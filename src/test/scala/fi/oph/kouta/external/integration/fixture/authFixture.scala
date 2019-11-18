@@ -1,8 +1,7 @@
-package fi.oph.kouta.integration.fixture
+package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.external.MockSecurityContext
 import fi.oph.kouta.external.client.KayttooikeusClient
-import fi.oph.kouta.external.integration.KoutaIntegrationSpec
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.servlet.AuthServlet
 

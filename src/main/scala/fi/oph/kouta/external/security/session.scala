@@ -16,7 +16,7 @@ sealed abstract class RoleEntity(val entity: String) {
   val roles: Seq[Role] = Seq(Read, Update, Crud)
 
   def createRoles: Seq[Role] = Seq(Crud, Role.Paakayttaja)
-  def readRoles: Seq[Role]   = Seq(Crud, Role.Indexer, Read, Update, Role.Paakayttaja)
+  def readRoles: Seq[Role]   = Seq(Crud, Read, Update, Role.Paakayttaja)
   def updateRoles: Seq[Role] = Seq(Crud, Update, Role.Paakayttaja)
   def deleteRoles: Seq[Role] = Seq(Crud, Role.Paakayttaja)
 }

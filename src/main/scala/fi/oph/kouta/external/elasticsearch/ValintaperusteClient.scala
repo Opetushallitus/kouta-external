@@ -11,10 +11,8 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ValintaperusteClient extends ValintaperusteClient("valintaperuste-kouta")
-
-abstract class ValintaperusteClient(override val index: String)
-  extends ElasticsearchClient(index, "valintaperuste")
+class ValintaperusteClient(override val index: String, elasticsearchClientHolder: ElasticsearchClientHolder)
+  extends ElasticsearchClient(index, "valintaperuste", elasticsearchClientHolder)
     with KoutaJsonFormats
     with Logging {
 

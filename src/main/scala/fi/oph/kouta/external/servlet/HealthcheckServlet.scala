@@ -7,7 +7,8 @@ import org.scalatra._
 
 class HealthcheckServlet extends KoutaServlet {
 
-  registerPath("/healthcheck/",
+  registerPath(
+    "/healthcheck/",
     s"""    get:
        |      summary: Healthcheck-rajapinta
        |      description: Healthcheck-rajapinta
@@ -16,12 +17,14 @@ class HealthcheckServlet extends KoutaServlet {
        |      responses:
        |        '200':
        |          description: Ok
-       |""".stripMargin)
+       |""".stripMargin
+  )
   get("/") {
     Ok("message" -> "ok")
   }
 
-  registerPath("/healthcheck/elastic",
+  registerPath(
+    "/healthcheck/elastic",
     s"""    get:
        |      summary: Tarkista yhteys Elasticsearchiin
        |      description: Tarkista yhteys Elasticsearchiin
@@ -30,7 +33,8 @@ class HealthcheckServlet extends KoutaServlet {
        |      responses:
        |        '200':
        |          description: Ok
-       |""".stripMargin)
+       |""".stripMargin
+  )
   get("/elastic") {
     ElasticsearchHealth.checkStatus() match {
       case s if s == Unreachable || s == Red =>

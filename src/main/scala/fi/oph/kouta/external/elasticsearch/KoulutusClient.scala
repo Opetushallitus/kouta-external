@@ -9,10 +9,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object KoulutusClient extends KoulutusClient("koulutus-kouta")
-
-abstract class KoulutusClient(override val index: String)
-    extends ElasticsearchClient(index, "koulutus")
+class KoulutusClient(override val index: String, elasticsearchClientHolder: ElasticsearchClientHolder)
+  extends ElasticsearchClient(index, "koulutus", elasticsearchClientHolder)
     with KoutaJsonFormats {
 
   def getKoulutus(oid: KoulutusOid): Future[Koulutus] =

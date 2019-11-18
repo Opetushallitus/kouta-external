@@ -9,10 +9,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object HakukohdeClient extends HakukohdeClient("hakukohde-kouta")
-
-abstract class HakukohdeClient(override val index: String)
-  extends ElasticsearchClient(index, "hakukohde")
+class HakukohdeClient(override val index: String, elasticsearchClientHolder: ElasticsearchClientHolder)
+  extends ElasticsearchClient(index, "hakukohde", elasticsearchClientHolder)
     with KoutaJsonFormats {
 
   def getHakukohde(oid: HakukohdeOid): Future[Hakukohde] =

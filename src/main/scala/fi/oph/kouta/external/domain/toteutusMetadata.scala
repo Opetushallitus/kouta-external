@@ -15,11 +15,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        opetus:
     |          type: object
     |          $ref: '#/components/schemas/Opetus'
-    |        yhteyshenkilo:
-    |          type: object
-    |          description: Toteutuksen yhteyshenkilön tiedot
-    |          allOf:
-    |            - $ref: '#/components/schemas/Yhteyshenkilo'
+    |        yhteyshenkilot:
+    |          type: array
+    |          description: Toteutuksen yhteyshenkilöiden tiedot
+    |          items:
+    |            $ref: '#/components/schemas/Yhteyshenkilo'
     |        asiasanat:
     |          type: array
     |          description: Lista toteutukseen liittyvistä asiasanoista, joiden avulla opiskelija voi hakea koulutusta Opintopolusta
@@ -37,7 +37,7 @@ sealed trait ToteutusMetadata {
   val opetus: Option[Opetus]
   val asiasanat: List[Keyword]
   val ammattinimikkeet: List[Keyword]
-  val yhteyshenkilo: Option[Yhteyshenkilo]
+  val yhteyshenkilot: Seq[Yhteyshenkilo]
 }
 
 @SwaggerModel(
@@ -86,7 +86,7 @@ case class AmmatillinenToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilo: Option[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -108,7 +108,7 @@ case class YliopistoToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilo: Option[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
     alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
@@ -132,7 +132,7 @@ case class AmmattikorkeakouluToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilo: Option[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
     alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata

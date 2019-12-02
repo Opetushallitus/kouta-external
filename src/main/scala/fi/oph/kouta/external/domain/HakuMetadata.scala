@@ -6,15 +6,15 @@ import fi.oph.kouta.external.swagger.SwaggerModel
   """    HakuMetadata:
     |      type: object
     |      properties:
-    |        yhteyshenkilo:
-    |          type: object
-    |          description: Haun yhteyshenkilön tiedot
-    |          allOf:
-    |            - $ref: '#/components/schemas/Yhteyshenkilo'
+    |        yhteyshenkilot:
+    |          type: array
+    |          description: Haun yhteyshenkilöiden tiedot
+    |          items:
+    |            $ref: '#/components/schemas/Yhteyshenkilo'
     |        tulevaisuudenAikataulu:
     |          type: array
     |          description: Oppijalle Opintopolussa näytettävät haun mahdolliset tulevat hakuajat
     |          items:
     |            $ref: '#/components/schemas/Ajanjakso'
     |""")
-case class HakuMetadata(yhteyshenkilo: Option[Yhteyshenkilo], tulevaisuudenAikataulu: Seq[Ajanjakso])
+case class HakuMetadata(yhteyshenkilot: Seq[Yhteyshenkilo], tulevaisuudenAikataulu: Seq[Ajanjakso])

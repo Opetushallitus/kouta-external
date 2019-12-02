@@ -39,7 +39,7 @@ case class ToteutusMetadataIndexed(
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilo: Option[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
     alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) {
@@ -52,7 +52,7 @@ case class ToteutusMetadataIndexed(
         opetus = opetus.map(_.toOpetus),
         asiasanat = asiasanat,
         ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilo = yhteyshenkilo
+        yhteyshenkilot = yhteyshenkilot
       )
     case Koulutustyyppi.Yo =>
       YliopistoToteutusMetadata(
@@ -61,7 +61,7 @@ case class ToteutusMetadataIndexed(
         opetus = opetus.map(_.toOpetus),
         asiasanat = asiasanat,
         ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilo = yhteyshenkilo,
+        yhteyshenkilot = yhteyshenkilot,
         alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
         ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
       )
@@ -72,7 +72,7 @@ case class ToteutusMetadataIndexed(
         opetus = opetus.map(_.toOpetus),
         asiasanat = asiasanat,
         ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilo = yhteyshenkilo,
+        yhteyshenkilot = yhteyshenkilot,
         alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
         ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
       )

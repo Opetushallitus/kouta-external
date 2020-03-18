@@ -106,6 +106,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          example:
     |            - pohjakoulutusvaatimustoinenaste_pk#1
     |            - pohjakoulutusvaatimustoinenaste_yo#1
+    |        pohjakoulutusvaatimusTarkenne:
+    |          type: object
+    |          description: Pohjakoulutusvaatimuksen tarkenne eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |          allOf:
+    |            - $ref: '#/components/schemas/Kuvaus'
     |        muuPohjakoulutusvaatimus:
     |          type: object
     |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -203,6 +208,7 @@ case class Hakukohde(
     minEnsikertalaisenAloituspaikat: Option[Int],
     maxEnsikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimusKoodiUrit: Seq[String],
+    pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
     toinenAsteOnkoKaksoistutkinto: Option[Boolean],
     kaytetaanHaunAikataulua: Option[Boolean],

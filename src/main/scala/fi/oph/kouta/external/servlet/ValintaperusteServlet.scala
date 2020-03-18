@@ -30,7 +30,7 @@ class ValintaperusteServlet(elasticsearchClientHolder: ElasticsearchClientHolder
       |        - Valintaperuste
       |      parameters:
       |        - in: path
-      |          name: oid
+      |          name: id
       |          schema:
       |            type: string
       |          required: true

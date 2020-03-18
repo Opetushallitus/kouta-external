@@ -81,8 +81,8 @@ package object domain {
       |      properties:
       |        otsikkoKoodiUri:
       |          type: string
-      |          description: Lisätiedon otsikon koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutuksenjarjestamisenlisaosiot/1)
-      |          example: koulutuksenjarjestamisenlisaosiot_3#1
+      |          description: Lisätiedon otsikon koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutuksenlisatiedot/1)
+      |          example: koulutuksenlisatiedot_03#1
       |        teksti:
       |          type: object
       |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa.
@@ -155,7 +155,7 @@ package object domain {
       |          type: string
       |          description: Valintakokeen yksilöivä tunniste. Järjestelmän generoima.
       |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
-      |        tyyppi:
+      |        tyyppiKoodiUri:
       |          type: string
       |          description: Valintakokeen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/valintakokeentyyppi/1)
       |          example: valintakokeentyyppi_1#1
@@ -165,7 +165,11 @@ package object domain {
       |          items:
       |            $ref: '#/components/schemas/Valintakoetilaisuus'
       |""")
-  case class Valintakoe(id: Option[UUID], tyyppi: Option[String], tilaisuudet: List[Valintakoetilaisuus])
+  case class Valintakoe(
+      id: Option[UUID] = None,
+      tyyppiKoodiUri: Option[String] = None,
+      tilaisuudet: List[Valintakoetilaisuus] = List()
+  )
 
   @SwaggerModel(
     """    Valintakoetilaisuus:
@@ -198,18 +202,12 @@ package object domain {
       |          description: Osoite eri kielillä. Kielet on määritetty kielivalinnassa.
       |          allOf:
       |            - $ref: '#/components/schemas/Teksti'
-      |        postinumero:
+      |        postinumeroKoodiUri:
       |          type: string
-      |          description: Postinumero
-      |          example: "04230"
-      |        postitoimipaikka:
-      |          type: object
-      |          description: Postitoimipaikka eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/posti/2)
+      |          example: "posti_04230#2"
       |""")
-  case class Osoite(osoite: Kielistetty, postinumero: Option[String], postitoimipaikka: Kielistetty)
-
+  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[String])
 
   @SwaggerModel(
     """    Ammattinimike:

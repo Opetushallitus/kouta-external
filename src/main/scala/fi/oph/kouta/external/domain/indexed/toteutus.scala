@@ -16,6 +16,7 @@ case class ToteutusIndexed(
     muokkaaja: Muokkaaja,
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
+    teemakuva: Option[String],
     modified: Option[LocalDateTime]
 ) {
   def toToteutus = Toteutus(
@@ -28,6 +29,7 @@ case class ToteutusIndexed(
     muokkaaja = muokkaaja.oid,
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
+    teemakuva = teemakuva,
     modified = modified
   )
 }
@@ -81,7 +83,7 @@ case class ToteutusMetadataIndexed(
 }
 
 case class AmmatillinenOsaamisalaIndexed(koodi: KoodiUri, linkki: Kielistetty, otsikko: Kielistetty) {
-  def toAmmatillinenOsaamisala = AmmatillinenOsaamisala(koodi = koodi.koodiUri, linkki = linkki, otsikko = otsikko)
+  def toAmmatillinenOsaamisala = AmmatillinenOsaamisala(koodiUri = koodi.koodiUri, linkki = linkki, otsikko = otsikko)
 }
 
 case class OpetusIndexed(
@@ -94,15 +96,14 @@ case class OpetusIndexed(
     onkoMaksullinen: Option[Boolean],
     maksullisuusKuvaus: Kielistetty,
     maksunMaara: Option[Double],
-    alkamiskausi: Option[KoodiUri],
-    alkamisvuosi: Option[String],
-    alkamisaikaKuvaus: Kielistetty,
+    koulutuksenTarkkaAlkamisaika: Boolean,
+    koulutuksenAlkamispaivamaara: Option[LocalDateTime],
+    koulutuksenPaattymispaivamaara: Option[LocalDateTime],
+    koulutuksenAlkamiskausi: Option[String],
+    koulutuksenAlkamisvuosi: Option[Int],
     lisatiedot: Seq[LisatietoIndexed],
-    onkoLukuvuosimaksua: Option[Boolean],
-    lukuvuosimaksu: Kielistetty,
-    lukuvuosimaksuKuvaus: Kielistetty,
     onkoStipendia: Option[Boolean],
-    stipendinMaara: Kielistetty,
+    stipendinMaara: Option[Double],
     stipendinKuvaus: Kielistetty
 ) {
   def toOpetus: Opetus = Opetus(
@@ -115,13 +116,12 @@ case class OpetusIndexed(
     onkoMaksullinen = onkoMaksullinen,
     maksullisuusKuvaus = maksullisuusKuvaus,
     maksunMaara = maksunMaara,
-    alkamiskausiKoodiUri = alkamiskausi.map(_.koodiUri),
-    alkamisvuosi = alkamisvuosi,
-    alkamisaikaKuvaus = alkamisaikaKuvaus,
+    koulutuksenTarkkaAlkamisaika = koulutuksenTarkkaAlkamisaika,
+    koulutuksenAlkamispaivamaara = koulutuksenAlkamispaivamaara,
+    koulutuksenPaattymispaivamaara = koulutuksenPaattymispaivamaara,
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi,
+    koulutuksenAlkamisvuosi = koulutuksenAlkamisvuosi,
     lisatiedot = lisatiedot.map(_.toLisatieto),
-    onkoLukuvuosimaksua = onkoLukuvuosimaksua,
-    lukuvuosimaksu = lukuvuosimaksu,
-    lukuvuosimaksuKuvaus = lukuvuosimaksuKuvaus,
     onkoStipendia = onkoStipendia,
     stipendinMaara = stipendinMaara,
     stipendinKuvaus = stipendinKuvaus

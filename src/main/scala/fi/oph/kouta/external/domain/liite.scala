@@ -14,7 +14,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: string
     |          description: Liitteen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
-    |        tyyppi:
+    |        tyyppiKoodiUri:
     |          type: string
     |          description: Liitteen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/liitetyypitamm/1)
     |          example: liitetyypitamm_3#1
@@ -49,7 +49,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |""")
 case class Liite(
     id: Option[UUID],
-    tyyppi: Option[String],
+    tyyppiKoodiUri: Option[String],
     nimi: Kielistetty,
     kuvaus: Kielistetty,
     toimitusaika: Option[LocalDateTime],

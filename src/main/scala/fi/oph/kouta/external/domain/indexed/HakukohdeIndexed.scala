@@ -5,7 +5,7 @@ import java.util.UUID
 
 import fi.oph.kouta.external.domain.enums.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
 import fi.oph.kouta.external.domain.oid.{HakuOid, HakukohdeOid, ToteutusOid}
-import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, Kielistetty, Liite, LiitteenToimitusosoite}
+import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, Kielistetty}
 
 case class HakukohdeIndexed(
     oid: Option[HakukohdeOid],
@@ -28,6 +28,7 @@ case class HakukohdeIndexed(
     minEnsikertalaisenAloituspaikat: Option[Int],
     maxEnsikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimus: Seq[KoodiUri],
+    pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
     toinenAsteOnkoKaksoistutkinto: Option[Boolean],
     kaytetaanHaunAikataulua: Option[Boolean],
@@ -36,8 +37,8 @@ case class HakukohdeIndexed(
     liitteetOnkoSamaToimitusosoite: Option[Boolean],
     liitteidenToimitusaika: Option[LocalDateTime],
     liitteidenToimitustapa: Option[LiitteenToimitustapa],
-    liitteidenToimitusosoite: Option[LiitteenToimitusosoite],
-    liitteet: List[Liite],
+    liitteidenToimitusosoite: Option[LiitteenToimitusosoiteIndexed],
+    liitteet: List[LiiteIndexed],
     valintakokeet: List[ValintakoeIndexed],
     hakuajat: List[Ajanjakso],
     muokkaaja: Muokkaaja,
@@ -66,6 +67,7 @@ case class HakukohdeIndexed(
     minEnsikertalaisenAloituspaikat = minEnsikertalaisenAloituspaikat,
     maxEnsikertalaisenAloituspaikat = maxEnsikertalaisenAloituspaikat,
     pohjakoulutusvaatimusKoodiUrit = pohjakoulutusvaatimus.map(_.koodiUri),
+    pohjakoulutusvaatimusTarkenne = pohjakoulutusvaatimusTarkenne,
     muuPohjakoulutusvaatimus = muuPohjakoulutusvaatimus,
     toinenAsteOnkoKaksoistutkinto = toinenAsteOnkoKaksoistutkinto,
     kaytetaanHaunAikataulua = kaytetaanHaunAikataulua,
@@ -74,8 +76,8 @@ case class HakukohdeIndexed(
     liitteetOnkoSamaToimitusosoite = liitteetOnkoSamaToimitusosoite,
     liitteidenToimitusaika = liitteidenToimitusaika,
     liitteidenToimitustapa = liitteidenToimitustapa,
-    liitteidenToimitusosoite = liitteidenToimitusosoite,
-    liitteet = liitteet,
+    liitteidenToimitusosoite = liitteidenToimitusosoite.map(_.toLiitteenToimitusosoite),
+    liitteet = liitteet.map(_.toLiite),
     valintakokeet = valintakokeet.map(_.toValintakoe),
     hakuajat = hakuajat,
     muokkaaja = muokkaaja.oid,

@@ -55,10 +55,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |              fi: Suomenkielinen kuvaus
     |              sv: Ruotsinkielinen kuvaus
     |            osaamisalat:
-    |              - koodi: osaamisala_0001#1
+    |              - koodiUri: osaamisala_0001#1
     |                linkki:
-    |                  fi: http://osaamisala/linkki/fi
-    |                  sv: http://osaamisala/linkki/sv
+    |                  fi: http://osaamisala.fi/linkki/fi
+    |                  sv: http://osaamisala.fi/linkki/sv
     |                otsikko:
     |                  fi: Katso osaamisalan tarkempi kuvaus tästä
     |                  sv: Katso osaamisalan tarkempi kuvaus tästä ruotsiksi
@@ -90,7 +90,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |                fi: Alkamisajan suomenkielinen kuvaus
     |                sv: Alkamisajan ruotsinkielinen kuvaus
     |              lisatiedot:
-    |                - otsikkoKoodiUri: koulutuksenjarjestamisenlisaosiot_3#1
+    |                - otsikkoKoodiUri: koulutuksenlisatiedot_03#1
     |                  teksti:
     |                    fi: Suomenkielinen lisätietoteksti
     |                    sv: Ruotsinkielinen lisätietoteksti
@@ -142,6 +142,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |           type: string
     |           description: Toteutuksen luoneen organisaation oid
     |           example: 1.2.246.562.10.00101010101
+    |        teemakuva:
+    |          type: string
+    |          description: Toteutuksen Opintopolussa näytettävän teemakuvan URL.
+    |          example: https://konfo-files.opintopolku.fi/toteutus-teema/1.2.246.562.13.00000000000000000009/f4ecc80a-f664-40ef-98e6-eaf8dfa57f6e.png
     |        modified:
     |           type: string
     |           format: date-time
@@ -158,5 +162,6 @@ case class Toteutus(
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
+    teemakuva: Option[String],
     modified: Option[LocalDateTime]
 ) extends PerustiedotWithOid

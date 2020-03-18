@@ -12,13 +12,17 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Lista valintaperustekuvauksen kielitaitovaatimuksista
     |          items:
     |            $ref: '#/components/schemas/Kielitaitovaatimus'
+    |        valintatavat:
+    |          type: array
+    |          description: Lista valintaperustekuvauksen valintatavoista
+    |          items:
+    |            $ref: '#/components/schemas/Valintatapa'
     |""")
 sealed trait ValintaperusteMetadata {
-  def koulutustyyppi: Koulutustyyppi
-
+  def tyyppi: Koulutustyyppi
   def valintatavat: Seq[Valintatapa]
-
   def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus]
+  def kuvaus: Kielistetty
 }
 
 @SwaggerModel(
@@ -41,13 +45,7 @@ sealed trait ValintaperusteMetadata {
     |            - $ref: '#/components/schemas/Kuvaus'
     |""")
 sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata {
-  def valintatavat: Seq[KorkeakoulutusValintatapa]
-
-  def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus]
-
   def osaamistaustaKoodiUrit: Seq[String]
-
-  def kuvaus: Kielistetty
 }
 
 @SwaggerModel(
@@ -56,12 +54,7 @@ sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
     |      properties:
-    |        valintatavat:
-    |          type: array
-    |          description: Lista valintaperustekuvauksen valintatavoista
-    |          items:
-    |            $ref: '#/components/schemas/AmmatillinenValintatapa'
-    |        koulutustyyppi:
+    |        tyyppi:
     |          type: string
     |          description: Valintaperustekuvauksen metatiedon tyyppi
     |          example: amm
@@ -69,9 +62,10 @@ sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata
     |            - amm
     |""")
 case class AmmatillinenValintaperusteMetadata(
-    koulutustyyppi: Koulutustyyppi = Koulutustyyppi.Amm,
-    valintatavat: Seq[AmmatillinenValintatapa],
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus]
+    tyyppi: Koulutustyyppi,
+    valintatavat: Seq[Valintatapa],
+    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
+    kuvaus: Kielistetty
 ) extends ValintaperusteMetadata
 
 @SwaggerModel(
@@ -80,12 +74,7 @@ case class AmmatillinenValintaperusteMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakoulutusValintaperusteMetadata'
     |      properties:
-    |        valintatavat:
-    |          type: array
-    |          description: Lista valintaperustekuvauksen valintatavoista
-    |          items:
-    |            $ref: '#/components/schemas/YliopistoValintatapa'
-    |        koulutustyyppi:
+    |        tyyppi:
     |          type: string
     |          description: Valintaperustekuvauksen metatiedon tyyppi
     |          example: yo
@@ -93,11 +82,11 @@ case class AmmatillinenValintaperusteMetadata(
     |            - yo
     |""")
 case class YliopistoValintaperusteMetadata(
-    koulutustyyppi: Koulutustyyppi = Koulutustyyppi.Yo,
-    valintatavat: Seq[YliopistoValintatapa],
+    tyyppi: Koulutustyyppi,
+    valintatavat: Seq[Valintatapa],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
-    osaamistaustaKoodiUrit: Seq[String] = Seq(),
-    kuvaus: Kielistetty = Map()
+    osaamistaustaKoodiUrit: Seq[String],
+    kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadata
 
 @SwaggerModel(
@@ -106,12 +95,7 @@ case class YliopistoValintaperusteMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakoulutusValintaperusteMetadata'
     |      properties:
-    |        valintatavat:
-    |          type: array
-    |          description: Lista valintaperustekuvauksen valintatavoista
-    |          items:
-    |            $ref: '#/components/schemas/AmmattikorkeakouluValintatapa'
-    |        koulutustyyppi:
+    |        tyyppi:
     |          type: string
     |          description: Valintaperustekuvauksen metatiedon tyyppi
     |          example: amk
@@ -119,20 +103,20 @@ case class YliopistoValintaperusteMetadata(
     |            - amk
     |""")
 case class AmmattikorkeakouluValintaperusteMetadata(
-    koulutustyyppi: Koulutustyyppi = Koulutustyyppi.Amk,
-    valintatavat: Seq[AmmattikorkeakouluValintatapa],
+    tyyppi: Koulutustyyppi,
+    valintatavat: Seq[Valintatapa],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
-    osaamistaustaKoodiUrit: Seq[String] = Seq(),
-    kuvaus: Kielistetty = Map()
+    osaamistaustaKoodiUrit: Seq[String],
+    kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadata
 
 case class ValintaperusteKielitaitovaatimus(
-    kieliKoodiUri: Option[String] = None,
-    kielitaidonVoiOsoittaa: Seq[Kielitaito] = Seq(),
-    vaatimukset: Seq[Kielitaitovaatimus] = Seq()
+    kieliKoodiUri: Option[String],
+    kielitaidonVoiOsoittaa: Seq[Kielitaito],
+    vaatimukset: Seq[Kielitaitovaatimus]
 )
 
-case class Kielitaito(kielitaitoKoodiUri: Option[String] = None, lisatieto: Kielistetty = Map())
+case class Kielitaito(kielitaitoKoodiUri: Option[String], lisatieto: Kielistetty = Map())
 
 @SwaggerModel(
   """    Kielitaitovaatimus:
@@ -187,11 +171,11 @@ case class Kielitaito(kielitaitoKoodiUri: Option[String] = None, lisatieto: Kiel
     |                      example: A
     |""")
 case class Kielitaitovaatimus(
-    kielitaitovaatimusKoodiUri: Option[String] = None,
-    kielitaitovaatimusKuvaukset: Seq[KielitaitovaatimusKuvaus] = Seq()
+    kielitaitovaatimusKoodiUri: Option[String],
+    kielitaitovaatimusKuvaukset: Seq[KielitaitovaatimusKuvaus]
 )
 
 case class KielitaitovaatimusKuvaus(
-    kielitaitovaatimusKuvausKoodiUri: Option[String] = None,
-    kielitaitovaatimusTaso: Option[String] = None
+    kielitaitovaatimusKuvausKoodiUri: Option[String],
+    kielitaitovaatimusTaso: Option[String]
 )

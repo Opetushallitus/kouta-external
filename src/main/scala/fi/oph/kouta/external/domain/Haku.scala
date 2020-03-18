@@ -96,11 +96,6 @@ import fi.oph.kouta.external.domain.oid.{HakuOid, OrganisaatioOid, UserOid}
     |          description: Haun hakuajat. Hakukohteella voi olla omat hakuajat.
     |          items:
     |            $ref: '#/components/schemas/Ajanjakso'
-    |        valintakokeet:
-    |          type: array
-    |          description: Hakuun liittyvät valintakokeet
-    |          items:
-    |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
     |          $ref: '#/components/schemas/HakuMetadata'
@@ -145,9 +140,7 @@ case class Haku(
     metadata: Option[HakuMetadata],
     organisaatioOid: OrganisaatioOid,
     hakuajat: List[Ajanjakso],
-    valintakokeet: List[Valintakoe],
     muokkaaja: UserOid,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime]
 ) extends PerustiedotWithOid
-

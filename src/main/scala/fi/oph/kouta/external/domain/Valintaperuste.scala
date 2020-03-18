@@ -65,6 +65,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Valintaperustekuvauksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
+    |        valintakokeet:
+    |          type: array
+    |          description: Hakuun liittyvät valintakokeet
+    |          items:
+    |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
     |          oneOf:
@@ -72,7 +77,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
     |          example:
-    |            koulutustyyppi: amm
+    |            tyyppi: amm
     |            valintatavat:
     |              - valintatapaKoodiUri: valintatapajono_tv#1
     |                kuvaus:
@@ -144,6 +149,7 @@ case class Valintaperuste(
     nimi: Kielistetty,
     julkinen: Boolean,
     sorakuvausId: Option[UUID],
+    valintakokeet: List[Valintakoe],
     metadata: Option[ValintaperusteMetadata],
     organisaatioOid: OrganisaatioOid,
     muokkaaja: UserOid,

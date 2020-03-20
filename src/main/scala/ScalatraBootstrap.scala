@@ -20,6 +20,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(new HakuServlet(DefaultElasticsearchClientHolder), "/haku", "haku")
     context.mount(new HakukohdeServlet(DefaultElasticsearchClientHolder), "/hakukohde", "hakukohde")
     context.mount(new ToteutusServlet(DefaultElasticsearchClientHolder), "/toteutus", "toteutus")
+    context.mount(new SorakuvausServlet(DefaultElasticsearchClientHolder), "/sorakuvaus", "sorakuvaus")
 
     context.mount(new HealthcheckServlet(), "/healthcheck", "healthcheck")
     context.mount(new SwaggerServlet, "/swagger")

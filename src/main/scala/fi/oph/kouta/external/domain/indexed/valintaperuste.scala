@@ -3,8 +3,8 @@ package fi.oph.kouta.external.domain.indexed
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.domain._
+import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
 
 case class ValintaperusteIndexed(
     id: Option[UUID],
@@ -15,7 +15,7 @@ case class ValintaperusteIndexed(
     kohdejoukonTarkenne: Option[KoodiUri],
     nimi: Kielistetty,
     julkinen: Boolean,
-    sorakuvaus: Option[SorakuvausIndexed],
+    sorakuvaus: Option[UuidObject],
     valintakokeet: List[ValintakoeIndexed],
     metadata: Option[ValintaperusteMetadataIndexed],
     organisaatio: Organisaatio,
@@ -41,8 +41,6 @@ case class ValintaperusteIndexed(
     modified = modified
   )
 }
-
-case class SorakuvausIndexed(id: UUID)
 
 sealed trait ValintaperusteMetadataIndexed {
   def tyyppi: Koulutustyyppi

@@ -3,16 +3,17 @@ package fi.oph.kouta.external.integration.fixture
 import java.util.UUID
 
 import fi.oph.kouta.domain.{Ataru, EiSähköistä}
-import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.oid.{HakuOid, OrganisaatioOid}
+import fi.oph.kouta.external.elasticsearch.HakuClient
+import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.servlet.HakuServlet
-import fi.oph.kouta.external.{OrganisaatioServiceMock, TempElasticClientHolder}
+import fi.oph.kouta.external.{KoutaFixtureTool, OrganisaatioServiceMock, TempElasticClient}
 
 trait HakuFixture extends KoutaIntegrationSpec {
   val HakuPath = "/haku"
 
-  addServlet(new HakuServlet(TempElasticClientHolder), HakuPath)
+  addServlet(new HakuServlet(new HakuService(new HakuClient(TempElasticClient.client))), HakuPath)
 
   def get(oid: HakuOid): Haku = get[Haku](HakuPath, oid)
 

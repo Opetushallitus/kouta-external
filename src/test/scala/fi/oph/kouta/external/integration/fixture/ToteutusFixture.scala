@@ -2,16 +2,17 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.external.KoutaFixtureTool
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid}
+import fi.oph.kouta.external.elasticsearch.ToteutusClient
+import fi.oph.kouta.external.service.ToteutusService
 import fi.oph.kouta.external.servlet.ToteutusServlet
-import fi.oph.kouta.external.{OrganisaatioServiceMock, TempElasticClientHolder}
 
 trait ToteutusFixture extends KoutaIntegrationSpec {
   val ToteutusPath = "/toteutus"
 
-  addServlet(new ToteutusServlet(TempElasticClientHolder), ToteutusPath)
+  addServlet(new ToteutusServlet(new ToteutusService(new ToteutusClient(TempElasticClient.client))), ToteutusPath)
 
   def get(oid: ToteutusOid): Toteutus = get[Toteutus](ToteutusPath, oid)
 

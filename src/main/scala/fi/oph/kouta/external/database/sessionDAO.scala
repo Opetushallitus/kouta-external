@@ -10,36 +10,28 @@ import slick.jdbc.PostgresProfile.api._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
-trait SessionDAO {
-  def delete(ticket: ServiceTicket): Boolean
-  def delete(id: UUID): Boolean
-  def store(session: Session): UUID
-  def store(session: CasSession, id: UUID): UUID
-  def get(id: UUID): Option[Session]
-}
-
-object SessionDAO extends SessionDAO with SessionSQL {
+object SessionDAO extends SessionSQL {
 
   import KoutaDatabase.{runBlocking, runBlockingTransactionally}
 
-  override def store(session: Session): UUID = session match {
+  def store(session: Session): UUID = session match {
     case CasSession(ServiceTicket(ticket), personOid, authorities) =>
       val id = UUID.randomUUID()
       runBlockingTransactionally(storeCasSession(id, ticket, personOid, authorities), timeout = Duration(1, TimeUnit.MINUTES))
         .map(_ => id).get
   }
 
-  override def store(session: CasSession, id: UUID): UUID =
+  def store(session: CasSession, id: UUID): UUID =
     runBlockingTransactionally(storeCasSession(id, session.casTicket.s, session.personOid, session.authorities), timeout = Duration(1, TimeUnit.MINUTES))
       .map(_ => id).get
 
-  override def delete(id: UUID): Boolean =
+  def delete(id: UUID): Boolean =
     runBlockingTransactionally(deleteSession(id), timeout = Duration(10, TimeUnit.SECONDS)).get
 
-  override def delete(ticket: ServiceTicket): Boolean =
+  def delete(ticket: ServiceTicket): Boolean =
     runBlockingTransactionally(deleteSession(ticket), timeout = Duration(10, TimeUnit.SECONDS)).get
 
-  override def get(id: UUID): Option[Session] = {
+  def get(id: UUID): Option[Session] = {
     runBlockingTransactionally(getSession(id), timeout = Duration(2, TimeUnit.SECONDS)).get.map {
       case (casTicket, personOid) =>
         val authorities = runBlocking(searchAuthoritiesBySession(id), Duration(2, TimeUnit.SECONDS))

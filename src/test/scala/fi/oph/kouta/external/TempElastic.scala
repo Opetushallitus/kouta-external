@@ -4,13 +4,12 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 import com.sksamuel.elastic4s.http.{ElasticClient, ElasticProperties}
-import fi.oph.kouta.external.elasticsearch.ElasticsearchClientHolder
 import fi.vm.sade.utils.tcp.ChooseFreePort
 import pl.allegro.tech.embeddedelasticsearch.{EmbeddedElastic, PopularProperties}
 
-object TempElasticClientHolder extends ElasticsearchClientHolder {
-  lazy val elasticUrl            = s"http://localhost:${TempElastic.start()}"
-  lazy val client: ElasticClient = ElasticClient(ElasticProperties(elasticUrl))
+object TempElasticClient {
+  lazy val url = s"http://localhost:${TempElastic.start()}"
+  lazy val client: ElasticClient = ElasticClient(ElasticProperties(url))
 }
 
 object TempElastic {
@@ -26,7 +25,7 @@ object TempElastic {
       .builder()
       .withElasticVersion("6.7.2")
       .withInstallationDirectory(new File("target/embeddedElasticsearch"))
-      .withSetting(PopularProperties.HTTP_PORT, port)
+      .withSetting(PopularProperties.HTTP_PORT, port) // Koita ilman tätä?
       .withSetting("path.repo", "embeddedElasticsearch")
       .withSetting(PopularProperties.CLUSTER_NAME, "elasticsearch")
       .withSetting("discovery.zen.ping.unicast.hosts", s"127.0.0.1:$port")

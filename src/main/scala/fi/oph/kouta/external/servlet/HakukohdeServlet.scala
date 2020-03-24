@@ -1,7 +1,6 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.domain.oid.HakukohdeOid
-import fi.oph.kouta.external.elasticsearch.ElasticsearchClientHolder
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
@@ -10,14 +9,14 @@ import org.scalatra.FutureSupport
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class HakukohdeServlet(elasticsearchClientHolder: ElasticsearchClientHolder)
+object HakukohdeServlet extends HakukohdeServlet(HakukohdeService)
+
+class HakukohdeServlet(hakukohdeService: HakukohdeService)
   extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
   override def executor: ExecutionContext = global
-
-  val hakukohdeService = new HakukohdeService(elasticsearchClientHolder)
 
   registerPath(
     "/hakukohde/{oid}",

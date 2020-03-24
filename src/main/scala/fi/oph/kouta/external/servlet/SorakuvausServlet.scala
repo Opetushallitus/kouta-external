@@ -2,23 +2,22 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
-import fi.oph.kouta.external.elasticsearch.ElasticsearchClientHolder
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.SorakuvausService
+import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import org.scalatra.FutureSupport
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
-import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 
-class SorakuvausServlet(elasticsearchClientHolder: ElasticsearchClientHolder)
+object SorakuvausServlet extends SorakuvausServlet(SorakuvausService)
+
+class SorakuvausServlet(sorakuvausService: SorakuvausService)
   extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
   override def executor: ExecutionContext = global
-
-  val sorakuvausService = new SorakuvausService(elasticsearchClientHolder)
 
   registerPath(
     "/sorakuvaus/{id}",

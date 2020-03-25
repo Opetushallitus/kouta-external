@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.servlet
 
 import com.sksamuel.elastic4s.http.ElasticClient
+import fi.oph.kouta.external.client.KoutaClient
 import fi.oph.kouta.external.domain.enums.ElasticsearchHealthStatus._
 import fi.oph.kouta.external.elasticsearch.{ElasticsearchClient, ElasticsearchHealth}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
@@ -44,6 +45,26 @@ class HealthcheckServlet(client: ElasticClient) extends KoutaServlet {
         InternalServerError("status" -> s.name)
       case s if s == Yellow || s == Green =>
         Ok("status" -> s.name)
+    }
+  }
+
+  registerPath(
+    "/healthcheck/kouta",
+    s"""    get:
+       |      summary: Tarkista yhteys Kouta-backendiin
+       |      description: Tarkista yhteys Kouta-backendiin
+       |      tags:
+       |        - Admin
+       |      responses:
+       |        '200':
+       |          description: Ok
+       |""".stripMargin
+  )
+  get("/kouta") {
+    if (KoutaClient.session()) {
+      Ok("message" -> "ok")
+    } else {
+      InternalServerError("message" -> "error")
     }
   }
 }

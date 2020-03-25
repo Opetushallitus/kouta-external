@@ -32,6 +32,8 @@ case class SecurityConfiguration(
 
 case class ElasticSearchConfiguration(elasticUrl: String)
 
+case class CasClientConfiguration(username: String, password: String)
+
 case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperties)
     extends ApplicationSettings(config) {
 
@@ -57,6 +59,11 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
 
   val elasticSearchConfiguration = ElasticSearchConfiguration(
     config.getString("kouta-external.elasticsearch.url")
+  )
+
+  val clientConfiguration = CasClientConfiguration(
+    username = config.getString("kouta-external.cas.username"),
+    password = config.getString("kouta-external.cas.password")
   )
 }
 

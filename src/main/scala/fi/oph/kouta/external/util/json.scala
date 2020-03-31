@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.util
 
+import java.net.InetAddress
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -8,6 +9,7 @@ import fi.oph.kouta.external.domain._
 import fi.oph.kouta.external.domain.enums._
 import fi.oph.kouta.external.domain.indexed._
 import fi.oph.kouta.external.domain.oid._
+import fi.oph.kouta.external.security.ServiceTicket
 import org.json4s.JsonAST.{JObject, JString}
 import org.json4s._
 import org.json4s.jackson.Serialization.write
@@ -51,6 +53,8 @@ sealed trait DefaultKoutaJsonFormats {
       stringSerializer(OrganisaatioOid),
       stringSerializer(UserOid),
       stringSerializer(GenericOid),
+      stringSerializer(InetAddress.getByName, (ip: InetAddress) => ip.getHostAddress),
+      stringSerializer(ServiceTicket.apply),
     )
 
   private def serializer[A: Manifest](deserializer: PartialFunction[JValue, A])(serializer: PartialFunction[Any, JValue]) =
@@ -71,11 +75,15 @@ sealed trait DefaultKoutaJsonFormats {
     case i: LocalDateTime => JString(ISO_LOCAL_DATE_TIME_FORMATTER.format(i))
   }
 
-  private def stringSerializer[A: Manifest](construct: String => A) = serializer {
-    case JString(s) => construct(s)
-  } {
-    case a: A => JString(a.toString)
-  }
+  private def stringSerializer[A: Manifest](construct: String => A): CustomSerializer[A] =
+    stringSerializer(construct, (a: A) => a.toString)
+
+  private def stringSerializer[A: Manifest](construct: String => A, deconstruct: A => String): CustomSerializer[A] =
+    serializer {
+      case JString(s) => construct(s)
+    } {
+      case a: A => JString(deconstruct(a))
+    }
 
   private def koulutusMetadataSerializer: CustomSerializer[KoulutusMetadata] = serializer[KoulutusMetadata] {
     case s: JObject =>

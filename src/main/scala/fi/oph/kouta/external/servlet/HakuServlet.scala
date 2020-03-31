@@ -2,21 +2,20 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
+import fi.oph.kouta.external.client.KoutaClient
+import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.oid.HakuOid
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.{FutureSupport, NotFound}
+import org.scalatra.{ActionResult, FutureSupport, InternalServerError, NotFound, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object HakuServlet extends HakuServlet(HakuService)
 
-class HakuServlet(hakuService: HakuService)
-  extends KoutaServlet
-    with CasAuthenticatedServlet
-    with FutureSupport {
+class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthenticatedServlet with FutureSupport {
 
   override def executor: ExecutionContext = global
 
@@ -91,4 +90,44 @@ class HakuServlet(hakuService: HakuService)
         }
     }
   }
+
+  registerPath( "/haku/",
+    """    post:
+      |      summary: Tallenna uusi haku
+      |      operationId: Tallenna uusi haku
+      |      description: Tallenna uuden haun tiedot.
+      |        Rajapinta palauttaa haulle generoidun yksilöivän haku-oidin.
+      |      tags:
+      |        - Haku
+      |      requestBody:
+      |        description: Tallennettava haku
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Haku'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: object
+      |                properties:
+      |                  oid:
+      |                    type: string
+      |                    description: Uuden haun yksilöivä oid
+      |                    example: 1.2.246.562.29.00000000000000000009
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    KoutaClient.createHaku(parsedBody.extract[Haku]) map {
+      case Right(oid) =>
+        Ok("oid" -> oid)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
 }

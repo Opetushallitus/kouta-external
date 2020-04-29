@@ -1,13 +1,15 @@
 package fi.oph.kouta.external.integration
 
+import java.time.Instant
 import java.util.UUID
 
+import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.oid.HakuOid
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
 import fi.oph.kouta.external.security.Role
 
-class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] {
+class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
 
   override val roleEntities = Seq(Role.Haku)
   override val getPath      = HakuPath
@@ -60,7 +62,7 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
   }
 
   it should s"list the haut the user has access to" in {
-    val haut = get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1", crudSessions(ChildOid))
+    val haut = get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1", crudSessionIds(ChildOid))
 
     haut.map(_.oid.get) should contain theSameElementsAs Seq(
       HakuOid("1.2.246.562.29.301"),
@@ -69,11 +71,11 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
   }
 
   it should s"return 404 if the user doesn't have access to any of the matching haku" in {
-    get(s"$HakuPath/search?ataruId=$ataruId1", crudSessions(LonelyOid), 404)
+    get(s"$HakuPath/search?ataruId=$ataruId1", crudSessionIds(LonelyOid), 404)
   }
 
   it should s"allow a user of an ancestor organization to get the haut" in {
-    val haut = get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1", crudSessions(ParentOid))
+    val haut = get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1", crudSessionIds(ParentOid))
 
     haut.map(_.oid.get) should contain theSameElementsAs Seq(
       HakuOid("1.2.246.562.29.301"),
@@ -84,14 +86,60 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
   }
 
   it should "deny a user with only access to a descendant organization" in {
-    get(s"$HakuPath/search?ataruId=$ataruId1", crudSessions(GrandChildOid), 404)
+    get(s"$HakuPath/search?ataruId=$ataruId1", crudSessionIds(GrandChildOid), 404)
   }
 
   it should "deny a user with the wrong role" in {
-    get(s"$HakuPath/search?ataruId=$ataruId1", otherRoleSession, 403)
+    get(s"$HakuPath/search?ataruId=$ataruId1", otherRoleSessionId, 403)
   }
 
   it should "deny indexer access" in {
-    get(s"$HakuPath/search?ataruId=$ataruId1", indexerSession, 403)
+    get(s"$HakuPath/search?ataruId=$ataruId1", indexerSessionId, 403)
+  }
+
+  "Create haku" should "create a haku" in {
+    mockCreateHaku(haku(ParentOid), "1.2.246.562.29.123456789")
+
+    create(haku("1.2.246.562.29.123456789", ParentOid))
+  }
+
+  it should "return the error code and message" in {
+    val testError = "{\"error\": \"test error\"}"
+    mockCreateHaku(haku(ChildOid), 400, testError)
+
+    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
+  }
+
+  it should "include the caller's authentication in the call" in {
+    val (sessionId, session) = crudSessions(EvilChildOid)
+    mockCreateHaku(haku(EvilChildOid), "1.2.246.562.29.123456789", sessionId, session)
+    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
+  }
+
+  "Update haku" should "update a haku" in {
+    val now = Instant.now()
+    mockUpdateHaku(haku("1.2.246.562.29.1"), now)
+
+    update(haku("1.2.246.562.29.1"), now)
+  }
+
+  it should "require x-If-Unmodified-Since header" in {
+    update(HakuPath, haku("1.2.246.562.29.1"), defaultSessionId, 400, "{\"error\":\"Otsake x-If-Unmodified-Since on pakollinen.\"}")
+  }
+
+  it should "return the error code and message" in {
+    val testError = "{\"error\": \"test error\"}"
+    val now = Instant.now()
+
+    mockUpdateHaku(haku("1.2.246.562.29.2"), now, 400, testError)
+    update(HakuPath, haku("1.2.246.562.29.2"), now, defaultSessionId, 400, testError)
+  }
+
+  it should "include the caller's authentication in the call" in {
+    val now = Instant.now()
+    val (sessionId, session) = crudSessions(EvilChildOid)
+
+    mockUpdateHaku(haku("1.2.246.562.29.3"), now, sessionId, session)
+    update(haku("1.2.246.562.29.3"), now, sessionId)
   }
 }

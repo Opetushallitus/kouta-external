@@ -38,26 +38,29 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
   val UnknownOid = OrganisaatioOid("1.2.246.562.10.99999999998")
   val YoOid = OrganisaatioOid("1.2.246.562.10.46312206843")
 
-  //val testSessions: mutable.Map[Symbol, (String, String)] = mutable.Map.empty
-  val crudSessions: mutable.Map[OrganisaatioOid, UUID] = mutable.Map.empty
-  val readSessions: mutable.Map[OrganisaatioOid, UUID] = mutable.Map.empty
+  val crudSessions: mutable.Map[OrganisaatioOid, (UUID, CasSession)] = mutable.Map.empty
+  val readSessions: mutable.Map[OrganisaatioOid, (UUID, CasSession)] = mutable.Map.empty
 
-  var indexerSession: UUID = _
-  var fakeIndexerSession: UUID = _
-  var otherRoleSession: UUID = _
+  def crudSessionIds(oid: OrganisaatioOid): UUID = crudSessions(oid)._1
+  def readSessionIds(oid: OrganisaatioOid): UUID = readSessions(oid)._1
 
-  def addTestSession(authorities: Seq[Authority]): UUID = {
+  var indexerSessionId: UUID = _
+  var fakeIndexerSessionId: UUID = _
+  var otherRoleSessionId: UUID = _
+
+  def addTestSession(authorities: Seq[Authority]): (UUID, CasSession) = {
     val sessionId = UUID.randomUUID()
     val oid = s"1.2.246.562.24.${math.abs(sessionId.getLeastSignificantBits.toInt)}"
     val user = TestUser(oid, s"user-$oid", sessionId)
-    SessionDAO.store(CasSession(ServiceTicket(user.ticket), user.oid, authorities.toSet), user.sessionId)
-    sessionId
+    val session = CasSession(ServiceTicket(user.ticket), user.oid, authorities.toSet)
+    SessionDAO.store(session, user.sessionId)
+    (sessionId, session)
   }
 
-  def addTestSession(role: Role, organisaatioOid: OrganisaatioOid): UUID =
+  def addTestSession(role: Role, organisaatioOid: OrganisaatioOid): (UUID, CasSession) =
     addTestSession(Seq(role), organisaatioOid)
 
-  def addTestSession(roles: Seq[Role], organisaatioOid: OrganisaatioOid): UUID = {
+  def addTestSession(roles: Seq[Role], organisaatioOid: OrganisaatioOid): (UUID, CasSession) = {
     val authorities = roles.map(Authority(_, organisaatioOid))
     addTestSession(authorities)
   }
@@ -71,8 +74,8 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
       readSessions.update(org, addTestSession(roleEntities.map(_.Read.asInstanceOf[Role]), org))
     }
 
-    indexerSession = addTestSession(Role.Indexer, OphOid)
-    fakeIndexerSession = addTestSession(Role.Indexer, ChildOid)
-    otherRoleSession = addTestSession(Role.UnknownRole("APP_OTHER"), ChildOid)
+    indexerSessionId = addTestSession(Role.Indexer, OphOid)._1
+    fakeIndexerSessionId = addTestSession(Role.Indexer, ChildOid)._1
+    otherRoleSessionId = addTestSession(Role.UnknownRole("APP_OTHER"), ChildOid)._1
   }
 }

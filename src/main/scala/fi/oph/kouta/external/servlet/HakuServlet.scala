@@ -2,13 +2,12 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
-import fi.oph.kouta.external.client.KoutaClient
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.oid.HakuOid
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.{ActionResult, FutureSupport, InternalServerError, NotFound, Ok}
+import org.scalatra.{ActionResult, FutureSupport, NotFound, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -122,7 +121,7 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   post("/") {
     implicit val authenticated: Authenticated = authenticate
 
-    KoutaClient.createHaku(parsedBody.extract[Haku]) map {
+    hakuService.create(parsedBody.extract[Haku]) map {
       case Right(oid) =>
         Ok("oid" -> oid)
       case Left((status, message)) =>
@@ -130,4 +129,35 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     }
   }
 
+  registerPath("/haku/",
+    """    put:
+      |      summary: Muokkaa olemassa olevaa hakua
+      |      operationId: Muokkaa hakua
+      |      description: Muokkaa olemassa olevaa hakua. Rajapinnalle annetaan haun kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Haku
+      |      parameters:
+      |        - $ref: '#/components/parameters/xIfUnmodifiedSince'
+      |      requestBody:
+      |        description: Muokattavan haun kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Haku'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  put("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
+      case Right(oid) =>
+        Ok("oid" -> oid)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
 }

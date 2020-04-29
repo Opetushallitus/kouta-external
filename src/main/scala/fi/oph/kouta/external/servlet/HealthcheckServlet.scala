@@ -1,9 +1,9 @@
 package fi.oph.kouta.external.servlet
 
 import com.sksamuel.elastic4s.http.ElasticClient
-import fi.oph.kouta.external.client.KoutaClient
 import fi.oph.kouta.external.domain.enums.ElasticsearchHealthStatus._
 import fi.oph.kouta.external.elasticsearch.{ElasticsearchClient, ElasticsearchHealth}
+import fi.oph.kouta.external.kouta.CasKoutaClient
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import org.scalatra._
 
@@ -61,7 +61,7 @@ class HealthcheckServlet(client: ElasticClient) extends KoutaServlet {
        |""".stripMargin
   )
   get("/kouta") {
-    if (KoutaClient.session()) {
+    if (CasKoutaClient.session()) {
       Ok("message" -> "ok")
     } else {
       InternalServerError("message" -> "error")

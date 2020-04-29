@@ -46,14 +46,14 @@
         <jetty.version>9.4.17.v20190418</jetty.version>
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
         <kouta-indeksoija.version>0.3.0-SNAPSHOT</kouta-indeksoija.version>
-        <kouta-backend.version>0.23-SNAPSHOT</kouta-backend.version>
+        <kouta-backend.version>0.24-SNAPSHOT</kouta-backend.version>
         <mockserver-netty.version>5.5.0</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>
 
         <!-- Plugin properties -->
         <enforce.java.version>[1.8,)</enforce.java.version>
 
-        <plugin.scala-maven-plugin.version>3.3.2</plugin.scala-maven-plugin.version>
+        <plugin.scala-maven-plugin.version>4.3.1</plugin.scala-maven-plugin.version>
         <plugin.maven-enforcer-plugin.version>3.0.0-M2</plugin.maven-enforcer-plugin.version>
         <plugin.maven-assembly-plugin.version>3.1.1</plugin.maven-assembly-plugin.version>
         <plugin.maven-jar-plugin.version>3.1.1</plugin.maven-jar-plugin.version>
@@ -242,6 +242,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.scalatra.scalate</groupId>
+                <artifactId>scalate-core_2.12</artifactId>
+                <version>1.9.5</version>
+            </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>

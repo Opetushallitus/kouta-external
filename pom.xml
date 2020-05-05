@@ -45,8 +45,8 @@
         <scalatra-scalatest.version>2.7.0-RC1</scalatra-scalatest.version>
         <jetty.version>9.4.17.v20190418</jetty.version>
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
-        <kouta-indeksoija.version>0.3.0-SNAPSHOT</kouta-indeksoija.version>
-        <kouta-backend.version>0.24-SNAPSHOT</kouta-backend.version>
+        <kouta-indeksoija.version>0.5.0-KTO-652-SNAPSHOT</kouta-indeksoija.version>
+        <kouta-backend.version>0.26-SNAPSHOT</kouta-backend.version>
         <mockserver-netty.version>5.5.0</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>
 

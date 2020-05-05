@@ -1,10 +1,10 @@
 package fi.oph.kouta.external.servlet
 
-import fi.oph.kouta.external.domain.oid.HakukohdeOid
+import fi.oph.kouta.external.domain.oid.{HakuOid, HakukohdeOid}
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.FutureSupport
+import org.scalatra.{FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,6 +47,9 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     implicit val authenticated: Authenticated = authenticate
 
     hakukohdeService.get(HakukohdeOid(params("oid")))
+      .map { hakukohde =>
+        Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+      }
   }
 
 }

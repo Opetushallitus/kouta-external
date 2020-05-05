@@ -47,6 +47,9 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     hakuService.get(HakuOid(params("oid")))
+      .map { haku =>
+        Ok(haku, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(haku)))
+      }
   }
 
   registerPath(
@@ -154,8 +157,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
+      case Right(response) =>
+        Ok(response)
       case Left((status, message)) =>
         ActionResult(status, message, Map.empty)
     }

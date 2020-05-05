@@ -1,9 +1,10 @@
 package fi.oph.kouta.external.servlet
 
 import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId, ZonedDateTime}
+import java.time.{Instant, LocalDateTime, ZoneId, ZoneOffset, ZonedDateTime}
 import java.util.{ConcurrentModificationException, NoSuchElementException}
 
+import fi.oph.kouta.external.domain.Perustiedot
 import fi.oph.kouta.external.elasticsearch.ElasticSearchException
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -20,6 +21,12 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
 
   before() {
     contentType = formats("json")
+  }
+
+  protected def createLastModifiedHeader[E <: Perustiedot](entity: E): String = {
+    // Oletetaan, että modified on Helsingin ajassa, kun sen mukana ei ole aikavyöhyketietoa
+    val instant = entity.modified.get.atZone(ZoneId.of("Europe/Helsinki")).toInstant
+    renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1))
   }
 
   protected def getIfUnmodifiedSince: Instant =

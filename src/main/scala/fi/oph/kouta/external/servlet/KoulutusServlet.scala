@@ -4,7 +4,7 @@ import fi.oph.kouta.external.domain.oid.KoulutusOid
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.KoulutusService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.FutureSupport
+import org.scalatra.{FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,6 +47,9 @@ class KoulutusServlet(koulutusService: KoulutusService)
     implicit val authenticated: Authenticated = authenticate
 
     koulutusService.get(KoulutusOid(params("oid")))
+      .map { koulutus =>
+        Ok(koulutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(koulutus)))
+      }
   }
 
 }

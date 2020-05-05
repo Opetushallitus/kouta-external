@@ -4,7 +4,7 @@ import fi.oph.kouta.external.domain.oid.ToteutusOid
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.ToteutusService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.FutureSupport
+import org.scalatra.{FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,6 +47,9 @@ class ToteutusServlet(toteutusService: ToteutusService)
     implicit val authenticated: Authenticated = authenticate
 
     toteutusService.get(ToteutusOid(params("oid")))
+      .map { toteutus =>
+        Ok(toteutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(toteutus)))
+      }
   }
 
 }

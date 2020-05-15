@@ -27,7 +27,7 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
 
   protected def createLastModifiedHeader[E <: Perustiedot[_, E]](entity: E): String = {
     // Oletetaan, että modified on Helsingin ajassa, kun sen mukana ei ole aikavyöhyketietoa
-    val instant = entity.modified.get.atZone(ZoneId.of("Europe/Helsinki")).toInstant
+    val instant = entity.modified.get.value.atZone(ZoneId.of("Europe/Helsinki")).toInstant
     renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1))
   }
 

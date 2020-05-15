@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
+import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, Kielistetty}
 
 case class HakukohdeIndexed(
@@ -40,7 +40,7 @@ case class HakukohdeIndexed(
     muokkaaja: Muokkaaja,
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime],
+    modified: Option[Modified],
     toteutus: Option[Tarjoajat]
 ) {
   def toHakukohde: Hakukohde = Hakukohde(

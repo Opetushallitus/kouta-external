@@ -1,9 +1,7 @@
 package fi.oph.kouta.external.domain
 
-import java.time.LocalDateTime
-
-import fi.oph.kouta.domain.{Julkaisutila, Kieli}
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid, UserOid}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -163,7 +161,7 @@ case class Toteutus(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) extends PerustiedotWithOid[ToteutusOid, Toteutus] {
   override def withMuokkaaja(muokkaaja: UserOid): Toteutus = copy(muokkaaja = muokkaaja)
 }

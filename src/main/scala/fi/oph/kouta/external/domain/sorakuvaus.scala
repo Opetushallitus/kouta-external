@@ -1,10 +1,9 @@
 package fi.oph.kouta.external.domain
 
-import java.time.LocalDateTime
 import java.util.UUID
 
 import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
-import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
@@ -83,7 +82,7 @@ case class Sorakuvaus(
     metadata: Option[SorakuvausMetadata],
     organisaatioOid: OrganisaatioOid,
     muokkaaja: UserOid,
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) extends PerustiedotWithId[Sorakuvaus] with AuthorizableMaybeJulkinen[Sorakuvaus] {
   override def withMuokkaaja(muokkaaja: UserOid): Sorakuvaus = copy(muokkaaja = muokkaaja)
 }

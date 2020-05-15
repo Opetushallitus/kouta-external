@@ -1,9 +1,7 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.time.LocalDateTime
-
-import fi.oph.kouta.domain.oid._
 import fi.oph.kouta.domain._
+import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.domain._
 
 case class KoulutusIndexed(
@@ -22,7 +20,7 @@ case class KoulutusIndexed(
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
     ePerusteId: Option[Long],
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) {
   def toKoulutus: Koulutus = Koulutus(
     oid = oid,

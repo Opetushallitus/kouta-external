@@ -4,6 +4,7 @@ import java.util.UUID
 
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegrationSpec}
 import fi.oph.kouta.external.servlet.KoutaServlet
+import fi.oph.kouta.TestOids._
 
 trait GenericGetTests[E, ID] {
   this: KoutaIntegrationSpec with AccessControlSpec =>
@@ -57,8 +58,8 @@ trait GenericGetTests[E, ID] {
       get(existingId, crudSessionIds(ParentOid))
     }
 
-    it should "deny a user with only access to a descendant organization" in {
-      get(existingId, crudSessionIds(GrandChildOid), 403)
+    it should s"allow a user with only access to a descendant organization to read the $entityName" in {
+      get(existingId, crudSessionIds(GrandChildOid))
     }
 
     it should "deny a user with the wrong role" in {

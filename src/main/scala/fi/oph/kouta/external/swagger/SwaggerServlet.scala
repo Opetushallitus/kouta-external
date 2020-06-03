@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.swagger
 
 import fi.oph.kouta.external.servlet.KoutaServlet
+import fi.oph.kouta.swagger.SwaggerModel
 import org.reflections.Reflections
 import org.scalatra.ScalatraServlet
 
@@ -86,7 +87,7 @@ class SwaggerServlet extends ScalatraServlet {
   }
 
   private def getModelAnnotations: String = {
-    val reflections = new Reflections("fi.oph.kouta.external")
+    val reflections = new Reflections("fi.oph.kouta")
 
     reflections
       .getTypesAnnotatedWith(classOf[SwaggerModel])

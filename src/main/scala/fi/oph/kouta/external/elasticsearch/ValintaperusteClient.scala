@@ -16,6 +16,7 @@ class ValintaperusteClient(val client: ElasticClient) extends ElasticsearchClien
 
   def getValintaperuste(id: UUID): Future[Valintaperuste] =
     getItem(id.toString)
+      .map(debugJson)
       .map(_.to[ValintaperusteIndexed])
       .map(_.toValintaperuste)
 }

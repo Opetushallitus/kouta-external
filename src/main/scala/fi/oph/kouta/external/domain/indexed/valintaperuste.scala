@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
+import fi.oph.kouta.domain.{Amm, Julkaisutila, Kieli, Koulutustyyppi}
 
 case class ValintaperusteIndexed(
     id: Option[UUID],
@@ -52,10 +52,9 @@ sealed trait ValintaperusteMetadataIndexed {
 }
 
 case class AmmatillinenValintaperusteMetadataIndexed(
-    tyyppi: Koulutustyyppi = Koulutustyyppi.Amm,
+    tyyppi: Koulutustyyppi = Amm,
     valintatavat: Seq[ValintatapaIndexed],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
-    osaamistausta: Seq[KoodiUri],
     kuvaus: Kielistetty
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =

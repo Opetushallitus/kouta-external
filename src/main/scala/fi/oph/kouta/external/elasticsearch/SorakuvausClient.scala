@@ -16,6 +16,7 @@ class SorakuvausClient(val client: ElasticClient) extends ElasticsearchClient wi
 
   def getSorakuvaus(id: UUID): Future[Sorakuvaus] =
     getItem(id.toString)
+      .map(debugJson)
       .map(_.to[SorakuvausIndexed])
       .map(_.toSorakuvaus)
 }

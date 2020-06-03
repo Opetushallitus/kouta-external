@@ -1,9 +1,10 @@
 package fi.oph.kouta.external.integration
 
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain.Toteutus
-import fi.oph.kouta.external.domain.oid.{KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.security.Role
 
 class ToteutusSpec extends ToteutusFixture with KoulutusFixture with AccessControlSpec with GenericGetTests[Toteutus, ToteutusOid] {
 

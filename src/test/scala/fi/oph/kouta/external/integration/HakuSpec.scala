@@ -3,11 +3,12 @@ package fi.oph.kouta.external.integration
 import java.time.Instant
 import java.util.UUID
 
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
-import fi.oph.kouta.external.domain.oid.HakuOid
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.security.Role
 
 class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
 
@@ -35,6 +36,7 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
 
   getTests()
 
+/*
   "Search by Ataru ID" should "find haku based on Ataru ID" in {
     val haut = get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1", defaultSessionId)
 
@@ -96,6 +98,7 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
   it should "deny indexer access" in {
     get(s"$HakuPath/search?ataruId=$ataruId1", indexerSessionId, 403)
   }
+ */
 
   "Create haku" should "create a haku" in {
     mockCreateHaku(haku(ParentOid), "1.2.246.562.29.123456789")

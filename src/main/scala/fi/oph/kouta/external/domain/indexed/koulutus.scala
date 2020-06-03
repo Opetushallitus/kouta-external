@@ -2,9 +2,9 @@ package fi.oph.kouta.external.domain.indexed
 
 import java.time.LocalDateTime
 
+import fi.oph.kouta.domain.oid._
+import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.external.domain.enums._
-import fi.oph.kouta.external.domain.oid._
 
 case class KoulutusIndexed(
     oid: Option[KoulutusOid],
@@ -16,10 +16,12 @@ case class KoulutusIndexed(
     nimi: Kielistetty,
     metadata: Option[KoulutusMetadataIndexed],
     julkinen: Boolean,
+    esikatselu: Boolean = true,
     muokkaaja: Muokkaaja,
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
+    ePerusteId: Option[Long],
     modified: Option[LocalDateTime]
 ) {
   def toKoulutus: Koulutus = Koulutus(
@@ -36,6 +38,7 @@ case class KoulutusIndexed(
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
     teemakuva = teemakuva,
+    ePerusteId = ePerusteId,
     modified = modified
   )
 }
@@ -50,10 +53,10 @@ sealed trait KoulutusMetadataIndexed {
 }
 
 case class AmmatillinenKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
-    kuvaus: Kielistetty,
-    lisatiedot: Seq[LisatietoIndexed],
-    koulutusala: Seq[KoodiUri]
+    tyyppi: Koulutustyyppi = Amm,
+    kuvaus: Kielistetty = Map.empty,
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    koulutusala: Seq[KoodiUri] = Seq.empty
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: AmmatillinenKoulutusMetadata =
     AmmatillinenKoulutusMetadata(
@@ -71,10 +74,10 @@ trait KorkeakoulutusKoulutusMetadataIndexed extends KoulutusMetadataIndexed {
 }
 
 case class YliopistoKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
-    kuvaus: Kielistetty,
-    lisatiedot: Seq[LisatietoIndexed],
-    koulutusala: Seq[KoodiUri],
+    tyyppi: Koulutustyyppi = Yo,
+    kuvaus: Kielistetty = Map.empty,
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    koulutusala: Seq[KoodiUri] = Seq.empty,
     tutkintonimike: Seq[KoodiUri],
     opintojenLaajuus: Option[KoodiUri],
     kuvauksenNimi: Kielistetty
@@ -91,10 +94,10 @@ case class YliopistoKoulutusMetadataIndexed(
 }
 
 case class AmmattikorkeakouluKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
-    kuvaus: Kielistetty,
-    lisatiedot: Seq[LisatietoIndexed],
-    koulutusala: Seq[KoodiUri],
+    tyyppi: Koulutustyyppi = Amk,
+    kuvaus: Kielistetty = Map.empty,
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    koulutusala: Seq[KoodiUri] = Seq.empty,
     tutkintonimike: Seq[KoodiUri],
     opintojenLaajuus: Option[KoodiUri],
     kuvauksenNimi: Kielistetty

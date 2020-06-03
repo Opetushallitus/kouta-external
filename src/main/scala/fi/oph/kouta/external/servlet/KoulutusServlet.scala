@@ -1,9 +1,9 @@
 package fi.oph.kouta.external.servlet
 
-import fi.oph.kouta.external.domain.oid.KoulutusOid
-import fi.oph.kouta.external.security.Authenticated
+import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.service.KoulutusService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext

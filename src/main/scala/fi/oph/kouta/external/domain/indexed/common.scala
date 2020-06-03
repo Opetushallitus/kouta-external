@@ -3,7 +3,7 @@ package fi.oph.kouta.external.domain.indexed
 import java.util.UUID
 
 import fi.oph.kouta.external.domain.{Ajanjakso, Kielistetty, Lisatieto, Osoite, Valintakoe, Valintakoetilaisuus}
-import fi.oph.kouta.external.domain.oid.{OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
 
 case class Muokkaaja(oid: UserOid)
 

@@ -21,7 +21,7 @@
 
         <!-- Utility properties -->
         <scala-utils.version>0.0.1-SNAPSHOT</scala-utils.version>
-        <json4s.version>3.6.7</json4s.version>
+        <json4s.version>3.7.0-M4</json4s.version>
         <jackson.version>2.9.9</jackson.version>
         <logback-access.version>1.2.3</logback-access.version>
 
@@ -46,8 +46,8 @@
         <jetty.version>9.4.17.v20190418</jetty.version>
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
         <kouta-indeksoija.version>0.5.0-KTO-652-SNAPSHOT</kouta-indeksoija.version>
-        <kouta-backend.version>0.26-SNAPSHOT</kouta-backend.version>
-        <mockserver-netty.version>5.5.0</mockserver-netty.version>
+        <kouta-backend.version>1.0.0-SNAPSHOT</kouta-backend.version>
+        <mockserver-netty.version>5.5.1</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>
 
         <!-- Plugin properties -->
@@ -62,6 +62,20 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-authorization</artifactId>
+            <version>${kouta-backend.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-authorization</artifactId>
+            <version>${kouta-backend.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>

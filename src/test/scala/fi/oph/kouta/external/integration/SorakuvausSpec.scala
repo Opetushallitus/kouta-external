@@ -2,9 +2,10 @@ package fi.oph.kouta.external.integration
 
 import java.util.UUID
 
+import fi.oph.kouta.TestOids._
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, SorakuvausFixture}
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.security.Role
 
 class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec with GenericGetTests[Sorakuvaus, UUID] {
 

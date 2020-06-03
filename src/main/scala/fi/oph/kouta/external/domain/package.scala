@@ -3,8 +3,8 @@ package fi.oph.kouta.external
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.Kieli
-import fi.oph.kouta.external.swagger.SwaggerModel
+import fi.oph.kouta.domain.Kieli
+import fi.oph.kouta.swagger.SwaggerModel
 
 package object domain {
 

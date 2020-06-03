@@ -3,7 +3,7 @@ package fi.oph.kouta.external.domain.indexed
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.LiitteenToimitustapa
+import fi.oph.kouta.domain.LiitteenToimitustapa
 import fi.oph.kouta.external.domain.{Kielistetty, Liite, LiitteenToimitusosoite}
 
 case class LiiteIndexed(

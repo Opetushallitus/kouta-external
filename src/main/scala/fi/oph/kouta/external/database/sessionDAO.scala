@@ -3,7 +3,7 @@ package fi.oph.kouta.external.database
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-import fi.oph.kouta.external.security.{Authority, CasSession, ServiceTicket, Session}
+import fi.oph.kouta.security.{Authority, CasSession, ServiceTicket, Session}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 

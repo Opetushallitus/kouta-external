@@ -3,20 +3,29 @@ package fi.oph.kouta.external.integration.fixture
 import java.time.Instant
 import java.util.UUID
 
-import fi.oph.kouta.domain.{Ataru, EiSähköistä}
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
+import fi.oph.kouta.domain.{Ataru, EiSähköistä, Julkaisutila}
 import fi.oph.kouta.external.TestData.JulkaistuHaku
+import fi.oph.kouta.external._
 import fi.oph.kouta.external.domain.Haku
-import fi.oph.kouta.external.domain.enums.Julkaisutila
-import fi.oph.kouta.external.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.elasticsearch.HakuClient
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.servlet.HakuServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, MockKoutaClient, OrganisaatioServiceMock, TempElasticClient}
 
 trait HakuFixture extends KoutaIntegrationSpec {
+  this: AccessControlSpec =>
   val HakuPath = "/haku"
 
-  addServlet(new HakuServlet(new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient)), HakuPath)
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    val urlProperties = KoutaConfigurationFactory.configuration.urlProperties
+    val organisaatioClient = new OrganisaatioClient(urlProperties, "kouta-external")
+    val koutaClient = new MockKoutaClient(urlProperties)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioClient)
+    addServlet(new HakuServlet(hakuService), HakuPath)
+  }
 
   val haku = JulkaistuHaku
 
@@ -51,15 +60,15 @@ trait HakuFixture extends KoutaIntegrationSpec {
     update(HakuPath, haku, ifUnmodifiedSince, sessionId)
 
   def addMockHaku(
-      hakuOid: HakuOid,
-      organisaatioOid: OrganisaatioOid = OrganisaatioServiceMock.ChildOid,
-      hakulomakeAtaruId: Option[UUID] = None
-  ): Unit = {
+                   hakuOid: HakuOid,
+                   organisaatioOid: OrganisaatioOid = ChildOid,
+                   hakulomakeAtaruId: Option[UUID] = None
+                 ): Unit = {
     val hakulomakeFields: Map[String, String] = hakulomakeAtaruId match {
       case None =>
         Map(
           KoutaFixtureTool.HakulomaketyyppiKey -> EiSähköistä.toString,
-          KoutaFixtureTool.HakulomakeIdKey     -> UUID.randomUUID().toString
+          KoutaFixtureTool.HakulomakeIdKey -> UUID.randomUUID().toString
         )
       case Some(id) =>
         Map(KoutaFixtureTool.HakulomaketyyppiKey -> Ataru.toString, KoutaFixtureTool.HakulomakeIdKey -> id.toString)

@@ -2,10 +2,12 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.external.{MockSecurityContext, OrganisaatioServiceMock}
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.security._
+import fi.oph.kouta.external.{KoutaConfigurationFactory, MockSecurityContext}
+import fi.oph.kouta.mocks.OrganisaatioServiceMock
+import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
 import scala.collection.mutable
@@ -21,8 +23,13 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+
     startServiceMocking()
     addTestSessions()
+
+    urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties
+      .addOverride("host.virkailija", s"localhost:$mockPort")
+      .addOverride("host.kouta-backend", s"http://localhost:$mockPort"))
 
     mockOrganisaatioResponses(EvilChildOid, ChildOid, ParentOid, GrandChildOid)
     mockSingleOrganisaatioResponses(LonelyOid)

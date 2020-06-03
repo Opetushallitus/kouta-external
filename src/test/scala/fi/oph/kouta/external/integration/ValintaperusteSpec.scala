@@ -2,9 +2,10 @@ package fi.oph.kouta.external.integration
 
 import java.util.UUID
 
+import fi.oph.kouta.TestOids._
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, ValintaperusteFixture}
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.security.Role
 
 class ValintaperusteSpec
     extends ValintaperusteFixture

@@ -5,7 +5,7 @@ import java.time.{Instant, LocalDateTime, OffsetDateTime, ZoneId}
 import java.util.UUID
 
 import fi.oph.kouta.external.domain.Ajanjakso
-import fi.oph.kouta.external.domain.oid._
+import fi.oph.kouta.domain.oid._
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.utils.slf4j.Logging
 import slick.jdbc.{PositionedParameters, SetParameter}

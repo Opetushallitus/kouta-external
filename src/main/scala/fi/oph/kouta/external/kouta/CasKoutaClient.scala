@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
@@ -95,7 +96,7 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
       ifUnmodifiedSince: Instant
   ): Future[Either[(Int, String), UpdateResponse]] = {
     val headers = Headers(
-      Header(KoutaServlet.IfUnmodifiedSinceHeader, KoutaServlet.renderHttpDate(ifUnmodifiedSince)),
+      Header(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince)),
       Header("Content-Type", "application/json")
     )
     fetch(Method.POST, url, body, headers).map {

@@ -2,11 +2,11 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
-import fi.oph.kouta.external.domain.oid.HakuOid
-import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{ActionResult, FutureSupport, NotFound, Ok}
 
 import scala.concurrent.ExecutionContext
@@ -47,11 +47,12 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     hakuService.get(HakuOid(params("oid")))
-      .map { haku =>
-        Ok(haku, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(haku)))
+      .map { case (haku, modified) =>
+        Ok(haku, headers = createLastModifiedHeader(modified))
       }
   }
 
+  /*
   registerPath(
     "/haku/search",
     """    get:
@@ -92,6 +93,7 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
         }
     }
   }
+   */
 
   registerPath( "/haku/",
     """    post:

@@ -2,10 +2,12 @@ package fi.oph.kouta.external.domain
 
 import java.time.LocalDateTime
 import java.util.UUID
-import fi.oph.kouta.external.domain.oid._
-import fi.oph.kouta.external.domain.enums._
 
-sealed trait Perustiedot{
+import fi.oph.kouta.domain.oid._
+import fi.oph.kouta.domain.{Julkaisutila, Kieli}
+import fi.oph.kouta.security.AuthorizableEntity
+
+sealed trait Perustiedot[ID, T] extends AuthorizableEntity[T] {
   val tila: Julkaisutila
   val nimi: Kielistetty
   val muokkaaja: UserOid
@@ -14,10 +16,10 @@ sealed trait Perustiedot{
   val modified: Option[LocalDateTime]
 }
 
-abstract class PerustiedotWithOid extends Perustiedot {
+abstract class PerustiedotWithOid[ID <: Oid, T] extends Perustiedot[ID, T] {
   val oid: Option[Oid]
 }
 
-abstract class PerustiedotWithId extends Perustiedot {
+abstract class PerustiedotWithId[T] extends Perustiedot[UUID, T] {
   val id: Option[UUID]
 }

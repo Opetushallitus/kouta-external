@@ -2,13 +2,13 @@ package fi.oph.kouta.external.domain.indexed
 
 import java.time.LocalDateTime
 
+import fi.oph.kouta.domain._
+import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
-import fi.oph.kouta.external.domain.oid.{KoulutusOid, ToteutusOid}
 
 case class ToteutusIndexed(
     oid: Option[ToteutusOid],
-    koulutusOid: KoulutusOid,
+    koulutusOid: Option[KoulutusOid],
     tila: Julkaisutila,
     tarjoajat: List[Organisaatio],
     nimi: Kielistetty,
@@ -19,9 +19,9 @@ case class ToteutusIndexed(
     teemakuva: Option[String],
     modified: Option[LocalDateTime]
 ) {
-  def toToteutus = Toteutus(
+  def toToteutus: Toteutus = Toteutus(
     oid = oid,
-    koulutusOid = koulutusOid,
+    koulutusOid = koulutusOid.get,
     tila = tila,
     tarjoajat = tarjoajat.map(_.oid),
     nimi = nimi,
@@ -32,58 +32,6 @@ case class ToteutusIndexed(
     teemakuva = teemakuva,
     modified = modified
   )
-}
-
-case class ToteutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
-    kuvaus: Kielistetty,
-    osaamisalat: List[AmmatillinenOsaamisalaIndexed],
-    opetus: Option[OpetusIndexed],
-    asiasanat: List[Keyword],
-    ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) {
-  def toToteutusMetadata: ToteutusMetadata = tyyppi match {
-    case Koulutustyyppi.Amm =>
-      AmmatillinenToteutusMetadata(
-        tyyppi = tyyppi,
-        kuvaus = kuvaus,
-        osaamisalat = osaamisalat.map(_.toAmmatillinenOsaamisala),
-        opetus = opetus.map(_.toOpetus),
-        asiasanat = asiasanat,
-        ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilot = yhteyshenkilot
-      )
-    case Koulutustyyppi.Yo =>
-      YliopistoToteutusMetadata(
-        tyyppi = tyyppi,
-        kuvaus = kuvaus,
-        opetus = opetus.map(_.toOpetus),
-        asiasanat = asiasanat,
-        ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilot = yhteyshenkilot,
-        alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
-        ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
-      )
-    case Koulutustyyppi.Amk =>
-      AmmattikorkeakouluToteutusMetadata(
-        tyyppi = tyyppi,
-        kuvaus = kuvaus,
-        opetus = opetus.map(_.toOpetus),
-        asiasanat = asiasanat,
-        ammattinimikkeet = ammattinimikkeet,
-        yhteyshenkilot = yhteyshenkilot,
-        alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
-        ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
-      )
-    case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
-  }
-}
-
-case class AmmatillinenOsaamisalaIndexed(koodi: KoodiUri, linkki: Kielistetty, otsikko: Kielistetty) {
-  def toAmmatillinenOsaamisala = AmmatillinenOsaamisala(koodiUri = koodi.koodiUri, linkki = linkki, otsikko = otsikko)
 }
 
 case class OpetusIndexed(
@@ -99,7 +47,7 @@ case class OpetusIndexed(
     koulutuksenTarkkaAlkamisaika: Boolean,
     koulutuksenAlkamispaivamaara: Option[LocalDateTime],
     koulutuksenPaattymispaivamaara: Option[LocalDateTime],
-    koulutuksenAlkamiskausi: Option[String],
+    koulutuksenAlkamiskausi: Option[KoodiUri],
     koulutuksenAlkamisvuosi: Option[Int],
     lisatiedot: Seq[LisatietoIndexed],
     onkoStipendia: Option[Boolean],
@@ -119,11 +67,97 @@ case class OpetusIndexed(
     koulutuksenTarkkaAlkamisaika = koulutuksenTarkkaAlkamisaika,
     koulutuksenAlkamispaivamaara = koulutuksenAlkamispaivamaara,
     koulutuksenPaattymispaivamaara = koulutuksenPaattymispaivamaara,
-    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi,
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.koodiUri),
     koulutuksenAlkamisvuosi = koulutuksenAlkamisvuosi,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     onkoStipendia = onkoStipendia,
     stipendinMaara = stipendinMaara,
     stipendinKuvaus = stipendinKuvaus
   )
+}
+
+trait ToteutusMetadataIndexed {
+  val tyyppi: Koulutustyyppi
+  val kuvaus: Kielistetty
+  val opetus: Option[OpetusIndexed]
+  val asiasanat: List[Keyword]
+  val ammattinimikkeet: List[Keyword]
+  val yhteyshenkilot: Seq[Yhteyshenkilo]
+
+  def toToteutusMetadata: ToteutusMetadata
+}
+
+trait KorkeakoulutusToteutusMetadata extends ToteutusMetadataIndexed {
+  val alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+  val ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+}
+
+case class AmmatillinenToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    osaamisalat: List[AmmatillinenOsaamisalaIndexed],
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
+) extends ToteutusMetadataIndexed {
+  def toToteutusMetadata: AmmatillinenToteutusMetadata = AmmatillinenToteutusMetadata(
+    tyyppi = tyyppi,
+    kuvaus = kuvaus,
+    osaamisalat = osaamisalat.map(_.toAmmatillinenOsaamisala),
+    opetus = opetus.map(_.toOpetus),
+    asiasanat = asiasanat,
+    ammattinimikkeet = ammattinimikkeet,
+    yhteyshenkilot = yhteyshenkilot
+  )
+}
+
+case class AmmatillinenOsaamisalaIndexed(koodi: KoodiUri, linkki: Kielistetty, otsikko: Kielistetty) {
+  def toAmmatillinenOsaamisala: AmmatillinenOsaamisala =
+    AmmatillinenOsaamisala(koodiUri = koodi.koodiUri, linkki = linkki, otsikko = otsikko)
+}
+
+case class AmmattikorkeakouluToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
+    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+) extends KorkeakoulutusToteutusMetadata {
+  def toToteutusMetadata: AmmattikorkeakouluToteutusMetadata = AmmattikorkeakouluToteutusMetadata(
+    tyyppi = tyyppi,
+    kuvaus = kuvaus,
+    opetus = opetus.map(_.toOpetus),
+    asiasanat = asiasanat,
+    ammattinimikkeet = ammattinimikkeet,
+    yhteyshenkilot = yhteyshenkilot,
+    alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
+    ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
+  )
+}
+
+case class YliopistoToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
+    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+) extends ToteutusMetadataIndexed {
+  def toToteutusMetadata: YliopistoToteutusMetadata =
+    YliopistoToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
+      ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
+    )
 }

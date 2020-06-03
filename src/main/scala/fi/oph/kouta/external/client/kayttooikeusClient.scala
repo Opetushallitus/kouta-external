@@ -1,11 +1,15 @@
 package fi.oph.kouta.external.client
 
+import fi.oph.kouta.client.HttpClient
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.security._
+import fi.oph.kouta.security.Authority
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.jackson.JsonMethods.parse
 
-object KayttooikeusClient extends KayttooikeusClient
+object KayttooikeusClient extends KayttooikeusClient {
+  override def callerId: String = "kouta-external"
+}
 
 trait KayttooikeusClient extends HttpClient with Logging {
 

@@ -61,4 +61,11 @@ trait ElasticsearchClient extends Logging {
         logger.debug(s"Elasticsearch response: [{}]", response.result.hits.hits.map(_.sourceAsString).mkString(","))
         Future.successful(response.result)
     }
+
+  private val debugJsonEnabled = false
+
+  protected def debugJson(response: GetResponse): GetResponse = {
+    if(debugJsonEnabled) logger.info(s"Elastic search response: ${response.sourceAsString}")
+    response
+  }
 }

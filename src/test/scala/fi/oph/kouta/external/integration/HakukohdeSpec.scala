@@ -2,10 +2,11 @@ package fi.oph.kouta.external.integration
 
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.Hakukohde
-import fi.oph.kouta.external.domain.oid.{HakuOid, HakukohdeOid, KoulutusOid, ToteutusOid}
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.integration.fixture._
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.external.servlet.KoutaServlet
+import fi.oph.kouta.security.Role
 
 class HakukohdeSpec
     extends HakukohdeFixture
@@ -13,14 +14,14 @@ class HakukohdeSpec
     with KoulutusFixture
     with ToteutusFixture
     with ValintaperusteFixture
-    with AccessControlSpec
-    with GenericGetTests[Hakukohde, HakukohdeOid] {
+    with AccessControlSpec {
 
-  override val roleEntities                = Seq(Role.Hakukohde)
-  override val getPath: String             = HakukohdePath
-  override val entityName: String          = "hakukohde"
-  override val existingId: HakukohdeOid    = HakukohdeOid("1.2.246.562.20.00000000000000000009")
-  override val nonExistingId: HakukohdeOid = HakukohdeOid("1.2.246.562.20.0")
+  override val roleEntities       = Seq(Role.Hakukohde)
+  val getPath: String             = HakukohdePath
+  val entityName: String          = "hakukohde"
+  val index: String               = s"$entityName-kouta"
+  val existingId: HakukohdeOid    = HakukohdeOid("1.2.246.562.20.00000000000000000009")
+  val nonExistingId: HakukohdeOid = HakukohdeOid("1.2.246.562.20.0")
 
   val hakuOid          = HakuOid("1.2.246.562.29.00000000000000000010")
   val toteutusId       = ToteutusOid("1.2.246.562.17.00000000000000000010")
@@ -41,5 +42,53 @@ class HakukohdeSpec
     addMockHakukohde(existingId, ChildOid, hakuOid, toteutusId, valintaperusteId)
   }
 
-  getTests()
+  s"GET /hakukohde/:id" should s"get hakukohde from elastic search" in {
+    get(existingId, defaultSessionId)
+  }
+
+  it should s"have ${KoutaServlet.LastModifiedHeader} header in the response" in {
+    get(s"$getPath/$existingId", headers = Seq(defaultSessionHeader)) {
+      status should equal(200)
+      header.get(KoutaServlet.LastModifiedHeader) should not be empty
+      KoutaServlet.parseHttpDate(header(KoutaServlet.LastModifiedHeader)).toOption should not be empty
+    }
+  }
+
+  it should s"return 404 if $entityName not found" in {
+    get(s"$getPath/$nonExistingId", headers = Seq(defaultSessionHeader)) {
+      status should equal(404)
+      body should include(s"Didn't find id $nonExistingId from $index")
+    }
+  }
+
+  it should "return 401 without a valid session" in {
+    get(s"$getPath/$nonExistingId") {
+      status should equal(401)
+      body should include("Unauthorized")
+    }
+  }
+
+  it should s"allow a user of the $entityName organization to read the $entityName" in {
+    get(existingId, crudSessionIds(ChildOid))
+  }
+
+  it should s"deny a user without access to the $entityName organization" in {
+    get(existingId, crudSessionIds(LonelyOid), 403)
+  }
+
+  it should s"allow a user of an ancestor organization to read the $entityName" in {
+    get(existingId, crudSessionIds(ParentOid))
+  }
+
+  it should s"deny a user with only access to a descendant organization" in {
+    get(existingId, crudSessionIds(GrandChildOid), 403)
+  }
+
+  it should "deny a user with the wrong role" in {
+    get(existingId, otherRoleSessionId, 403)
+  }
+
+  it should "deny indexer access" in {
+    get(existingId, indexerSessionId, 403)
+  }
 }

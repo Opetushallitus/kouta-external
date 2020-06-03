@@ -1,9 +1,10 @@
 package fi.oph.kouta.external.integration
 
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.domain.Koulutus
-import fi.oph.kouta.external.domain.oid.KoulutusOid
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture}
-import fi.oph.kouta.external.security.Role
+import fi.oph.kouta.security.Role
 
 class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGetTests[Koulutus, KoulutusOid] {
 
@@ -15,6 +16,8 @@ class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGe
 
   override def beforeAll(): Unit = {
     super.beforeAll()
+
+    println("ASDF KoulutusSpec beforeAll()")
     addMockKoulutus(existingId, ChildOid)
   }
 

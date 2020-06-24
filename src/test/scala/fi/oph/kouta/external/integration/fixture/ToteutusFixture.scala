@@ -27,11 +27,16 @@ trait ToteutusFixture extends KoutaIntegrationSpec {
   def get(oid: ToteutusOid, sessionId: UUID, errorStatus: Int): Unit =
     get(s"$ToteutusPath/$oid", sessionId, errorStatus)
 
-  def addMockToteutus(toteutusOid: ToteutusOid, organisaatioOid: OrganisaatioOid, koulutusOid: KoulutusOid): Unit = {
+  def addMockToteutus(
+      toteutusOid: ToteutusOid,
+      organisaatioOid: OrganisaatioOid,
+      koulutusOid: KoulutusOid,
+      modifier: Map[String, String] => Map[String, String] = identity
+  ): Unit = {
     val toteutus = KoutaFixtureTool.DefaultToteutusScala +
       (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s) +
       (KoutaFixtureTool.KoulutusOidKey  -> koulutusOid.s)
-    KoutaFixtureTool.addToteutus(toteutusOid.s, toteutus)
+    KoutaFixtureTool.addToteutus(toteutusOid.s, modifier(toteutus))
     indexToteutus(toteutusOid)
   }
 }

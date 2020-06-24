@@ -26,9 +26,13 @@ trait SorakuvausFixture extends KoutaIntegrationSpec {
 
   def get(id: UUID, sessionId: UUID, errorStatus: Int): Unit = get(s"$SorakuvausPath/$id", sessionId, errorStatus)
 
-  def addMockSorakuvaus(id: UUID, organisaatioOid: OrganisaatioOid): Unit = {
+  def addMockSorakuvaus(
+      id: UUID,
+      organisaatioOid: OrganisaatioOid,
+      modifier: Map[String, String] => Map[String, String] = identity
+  ): Unit = {
     val sorakuvaus = KoutaFixtureTool.DefaultSorakuvausScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
-    KoutaFixtureTool.addSorakuvaus(id.toString, sorakuvaus)
+    KoutaFixtureTool.addSorakuvaus(id.toString, modifier(sorakuvaus))
     indexSorakuvaus(id)
   }
 }

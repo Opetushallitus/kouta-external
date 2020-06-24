@@ -4,6 +4,7 @@ import java.util.UUID
 
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, KoulutusOid, ToteutusOid}
+import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.integration.fixture._
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.security.Role
@@ -29,6 +30,9 @@ class HakukohdeSpec
   val valintaperusteId = UUID.fromString("fa7fcb96-3f80-4162-8d19-5b74731cf90c")
   val sorakuvausId     = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
 
+  val toteutusWithTarjoajaOid  = ToteutusOid("1.2.246.562.17.00000000000000000014")
+  val hakukohdeWithTarjoajaOid = HakukohdeOid("1.2.246.562.20.00000000000000000014")
+
   override def beforeAll(): Unit = {
     super.beforeAll()
 
@@ -40,6 +44,9 @@ class HakukohdeSpec
     addMockValintaperuste(valintaperusteId, ChildOid, sorakuvausId)
 
     addMockHakukohde(existingId, ChildOid, hakuOid, toteutusId, valintaperusteId)
+
+    addMockToteutus(toteutusWithTarjoajaOid, LonelyOid, koulutusOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
+    addMockHakukohde(hakukohdeWithTarjoajaOid, LonelyOid, hakuOid, toteutusWithTarjoajaOid, valintaperusteId)
   }
 
   s"GET /hakukohde/:id" should s"get hakukohde from elastic search" in {
@@ -90,5 +97,17 @@ class HakukohdeSpec
 
   it should "deny indexer access" in {
     get(existingId, indexerSessionId, 403)
+  }
+
+  it should "allow the user of a tarjoaja organization of the toteutus" in {
+    get(hakukohdeWithTarjoajaOid, readSessionIds(ChildOid))
+  }
+
+  it should "allow the user of an ancestor of a tarjoaja organization of the toteutus" in {
+    get(hakukohdeWithTarjoajaOid, crudSessionIds(ParentOid))
+  }
+
+  it should "deny the user of a descendant of a tarjoaja organization of the toteutus" in {
+    get(hakukohdeWithTarjoajaOid, crudSessionIds(GrandChildOid), 403)
   }
 }

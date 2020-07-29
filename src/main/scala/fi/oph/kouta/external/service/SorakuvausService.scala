@@ -2,8 +2,8 @@ package fi.oph.kouta.external.service
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioClient
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.client.OrganisaatioService
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.elasticsearch.SorakuvausClient
 import fi.oph.kouta.security.Role.Indexer
@@ -15,9 +15,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object SorakuvausService extends SorakuvausService(SorakuvausClient, OrganisaatioClientImpl)
+object SorakuvausService extends SorakuvausService(SorakuvausClient, OrganisaatioServiceImpl)
 
-class SorakuvausService(sorakuvausClient: SorakuvausClient, val organisaatioClient: OrganisaatioClient)
+class SorakuvausService(sorakuvausClient: SorakuvausClient, val organisaatioService: OrganisaatioService)
     extends RoleEntityAuthorizationService[Sorakuvaus]
     with Logging {
 

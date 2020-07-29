@@ -30,7 +30,7 @@ trait KoutaBackendMock extends ServiceMocks with KoutaJsonFormats {
       .map(i => KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(i))
       .toMap
     mockPost(
-      key = key,
+      path = getMockPath(key),
       body = json,
       headers = headers,
       statusCode = responseStatus,
@@ -46,7 +46,7 @@ trait KoutaBackendMock extends ServiceMocks with KoutaJsonFormats {
       responseString: String
   ): Unit =
     mockCreate(
-      key = "kouta-backend.haku",
+      path = getMockPath("kouta-backend.haku"),
       json = session.map {
         case (sessionId, session) => Seq("authenticated" -> authenticated(sessionId, session))
       }.getOrElse(Seq()).toMap + ("haku" -> KoutaBackendConverters.convertHaku(haku)),
@@ -63,9 +63,9 @@ trait KoutaBackendMock extends ServiceMocks with KoutaJsonFormats {
   def mockCreateHaku(haku: Haku, responseStatus: Int, responseString: String): Unit =
     addCreateHakuMock(haku, responseStatus = responseStatus, responseString = responseString)
 
-  protected def mockCreate(key: String, json: AnyRef, responseStatus: Int, responseString: String): Unit =
+  protected def mockCreate(path: String, json: AnyRef, responseStatus: Int, responseString: String): Unit =
     mockPut(
-      key = key,
+      path = path,
       body = json,
       statusCode = responseStatus,
       responseString = responseString,

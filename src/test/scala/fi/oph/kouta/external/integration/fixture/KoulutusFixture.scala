@@ -3,21 +3,21 @@ package fi.oph.kouta.external.integration.fixture
 import java.util.UUID
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.client.OrganisaatioClient
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid}
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.external.service.KoulutusService
 import fi.oph.kouta.external.servlet.KoulutusServlet
-import fi.oph.kouta.external.{KoutaConfigurationFactory, KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 
-trait KoulutusFixture extends KoutaIntegrationSpec {
+trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val KoulutusPath = "/koulutus"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioClient = new OrganisaatioClient(KoutaConfigurationFactory.configuration.urlProperties, "kouta-external")
-    val koulutusService = new KoulutusService(new KoulutusClient(TempElasticClient.client), organisaatioClient)
+    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val koulutusService = new KoulutusService(new KoulutusClient(TempElasticClient.client), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

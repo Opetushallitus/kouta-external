@@ -20,7 +20,7 @@ kouta-external.elasticsearch.url={{kouta_external_elasticsearch_url}}
 
 host.virkailija={{host_virkailija}}
 kayttooikeus-service.userDetails.byUsername=http://{{host_alb_virkailija}}/kayttooikeus-service/userDetails/$1
-organisaatio-service.organisaatio.hierarkia=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/hierarkia/hae
+organisaatio-service.organisaatio.oid.jalkelaiset=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/$1/jalkelaiset
 root.organisaatio.oid=1.2.246.562.10.00000000001
 
 kouta-backend.service=https://{{host_virkailija}}/kouta-backend

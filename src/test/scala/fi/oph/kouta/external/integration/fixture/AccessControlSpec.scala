@@ -21,19 +21,20 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
 
   protected val roleEntities: Seq[RoleEntity] = Seq.empty
 
+  override def startServiceMocking(): Unit = {
+    super.startServiceMocking()
+    urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties
+      .addOverride("host.virkailija", s"localhost:$mockPort")
+      .addOverride("host.kouta-backend", s"http://localhost:$mockPort"))
+  }
+
   override def beforeAll(): Unit = {
     super.beforeAll()
 
     startServiceMocking()
     addTestSessions()
 
-    urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties
-      .addOverride("host.virkailija", s"localhost:$mockPort")
-      .addOverride("host.kouta-backend", s"http://localhost:$mockPort"))
-
-    mockOrganisaatioResponses(EvilChildOid, ChildOid, ParentOid, GrandChildOid)
-    mockSingleOrganisaatioResponses(LonelyOid)
-    mockOrganisaatioResponse(YoOid, responseFromResource("mpkk"))
+    mockOrganisaatioResponse()
   }
 
   override def afterAll(): Unit = {

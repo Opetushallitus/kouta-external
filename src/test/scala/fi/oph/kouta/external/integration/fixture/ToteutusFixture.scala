@@ -2,21 +2,21 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioClient
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid}
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
 import fi.oph.kouta.external.service.ToteutusService
 import fi.oph.kouta.external.servlet.ToteutusServlet
-import fi.oph.kouta.external.{KoutaConfigurationFactory, KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 
-trait ToteutusFixture extends KoutaIntegrationSpec {
+trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val ToteutusPath = "/toteutus"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioClient = new OrganisaatioClient(KoutaConfigurationFactory.configuration.urlProperties, "kouta-external")
-    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client), organisaatioClient)
+    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client), organisaatioService)
     addServlet(new ToteutusServlet(toteutusService), ToteutusPath)
   }
 

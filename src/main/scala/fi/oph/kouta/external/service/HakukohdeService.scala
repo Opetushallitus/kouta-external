@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.client.OrganisaatioService
 import fi.oph.kouta.domain.oid.HakukohdeOid
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.security.Role.Indexer
@@ -14,9 +14,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object HakukohdeService extends HakukohdeService(HakukohdeClient, OrganisaatioClientImpl)
+object HakukohdeService extends HakukohdeService(HakukohdeClient, OrganisaatioServiceImpl)
 
-class HakukohdeService(hakukohdeClient: HakukohdeClient, val organisaatioClient: OrganisaatioClient) extends RoleEntityAuthorizationService[Hakukohde] with Logging {
+class HakukohdeService(hakukohdeClient: HakukohdeClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Hakukohde] with Logging {
 
   override val roleEntity: RoleEntity = Role.Hakukohde
 

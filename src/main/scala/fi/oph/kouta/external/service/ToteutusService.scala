@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.client.OrganisaatioService
 import fi.oph.kouta.domain.oid.ToteutusOid
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
 import fi.oph.kouta.security.Role.Indexer
@@ -14,9 +14,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ToteutusService extends ToteutusService(ToteutusClient, OrganisaatioClientImpl)
+object ToteutusService extends ToteutusService(ToteutusClient, OrganisaatioServiceImpl)
 
-class ToteutusService(toteutusClient: ToteutusClient, val organisaatioClient: OrganisaatioClient) extends RoleEntityAuthorizationService[Toteutus] with Logging {
+class ToteutusService(toteutusClient: ToteutusClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Toteutus] with Logging {
 
   override val roleEntity: RoleEntity = Role.Toteutus
 

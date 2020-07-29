@@ -2,9 +2,9 @@ package fi.oph.kouta.external.service
 
 import java.time.Instant
 
-import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.client.OrganisaatioService
 import fi.oph.kouta.domain.oid.HakuOid
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
 import fi.oph.kouta.external.kouta.CasKoutaClient.KoutaResponse
@@ -18,9 +18,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object HakuService extends HakuService(HakuClient, CasKoutaClient, OrganisaatioClientImpl)
+object HakuService extends HakuService(HakuClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val organisaatioClient: OrganisaatioClient)
+class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val organisaatioService: OrganisaatioService)
   extends RoleEntityAuthorizationService[Haku]
     with Logging {
 

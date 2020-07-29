@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.client.OrganisaatioService
 import fi.oph.kouta.domain.oid.KoulutusOid
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.security.Role.Indexer
@@ -14,9 +14,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object KoulutusService extends KoulutusService(KoulutusClient, OrganisaatioClientImpl)
+object KoulutusService extends KoulutusService(KoulutusClient, OrganisaatioServiceImpl)
 
-class KoulutusService(koulutusClient: KoulutusClient, val organisaatioClient: OrganisaatioClient) extends RoleEntityAuthorizationService[Koulutus] with Logging {
+class KoulutusService(koulutusClient: KoulutusClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Koulutus] with Logging {
 
   override val roleEntity: RoleEntity = Role.Koulutus
 

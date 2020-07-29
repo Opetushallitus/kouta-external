@@ -2,8 +2,8 @@ package fi.oph.kouta.external.service
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioClient
-import fi.oph.kouta.external.client.OrganisaatioClientImpl
+import fi.oph.kouta.client.HttpClient
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.security.Role.Indexer
@@ -15,9 +15,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ValintaperusteService extends ValintaperusteService(ValintaperusteClient, OrganisaatioClientImpl)
+object ValintaperusteService extends ValintaperusteService(ValintaperusteClient, OrganisaatioServiceImpl)
 
-class ValintaperusteService(valintaperusteClient: ValintaperusteClient, val organisaatioClient: OrganisaatioClient)
+class ValintaperusteService(valintaperusteClient: ValintaperusteClient, val organisaatioService: OrganisaatioServiceImpl)
   extends RoleEntityAuthorizationService[Valintaperuste] with Logging {
 
   override val roleEntity: RoleEntity = Role.Valintaperuste

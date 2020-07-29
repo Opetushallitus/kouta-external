@@ -2,21 +2,21 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioClient
 import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.external.service.ValintaperusteService
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
-import fi.oph.kouta.external.{KoutaConfigurationFactory, KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 
-trait ValintaperusteFixture extends KoutaIntegrationSpec {
+trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val ValintaperustePath = "/valintaperuste"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioClient = new OrganisaatioClient(KoutaConfigurationFactory.configuration.urlProperties, "kouta-external")
-    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticClient.client), organisaatioClient)
+    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticClient.client), organisaatioService)
     addServlet(new ValintaperusteServlet(valintaperusteService), ValintaperustePath)
   }
 

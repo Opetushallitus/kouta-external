@@ -4,26 +4,25 @@ import java.time.Instant
 import java.util.UUID
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.client.OrganisaatioClient
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.domain.{Ataru, EiSähköistä, Julkaisutila}
 import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external._
+import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.servlet.HakuServlet
 
-trait HakuFixture extends KoutaIntegrationSpec {
+trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
   this: AccessControlSpec =>
   val HakuPath = "/haku"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val urlProperties = KoutaConfigurationFactory.configuration.urlProperties
-    val organisaatioClient = new OrganisaatioClient(urlProperties, "kouta-external")
-    val koutaClient = new MockKoutaClient(urlProperties)
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioClient)
+    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val koutaClient = new MockKoutaClient(urlProperties.get)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioService)
     addServlet(new HakuServlet(hakuService), HakuPath)
   }
 

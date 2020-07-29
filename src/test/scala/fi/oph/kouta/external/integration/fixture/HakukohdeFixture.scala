@@ -2,21 +2,21 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioClient
+import fi.oph.kouta.client.OrganisaatioServiceImpl
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.servlet.HakukohdeServlet
-import fi.oph.kouta.external.{KoutaConfigurationFactory, KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 
-trait HakukohdeFixture extends KoutaIntegrationSpec {
+trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val HakukohdePath = "/hakukohde"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioClient = new OrganisaatioClient(KoutaConfigurationFactory.configuration.urlProperties, "kouta-external")
-    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticClient.client), organisaatioClient)
+    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticClient.client), organisaatioService)
     addServlet(new HakukohdeServlet(hakukohdeService), HakukohdePath)
   }
 

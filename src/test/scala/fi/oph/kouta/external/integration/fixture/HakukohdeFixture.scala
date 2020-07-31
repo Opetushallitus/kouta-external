@@ -2,11 +2,10 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.client.OrganisaatioServiceImpl
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
-import fi.oph.kouta.external.service.HakukohdeService
+import fi.oph.kouta.external.service.{HakukohdeService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 

@@ -2,8 +2,6 @@ package fi.oph.kouta.external.service
 
 import java.util.UUID
 
-import fi.oph.kouta.client.HttpClient
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.security.Role.Indexer

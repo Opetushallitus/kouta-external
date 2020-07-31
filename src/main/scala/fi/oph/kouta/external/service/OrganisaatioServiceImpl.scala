@@ -1,8 +1,9 @@
-package fi.oph.kouta.external.client
+package fi.oph.kouta.external.service
 
-import fi.oph.kouta.client.{CachedOrganisaatioHierarkiaClient, OrganisaatioService}
+import fi.oph.kouta.client.CachedOrganisaatioHierarkiaClient
 import fi.oph.kouta.domain.oid.RootOrganisaatioOid
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.service.OrganisaatioService
 import fi.vm.sade.properties.OphProperties
 
 object OrganisaatioServiceImpl extends OrganisaatioServiceImpl(KoutaConfigurationFactory.configuration.urlProperties)

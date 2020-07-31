@@ -8,10 +8,9 @@ import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.domain.{Ataru, EiSähköistä, Julkaisutila}
 import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external._
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.service.HakuService
+import fi.oph.kouta.external.service.{HakuService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakuServlet
 
 trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {

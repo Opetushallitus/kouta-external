@@ -4,10 +4,9 @@ import java.util.UUID
 
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid}
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
-import fi.oph.kouta.external.service.KoulutusService
+import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
 import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 

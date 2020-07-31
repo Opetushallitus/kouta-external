@@ -3,10 +3,9 @@ package fi.oph.kouta.external.integration.fixture
 import java.util.UUID
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.elasticsearch.SorakuvausClient
-import fi.oph.kouta.external.service.SorakuvausService
+import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, SorakuvausService}
 import fi.oph.kouta.external.servlet.SorakuvausServlet
 import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 

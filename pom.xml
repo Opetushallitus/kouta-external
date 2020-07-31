@@ -66,13 +66,28 @@
     <dependencies>
         <dependency>
             <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-authorization</artifactId>
+            <artifactId>kouta-common</artifactId>
             <version>${kouta-backend.version}</version>
         </dependency>
 
         <dependency>
             <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-authorization</artifactId>
+            <artifactId>kouta-common</artifactId>
+            <version>${kouta-backend.version}</version>
+            <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-backend</artifactId>
+            <version>${kouta-backend.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-backend</artifactId>
             <version>${kouta-backend.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
@@ -240,20 +255,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-backend</artifactId>
-            <version>${kouta-backend.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-backend</artifactId>
-            <version>${kouta-backend.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>

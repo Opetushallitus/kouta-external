@@ -3,10 +3,9 @@ package fi.oph.kouta.external.integration.fixture
 import java.util.UUID
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
-import fi.oph.kouta.external.service.ValintaperusteService
+import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ValintaperusteService}
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
 import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 

@@ -3,10 +3,9 @@ package fi.oph.kouta.external.integration.fixture
 import java.util.UUID
 
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid}
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
-import fi.oph.kouta.external.service.ToteutusService
+import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ToteutusService}
 import fi.oph.kouta.external.servlet.ToteutusServlet
 import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 

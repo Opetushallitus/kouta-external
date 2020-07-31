@@ -1,13 +1,11 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.client.OrganisaatioService
 import fi.oph.kouta.domain.oid.HakukohdeOid
-import fi.oph.kouta.external.client.OrganisaatioServiceImpl
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.RoleEntityAuthorizationService
+import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 

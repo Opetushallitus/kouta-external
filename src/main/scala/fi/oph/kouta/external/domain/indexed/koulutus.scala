@@ -9,7 +9,7 @@ import fi.oph.kouta.external.domain.oid._
 case class KoulutusIndexed(
     oid: Option[KoulutusOid],
     johtaaTutkintoon: Boolean,
-    koulutustyyppi: Option[Koulutustyyppi],
+    koulutustyyppi: Koulutustyyppi,
     koulutus: Option[KoodiUri],
     tila: Julkaisutila,
     tarjoajat: List[Organisaatio],
@@ -19,6 +19,7 @@ case class KoulutusIndexed(
     muokkaaja: Muokkaaja,
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
+    teemakuva: Option[String],
     modified: Option[LocalDateTime]
 ) {
   def toKoulutus: Koulutus = Koulutus(
@@ -34,6 +35,7 @@ case class KoulutusIndexed(
     muokkaaja = muokkaaja.oid,
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
+    teemakuva = teemakuva,
     modified = modified
   )
 }

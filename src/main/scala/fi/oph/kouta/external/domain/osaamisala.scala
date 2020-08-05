@@ -6,7 +6,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
   """    Osaamisala:
     |      type: object
     |      properties:
-    |        koodi:
+    |        koodiUri:
     |          type: string
     |          description: Osaamisalan koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/osaamisala/1)
     |          example: osaamisala_0001#1
@@ -26,7 +26,7 @@ sealed trait Osaamisala {
   val otsikko: Kielistetty
 }
 
-case class AmmatillinenOsaamisala(koodi: String, linkki: Kielistetty, otsikko: Kielistetty) extends Osaamisala
+case class AmmatillinenOsaamisala(koodiUri: String, linkki: Kielistetty, otsikko: Kielistetty) extends Osaamisala
 
 @SwaggerModel(
   """    KorkeakouluOsaamisala:

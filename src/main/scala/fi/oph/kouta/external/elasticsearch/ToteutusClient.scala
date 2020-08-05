@@ -9,10 +9,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ToteutusClient extends ToteutusClient("toteutus-kouta")
-
-abstract class ToteutusClient(override val index: String)
-  extends ElasticsearchClient(index, "toteutus")
+class ToteutusClient(override val index: String, elasticsearchClientHolder: ElasticsearchClientHolder)
+  extends ElasticsearchClient(index, "toteutus", elasticsearchClientHolder)
     with KoutaJsonFormats {
 
   def getToteutus(oid: ToteutusOid): Future[Toteutus] =

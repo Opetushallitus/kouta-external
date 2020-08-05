@@ -37,7 +37,7 @@ abstract class CasSessionService(val securityContext: SecurityContext, val userD
           logger.debug("Ticket validation error", t)
           Task.fail(AuthenticationFailedException(s"Failed to validate service ticket $s", t))
       }
-      .attemptRunFor(Duration(1, TimeUnit.SECONDS))
+      .unsafePerformSyncAttemptFor(Duration(1, TimeUnit.SECONDS))
       .toEither
   }
 

@@ -26,7 +26,6 @@ class HakuIndexed(
     metadata: Option[HakuMetadata],
     organisaatio: Organisaatio,
     hakuajat: List[Ajanjakso],
-    valintakokeet: List[ValintakoeIndexed],
     muokkaaja: Muokkaaja,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime]
@@ -50,7 +49,6 @@ class HakuIndexed(
     metadata = metadata,
     organisaatioOid = organisaatio.oid,
     hakuajat = hakuajat,
-    valintakokeet = valintakokeet.map(_.toValintakoe),
     muokkaaja = muokkaaja.oid,
     kielivalinta = kielivalinta,
     modified = modified

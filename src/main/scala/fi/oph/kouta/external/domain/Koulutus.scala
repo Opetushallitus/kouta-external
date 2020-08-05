@@ -78,7 +78,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |              fi: Suomenkielinen kuvaus
     |              sv: Ruotsinkielinen kuvaus
     |            lisatiedot:
-    |              - otsikkoKoodiUri: koulutuksenjarjestamisenlisaosiot_3#1
+    |              - otsikkoKoodiUri: koulutuksenlisatiedot_03#1
     |                teksti:
     |                  fi: Opintojen suomenkielinen lisätietokuvaus
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
@@ -90,6 +90,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |           type: string
     |           description: Koulutuksen luoneen organisaation oid
     |           example: 1.2.246.562.10.00101010101
+    |        teemakuva:
+    |          type: string
+    |          description: Koulutuksen Opintopolussa näytettävän teemakuvan URL.
+    |          example: https://konfo-files.opintopolku.fi/koulutus-teema/1.2.246.562.13.00000000000000000009/f4ecc80a-f664-40ef-98e6-eaf8dfa57f6e.png
     |        modified:
     |           type: string
     |           format: date-time
@@ -99,7 +103,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 case class Koulutus(
     oid: Option[KoulutusOid],
     johtaaTutkintoon: Boolean,
-    koulutustyyppi: Option[Koulutustyyppi],
+    koulutustyyppi: Koulutustyyppi,
     koulutusKoodiUri: Option[String],
     tila: Julkaisutila,
     tarjoajat: List[OrganisaatioOid],
@@ -109,5 +113,6 @@ case class Koulutus(
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
+    teemakuva: Option[String],
     modified: Option[LocalDateTime]
 ) extends PerustiedotWithOid

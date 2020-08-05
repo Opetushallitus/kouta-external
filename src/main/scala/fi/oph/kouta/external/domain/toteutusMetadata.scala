@@ -17,7 +17,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Opetus'
     |        yhteyshenkilot:
     |          type: array
-    |          description: Toteutuksen yhteyshenkilöiden tiedot
+    |          description: Lista toteutuksen yhteyshenkilöistä
     |          items:
     |            $ref: '#/components/schemas/Yhteyshenkilo'
     |        asiasanat:

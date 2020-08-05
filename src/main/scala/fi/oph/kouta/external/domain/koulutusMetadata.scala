@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.external.domain.enums.{Kieli, Koulutustyyppi}
+import fi.oph.kouta.external.domain.enums.Koulutustyyppi
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -96,13 +96,15 @@ trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
     |              enum:
     |                - yo
     |""")
-case class YliopistoKoulutusMetadata(tyyppi: Koulutustyyppi,
-                                     kuvaus: Kielistetty,
-                                     lisatiedot: Seq[Lisatieto],
-                                     koulutusalaKoodiUrit: Seq[String],
-                                     tutkintonimikeKoodiUrit: Seq[String],
-                                     opintojenLaajuusKoodiUri: Option[String],
-                                     kuvauksenNimi: Kielistetty) extends KorkeakoulutusKoulutusMetadata
+case class YliopistoKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    koulutusalaKoodiUrit: Seq[String],
+    tutkintonimikeKoodiUrit: Seq[String],
+    opintojenLaajuusKoodiUri: Option[String],
+    kuvauksenNimi: Kielistetty
+) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel(
   """    AmmattikorkeaKoulutusMetadata:
@@ -117,10 +119,12 @@ case class YliopistoKoulutusMetadata(tyyppi: Koulutustyyppi,
     |              enum:
     |                - amk
     |""")
-case class AmmattikorkeakouluKoulutusMetadata(tyyppi: Koulutustyyppi,
-                                              kuvaus: Kielistetty,
-                                              lisatiedot: Seq[Lisatieto],
-                                              koulutusalaKoodiUrit: Seq[String],
-                                              tutkintonimikeKoodiUrit: Seq[String],
-                                              opintojenLaajuusKoodiUri: Option[String],
-                                              kuvauksenNimi: Kielistetty) extends KorkeakoulutusKoulutusMetadata
+case class AmmattikorkeakouluKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    koulutusalaKoodiUrit: Seq[String],
+    tutkintonimikeKoodiUrit: Seq[String],
+    opintojenLaajuusKoodiUri: Option[String],
+    kuvauksenNimi: Kielistetty
+) extends KorkeakoulutusKoulutusMetadata

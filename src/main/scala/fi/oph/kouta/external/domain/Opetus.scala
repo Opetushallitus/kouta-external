@@ -1,5 +1,7 @@
 package fi.oph.kouta.external.domain
 
+import java.time.LocalDateTime
+
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -57,46 +59,39 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa?"
     |          example: 220.50
-    |        alkamiskausiKoodiUri:
+    |        koulutuksenTarkkaAlkamisaika:
+    |          type: string
+    |          description: Jos alkamisaika on tiedossa niin alkamis- ja päättymispäivämäärä on pakollinen. Muussa tapauksessa kausi ja vuosi on pakollisia tietoja.
+    |          example: true
+    |        koulutuksenAlkamispaivamaara:
+    |          type: string
+    |          description: Koulutuksen alkamisen päivämäärä
+    |          example: 2019-11-20T12:00
+    |        koulutuksenPaattymispaivamaara:
+    |          type: string
+    |          description: Koulutuksen päättymisen päivämäärä
+    |          example: 2019-12-20T12:00
+    |        koulutuksenAlkamiskausi:
     |          type: string
     |          description: Koulutuksen toteutuksen alkamiskausi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
     |          example: kausi_k#1
-    |        alkamisvuosi:
+    |        koulutuksenAlkamisvuosi:
     |          type: string
-    |          description: Koulutuksen toteutuksen alkamisvuosi
+    |          description: Koulutuksen alkamisvuosi
     |          example: 2020
-    |        alkamisaikaKuvaus:
-    |          type: object
-    |          description: Koulutuksen toteutuksen alkamisaikoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
     |        lisatiedot:
     |          type: array
     |          description: Koulutuksen toteutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
     |          items:
     |            type: object
     |            $ref: '#/components/schemas/Lisatieto'
-    |        onkoLukuvuosimaksua:
-    |          type: boolean
-    |          description: "Onko koulutuksella lukuvuosimaksua?"
-    |        lukuvuosimaksu:
-    |          type: object
-    |          description: Koulutuksen toteutuksen lukuvuosimaksu eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Teksti'
-    |        lukuvuosimaksuKuvaus:
-    |          type: object
-    |          description: Koulutuksen toteutuksen lukuvuosimaksua tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
     |        onkoStipendia:
     |          type: boolean
     |          description: "Onko koulutukseen stipendiä?"
     |        stipendinMaara:
-    |          type: object
-    |          description: Koulutuksen toteutuksen stipendin määrä eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Teksti'
+    |          type: double
+    |          description: Koulutuksen toteutuksen stipendin määrä.
+    |          example: 10.0
     |        stipendinKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen stipendiä tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -113,14 +108,13 @@ case class Opetus(
     onkoMaksullinen: Option[Boolean],
     maksullisuusKuvaus: Kielistetty,
     maksunMaara: Option[Double],
-    alkamiskausiKoodiUri: Option[String],
-    alkamisvuosi: Option[String],
-    alkamisaikaKuvaus: Kielistetty,
+    koulutuksenTarkkaAlkamisaika: Boolean,
+    koulutuksenAlkamispaivamaara: Option[LocalDateTime],
+    koulutuksenPaattymispaivamaara: Option[LocalDateTime],
+    koulutuksenAlkamiskausi: Option[String],
+    koulutuksenAlkamisvuosi: Option[Int],
     lisatiedot: Seq[Lisatieto],
-    onkoLukuvuosimaksua: Option[Boolean],
-    lukuvuosimaksu: Kielistetty,
-    lukuvuosimaksuKuvaus: Kielistetty,
     onkoStipendia: Option[Boolean],
-    stipendinMaara: Kielistetty,
+    stipendinMaara: Option[Double],
     stipendinKuvaus: Kielistetty
 )

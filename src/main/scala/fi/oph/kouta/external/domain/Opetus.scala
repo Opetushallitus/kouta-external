@@ -2,7 +2,7 @@ package fi.oph.kouta.external.domain
 
 import java.time.LocalDateTime
 
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Opetus:

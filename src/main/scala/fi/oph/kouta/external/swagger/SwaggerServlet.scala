@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.swagger
 
 import fi.oph.kouta.external.servlet.KoutaServlet
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 import org.reflections.Reflections
 import org.scalatra.ScalatraServlet
 

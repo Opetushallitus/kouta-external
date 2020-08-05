@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 import fi.oph.kouta.domain.LiitteenToimitustapa
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Liite:

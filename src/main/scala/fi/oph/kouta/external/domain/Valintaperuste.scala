@@ -5,7 +5,7 @@ import java.util.UUID
 
 import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
 import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
 @SwaggerModel(

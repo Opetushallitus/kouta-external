@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    HakuMetadata:

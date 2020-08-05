@@ -2,7 +2,7 @@ package fi.oph.kouta.external.domain
 
 import java.util.UUID
 
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Valintatapa:

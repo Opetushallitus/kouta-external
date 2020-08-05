@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 import fi.oph.kouta.domain.{Julkaisutila, Kieli}
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid, UserOid}
-import fi.oph.kouta.swagger.SwaggerModel
+import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Toteutus:

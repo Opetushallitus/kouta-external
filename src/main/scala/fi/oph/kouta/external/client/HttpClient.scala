@@ -9,17 +9,22 @@ trait HttpClient {
   private val DefaultConnTimeout = 30000
   private val DefaultReadTimeout = 120000
 
-  private val DefaultOptions: Seq[HttpOption] = Seq(
+  private def defaultOptions(doFollowRedirects: Boolean = false): Seq[HttpOption] = Seq(
     connTimeout(DefaultConnTimeout),
-    readTimeout(DefaultReadTimeout)
+    readTimeout(DefaultReadTimeout),
+    followRedirects(doFollowRedirects)
   )
 
   private val HeaderCallerId            = ("Caller-id", "kouta-external")
   private val HeaderClientSubSystemCode = ("clientSubSystemCode", "kouta-external")
 
-  def get[T](url: String, errorHandler: (String, Int, String) => Nothing = defaultErrorHandler)(parse: String => T): T =
+  def get[T](
+      url: String,
+      errorHandler: (String, Int, String) => Nothing = defaultErrorHandler,
+      followRedirects: Boolean = false
+  )(parse: String => T): T =
     DefaultHttpClient
-      .httpGet(url, DefaultOptions: _*)
+      .httpGet(url, defaultOptions(followRedirects): _*)
       .header(HeaderClientSubSystemCode._1, HeaderClientSubSystemCode._2)
       .header(HeaderCallerId._1, HeaderCallerId._2)
       .responseWithHeaders match {

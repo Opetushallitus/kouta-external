@@ -27,7 +27,7 @@ trait KayttooikeusClient extends HttpClient with Logging {
           throw new RuntimeException(s"Failed to get username $username details using URL $url, got response $status $response")
       }
 
-    get(url, errorHandler) { response =>
+    get(url, errorHandler, followRedirects = true) { response =>
       val kayttooikeusDto = parse(response).extract[KayttooikeusUserResp]
       KayttooikeusUserDetails(
         kayttooikeusDto.authorities

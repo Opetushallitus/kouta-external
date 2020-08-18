@@ -23,6 +23,7 @@
         <scala-utils.version>0.0.1-SNAPSHOT</scala-utils.version>
         <json4s.version>3.6.7</json4s.version>
         <jackson.version>2.9.9</jackson.version>
+        <logback-access.version>1.2.3</logback-access.version>
 
         <!-- Cas properties -->
         <scala-cas.version>1.4.0-SNAPSHOT</scala-cas.version>
@@ -81,6 +82,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-access</artifactId>
+            <version>${logback-access.version}</version>
         </dependency>
 
         <!-- Jetty -->

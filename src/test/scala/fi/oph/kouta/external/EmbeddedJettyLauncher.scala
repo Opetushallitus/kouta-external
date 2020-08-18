@@ -22,7 +22,7 @@ object EmbeddedJettyLauncher extends Logging with KoutaConfigurationConstants {
 
     logger.info(s"Starting standalone Kouta-external Jetty on port $port...")
     logger.info(s"http://localhost:$port/kouta-external/swagger")
-    new JettyLauncher(port).start.join()
+    new JettyLauncher(port).start().join()
   }
 
   def setupForTestTemplate() = {

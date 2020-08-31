@@ -1,20 +1,23 @@
 package fi.oph.kouta.external.service
 
+import java.time.Instant
 import java.util.UUID
 
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.oid.HakuOid
 import fi.oph.kouta.external.elasticsearch.HakuClient
+import fi.oph.kouta.external.kouta.CasKoutaClient.KoutaResponse
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaClient, KoutaHakuRequest, UpdateResponse}
 import fi.oph.kouta.external.security.{Authenticated, Role, RoleEntity}
 import fi.vm.sade.utils.slf4j.Logging
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object HakuService extends HakuService(HakuClient)
+object HakuService extends HakuService(HakuClient, CasKoutaClient)
 
-class HakuService(hakuClient: HakuClient)
-  extends RoleEntityAuthorizationService
+class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient)
+    extends RoleEntityAuthorizationService
     with Logging {
 
   override val roleEntity: RoleEntity = Role.Haku
@@ -33,4 +36,12 @@ class HakuService(hakuClient: HakuClient)
       }
     }
   }
+
+  def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] =
+    koutaClient.createHaku(KoutaHakuRequest(authenticated, haku))
+
+  def update(haku: Haku, ifUnmodifiedSince: Instant)(
+      implicit authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]] =
+    koutaClient.updateHaku(KoutaHakuRequest(authenticated, haku), ifUnmodifiedSince)
 }

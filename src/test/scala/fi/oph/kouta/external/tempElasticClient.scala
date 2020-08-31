@@ -25,7 +25,7 @@ object TempElastic {
       .builder()
       .withElasticVersion("6.7.2")
       .withInstallationDirectory(new File("target/embeddedElasticsearch"))
-      .withSetting(PopularProperties.HTTP_PORT, port) // Koita ilman tätä?
+      .withSetting(PopularProperties.HTTP_PORT, port)
       .withSetting("path.repo", "embeddedElasticsearch")
       .withSetting(PopularProperties.CLUSTER_NAME, "elasticsearch")
       .withSetting("discovery.zen.ping.unicast.hosts", s"127.0.0.1:$port")

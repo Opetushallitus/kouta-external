@@ -29,7 +29,7 @@
         <scala-cas.version>1.4.0-SNAPSHOT</scala-cas.version>
 
         <!-- Http related properties -->
-        <scalatra.version>2.7.0-RC1</scalatra.version>
+        <scalatra.version>2.7.0</scalatra.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 
         <!-- Elasticsearch properties -->
@@ -42,18 +42,18 @@
 
         <!-- Test properties -->
         <scala-test.version>3.2.0-SNAP10</scala-test.version>
-        <scalatra-scalatest.version>2.7.0-RC1</scalatra-scalatest.version>
+        <scalatra-scalatest.version>2.7.0</scalatra-scalatest.version>
         <jetty.version>9.4.17.v20190418</jetty.version>
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
-        <kouta-indeksoija.version>0.3.0-SNAPSHOT</kouta-indeksoija.version>
-        <kouta-backend.version>0.23-SNAPSHOT</kouta-backend.version>
+        <kouta-indeksoija.version>0.5.0-KTO-652-SNAPSHOT</kouta-indeksoija.version>
+        <kouta-backend.version>0.26-SNAPSHOT</kouta-backend.version>
         <mockserver-netty.version>5.5.0</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>
 
         <!-- Plugin properties -->
         <enforce.java.version>[1.8,)</enforce.java.version>
 
-        <plugin.scala-maven-plugin.version>3.3.2</plugin.scala-maven-plugin.version>
+        <plugin.scala-maven-plugin.version>4.3.1</plugin.scala-maven-plugin.version>
         <plugin.maven-enforcer-plugin.version>3.0.0-M2</plugin.maven-enforcer-plugin.version>
         <plugin.maven-assembly-plugin.version>3.1.1</plugin.maven-assembly-plugin.version>
         <plugin.maven-jar-plugin.version>3.1.1</plugin.maven-jar-plugin.version>
@@ -132,6 +132,11 @@
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
         </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-http</artifactId>
+            <version>0.5.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- Cas related dependencies -->
         <dependency>
@@ -142,6 +147,11 @@
         <dependency>
             <groupId>org.scalaz</groupId>
             <artifactId>scalaz-core_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.http4s</groupId>
+            <artifactId>http4s-json4s-jackson_2.12</artifactId>
+            <version>0.16.6a</version>
         </dependency>
 
         <!-- Elasticsearch dependencies -->
@@ -233,6 +243,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.scalatra.scalate</groupId>
+                <artifactId>scalate-core_2.12</artifactId>
+                <version>1.9.5</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
@@ -301,6 +316,12 @@
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>2.10</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>

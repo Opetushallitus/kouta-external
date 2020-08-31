@@ -24,6 +24,11 @@ trait CasAuthenticatedServlet {
 
     logger.trace("Session found {}", session)
 
-    Authenticated.tupled(session.getOrElse(throw new AuthenticationFailedException))
+    session match {
+      case None =>
+        throw new AuthenticationFailedException(s"No session found. Session cookie: ${sessionCookie}. Session attribute: ${sessionAttribute}.")
+      case Some((id, s)) =>
+        Authenticated(id, s)
+    }
   }
 }

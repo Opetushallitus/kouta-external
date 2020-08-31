@@ -72,7 +72,9 @@ sealed trait Session {
   lazy val roles: Set[Role] = roleMap.keySet
 }
 
-case class ServiceTicket(s: String)
+case class ServiceTicket(s: String) {
+  override def toString: String = s
+}
 
 case class CasSession(
     casTicket: ServiceTicket,

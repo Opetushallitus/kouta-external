@@ -12,48 +12,21 @@ import org.json4s.jackson.Serialization.write
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
 
+import scala.util.Try
 import scala.util.control.NonFatal
-import scala.util.{Failure, Try}
 
 trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJsonSupport with Logging {
+  import KoutaServlet._
 
   before() {
     contentType = formats("json")
   }
 
-  protected def renderHttpDate(instant: Instant): String = {
-    DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.ofInstant(instant, ZoneId.of("GMT")))
-  }
-
-  protected def parseHttpDate(string: String): Instant = {
-    Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(string))
-  }
-
-  protected def createLastModifiedHeader(instant: Instant): String = {
-    //- system_time range in database is of form ["2017-02-28 13:40:02.442277+02",)
-    //- RFC-1123 date-time format used in headers has no millis
-    //- if Last-Modified/If-Unmodified-Since header is set to 2017-02-28 13:40:02, it will never be inside system_time range
-    //-> this is why we wan't to set it to 2017-02-28 13:40:03 instead
-    renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1))
-  }
-
-  val SampleHttpDate: String = renderHttpDate(Instant.EPOCH)
-
-  protected def parseIfUnmodifiedSince: Option[Instant] = request.headers.get("If-Unmodified-Since") match {
-    case Some(s) =>
-      Try(parseHttpDate(s)) match {
-        case x if x.isSuccess =>
-          Some(x.get)
-        case Failure(e) =>
-          throw new IllegalArgumentException(s"Ei voitu jäsentää otsaketta If-Unmodified-Since muodossa $SampleHttpDate.", e)
-      }
-    case None => None
-  }
-
-  protected def getIfUnmodifiedSince: Instant = parseIfUnmodifiedSince match {
-    case Some(s) => s
-    case None    => throw new IllegalArgumentException("Otsake If-Unmodified-Since on pakollinen.")
-  }
+  protected def getIfUnmodifiedSince: Instant =
+    request.headers.get(IfUnmodifiedSinceHeader) match {
+      case Some(s) => parseIfUnmodifiedSince(s)
+      case None    => throw new IllegalArgumentException(s"Otsake ${IfUnmodifiedSinceHeader} on pakollinen.")
+    }
 
   def errorMsgFromRequest(): String = {
     def msgBody = request.body.length match {
@@ -92,4 +65,25 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
       logger.error(errorMsgFromRequest(), e)
       InternalServerError("error" -> "500 Internal Server Error")
   }
+}
+
+object KoutaServlet {
+  val IfUnmodifiedSinceHeader = "x-If-Unmodified-Since"
+  val LastModifiedHeader      = "x-Last-Modified"
+  val SampleHttpDate: String  = renderHttpDate(Instant.EPOCH)
+
+  def renderHttpDate(instant: Instant): String = {
+    DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.ofInstant(instant, ZoneId.of("GMT")))
+  }
+
+  def parseHttpDate(string: String): Try[Instant] = Try {
+    Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(string))
+  }
+
+  def parseIfUnmodifiedSince(value: String): Instant =
+    parseHttpDate(value).recover {
+      case e =>
+        val msg = s"Ei voitu jäsentää otsaketta $IfUnmodifiedSinceHeader muodossa $SampleHttpDate."
+        throw new IllegalArgumentException(msg, e)
+    }.get
 }

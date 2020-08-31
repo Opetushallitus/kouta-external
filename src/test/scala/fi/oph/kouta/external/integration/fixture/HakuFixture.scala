@@ -1,19 +1,34 @@
 package fi.oph.kouta.external.integration.fixture
 
+import java.time.Instant
 import java.util.UUID
 
 import fi.oph.kouta.domain.{Ataru, EiSähköistä}
+import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external.domain.Haku
+import fi.oph.kouta.external.domain.enums.Julkaisutila
 import fi.oph.kouta.external.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.elasticsearch.HakuClient
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.servlet.HakuServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, OrganisaatioServiceMock, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, MockKoutaClient, OrganisaatioServiceMock, TempElasticClient}
 
 trait HakuFixture extends KoutaIntegrationSpec {
   val HakuPath = "/haku"
 
-  addServlet(new HakuServlet(new HakuService(new HakuClient(TempElasticClient.client))), HakuPath)
+  addServlet(new HakuServlet(new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient)), HakuPath)
+
+  val haku = JulkaistuHaku
+
+  def haku(oid: String): Haku = haku.copy(oid = Some(HakuOid(oid)))
+
+  def haku(oid: String, tila: Julkaisutila): Haku = haku.copy(oid = Some(HakuOid(oid)), tila = tila)
+
+  def haku(organisaatioOid: OrganisaatioOid): Haku =
+    haku.copy(organisaatioOid = organisaatioOid)
+
+  def haku(oid: String, organisaatioOid: OrganisaatioOid): Haku =
+    haku.copy(oid = Some(HakuOid(oid)), organisaatioOid = organisaatioOid)
 
   def get(oid: HakuOid): Haku = get[Haku](HakuPath, oid)
 
@@ -22,6 +37,18 @@ trait HakuFixture extends KoutaIntegrationSpec {
   def get(oid: HakuOid, errorStatus: Int): Unit = get(oid, defaultSessionId, errorStatus)
 
   def get(oid: HakuOid, sessionId: UUID, errorStatus: Int): Unit = get(s"$HakuPath/$oid", sessionId, errorStatus)
+
+  def create(haku: Haku): String =
+    create(HakuPath, haku, parseOid)
+
+  def create(haku: Haku, sessionId: UUID): String =
+    create(HakuPath, haku, sessionId, parseOid)
+
+  def update(haku: Haku, ifUnmodifiedSince: Instant): Unit =
+    update(HakuPath, haku, ifUnmodifiedSince)
+
+  def update(haku: Haku, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(HakuPath, haku, ifUnmodifiedSince, sessionId)
 
   def addMockHaku(
       hakuOid: HakuOid,

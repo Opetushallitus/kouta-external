@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.swagger
 
+import fi.oph.kouta.external.servlet.KoutaServlet
 import org.reflections.Reflections
 import org.scalatra.ScalatraServlet
 
@@ -62,6 +63,14 @@ class SwaggerServlet extends ScalatraServlet {
       s"""
          |components:
          |  parameters:
+         |    xIfUnmodifiedSince:
+         |      in: header
+         |      name: ${KoutaServlet.IfUnmodifiedSinceHeader}
+         |      schema:
+         |        type: string
+         |        default: ${KoutaServlet.SampleHttpDate}
+         |      required: true
+         |      description: Vastaavan GETin ${KoutaServlet.LastModifiedHeader}
          |    callerId:
          |      in: header
          |      name: Caller-Id

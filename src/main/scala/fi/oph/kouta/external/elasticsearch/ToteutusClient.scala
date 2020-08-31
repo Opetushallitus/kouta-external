@@ -12,6 +12,7 @@ import scala.concurrent.Future
 
 class ToteutusClient(val client: ElasticClient) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "toteutus-kouta"
+
   def getToteutus(oid: ToteutusOid): Future[Toteutus] =
     getItem(oid.s)
       .map(_.to[ToteutusIndexed])

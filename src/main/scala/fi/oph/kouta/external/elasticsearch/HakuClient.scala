@@ -2,6 +2,7 @@ package fi.oph.kouta.external.elasticsearch
 
 import java.util.UUID
 
+import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.indexed.HakuIndexed
@@ -11,9 +12,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class HakuClient(override val index: String, elasticsearchClientHolder: ElasticsearchClientHolder)
-  extends ElasticsearchClient(index, "haku", elasticsearchClientHolder)
-    with KoutaJsonFormats {
+class HakuClient(val client: ElasticClient) extends ElasticsearchClient with KoutaJsonFormats {
+  val index: String = "haku-kouta"
 
   def getHaku(oid: HakuOid): Future[Haku] =
     getItem(oid.s)
@@ -25,3 +25,5 @@ class HakuClient(override val index: String, elasticsearchClientHolder: Elastics
       .map(_.to[HakuIndexed])
       .map(_.map(_.toHaku))
 }
+
+object HakuClient extends HakuClient(ElasticsearchClient.client)

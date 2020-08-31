@@ -2,16 +2,17 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 
-import fi.oph.kouta.external.KoutaFixtureTool
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
+import fi.oph.kouta.external.service.ValintaperusteService
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
-import fi.oph.kouta.external.{OrganisaatioServiceMock, TempElasticClientHolder}
 
 trait ValintaperusteFixture extends KoutaIntegrationSpec {
   val ValintaperustePath = "/valintaperuste"
 
-  addServlet(new ValintaperusteServlet(TempElasticClientHolder), ValintaperustePath)
+  addServlet(new ValintaperusteServlet(new ValintaperusteService(new ValintaperusteClient(TempElasticClient.client))), ValintaperustePath)
 
   def get(id: UUID): Valintaperuste = get[Valintaperuste](ValintaperustePath, id)
 

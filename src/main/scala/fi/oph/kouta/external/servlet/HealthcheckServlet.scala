@@ -1,11 +1,14 @@
 package fi.oph.kouta.external.servlet
 
+import com.sksamuel.elastic4s.http.ElasticClient
 import fi.oph.kouta.external.domain.enums.ElasticsearchHealthStatus._
-import fi.oph.kouta.external.elasticsearch.ElasticsearchHealth
+import fi.oph.kouta.external.elasticsearch.{ElasticsearchClient, ElasticsearchHealth}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import org.scalatra._
 
-class HealthcheckServlet extends KoutaServlet {
+object HealthcheckServlet extends HealthcheckServlet(ElasticsearchClient.client)
+
+class HealthcheckServlet(client: ElasticClient) extends KoutaServlet {
 
   registerPath(
     "/healthcheck/",

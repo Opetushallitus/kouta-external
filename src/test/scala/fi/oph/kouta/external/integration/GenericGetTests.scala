@@ -24,7 +24,7 @@ trait GenericGetTests[E, ID] {
     it should s"return 404 if $entityName not found" in {
       get(s"$getPath/$nonExistingId", headers = Seq(defaultSessionHeader)) {
         status should equal(404)
-        body should include(s"Didn't find $entityName with id $nonExistingId")
+        body should include(s"Didn't find id $nonExistingId from $entityName-kouta")
       }
     }
 

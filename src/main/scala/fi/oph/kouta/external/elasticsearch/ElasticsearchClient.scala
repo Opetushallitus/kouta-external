@@ -13,30 +13,19 @@ import org.json4s.Serialization
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-trait ElasticsearchClientHolder {
-  def client: ElasticClient
+object ElasticsearchClient {
+  private val elasticUrl: String = KoutaConfigurationFactory.configuration.elasticSearchConfiguration.elasticUrl
+  def client: ElasticClient = ElasticClient(ElasticProperties(elasticUrl))
 }
 
-object DefaultElasticsearchClientHolder extends ElasticsearchClientHolder {
-  private lazy val elasticUrl: String = KoutaConfigurationFactory.configuration.elasticSearchConfiguration.elasticUrl
-
-  private var clientHolder: Option[ElasticClient] = None
-
-  def client: ElasticClient = clientHolder.getOrElse {
-    clientHolder = Option(ElasticClient(ElasticProperties(elasticUrl)))
-    clientHolder.orNull
-  }
-}
-
-abstract class ElasticsearchClient(val index: String, val entityName: String, clientHolder: ElasticsearchClientHolder)
-  extends Logging {
-
-  lazy val elasticClient: ElasticClient = clientHolder.client
+trait ElasticsearchClient extends Logging {
+  val index: String
+  val client: ElasticClient
 
   implicit val json4s: Serialization = org.json4s.jackson.Serialization
 
   protected def getItem(id: String): Future[GetResponse] =
-    elasticClient.execute {
+    client.execute {
       val q = get(id).from(index)
       logger.debug(s"Elasticsearch query: {}", q.show)
       q
@@ -45,7 +34,7 @@ abstract class ElasticsearchClient(val index: String, val entityName: String, cl
         Future.failed(ElasticSearchException(failure.error))
 
       case response: RequestSuccess[GetResponse] if !response.result.exists =>
-        Future.failed(new NoSuchElementException(s"Didn't find $entityName with id $id"))
+        Future.failed(new NoSuchElementException(s"Didn't find id $id from $index"))
 
       case response: RequestSuccess[GetResponse] =>
         logger.debug(s"Elasticsearch status: {}", response.status)
@@ -54,7 +43,7 @@ abstract class ElasticsearchClient(val index: String, val entityName: String, cl
     }
 
   protected def simpleSearch(field: String, value: String): Future[SearchResponse] =
-    elasticClient.execute {
+    client.execute {
       val q = search(index).query(matchPhraseQuery(field, value))
       logger.debug(s"Elasticsearch query: ${q.show}")
       q
@@ -64,7 +53,7 @@ abstract class ElasticsearchClient(val index: String, val entityName: String, cl
 
       case response: RequestSuccess[SearchResponse] if response.result.hits.isEmpty =>
         Future.failed(
-          new NoSuchElementException(s"Didn't find anything searching for $entityName with $value in $field")
+          new NoSuchElementException(s"Didn't find anything searching for $value in $field from $index")
         )
 
       case response: RequestSuccess[SearchResponse] =>

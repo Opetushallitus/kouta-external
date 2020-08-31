@@ -5,13 +5,15 @@ import java.util.UUID
 import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.domain.oid.{KoulutusOid, OrganisaatioOid}
+import fi.oph.kouta.external.elasticsearch.KoulutusClient
+import fi.oph.kouta.external.service.KoulutusService
 import fi.oph.kouta.external.servlet.KoulutusServlet
-import fi.oph.kouta.external.{OrganisaatioServiceMock, TempElasticClientHolder}
+import fi.oph.kouta.external.{OrganisaatioServiceMock, TempElasticClient}
 
 trait KoulutusFixture extends KoutaIntegrationSpec {
   val KoulutusPath = "/koulutus"
 
-  addServlet(new KoulutusServlet(TempElasticClientHolder), KoulutusPath)
+  addServlet(new KoulutusServlet(new KoulutusService(new KoulutusClient(TempElasticClient.client))), KoulutusPath)
 
   def get(oid: KoulutusOid): Koulutus = get[Koulutus](KoulutusPath, oid)
 

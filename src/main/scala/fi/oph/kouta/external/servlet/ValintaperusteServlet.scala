@@ -2,7 +2,6 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
-import fi.oph.kouta.external.elasticsearch.ElasticsearchClientHolder
 import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.ValintaperusteService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
@@ -11,14 +10,14 @@ import org.scalatra.FutureSupport
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class ValintaperusteServlet(elasticsearchClientHolder: ElasticsearchClientHolder)
+object ValintaperusteServlet extends ValintaperusteServlet(ValintaperusteService)
+
+class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
   extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
   override def executor: ExecutionContext = global
-
-  val valintaperusteService = new ValintaperusteService(elasticsearchClientHolder)
 
   registerPath(
     "/valintaperuste/{id}",

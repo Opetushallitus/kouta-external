@@ -3,8 +3,8 @@ package fi.oph.kouta.external.domain
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
-import fi.oph.kouta.external.domain.oid._
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
+import fi.oph.kouta.domain.oid._
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -202,11 +202,7 @@ case class Hakukohde(
     hakulomakeLinkki: Kielistetty,
     kaytetaanHaunHakulomaketta: Option[Boolean],
     aloituspaikat: Option[Int],
-    minAloituspaikat: Option[Int],
-    maxAloituspaikat: Option[Int],
     ensikertalaisenAloituspaikat: Option[Int],
-    minEnsikertalaisenAloituspaikat: Option[Int],
-    maxEnsikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimusKoodiUrit: Seq[String],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
@@ -225,4 +221,7 @@ case class Hakukohde(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime]
-) extends PerustiedotWithOid
+) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
+  override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
+
+}

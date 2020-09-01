@@ -3,6 +3,8 @@ package fi.oph.kouta.external.integration
 import java.util.UUID
 
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegrationSpec}
+import fi.oph.kouta.external.servlet.KoutaServlet
+import fi.oph.kouta.TestOids._
 
 trait GenericGetTests[E, ID] {
   this: KoutaIntegrationSpec with AccessControlSpec =>
@@ -20,6 +22,14 @@ trait GenericGetTests[E, ID] {
 
     s"GET $getPath/:id" should s"get $entityName from elastic search" in {
       get(existingId, defaultSessionId)
+    }
+
+    it should s"have ${KoutaServlet.LastModifiedHeader} header in the response" in {
+      get(s"$getPath/$existingId", headers = Seq(defaultSessionHeader)) {
+        status should equal(200)
+        header.get(KoutaServlet.LastModifiedHeader) should not be empty
+        KoutaServlet.parseHttpDate(header(KoutaServlet.LastModifiedHeader)).toOption should not be empty
+      }
     }
 
     it should s"return 404 if $entityName not found" in {
@@ -48,8 +58,8 @@ trait GenericGetTests[E, ID] {
       get(existingId, crudSessionIds(ParentOid))
     }
 
-    it should "deny a user with only access to a descendant organization" in {
-      get(existingId, crudSessionIds(GrandChildOid), 403)
+    it should s"allow a user with only access to a descendant organization to read the $entityName" in {
+      get(existingId, crudSessionIds(GrandChildOid))
     }
 
     it should "deny a user with the wrong role" in {

@@ -3,7 +3,7 @@ package fi.oph.kouta.external.domain
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.LiitteenToimitustapa
+import fi.oph.kouta.domain.LiitteenToimitustapa
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(

@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.integration
 
-import fi.oph.kouta.external.domain.oid.HakuOid
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, ElasticFixture, HakuFixture, KoulutusFixture}
 
 class ElasticFixtureSpec extends HakuFixture with KoulutusFixture with AccessControlSpec with ElasticFixture {

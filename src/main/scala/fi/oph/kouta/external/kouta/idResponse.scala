@@ -2,7 +2,7 @@ package fi.oph.kouta.external.kouta
 
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.oid.GenericOid
+import fi.oph.kouta.domain.oid.GenericOid
 
 sealed trait IdResponse
 

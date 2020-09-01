@@ -3,10 +3,21 @@ package fi.oph.kouta.external
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.Kieli
+import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 package object domain {
+
+  // Kielen swaggeri on tässä, koska Kieli-luokka on kouta-commonissa
+  @SwaggerModel(
+    """    Kieli:
+      |      type: string
+      |      enum:
+      |        - fi
+      |        - sv
+      |        - en
+      |""")
+  abstract class KieliSwagger
 
   // Kielistetyn swaggerit ovat tässä, koska pelkälle typelle ei voi asettaa annotaatiota
   @SwaggerModel(

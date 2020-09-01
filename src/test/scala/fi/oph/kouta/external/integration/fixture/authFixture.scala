@@ -4,8 +4,11 @@ import fi.oph.kouta.external.MockSecurityContext
 import fi.oph.kouta.external.client.KayttooikeusClient
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.servlet.AuthServlet
+import fi.oph.kouta.security.Authority
 
 class KayttooikeusClientMock(securityContext: SecurityContext, defaultAuthorities: Set[Authority]) extends KayttooikeusClient {
+  override def callerId: String = "kouta-external"
+
   override def getUserByUsername(username: String): KayttooikeusUserDetails = {
     username match {
       case "testuser" => KayttooikeusUserDetails(defaultAuthorities, "test-user-oid")

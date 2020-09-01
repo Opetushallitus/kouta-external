@@ -2,10 +2,10 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
-import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.ValintaperusteService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.FutureSupport
+import fi.oph.kouta.servlet.Authenticated
+import org.scalatra.{FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -48,5 +48,8 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
     implicit val authenticated: Authenticated = authenticate
 
     valintaperusteService.get(UUID.fromString(params("id")))
+      .map { valintaperuste =>
+        Ok(valintaperuste, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(valintaperuste)))
+      }
   }
 }

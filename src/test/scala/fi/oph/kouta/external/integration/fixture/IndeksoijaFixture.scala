@@ -4,7 +4,7 @@ import java.util.UUID
 
 import clojure.java.api.Clojure
 import fi.oph.kouta.external.TempElasticClient
-import fi.oph.kouta.external.domain.oid._
+import fi.oph.kouta.domain.oid._
 
 trait IndeksoijaFixture {
   private val require = Clojure.`var`("clojure.core", "require")

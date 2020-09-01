@@ -2,9 +2,10 @@ package fi.oph.kouta.external.domain
 
 import java.time.LocalDateTime
 
-import fi.oph.kouta.external.domain.enums._
-import fi.oph.kouta.external.domain.oid.{KoulutusOid, OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
+import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
 @SwaggerModel(
   """    Koulutus:
@@ -110,9 +111,14 @@ case class Koulutus(
     nimi: Kielistetty,
     metadata: Option[KoulutusMetadata],
     julkinen: Boolean,
+    esikatselu: Boolean = true,
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
+    ePerusteId: Option[Long],
     modified: Option[LocalDateTime]
-) extends PerustiedotWithOid
+) extends PerustiedotWithOid[KoulutusOid, Koulutus]
+    with AuthorizableMaybeJulkinen[Koulutus] {
+  override def withMuokkaaja(muokkaaja: UserOid): Koulutus = copy(muokkaaja = muokkaaja)
+}

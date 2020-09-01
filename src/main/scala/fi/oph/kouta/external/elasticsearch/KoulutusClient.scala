@@ -4,7 +4,7 @@ import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.domain.indexed.KoulutusIndexed
-import fi.oph.kouta.external.domain.oid.KoulutusOid
+import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -15,6 +15,7 @@ class KoulutusClient(val client: ElasticClient) extends ElasticsearchClient with
 
   def getKoulutus(oid: KoulutusOid): Future[Koulutus] =
     getItem(oid.s)
+      .map(debugJson)
       .map(_.to[KoulutusIndexed])
       .map(_.toKoulutus)
 }

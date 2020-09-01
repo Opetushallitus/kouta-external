@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.kouta
 
 import fi.oph.kouta.external.domain.{Haku, Koulutus}
-import fi.oph.kouta.external.security.Authenticated
+import fi.oph.kouta.servlet.Authenticated
 
 case class KoutaHakuRequest(authenticated: Authenticated, haku: Haku)
 

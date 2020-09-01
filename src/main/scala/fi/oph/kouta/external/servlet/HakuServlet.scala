@@ -1,13 +1,11 @@
 package fi.oph.kouta.external.servlet
 
-import java.util.UUID
-
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
-import fi.oph.kouta.external.domain.oid.HakuOid
-import fi.oph.kouta.external.security.Authenticated
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import org.scalatra.{ActionResult, FutureSupport, NotFound, Ok}
+import fi.oph.kouta.servlet.Authenticated
+import org.scalatra.{ActionResult, FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -47,47 +45,9 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     hakuService.get(HakuOid(params("oid")))
-  }
-
-  registerPath(
-    "/haku/search",
-    """    get:
-      |      summary: Etsi hakuja
-      |      operationId: Etsi hakuja
-      |      description: Etsii hauista annetuilla ehdoilla
-      |      tags:
-      |        - Haku
-      |      parameters:
-      |        - in: query
-      |          name: ataruId
-      |          schema:
-      |            type: string
-      |          required: true
-      |          description: Ataru-lomakkeen id
-      |          example: 66b7b709-1ed0-49cc-bbef-e5b0420a81c9
-      |      responses:
-      |        '200':
-      |          description: Ok
-      |          content:
-      |            application/json:
-      |              schema:
-      |                type: array
-      |                items:
-      |                  $ref: '#/components/schemas/Haku'
-      |""".stripMargin
-  )
-  get("/search") {
-    implicit val authenticated: Authenticated = authenticate
-
-    params.get("ataruId").map(UUID.fromString) match {
-      case None => NotFound()
-      case Some(id) =>
-        hakuService.searchByAtaruId(id).map {
-          case haut if haut.isEmpty =>
-            NotFound(s"Didn't find anything searching for haku with $id in hakulomakeAtaruId")
-          case haut => haut
-        }
-    }
+      .map { case (haku, modified) =>
+        Ok(haku, headers = createLastModifiedHeader(modified))
+      }
   }
 
   registerPath( "/haku/",
@@ -154,8 +114,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
+      case Right(response) =>
+        Ok(response)
       case Left((status, message)) =>
         ActionResult(status, message, Map.empty)
     }

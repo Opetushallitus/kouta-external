@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.external.domain.enums.Koulutustyyppi
+import fi.oph.kouta.domain.Koulutustyyppi
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(

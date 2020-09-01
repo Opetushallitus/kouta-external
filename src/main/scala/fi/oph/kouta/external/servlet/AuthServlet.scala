@@ -2,8 +2,9 @@ package fi.oph.kouta.external.servlet
 
 import java.util.UUID
 
-import fi.oph.kouta.external.security.{CasSessionService, ServiceTicket}
+import fi.oph.kouta.external.security.CasSessionService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.security.ServiceTicket
 import fi.vm.sade.utils.cas.CasLogout
 import org.scalatra._
 

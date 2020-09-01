@@ -3,13 +3,14 @@ package fi.oph.kouta.external.integration.fixture
 import java.time.Instant
 import java.util.UUID
 
+import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.TestSetups.{setupWithEmbeddedPostgres, setupWithTemplate}
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.integration.fixture.Oid
+import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
+import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
 import org.json4s.{JBool, JObject}
@@ -73,7 +74,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
   def jsonHeader = "Content-Type" -> "application/json; charset=utf-8"
 
   def ifUnmodifiedSinceHeader(lastModified: Instant): (String, String) =
-    KoutaServlet.IfUnmodifiedSinceHeader -> KoutaServlet.renderHttpDate(lastModified)
+    KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(lastModified)
 
   def sessionHeader(sessionId: String): (String, String) = "Cookie" -> s"session=$sessionId"
   def sessionHeader(sessionId: UUID): (String, String)   = sessionHeader(sessionId.toString)

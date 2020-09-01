@@ -3,9 +3,10 @@ package fi.oph.kouta.external.domain
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
-import fi.oph.kouta.external.domain.oid.{OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
+import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
 import fi.oph.kouta.external.swagger.SwaggerModel
+import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
 @SwaggerModel(
   """    Valintaperuste:
@@ -155,4 +156,6 @@ case class Valintaperuste(
     muokkaaja: UserOid,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime]
-) extends PerustiedotWithId
+) extends PerustiedotWithId[Valintaperuste] with AuthorizableMaybeJulkinen[Valintaperuste] {
+  override def withMuokkaaja(muokkaaja: UserOid): Valintaperuste = copy(muokkaaja = muokkaaja)
+}

@@ -3,8 +3,8 @@ package fi.oph.kouta.external.domain.indexed
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
-import fi.oph.kouta.external.domain.oid.{HakuOid, HakukohdeOid, ToteutusOid}
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
 import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, Kielistetty}
 
 case class HakukohdeIndexed(
@@ -22,11 +22,7 @@ case class HakukohdeIndexed(
     hakulomakeLinkki: Kielistetty,
     kaytetaanHaunHakulomaketta: Option[Boolean],
     aloituspaikat: Option[Int],
-    minAloituspaikat: Option[Int],
-    maxAloituspaikat: Option[Int],
     ensikertalaisenAloituspaikat: Option[Int],
-    minEnsikertalaisenAloituspaikat: Option[Int],
-    maxEnsikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimus: Seq[KoodiUri],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
@@ -44,7 +40,8 @@ case class HakukohdeIndexed(
     muokkaaja: Muokkaaja,
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime]
+    modified: Option[LocalDateTime],
+    toteutus: Option[Tarjoajat]
 ) {
   def toHakukohde: Hakukohde = Hakukohde(
     oid = oid,
@@ -61,11 +58,7 @@ case class HakukohdeIndexed(
     hakulomakeLinkki = hakulomakeLinkki,
     kaytetaanHaunHakulomaketta = kaytetaanHaunHakulomaketta,
     aloituspaikat = aloituspaikat,
-    minAloituspaikat = minAloituspaikat,
-    maxAloituspaikat = maxAloituspaikat,
     ensikertalaisenAloituspaikat = ensikertalaisenAloituspaikat,
-    minEnsikertalaisenAloituspaikat = minEnsikertalaisenAloituspaikat,
-    maxEnsikertalaisenAloituspaikat = maxEnsikertalaisenAloituspaikat,
     pohjakoulutusvaatimusKoodiUrit = pohjakoulutusvaatimus.map(_.koodiUri),
     pohjakoulutusvaatimusTarkenne = pohjakoulutusvaatimusTarkenne,
     muuPohjakoulutusvaatimus = muuPohjakoulutusvaatimus,
@@ -85,4 +78,9 @@ case class HakukohdeIndexed(
     kielivalinta = kielivalinta,
     modified = modified
   )
+
+  def tarjoajat: Seq[OrganisaatioOid] =
+    toteutus.map(_.tarjoajat.map(_.oid)).getOrElse(Seq())
 }
+
+case class Tarjoajat(tarjoajat: Seq[Organisaatio])

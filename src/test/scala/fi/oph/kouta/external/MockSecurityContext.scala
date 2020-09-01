@@ -1,6 +1,7 @@
 package fi.oph.kouta.external
 
-import fi.oph.kouta.external.security.{Authority, KayttooikeusUserDetails, SecurityContext}
+import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
+import fi.oph.kouta.security.Authority
 import fi.vm.sade.utils.cas.CasClient.{SessionCookie, Username}
 import fi.vm.sade.utils.cas.{CasClient, CasParams}
 import scalaz.concurrent.Task

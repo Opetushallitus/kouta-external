@@ -3,9 +3,10 @@ package fi.oph.kouta.external.domain
 import java.time.LocalDateTime
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.enums.{Julkaisutila, Kieli, Koulutustyyppi}
-import fi.oph.kouta.external.domain.oid.{OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
+import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
 @SwaggerModel(
   """    Sorakuvaus:
@@ -71,8 +72,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |           format: date-time
     |           description: SORA-kuvauksen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
-    |"""
-)
+    |""")
 case class Sorakuvaus(
     id: Option[UUID],
     tila: Julkaisutila,
@@ -84,6 +84,8 @@ case class Sorakuvaus(
     organisaatioOid: OrganisaatioOid,
     muokkaaja: UserOid,
     modified: Option[LocalDateTime]
-) extends PerustiedotWithId
+) extends PerustiedotWithId[Sorakuvaus] with AuthorizableMaybeJulkinen[Sorakuvaus] {
+  override def withMuokkaaja(muokkaaja: UserOid): Sorakuvaus = copy(muokkaaja = muokkaaja)
+}
 
 case class SorakuvausMetadata(kuvaus: Kielistetty = Map())

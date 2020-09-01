@@ -24,10 +24,6 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
       .map(_.toHaku)
       .map(h => (h, TimeUtils.localDateTimeToInstant(h.modified.get)))
 
-  def searchByAtaruId(id: UUID): Future[Seq[Haku]] =
-    simpleSearch("hakulomakeAtaruId", id.toString)
-      .map(_.to[HakuIndexed])
-      .map(_.map(_.toHaku))
 }
 
 object HakuClient extends HakuClient(ElasticsearchClient.client)

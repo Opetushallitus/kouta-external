@@ -29,20 +29,6 @@ class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val 
   def get(oid: HakuOid)(implicit authenticated: Authenticated): Future[(Haku, Instant)] =
     hakuClient.getHaku(oid).map(Some(_)).map(authorizeGet(_, readRules).get)
 
-  /*
-  def searchByAtaruId(ataruId: UUID)(implicit authenticated: Authenticated): Future[Seq[Haku]] = {
-    val haut = hakuClient.searchByAtaruId(ataruId)
-
-    if (hasRootAccess(roleEntity.readRoles)) {
-      haut
-    } else {
-      withAuthorizedChildOrganizationOids(roleEntity.readRoles) { orgs =>
-        haut.map(_.filter(h => orgs.exists(_ == h.organisaatioOid)))
-      }
-    }
-  }
-  */
-
   def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] = {
     koutaClient.createHaku(KoutaHakuRequest(authenticated, haku))
   }

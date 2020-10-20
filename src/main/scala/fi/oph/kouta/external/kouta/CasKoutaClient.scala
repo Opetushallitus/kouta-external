@@ -3,7 +3,7 @@ package fi.oph.kouta.external.kouta
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
-import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.{CallerId, KoutaConfigurationFactory}
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.util.TimeUtils
@@ -23,7 +23,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Promise}
 
-object CasKoutaClient extends KoutaClient {
+object CasKoutaClient extends KoutaClient with CallerId {
 
   private def params = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration
@@ -38,10 +38,10 @@ object CasKoutaClient extends KoutaClient {
 
   override lazy protected val client: Client = {
     CasAuthenticatingClient(
-      new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, defaultClient),
+      new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, defaultClient, callerId),
       casParams = params,
       serviceClient = defaultClient,
-      clientCallerId = "kouta-external",
+      clientCallerId = callerId,
       sessionCookieName = "session"
     )
   }

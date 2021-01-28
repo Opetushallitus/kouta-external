@@ -3,7 +3,7 @@ package fi.oph.kouta.external
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
 
-object TempDcokerDb extends Logging {
+object TempDockerDb extends Logging {
 
   import TempDbUtils.tryTimes
   import CommandLine._

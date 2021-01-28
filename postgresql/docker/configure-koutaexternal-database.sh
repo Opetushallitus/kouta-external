@@ -15,4 +15,4 @@ grant all privileges on database "${DB_APP_DB}" to "${DB_APP_USER}";
 END
 
 psql "${DB_APP_DB}" -c "ALTER SCHEMA \"public\" OWNER TO \"${DB_APP_USER}\"" \
-                    -c "GRANT ALL ON SCHEMA \"public\" TO \"${DB_
+                    -c "GRANT ALL ON SCHEMA \"public\" TO \"${DB_APP_USER}\""

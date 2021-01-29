@@ -35,12 +35,4 @@ class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec with Gener
   it should "deny the user of wrong koulutustyyppi to read sorakuvaus created by oph" in {
     get(ophSorakuvausId, readSessionIds(YoOid), 403)
   }
-
-  it should "allow the user of proper koulutustyyppi to read julkinen sorakuvaus" in {
-    get(julkinenId, readSessionIds(ChildOid))
-  }
-
-  it should "deny the user of wrong koulutustyyppi to read julkinen sorakuvaus" in {
-    get(julkinenId, readSessionIds(YoOid), 403)
-  }
 }

@@ -17,13 +17,11 @@ class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec with Gener
   override val nonExistingId: UUID = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
 
   val ophSorakuvausId = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
-  val julkinenId      = UUID.fromString("db8acf4f-6e29-409d-93a4-06000fa9a4cd")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     addMockSorakuvaus(existingId, ChildOid)
     addMockSorakuvaus(ophSorakuvausId, OphOid)
-    addMockSorakuvaus(julkinenId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey -> "true"))
   }
 
   getTests()

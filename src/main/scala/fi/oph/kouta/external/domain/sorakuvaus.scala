@@ -1,12 +1,12 @@
 package fi.oph.kouta.external.domain
 
-import java.time.LocalDateTime
-import java.util.UUID
-
 import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
 import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
-import fi.oph.kouta.security.AuthorizableMaybeJulkinen
+import fi.oph.kouta.security.AuthorizableByKoulutustyyppi
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 @SwaggerModel(
   """    Sorakuvaus:
@@ -34,9 +34,6 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - arkistoitu
     |            - tallennettu
     |          description: SORA-kuvauksen julkaisutila. Jos SORA-kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
-    |        julkinen:
-    |          type: boolean
-    |          description: Voivatko muut oppilaitokset käyttää SORA-kuvausta
     |        kielivalinta:
     |          type: array
     |          description: Kielet, joille SORA-kuvauksen nimi, kuvailutiedot ja muut tekstit on käännetty
@@ -78,13 +75,12 @@ case class Sorakuvaus(
     tila: Julkaisutila,
     nimi: Kielistetty,
     koulutustyyppi: Koulutustyyppi,
-    julkinen: Boolean,
     kielivalinta: Seq[Kieli],
     metadata: Option[SorakuvausMetadata],
     organisaatioOid: OrganisaatioOid,
     muokkaaja: UserOid,
     modified: Option[LocalDateTime]
-) extends PerustiedotWithId[Sorakuvaus] with AuthorizableMaybeJulkinen[Sorakuvaus] {
+) extends PerustiedotWithId[Sorakuvaus] with AuthorizableByKoulutustyyppi[Sorakuvaus] {
   override def withMuokkaaja(muokkaaja: UserOid): Sorakuvaus = copy(muokkaaja = muokkaaja)
 }
 

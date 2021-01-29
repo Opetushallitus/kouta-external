@@ -12,7 +12,7 @@ class MockSecurityContext(
     users: Map[String, KayttooikeusUserDetails]
 ) extends SecurityContext {
 
-  val casClient: CasClient = new CasClient("", null) {
+  val casClient: CasClient = new CasClient("", null, "mockCallerId") {
     override def validateServiceTicket(service: String)(ticket: String): Task[Username] =
       if (ticket.startsWith(MockSecurityContext.ticketPrefix(service))) {
         val username = ticket.stripPrefix(MockSecurityContext.ticketPrefix(service))

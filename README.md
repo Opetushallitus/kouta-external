@@ -84,7 +84,8 @@ Tämän jälkeen käynnistä kouta-external tätä lokaalia elasticsearchia vast
 
 Testiympäristöjen swaggerit löytyvät seuraavista osoitteista:
 
-TODO listaa tähän untuva, hahtuva ja QA
+- [hahtuva](https://virkailija.hahtuvaopintopolku.fi/kouta-external/swagger)
+- [QA eli pallero](https://virkailija.testiopintopolku.fi/kouta-external/swagger)
 
 ### 4.2. Asennus
 

@@ -30,7 +30,7 @@ class SorakuvausService(sorakuvausClient: SorakuvausClient, val organisaatioServ
           AuthorizationRules(
             requiredRoles = roleEntity.readRoles.filterNot(_ == Indexer),
             allowAccessToParentOrganizations = true,
-            Seq(AuthorizationRuleForJulkinen)
+            Seq(authorizationRuleByKoulutustyyppi)
           )
         )
       )

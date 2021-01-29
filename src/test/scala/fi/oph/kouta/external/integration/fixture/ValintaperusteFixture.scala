@@ -7,7 +7,7 @@ import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ValintaperusteService}
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
 
 trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val ValintaperustePath = "/valintaperuste"
@@ -15,7 +15,7 @@ trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticClient.client), organisaatioService)
+    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticDockerClient.client), organisaatioService)
     addServlet(new ValintaperusteServlet(valintaperusteService), ValintaperustePath)
   }
 

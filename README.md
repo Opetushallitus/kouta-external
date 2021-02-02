@@ -2,7 +2,8 @@
 
 ## 1. Palvelun tehtävä
 
-Tarjoaa rajapinnan ulkoisille palveluille uuden koulutustarjonnan indeksoituun dataan.
+Tarjoaa rajapinnan ulkoisille palveluille uuden koulutustarjonnan indeksoituun dataan.   
+Mahdollistaa myös kouta-backendin hakujen luonnin ja muokkauksen. 
 
 ## 2. Arkkitehtuuri
 
@@ -66,7 +67,7 @@ postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
 ### 3.5. Käyttöliittymä
 
-Swagger löytyy osoitteesta `http://localhost:8097/kouta-external/swagger/`
+Swagger löytyy osoitteesta [http://localhost:8097/kouta-external/swagger/](http://localhost:8097/kouta-external/swagger/)
 
 ### 3.6. Kehitystyökalut
 

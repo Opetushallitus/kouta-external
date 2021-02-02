@@ -2,8 +2,7 @@ package fi.oph.kouta.external
 
 import java.time.LocalDateTime
 import java.util.UUID
-
-import fi.oph.kouta.domain.Kieli
+import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 package object domain {
@@ -249,5 +248,45 @@ package object domain {
       |          example: robotiikka
       |""")
   case class Keyword(kieli: Kieli, arvo: String)
+
+  @SwaggerModel(
+    """    KoulutuksenAlkamiskausi:
+      |      type: object
+      |      properties:
+      |        alkamiskausityyppi:
+      |          type: string
+      |          description: Alkamiskauden tyyppi
+      |          enum:
+      |            - 'henkilokohtainen suunnitelma'
+      |            - 'tarkka alkamisajankohta'
+      |            - 'alkamiskausi ja -vuosi'
+      |        koulutuksenAlkamispaivamaara:
+      |          type: string
+      |          description: Koulutuksen tarkka alkamisen päivämäärä
+      |          example: 2019-11-20T12:00
+      |        koulutuksenPaattymispaivamaara:
+      |          type: string
+      |          description: Koulutuksen päättymisen päivämäärä
+      |          example: 2019-11-20T12:00
+      |        koulutuksenAlkamiskausiKoodiUri:
+      |          type: string
+      |          description: Koulutusten alkamiskausi.
+      |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+      |          example: kausi_k#1
+      |        koulutuksenAlkamisvuosi:
+      |          type: string
+      |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla.
+      |          example: 2020
+      |        henkilokohtaisenSuunnitelmanLisatiedot:
+      |          type: object
+      |          description: Lisätietoa koulutuksen alkamisesta henkilökohtaisen suunnitelman mukaan eri kielillä. Kielet on määritetty haun kielivalinnassa.
+      |          $ref: '#/components/schemas/Teksti'
+      |""")
+  case class KoulutuksenAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
+                                     henkilokohtaisenSuunnitelmanLisatiedot: Kielistetty = Map(),
+                                     koulutuksenAlkamispaivamaara: Option[LocalDateTime] = None,
+                                     koulutuksenPaattymispaivamaara: Option[LocalDateTime] = None,
+                                     koulutuksenAlkamiskausiKoodiUri: Option[String] = None,
+                                     koulutuksenAlkamisvuosi: Option[String] = None)
 
 }

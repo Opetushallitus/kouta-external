@@ -1,9 +1,11 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.util.UUID
-
-import fi.oph.kouta.external.domain.{Ajanjakso, Kielistetty, Lisatieto, Osoite, Valintakoe, Valintakoetilaisuus}
+import fi.oph.kouta.domain.Alkamiskausityyppi
 import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
+import fi.oph.kouta.external.domain._
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 case class Muokkaaja(oid: UserOid)
 

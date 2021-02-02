@@ -34,8 +34,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        nimi:
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
+    |          $ref: '#/components/schemas/Nimi'
     |        alkamiskausiKoodiUri:
     |          type: string
     |          description: Hakukohteen koulutusten alkamiskausi, jos ei käytetä haun alkamiskautta.
@@ -64,13 +63,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        hakulomakeKuvaus:
     |          type: object
     |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        hakulomakeLinkki:
     |          type: object
     |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Linkki'
+    |          $ref: '#/components/schemas/Linkki'
     |        kaytetaanHaunHakulomaketta:
     |          type: boolean
     |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake?
@@ -109,13 +106,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        pohjakoulutusvaatimusTarkenne:
     |          type: object
     |          description: Pohjakoulutusvaatimuksen tarkenne eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        muuPohjakoulutusvaatimus:
     |          type: object
     |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        toinenAsteOnkoKaksoistutkinto:
     |          type: boolean
     |          description: Onko hakukohteen toisen asteen koulutuksessa mahdollista suorittaa kaksoistutkinto?
@@ -153,8 +148,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        liitteidenToimitusosoite:
     |          type: object
     |          description: Jos liitteillä on sama toimitusosoite, se ilmoitetaan tässä
-    |          allOf:
-    |            - $ref: '#/components/schemas/LiitteenToimitusosoite'
+    |          $ref: '#/components/schemas/LiitteenToimitusosoite'
     |        liitteet:
     |          type: array
     |          description: Hakukohteen liitteet

@@ -180,6 +180,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |           format: date-time
     |           description: Hakukohteen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
+    |        jarjestyspaikkaOid:
+    |          type: string
+    |          description: Hakukohteen järjestyspaikan organisaatio
+    |          example: 1.2.246.562.10.00101010101
     |""")
 case class Hakukohde(
     oid: Option[HakukohdeOid],
@@ -214,7 +218,8 @@ case class Hakukohde(
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime]
+    modified: Option[LocalDateTime],
+    jarjestyspaikkaOid: Option[OrganisaatioOid] = None,
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
 

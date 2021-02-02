@@ -41,7 +41,8 @@ case class HakukohdeIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime],
-    toteutus: Option[Tarjoajat]
+    toteutus: Option[Tarjoajat],
+    jarjestyspaikka: Option[Organisaatio]
 ) {
   def toHakukohde: Hakukohde = Hakukohde(
     oid = oid,
@@ -76,7 +77,8 @@ case class HakukohdeIndexed(
     muokkaaja = muokkaaja.oid,
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
-    modified = modified
+    modified = modified,
+    jarjestyspaikkaOid = jarjestyspaikka.map(_.oid)
   )
 
   def tarjoajat: Seq[OrganisaatioOid] =

@@ -38,8 +38,6 @@ object TestData {
     hakukohteenLiittamisenTakaraja = Some(inFuture()),
     hakukohteenMuokkaamisenTakaraja = Some(inFuture()),
     ajastettuJulkaisu = Some(inFuture()),
-    alkamiskausiKoodiUri = Some("kausi_k#1"),
-    alkamisvuosi = Some(LocalDate.now().getYear.toString),
     kohdejoukkoKoodiUri = Some("haunkohdejoukko_17#1"),
     kohdejoukonTarkenneKoodiUri = Some("haunkohdejoukontarkenne_1#1"),
     hakulomaketyyppi = Some(EiSähköistä),

@@ -1,9 +1,10 @@
 package fi.oph.kouta.external
 
-import java.time.LocalDateTime
-import java.util.UUID
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli}
 import fi.oph.kouta.external.swagger.SwaggerModel
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 package object domain {
 

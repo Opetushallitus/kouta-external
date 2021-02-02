@@ -1,11 +1,12 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kielistetty, Sv}
+import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, Osoite, Yhteyshenkilo, KoulutuksenAlkamiskausi}
+
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
-import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kielistetty, Sv}
-import fi.oph.kouta.TestOids._
-import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, Osoite, Yhteyshenkilo, KoulutuksenAlkamiskausi}
 
 object TestData {
 

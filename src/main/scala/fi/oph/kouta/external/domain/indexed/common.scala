@@ -42,3 +42,19 @@ case class ValintakoetilaisuusIndexed(
 case class OsoiteIndexed(osoite: Kielistetty, postinumero: Option[KoodiUri]) {
   def toOsoite: Osoite = Osoite(osoite, postinumero.map(_.koodiUri))
 }
+
+case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskausityyppi],
+                                          henkilokohtaisenSuunnitelmanLisatiedot: Kielistetty,
+                                          koulutuksenAlkamispaivamaara: Option[LocalDateTime],
+                                          koulutuksenPaattymispaivamaara: Option[LocalDateTime],
+                                          koulutuksenAlkamiskausi: Option[KoodiUri],
+                                          koulutuksenAlkamisvuosi: Option[String]) {
+  def toKoulutuksenAlkamiskausi: KoulutuksenAlkamiskausi = KoulutuksenAlkamiskausi(
+    alkamiskausityyppi = alkamiskausityyppi,
+    henkilokohtaisenSuunnitelmanLisatiedot = henkilokohtaisenSuunnitelmanLisatiedot,
+    koulutuksenAlkamispaivamaara = koulutuksenAlkamispaivamaara,
+    koulutuksenPaattymispaivamaara = koulutuksenPaattymispaivamaara,
+    koulutuksenAlkamiskausiKoodiUri = koulutuksenAlkamiskausi.map(_.koodiUri),
+    koulutuksenAlkamisvuosi = koulutuksenAlkamisvuosi
+  )
+}

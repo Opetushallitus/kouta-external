@@ -1,10 +1,11 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.time.LocalDateTime
-import java.util.UUID
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
 import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, HakukohdeMetadata, Kielistetty}
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 case class HakukohdeIndexed(
     oid: Option[HakukohdeOid],

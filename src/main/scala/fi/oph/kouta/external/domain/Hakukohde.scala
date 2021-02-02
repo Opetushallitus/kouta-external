@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.domain
 
+import fi.oph.kouta.domain.oid._
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
+import fi.oph.kouta.external.swagger.SwaggerModel
+
 import java.time.LocalDateTime
 import java.util.UUID
-
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
-import fi.oph.kouta.domain.oid._
-import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Hakukohde:

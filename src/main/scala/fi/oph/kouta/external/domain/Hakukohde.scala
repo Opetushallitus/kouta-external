@@ -171,6 +171,9 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: string
     |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid
     |          example: 1.2.246.562.10.00101010101
+    |        metadata:
+    |          type: object
+    |          $ref: '#/components/schemas/HakukohdeMetadata'
     |        organisaatioOid:
     |           type: string
     |           description: Hakukohteen luoneen organisaation oid
@@ -216,11 +219,31 @@ case class Hakukohde(
     valintakokeet: List[Valintakoe],
     hakuajat: List[Ajanjakso],
     muokkaaja: UserOid,
+    metadata: Option[HakukohdeMetadata] = None,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime],
     jarjestyspaikkaOid: Option[OrganisaatioOid] = None,
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
-
 }
+
+@SwaggerModel(
+  """    HakukohdeMetadata:
+      |      type: object
+      |      properties:
+      |        valintakokeidenYleiskuvaus:
+      |          type: object
+      |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty hakukohteen kielivalinnassa.
+      |          $ref: '#/components/schemas/Kuvaus'
+      |        koulutuksenAlkamiskausi:
+      |          type: object
+      |          description: Koulutuksen alkamiskausi
+      |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
+      |        kaytetaanHaunAlkamiskautta:
+      |          type: boolean
+      |          description: Käytetäänkö haun alkamiskautta ja -vuotta vai onko hakukohteelle määritelty oma alkamisajankohta?
+    |""")
+case class HakukohdeMetadata(valintakokeidenYleiskuvaus: Kielistetty = Map(),
+                             koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
+                             kaytetaanHaunAlkamiskautta: Option[Boolean] = None)

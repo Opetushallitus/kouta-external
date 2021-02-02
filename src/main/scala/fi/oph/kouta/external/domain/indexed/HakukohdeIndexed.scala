@@ -2,10 +2,9 @@ package fi.oph.kouta.external.domain.indexed
 
 import java.time.LocalDateTime
 import java.util.UUID
-
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
-import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, Kielistetty}
+import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, HakukohdeMetadata, Kielistetty}
 
 case class HakukohdeIndexed(
     oid: Option[HakukohdeOid],
@@ -38,6 +37,7 @@ case class HakukohdeIndexed(
     valintakokeet: List[ValintakoeIndexed],
     hakuajat: List[Ajanjakso],
     muokkaaja: Muokkaaja,
+    metadata: Option[HakukohdeMetadataIndexed],
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[LocalDateTime],
@@ -75,6 +75,7 @@ case class HakukohdeIndexed(
     valintakokeet = valintakokeet.map(_.toValintakoe),
     hakuajat = hakuajat,
     muokkaaja = muokkaaja.oid,
+    metadata = metadata.map(_.toHakukohdeMetadata),
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
     modified = modified,
@@ -86,3 +87,15 @@ case class HakukohdeIndexed(
 }
 
 case class Tarjoajat(tarjoajat: Seq[Organisaatio])
+
+class HakukohdeMetadataIndexed(valintakokeidenYleiskuvaus: Kielistetty,
+                                koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
+                                kaytetaanHaunAlkamiskautta: Option[Boolean]
+                         ) {
+  def toHakukohdeMetadata: HakukohdeMetadata = HakukohdeMetadata(
+    valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi),
+    kaytetaanHaunAlkamiskautta = kaytetaanHaunAlkamiskautta
+  )
+}
+

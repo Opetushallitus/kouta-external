@@ -3,10 +3,9 @@ package fi.oph.kouta.external
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
-
-import fi.oph.kouta.domain.{EiSähköistä, Fi, Julkaistu, Kielistetty, Sv}
+import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kielistetty, Sv}
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, Osoite, Yhteyshenkilo}
+import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, Osoite, Yhteyshenkilo, KoulutuksenAlkamiskausi}
 
 object TestData {
 
@@ -44,7 +43,16 @@ object TestData {
     hakulomakeAtaruId = Some(UUID.randomUUID()),
     hakulomakeKuvaus = Map(Fi -> "Hakulomake tulostetaan ja toimitetaan postitse", Sv -> "Hakulomake tulostetaan ja toimitetaan postitse sv"),
     hakulomakeLinkki = Map(Fi -> "https://koulu.test/hakemusinfo-fi", Sv -> "https://koulu.test/hakemusinfo-sv"),
-    metadata = Some(HakuMetadata(Seq(Yhteystieto1), Seq(Ajanjakso(alkaa = now(), paattyy = inFuture())))),
+    metadata = Some(HakuMetadata(
+      Seq(Yhteystieto1),
+      Seq(Ajanjakso(alkaa = now(), paattyy = inFuture())),
+      koulutuksenAlkamiskausi = Some(KoulutuksenAlkamiskausi(
+        alkamiskausityyppi = Some(AlkamiskausiJaVuosi),
+        henkilokohtaisenSuunnitelmanLisatiedot = Map(Fi -> "Jotakin lisätietoa", Sv -> "Jotakin lisätietoa sv"),
+        koulutuksenAlkamispaivamaara = None,
+        koulutuksenPaattymispaivamaara = None,
+        koulutuksenAlkamiskausiKoodiUri = Some("kausi_k#1"),
+        koulutuksenAlkamisvuosi = Some(LocalDate.now().getYear.toString))))),
     hakuajat = List(Ajanjakso(alkaa = now(), paattyy = inFuture())),
     organisaatioOid = ChildOid,
     muokkaaja = TestUserOid,

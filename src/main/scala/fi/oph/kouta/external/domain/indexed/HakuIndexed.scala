@@ -21,7 +21,7 @@ class HakuIndexed(
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
-    metadata: Option[HakuMetadata],
+    metadata: Option[HakuMetadataIndexed],
     organisaatio: Organisaatio,
     hakuajat: List[Ajanjakso],
     muokkaaja: Muokkaaja,
@@ -42,11 +42,23 @@ class HakuIndexed(
     hakulomakeAtaruId = hakulomakeAtaruId,
     hakulomakeKuvaus = hakulomakeKuvaus,
     hakulomakeLinkki = hakulomakeLinkki,
-    metadata = metadata,
+    metadata = metadata.map(_.toHakuMetadata),
     organisaatioOid = organisaatio.oid,
     hakuajat = hakuajat,
     muokkaaja = muokkaaja.oid,
     kielivalinta = kielivalinta,
     modified = modified
+  )
+}
+
+class HakuMetadataIndexed(
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    tulevaisuudenAikataulu: Seq[Ajanjakso],
+    koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed]
+) {
+  def toHakuMetadata: HakuMetadata = HakuMetadata(
+    yhteyshenkilot = yhteyshenkilot,
+    tulevaisuudenAikataulu = tulevaisuudenAikataulu,
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi)
   )
 }

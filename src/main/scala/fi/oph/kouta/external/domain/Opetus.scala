@@ -59,26 +59,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa?"
     |          example: 220.50
-    |        koulutuksenTarkkaAlkamisaika:
-    |          type: string
-    |          description: Jos alkamisaika on tiedossa niin alkamis- ja päättymispäivämäärä on pakollinen. Muussa tapauksessa kausi ja vuosi on pakollisia tietoja.
-    |          example: true
-    |        koulutuksenAlkamispaivamaara:
-    |          type: string
-    |          description: Koulutuksen alkamisen päivämäärä
-    |          example: 2019-11-20T12:00
-    |        koulutuksenPaattymispaivamaara:
-    |          type: string
-    |          description: Koulutuksen päättymisen päivämäärä
-    |          example: 2019-12-20T12:00
-    |        koulutuksenAlkamiskausi:
-    |          type: string
-    |          description: Koulutuksen toteutuksen alkamiskausi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
-    |          example: kausi_k#1
-    |        koulutuksenAlkamisvuosi:
-    |          type: string
-    |          description: Koulutuksen alkamisvuosi
-    |          example: 2020
     |        lisatiedot:
     |          type: array
     |          description: Koulutuksen toteutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa

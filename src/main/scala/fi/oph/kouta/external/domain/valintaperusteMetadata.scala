@@ -7,6 +7,17 @@ import fi.oph.kouta.external.swagger.SwaggerModel
   """    ValintaperusteMetadata:
     |      type: object
     |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala'"
+    |          enum:
+    |            - amm
+    |            - yo
+    |            - amk
+    |            - lk
+    |            - amm-tutkinnon-osa
+    |            - amm-osaamisala
+    |          example: amm
     |        kielitaitovaatimukset:
     |          type: array
     |          description: Lista valintaperustekuvauksen kielitaitovaatimuksista

@@ -90,9 +90,9 @@ case class HakukohdeIndexed(
 case class Tarjoajat(tarjoajat: Seq[Organisaatio])
 
 class HakukohdeMetadataIndexed(valintakokeidenYleiskuvaus: Kielistetty,
-                                koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
-                                kaytetaanHaunAlkamiskautta: Option[Boolean]
-                         ) {
+                               koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
+                               kaytetaanHaunAlkamiskautta: Option[Boolean]
+                              ) {
   def toHakukohdeMetadata: HakukohdeMetadata = HakukohdeMetadata(
     valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi),

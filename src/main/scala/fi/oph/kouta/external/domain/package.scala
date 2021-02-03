@@ -193,8 +193,15 @@ package object domain {
       |          type: object
       |          description: Lisätietoja valintakokeesta eri kielillä. Kielet on määritetty kielivalinnassa.
       |          $ref: '#/components/schemas/Teksti'
+      |        jarjestamispaikka:
+      |          type: object
+      |          description: Valintakokeen järjestämispaikka eri kielillä. Kielet on määritetty kielivalinnassa.
+      |          $ref: '#/components/schemas/Teksti'
       |""")
-  case class Valintakoetilaisuus(osoite: Option[Osoite], aika: Option[Ajanjakso], lisatietoja: Kielistetty)
+  case class Valintakoetilaisuus(osoite: Option[Osoite],
+                                 aika: Option[Ajanjakso],
+                                 lisatietoja: Kielistetty,
+                                 jarjestamispaikka: Kielistetty = Map())
 
   @SwaggerModel(
     """    Osoite:

@@ -30,12 +30,14 @@ case class ValintakoeIndexed(id: Option[UUID], tyyppi: Option[KoodiUri], tilaisu
 case class ValintakoetilaisuusIndexed(
     osoite: Option[OsoiteIndexed],
     aika: Option[Ajanjakso],
-    lisatietoja: Kielistetty
+    lisatietoja: Kielistetty,
+    jarjestamispaikka: Kielistetty = Map()
 ) {
   def toValintakoetilaisuus: Valintakoetilaisuus = Valintakoetilaisuus(
     osoite = osoite.map(_.toOsoite),
     aika = aika,
-    lisatietoja = lisatietoja
+    lisatietoja = lisatietoja,
+    jarjestamispaikka = jarjestamispaikka
   )
 }
 

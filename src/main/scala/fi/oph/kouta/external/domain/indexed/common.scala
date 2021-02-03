@@ -19,11 +19,31 @@ case class LisatietoIndexed(otsikko: KoodiUri, teksti: Kielistetty) {
   def toLisatieto: Lisatieto = Lisatieto(otsikkoKoodiUri = otsikko.koodiUri, teksti)
 }
 
-case class ValintakoeIndexed(id: Option[UUID], tyyppi: Option[KoodiUri], tilaisuudet: List[ValintakoetilaisuusIndexed]) {
+case class ValintakoeIndexed(id: Option[UUID],
+                             tyyppi: Option[KoodiUri],
+                             metadata: Option[ValintaKoeMetadataIndexed],
+                             tilaisuudet: List[ValintakoetilaisuusIndexed]) {
   def toValintakoe: Valintakoe = Valintakoe(
     id = id,
     tyyppiKoodiUri = tyyppi.map(_.koodiUri),
+    metadata = metadata.map(_.toValintakoeMetadata),
     tilaisuudet = tilaisuudet.map(_.toValintakoetilaisuus)
+  )
+}
+
+case class ValintaKoeMetadataIndexed(tietoja: Kielistetty = Map(),
+                                     vahimmaispisteet: Option[Double] = None,
+                                     liittyyEnnakkovalmistautumista: Option[Boolean] = None,
+                                     ohjeetEnnakkovalmistautumiseen: Kielistetty = Map(),
+                                     erityisjarjestelytMahdollisia: Option[Boolean] = None,
+                                     ohjeetErityisjarjestelyihin: Kielistetty = Map()) {
+  def toValintakoeMetadata: ValintaKoeMetadata = ValintaKoeMetadata(
+    tietoja = tietoja,
+    vahimmaispisteet = vahimmaispisteet,
+    liittyyEnnakkovalmistautumista = liittyyEnnakkovalmistautumista,
+    ohjeetEnnakkovalmistautumiseen = ohjeetEnnakkovalmistautumiseen,
+    erityisjarjestelytMahdollisia = erityisjarjestelytMahdollisia,
+    ohjeetErityisjarjestelyihin = ohjeetErityisjarjestelyihin
   )
 }
 

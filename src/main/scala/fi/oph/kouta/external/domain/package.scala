@@ -164,6 +164,9 @@ package object domain {
       |          type: string
       |          description: Valintakokeen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/valintakokeentyyppi/1)
       |          example: valintakokeentyyppi_1#1
+      |        metadata:
+      |          type: object
+      |          $ref: '#/components/schemas/ValintakoeMetadata'
       |        tilaisuudet:
       |          type: array
       |          description: Valintakokeen järjestämistilaisuudet
@@ -173,8 +176,43 @@ package object domain {
   case class Valintakoe(
       id: Option[UUID] = None,
       tyyppiKoodiUri: Option[String] = None,
+      metadata: Option[ValintaKoeMetadata],
       tilaisuudet: List[Valintakoetilaisuus] = List()
   )
+
+  @SwaggerModel(
+    """    ValintakoeMetadata:
+      |      type: object
+      |      properties:
+      |        tietoja:
+      |          type: object
+      |          description: Tietoa valintakokeesta
+      |          $ref: '#/components/schemas/Teksti'
+      |        vahimmaispisteet:
+      |          type: double
+      |          description: Valintakokeen vähimmäispisteet
+      |          example: 10.0
+      |        liittyyEnnakkovalmistautumista:
+      |          type: boolean
+      |          description: Liittyykö valintakokeeseen ennakkovalmistautumista
+      |        ohjeetEnnakkovalmistautumiseen:
+      |          type: object
+      |          description: Ohjeet valintakokeen ennakkojärjestelyihin
+      |          $ref: '#/components/schemas/Teksti'
+      |        erityisjarjestelytMahdollisia:
+      |          type: boolean
+      |          description: Ovatko erityisjärjestelyt mahdollisia valintakokeessa
+      |        ohjeetErityisjarjestelyihin:
+      |          type: object
+      |          description: Ohjeet valintakokeen erityisjärjestelyihin
+      |          $ref: '#/components/schemas/Teksti'
+      |""")
+  case class ValintaKoeMetadata(tietoja: Kielistetty = Map(),
+                                vahimmaispisteet: Option[Double] = None,
+                                liittyyEnnakkovalmistautumista: Option[Boolean] = None,
+                                ohjeetEnnakkovalmistautumiseen: Kielistetty = Map(),
+                                erityisjarjestelytMahdollisia: Option[Boolean] = None,
+                                ohjeetErityisjarjestelyihin: Kielistetty = Map())
 
   @SwaggerModel(
     """    Valintakoetilaisuus:

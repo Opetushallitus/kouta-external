@@ -1,7 +1,5 @@
 package fi.oph.kouta.external.domain
 
-import java.time.LocalDateTime
-
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -51,6 +49,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: object
     |          description: Koulutuksen toteutuksen maksullisuutta tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
+    |        koulutuksenAlkamiskausi:
+    |          type: object
+    |          description: Koulutuksen alkamiskausi
+    |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
     |        maksunMaara:
     |          type: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa?"
@@ -82,6 +84,7 @@ case class Opetus(
     opetustapaKuvaus: Kielistetty,
     onkoMaksullinen: Option[Boolean],
     maksullisuusKuvaus: Kielistetty,
+    koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
     maksunMaara: Option[Double],
     lisatiedot: Seq[Lisatieto],
     onkoStipendia: Option[Boolean],

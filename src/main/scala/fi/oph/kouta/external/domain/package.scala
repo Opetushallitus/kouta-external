@@ -97,8 +97,7 @@ package object domain {
       |        teksti:
       |          type: object
       |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Lisatieto(otsikkoKoodiUri: String, teksti: Kielistetty)
 
@@ -109,28 +108,23 @@ package object domain {
       |        nimi:
       |          type: object
       |          description: Yhteyshenkilön nimi eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        titteli:
       |          type: object
       |          description: Yhteyshenkilön titteli eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        sahkoposti:
       |          type: object
       |          description: Yhteyshenkilön sähköpostiosoite eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        puhelinnumero:
       |          type: object
       |          description: Yhteyshenkilön puhelinnumero eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        wwwSivu:
       |          type: object
       |          description: Yhteyshenkilön www-sivu eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Yhteyshenkilo(
       nimi: Kielistetty,
@@ -189,8 +183,7 @@ package object domain {
       |        osoite:
       |          type: object
       |          description: Valintakokeen järjestämispaikan osoite
-      |          allOf:
-      |            - $ref: '#/components/schemas/Osoite'
+      |          $ref: '#/components/schemas/Osoite'
       |        aika:
       |          type: array
       |          description: Valintakokeen järjestämisaika
@@ -199,8 +192,7 @@ package object domain {
       |        lisatietoja:
       |          type: object
       |          description: Lisätietoja valintakokeesta eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Valintakoetilaisuus(osoite: Option[Osoite], aika: Option[Ajanjakso], lisatietoja: Kielistetty)
 
@@ -211,8 +203,7 @@ package object domain {
       |        osoite:
       |          type: object
       |          description: Osoite eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        postinumeroKoodiUri:
       |          type: string
       |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/posti/2)
@@ -227,8 +218,7 @@ package object domain {
       |        kieli:
       |          type: string
       |          desciption: Ammattinimikkeen kieli
-      |          allOf:
-      |            - $ref: '#/components/schemas/Kieli'
+      |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:
       |          type: string
@@ -240,8 +230,7 @@ package object domain {
       |        kieli:
       |          type: string
       |          desciption: Asiasanan kieli
-      |          allOf:
-      |            - $ref: '#/components/schemas/Kieli'
+      |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:
       |          type: string

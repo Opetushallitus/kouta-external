@@ -19,8 +19,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        opetuskieletKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen opetuskieliä tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        opetusaikaKoodiUrit:
     |          type: array
     |          description: Lista koulutuksen toteutuksen opetusajoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opetusaikakk/1)
@@ -32,8 +31,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        opetusaikaKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen opetusaikoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        opetustapaKoodiUrit:
     |          type: array
     |          description: Lista koulutuksen toteutuksen opetustavoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opetuspaikkakk/1)
@@ -45,16 +43,14 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        opetustapaKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen opetustapoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        onkoMaksullinen:
     |          type: boolean
     |          decription: "Onko koulutus maksullinen?"
     |        maksullisuusKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen maksullisuutta tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        maksunMaara:
     |          type: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa?"
@@ -75,8 +71,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        stipendinKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen stipendiä tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |""")
 case class Opetus(
     opetuskieliKoodiUrit: Seq[String],

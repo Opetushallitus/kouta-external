@@ -13,14 +13,14 @@ import fi.oph.kouta.security.Role
 class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
 
   override val roleEntities = Seq(Role.Haku)
-  override val getPath      = HakuPath
+  override val getPath: String = HakuPath
   override val entityName   = "haku"
-  val existingId            = HakuOid("1.2.246.562.29.00000000000000000009")
-  val nonExistingId         = HakuOid("1.2.246.562.29.0")
+  val existingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000009")
+  val nonExistingId: HakuOid = HakuOid("1.2.246.562.29.0")
 
-  val ataruId1 = UUID.randomUUID()
-  val ataruId2 = UUID.randomUUID()
-  val ataruId3 = UUID.randomUUID()
+  val ataruId1: UUID = UUID.randomUUID()
+  val ataruId2: UUID = UUID.randomUUID()
+  val ataruId3: UUID = UUID.randomUUID()
 
   override def beforeAll(): Unit = {
     super.beforeAll()

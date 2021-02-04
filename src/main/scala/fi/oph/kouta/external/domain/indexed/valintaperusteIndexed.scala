@@ -46,6 +46,7 @@ sealed trait ValintaperusteMetadataIndexed {
   def tyyppi: Koulutustyyppi
   def valintatavat: Seq[ValintatapaIndexed]
   def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed]
+  def valintakokeidenYleiskuvaus: Kielistetty
   def kuvaus: Kielistetty
 
   def toValintaperusteMetadata: ValintaperusteMetadata
@@ -54,6 +55,7 @@ sealed trait ValintaperusteMetadataIndexed {
 case class AmmatillinenValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     valintatavat: Seq[ValintatapaIndexed],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     kuvaus: Kielistetty
 ) extends ValintaperusteMetadataIndexed {
@@ -61,6 +63,7 @@ case class AmmatillinenValintaperusteMetadataIndexed(
     AmmatillinenValintaperusteMetadata(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
       kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
       kuvaus = kuvaus
     )
@@ -73,6 +76,7 @@ sealed trait KorkeakoulutusValintaperusteMetadataIndexed extends ValintaperusteM
 case class YliopistoValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[ValintatapaIndexed],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     osaamistausta: Seq[KoodiUri],
     kuvaus: Kielistetty
@@ -80,6 +84,7 @@ case class YliopistoValintaperusteMetadataIndexed(
   override def toValintaperusteMetadata: YliopistoValintaperusteMetadata = YliopistoValintaperusteMetadata(
     tyyppi = tyyppi,
     valintatavat = valintatavat.map(_.toValintatapa),
+    valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
     osaamistaustaKoodiUrit = osaamistausta.map(_.koodiUri),
     kuvaus = kuvaus
@@ -89,6 +94,7 @@ case class YliopistoValintaperusteMetadataIndexed(
 case class AmmattikorkeakouluValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[ValintatapaIndexed],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     osaamistausta: Seq[KoodiUri],
     kuvaus: Kielistetty
@@ -97,6 +103,7 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
     AmmattikorkeakouluValintaperusteMetadata(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
       kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
       osaamistaustaKoodiUrit = osaamistausta.map(_.koodiUri),
       kuvaus = kuvaus

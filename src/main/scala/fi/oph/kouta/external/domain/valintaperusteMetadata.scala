@@ -7,6 +7,17 @@ import fi.oph.kouta.external.swagger.SwaggerModel
   """    ValintaperusteMetadata:
     |      type: object
     |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala'"
+    |          enum:
+    |            - amm
+    |            - yo
+    |            - amk
+    |            - lk
+    |            - amm-tutkinnon-osa
+    |            - amm-osaamisala
+    |          example: amm
     |        kielitaitovaatimukset:
     |          type: array
     |          description: Lista valintaperustekuvauksen kielitaitovaatimuksista
@@ -17,11 +28,20 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Lista valintaperustekuvauksen valintatavoista
     |          items:
     |            $ref: '#/components/schemas/Valintatapa'
+    |        valintakokeidenYleiskuvaus:
+    |          type: object
+    |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
+    |        kuvaus:
+    |          type: object
+    |          description: Valintaperustekuvauksen kuvausteksti eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
     |""")
 sealed trait ValintaperusteMetadata {
   def tyyppi: Koulutustyyppi
   def valintatavat: Seq[Valintatapa]
   def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus]
+  def valintakokeidenYleiskuvaus: Kielistetty
   def kuvaus: Kielistetty
 }
 
@@ -65,6 +85,7 @@ case class AmmatillinenValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     kuvaus: Kielistetty
 ) extends ValintaperusteMetadata
 
@@ -85,6 +106,7 @@ case class YliopistoValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     osaamistaustaKoodiUrit: Seq[String],
     kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadata
@@ -106,6 +128,7 @@ case class AmmattikorkeakouluValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
     kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
+    valintakokeidenYleiskuvaus: Kielistetty = Map(),
     osaamistaustaKoodiUrit: Seq[String],
     kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadata

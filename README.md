@@ -2,7 +2,8 @@
 
 ## 1. Palvelun tehtävä
 
-Tarjoaa rajapinnan ulkoisille palveluille uuden koulutustarjonnan indeksoituun dataan.
+Tarjoaa rajapinnan ulkoisille palveluille uuden koulutustarjonnan indeksoituun dataan.   
+Mahdollistaa myös kouta-backendin hakujen luonnin ja muokkauksen. 
 
 ## 2. Arkkitehtuuri
 
@@ -66,7 +67,7 @@ postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
 ### 3.5. Käyttöliittymä
 
-Swagger löytyy osoitteesta `http://localhost:8097/kouta-external/swagger/`
+Swagger löytyy osoitteesta [http://localhost:8097/kouta-external/swagger/](http://localhost:8097/kouta-external/swagger/)
 
 ### 3.6. Kehitystyökalut
 
@@ -84,7 +85,8 @@ Tämän jälkeen käynnistä kouta-external tätä lokaalia elasticsearchia vast
 
 Testiympäristöjen swaggerit löytyvät seuraavista osoitteista:
 
-TODO listaa tähän untuva, hahtuva ja QA
+- [hahtuva](https://virkailija.hahtuvaopintopolku.fi/kouta-external/swagger)
+- [QA eli pallero](https://virkailija.testiopintopolku.fi/kouta-external/swagger)
 
 ### 4.2. Asennus
 

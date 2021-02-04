@@ -45,8 +45,7 @@ import java.util.UUID
     |        nimi:
     |          type: object
     |          description: SORA-kuvauksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty SORA-kuvauksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
+    |          $ref: '#/components/schemas/Nimi'
     |        metadata:
     |          type: object
     |          description: SORA-kuvauksen kuvailutiedot eri kielillä
@@ -54,8 +53,18 @@ import java.util.UUID
     |            kuvaus:
     |              type: object
     |              description: SORA-kuvauksen kuvausteksti eri kielillä. Kielet on määritetty kuvauksen kielivalinnassa.
-    |              allOf:
-    |                - $ref: '#/components/schemas/Kuvaus'
+    |              $ref: '#/components/schemas/Kuvaus'
+    |            koulutusKoodiUrit:
+    |              type: array
+    |              description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - koulutus_371101#1
+    |            koulutusalaKoodiUri:
+    |              type: string
+    |              description: Koulutusala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso2/1)
+    |              example: kansallinenkoulutusluokitus2016koulutusalataso2_054#1
     |        muokkaaja:
     |          type: string
     |          description: SORA-kuvausta viimeksi muokanneen virkailijan henkilö-oid
@@ -84,4 +93,6 @@ case class Sorakuvaus(
   override def withMuokkaaja(muokkaaja: UserOid): Sorakuvaus = copy(muokkaaja = muokkaaja)
 }
 
-case class SorakuvausMetadata(kuvaus: Kielistetty = Map())
+case class SorakuvausMetadata(kuvaus: Kielistetty = Map(),
+                              koulutusalaKoodiUri: Option[String],
+                              koulutusKoodiUrit: Seq[String] = Seq())

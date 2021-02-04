@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.time.LocalDateTime
-import java.util.UUID
-
 import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli}
 import fi.oph.kouta.external.domain._
+
+import java.time.LocalDateTime
+import java.util.UUID
 
 class HakuIndexed(
     oid: Option[HakuOid],
@@ -15,15 +15,13 @@ class HakuIndexed(
     hakukohteenLiittamisenTakaraja: Option[LocalDateTime],
     hakukohteenMuokkaamisenTakaraja: Option[LocalDateTime],
     ajastettuJulkaisu: Option[LocalDateTime],
-    alkamiskausi: Option[KoodiUri],
-    alkamisvuosi: Option[String],
     kohdejoukko: Option[KoodiUri],
     kohdejoukonTarkenne: Option[KoodiUri],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
-    metadata: Option[HakuMetadata],
+    metadata: Option[HakuMetadataIndexed],
     organisaatio: Organisaatio,
     hakuajat: List[Ajanjakso],
     muokkaaja: Muokkaaja,
@@ -38,19 +36,29 @@ class HakuIndexed(
     hakukohteenLiittamisenTakaraja = hakukohteenLiittamisenTakaraja,
     hakukohteenMuokkaamisenTakaraja = hakukohteenMuokkaamisenTakaraja,
     ajastettuJulkaisu = ajastettuJulkaisu,
-    alkamiskausiKoodiUri = alkamiskausi.map(_.koodiUri),
-    alkamisvuosi = alkamisvuosi,
     kohdejoukkoKoodiUri = kohdejoukko.map(_.koodiUri),
     kohdejoukonTarkenneKoodiUri = kohdejoukonTarkenne.map(_.koodiUri),
     hakulomaketyyppi = hakulomaketyyppi,
     hakulomakeAtaruId = hakulomakeAtaruId,
     hakulomakeKuvaus = hakulomakeKuvaus,
     hakulomakeLinkki = hakulomakeLinkki,
-    metadata = metadata,
+    metadata = metadata.map(_.toHakuMetadata),
     organisaatioOid = organisaatio.oid,
     hakuajat = hakuajat,
     muokkaaja = muokkaaja.oid,
     kielivalinta = kielivalinta,
     modified = modified
+  )
+}
+
+class HakuMetadataIndexed(
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    tulevaisuudenAikataulu: Seq[Ajanjakso],
+    koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed]
+) {
+  def toHakuMetadata: HakuMetadata = HakuMetadata(
+    yhteyshenkilot = yhteyshenkilot,
+    tulevaisuudenAikataulu = tulevaisuudenAikataulu,
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi)
   )
 }

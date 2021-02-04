@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.domain
 
+import fi.oph.kouta.domain.oid._
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
+import fi.oph.kouta.external.swagger.SwaggerModel
+
 import java.time.LocalDateTime
 import java.util.UUID
-
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
-import fi.oph.kouta.domain.oid._
-import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Hakukohde:
@@ -34,8 +34,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        nimi:
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
+    |          $ref: '#/components/schemas/Nimi'
     |        alkamiskausiKoodiUri:
     |          type: string
     |          description: Hakukohteen koulutusten alkamiskausi, jos ei käytetä haun alkamiskautta.
@@ -64,13 +63,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        hakulomakeKuvaus:
     |          type: object
     |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        hakulomakeLinkki:
     |          type: object
     |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Linkki'
+    |          $ref: '#/components/schemas/Linkki'
     |        kaytetaanHaunHakulomaketta:
     |          type: boolean
     |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake?
@@ -109,13 +106,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        pohjakoulutusvaatimusTarkenne:
     |          type: object
     |          description: Pohjakoulutusvaatimuksen tarkenne eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        muuPohjakoulutusvaatimus:
     |          type: object
     |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        toinenAsteOnkoKaksoistutkinto:
     |          type: boolean
     |          description: Onko hakukohteen toisen asteen koulutuksessa mahdollista suorittaa kaksoistutkinto?
@@ -153,8 +148,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        liitteidenToimitusosoite:
     |          type: object
     |          description: Jos liitteillä on sama toimitusosoite, se ilmoitetaan tässä
-    |          allOf:
-    |            - $ref: '#/components/schemas/LiitteenToimitusosoite'
+    |          $ref: '#/components/schemas/LiitteenToimitusosoite'
     |        liitteet:
     |          type: array
     |          description: Hakukohteen liitteet
@@ -177,6 +171,9 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: string
     |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid
     |          example: 1.2.246.562.10.00101010101
+    |        metadata:
+    |          type: object
+    |          $ref: '#/components/schemas/HakukohdeMetadata'
     |        organisaatioOid:
     |           type: string
     |           description: Hakukohteen luoneen organisaation oid
@@ -186,6 +183,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |           format: date-time
     |           description: Hakukohteen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
+    |        jarjestyspaikkaOid:
+    |          type: string
+    |          description: Hakukohteen järjestyspaikan organisaatio
+    |          example: 1.2.246.562.10.00101010101
     |""")
 case class Hakukohde(
     oid: Option[HakukohdeOid],
@@ -218,10 +219,31 @@ case class Hakukohde(
     valintakokeet: List[Valintakoe],
     hakuajat: List[Ajanjakso],
     muokkaaja: UserOid,
+    metadata: Option[HakukohdeMetadata] = None,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime]
+    modified: Option[LocalDateTime],
+    jarjestyspaikkaOid: Option[OrganisaatioOid] = None,
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
-
 }
+
+@SwaggerModel(
+  """    HakukohdeMetadata:
+      |      type: object
+      |      properties:
+      |        valintakokeidenYleiskuvaus:
+      |          type: object
+      |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty hakukohteen kielivalinnassa.
+      |          $ref: '#/components/schemas/Kuvaus'
+      |        koulutuksenAlkamiskausi:
+      |          type: object
+      |          description: Koulutuksen alkamiskausi
+      |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
+      |        kaytetaanHaunAlkamiskautta:
+      |          type: boolean
+      |          description: Käytetäänkö haun alkamiskautta ja -vuotta vai onko hakukohteelle määritelty oma alkamisajankohta?
+    |""")
+case class HakukohdeMetadata(valintakokeidenYleiskuvaus: Kielistetty = Map(),
+                             koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
+                             kaytetaanHaunAlkamiskautta: Option[Boolean] = None)

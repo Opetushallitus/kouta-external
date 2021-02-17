@@ -7,7 +7,7 @@ import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.external.service.{HakukohdeService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
 
 trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val HakukohdePath = "/hakukohde"
@@ -15,7 +15,7 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticClient.client), organisaatioService)
+    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticDockerClient.client), organisaatioService)
     addServlet(new HakukohdeServlet(hakukohdeService), HakukohdePath)
   }
 

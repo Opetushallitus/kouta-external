@@ -10,9 +10,8 @@ case class SorakuvausIndexed(
     tila: Julkaisutila,
     nimi: Kielistetty,
     koulutustyyppi: Koulutustyyppi,
-    julkinen: Boolean,
     kielivalinta: Seq[Kieli],
-    metadata: Option[SorakuvausMetadata],
+    metadata: Option[SorakuvausMetadataIndexed],
     organisaatio: Organisaatio,
     muokkaaja: Muokkaaja,
     modified: Option[Modified]
@@ -22,11 +21,21 @@ case class SorakuvausIndexed(
     tila = tila,
     nimi = nimi,
     koulutustyyppi = koulutustyyppi,
-    julkinen = julkinen,
     kielivalinta = kielivalinta,
-    metadata = metadata,
+    metadata = metadata.map(_.toSorakuvausMetadata),
     organisaatioOid = organisaatio.oid,
     muokkaaja = muokkaaja.oid,
     modified = modified
+  )
+}
+
+class SorakuvausMetadataIndexed(kuvaus: Kielistetty,
+                                koulutusala: Option[KoodiUri],
+                                koulutus: Seq[KoodiUri] = Seq()
+                              ) {
+  def toSorakuvausMetadata: SorakuvausMetadata = SorakuvausMetadata(
+    kuvaus = kuvaus,
+    koulutusalaKoodiUri = koulutusala.map(_.koodiUri),
+    koulutusKoodiUrit = koulutus.map(_.koodiUri)
   )
 }

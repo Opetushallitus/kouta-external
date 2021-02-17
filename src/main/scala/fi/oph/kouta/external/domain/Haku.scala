@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.domain
 
+import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, Modified, Tallennettu}
+import fi.oph.kouta.external.swagger.SwaggerModel
+
 import java.time.LocalDateTime
 import java.util.UUID
-
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid, UserOid}
-import fi.oph.kouta.domain._
-import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    Haku:
@@ -50,15 +50,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Ajanhetki, jolloin haku ja siihen liittyvät hakukohteet ja koulutukset julkaistaan
     |            automaattisesti Opintopolussa, jos ne eivät vielä ole julkisia
     |          example: 2019-08-23T09:55
-    |        alkamiskausiKoodiUri:
-    |          type: string
-    |          description: Haun koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla.
-    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
-    |          example: kausi_k#1
-    |        alkamisvuosi:
-    |          type: string
-    |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla.
-    |          example: 2020
     |        kohdejoukkoKoodiUri:
     |          type: string
     |          description: Haun kohdejoukko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukko/1)
@@ -129,8 +120,6 @@ case class Haku(
     hakukohteenLiittamisenTakaraja: Option[LocalDateTime] = None,
     hakukohteenMuokkaamisenTakaraja: Option[LocalDateTime] = None,
     ajastettuJulkaisu: Option[LocalDateTime] = None,
-    alkamiskausiKoodiUri: Option[String] = None,
-    alkamisvuosi: Option[String] = None,
     kohdejoukkoKoodiUri: Option[String] = None,
     kohdejoukonTarkenneKoodiUri: Option[String] = None,
     hakulomaketyyppi: Option[Hakulomaketyyppi] = None,

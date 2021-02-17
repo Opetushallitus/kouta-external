@@ -1,10 +1,10 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli}
+import fi.oph.kouta.external.swagger.SwaggerModel
+
 import java.time.LocalDateTime
 import java.util.UUID
-
-import fi.oph.kouta.domain.Kieli
-import fi.oph.kouta.external.swagger.SwaggerModel
 
 package object domain {
 
@@ -97,8 +97,7 @@ package object domain {
       |        teksti:
       |          type: object
       |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Lisatieto(otsikkoKoodiUri: String, teksti: Kielistetty)
 
@@ -109,28 +108,23 @@ package object domain {
       |        nimi:
       |          type: object
       |          description: Yhteyshenkilön nimi eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        titteli:
       |          type: object
       |          description: Yhteyshenkilön titteli eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        sahkoposti:
       |          type: object
       |          description: Yhteyshenkilön sähköpostiosoite eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        puhelinnumero:
       |          type: object
       |          description: Yhteyshenkilön puhelinnumero eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        wwwSivu:
       |          type: object
       |          description: Yhteyshenkilön www-sivu eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Yhteyshenkilo(
       nimi: Kielistetty,
@@ -170,6 +164,9 @@ package object domain {
       |          type: string
       |          description: Valintakokeen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/valintakokeentyyppi/1)
       |          example: valintakokeentyyppi_1#1
+      |        metadata:
+      |          type: object
+      |          $ref: '#/components/schemas/ValintakoeMetadata'
       |        tilaisuudet:
       |          type: array
       |          description: Valintakokeen järjestämistilaisuudet
@@ -179,8 +176,43 @@ package object domain {
   case class Valintakoe(
       id: Option[UUID] = None,
       tyyppiKoodiUri: Option[String] = None,
+      metadata: Option[ValintaKoeMetadata],
       tilaisuudet: List[Valintakoetilaisuus] = List()
   )
+
+  @SwaggerModel(
+    """    ValintakoeMetadata:
+      |      type: object
+      |      properties:
+      |        tietoja:
+      |          type: object
+      |          description: Tietoa valintakokeesta
+      |          $ref: '#/components/schemas/Teksti'
+      |        vahimmaispisteet:
+      |          type: double
+      |          description: Valintakokeen vähimmäispisteet
+      |          example: 10.0
+      |        liittyyEnnakkovalmistautumista:
+      |          type: boolean
+      |          description: Liittyykö valintakokeeseen ennakkovalmistautumista
+      |        ohjeetEnnakkovalmistautumiseen:
+      |          type: object
+      |          description: Ohjeet valintakokeen ennakkojärjestelyihin
+      |          $ref: '#/components/schemas/Teksti'
+      |        erityisjarjestelytMahdollisia:
+      |          type: boolean
+      |          description: Ovatko erityisjärjestelyt mahdollisia valintakokeessa
+      |        ohjeetErityisjarjestelyihin:
+      |          type: object
+      |          description: Ohjeet valintakokeen erityisjärjestelyihin
+      |          $ref: '#/components/schemas/Teksti'
+      |""")
+  case class ValintaKoeMetadata(tietoja: Kielistetty = Map(),
+                                vahimmaispisteet: Option[Double] = None,
+                                liittyyEnnakkovalmistautumista: Option[Boolean] = None,
+                                ohjeetEnnakkovalmistautumiseen: Kielistetty = Map(),
+                                erityisjarjestelytMahdollisia: Option[Boolean] = None,
+                                ohjeetErityisjarjestelyihin: Kielistetty = Map())
 
   @SwaggerModel(
     """    Valintakoetilaisuus:
@@ -189,8 +221,7 @@ package object domain {
       |        osoite:
       |          type: object
       |          description: Valintakokeen järjestämispaikan osoite
-      |          allOf:
-      |            - $ref: '#/components/schemas/Osoite'
+      |          $ref: '#/components/schemas/Osoite'
       |        aika:
       |          type: array
       |          description: Valintakokeen järjestämisaika
@@ -199,10 +230,16 @@ package object domain {
       |        lisatietoja:
       |          type: object
       |          description: Lisätietoja valintakokeesta eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
+      |        jarjestamispaikka:
+      |          type: object
+      |          description: Valintakokeen järjestämispaikka eri kielillä. Kielet on määritetty kielivalinnassa.
+      |          $ref: '#/components/schemas/Teksti'
       |""")
-  case class Valintakoetilaisuus(osoite: Option[Osoite], aika: Option[Ajanjakso], lisatietoja: Kielistetty)
+  case class Valintakoetilaisuus(osoite: Option[Osoite],
+                                 aika: Option[Ajanjakso],
+                                 lisatietoja: Kielistetty,
+                                 jarjestamispaikka: Kielistetty = Map())
 
   @SwaggerModel(
     """    Osoite:
@@ -211,8 +248,7 @@ package object domain {
       |        osoite:
       |          type: object
       |          description: Osoite eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          allOf:
-      |            - $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Teksti'
       |        postinumeroKoodiUri:
       |          type: string
       |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/posti/2)
@@ -227,8 +263,7 @@ package object domain {
       |        kieli:
       |          type: string
       |          desciption: Ammattinimikkeen kieli
-      |          allOf:
-      |            - $ref: '#/components/schemas/Kieli'
+      |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:
       |          type: string
@@ -240,8 +275,7 @@ package object domain {
       |        kieli:
       |          type: string
       |          desciption: Asiasanan kieli
-      |          allOf:
-      |            - $ref: '#/components/schemas/Kieli'
+      |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:
       |          type: string
@@ -249,5 +283,45 @@ package object domain {
       |          example: robotiikka
       |""")
   case class Keyword(kieli: Kieli, arvo: String)
+
+  @SwaggerModel(
+    """    KoulutuksenAlkamiskausi:
+      |      type: object
+      |      properties:
+      |        alkamiskausityyppi:
+      |          type: string
+      |          description: Alkamiskauden tyyppi
+      |          enum:
+      |            - 'henkilokohtainen suunnitelma'
+      |            - 'tarkka alkamisajankohta'
+      |            - 'alkamiskausi ja -vuosi'
+      |        koulutuksenAlkamispaivamaara:
+      |          type: string
+      |          description: Koulutuksen tarkka alkamisen päivämäärä
+      |          example: 2019-11-20T12:00
+      |        koulutuksenPaattymispaivamaara:
+      |          type: string
+      |          description: Koulutuksen päättymisen päivämäärä
+      |          example: 2019-11-20T12:00
+      |        koulutuksenAlkamiskausiKoodiUri:
+      |          type: string
+      |          description: Koulutusten alkamiskausi.
+      |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+      |          example: kausi_k#1
+      |        koulutuksenAlkamisvuosi:
+      |          type: string
+      |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla.
+      |          example: 2020
+      |        henkilokohtaisenSuunnitelmanLisatiedot:
+      |          type: object
+      |          description: Lisätietoa koulutuksen alkamisesta henkilökohtaisen suunnitelman mukaan eri kielillä. Kielet on määritetty haun kielivalinnassa.
+      |          $ref: '#/components/schemas/Teksti'
+      |""")
+  case class KoulutuksenAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
+                                     henkilokohtaisenSuunnitelmanLisatiedot: Kielistetty = Map(),
+                                     koulutuksenAlkamispaivamaara: Option[LocalDateTime] = None,
+                                     koulutuksenPaattymispaivamaara: Option[LocalDateTime] = None,
+                                     koulutuksenAlkamiskausiKoodiUri: Option[String] = None,
+                                     koulutuksenAlkamisvuosi: Option[String] = None)
 
 }

@@ -8,7 +8,7 @@ import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
 
 trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val KoulutusPath = "/koulutus"
@@ -16,7 +16,7 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService = new KoulutusService(new KoulutusClient(TempElasticClient.client), organisaatioService)
+    val koulutusService = new KoulutusService(new KoulutusClient(TempElasticDockerClient.client), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

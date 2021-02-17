@@ -7,7 +7,7 @@ import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ToteutusService}
 import fi.oph.kouta.external.servlet.ToteutusServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
 
 trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val ToteutusPath = "/toteutus"
@@ -15,7 +15,7 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client), organisaatioService)
+    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticDockerClient.client), organisaatioService)
     addServlet(new ToteutusServlet(toteutusService), ToteutusPath)
   }
 

@@ -5,7 +5,6 @@ import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 import fi.oph.kouta.security.AuthorizableByKoulutustyyppi
 
-import java.time.LocalDateTime
 import java.util.UUID
 
 @SwaggerModel(

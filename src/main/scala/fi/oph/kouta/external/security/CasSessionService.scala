@@ -32,7 +32,7 @@ abstract class CasSessionService(val securityContext: SecurityContext, val userD
   private def validateServiceTicket(ticket: ServiceTicket): Either[Throwable, Username] = {
     val ServiceTicket(s) = ticket
     casClient
-      .validateServiceTicket(securityContext.casServiceIdentifier)(s)
+      .validateServiceTicketWithVirkailijaUsername(securityContext.casServiceIdentifier)(s)
       .handleWith {
         case NonFatal(t) =>
           logger.debug("Ticket validation error", t)

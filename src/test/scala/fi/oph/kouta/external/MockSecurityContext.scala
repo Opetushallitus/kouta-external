@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.security.Authority
 import fi.vm.sade.utils.cas.CasClient.{SessionCookie, Username}

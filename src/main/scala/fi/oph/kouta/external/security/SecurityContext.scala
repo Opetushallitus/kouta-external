@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.security
 
-import fi.oph.kouta.external.{CallerId, SecurityConfiguration}
+import fi.oph.kouta.external.SecurityConfiguration
+import fi.oph.kouta.external.kouta.CallerId
 import fi.vm.sade.utils.cas.CasClient
 
 trait SecurityContext {

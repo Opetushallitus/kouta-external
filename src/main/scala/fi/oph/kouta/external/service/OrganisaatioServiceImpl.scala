@@ -1,9 +1,9 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.external.CallerId
 import fi.oph.kouta.client.CachedOrganisaatioHierarkiaClient
 import fi.oph.kouta.domain.oid.RootOrganisaatioOid
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.service.OrganisaatioService
 import fi.vm.sade.properties.OphProperties
 

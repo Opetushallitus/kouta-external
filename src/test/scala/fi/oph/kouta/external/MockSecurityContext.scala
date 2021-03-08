@@ -13,12 +13,12 @@ class MockSecurityContext(
 ) extends SecurityContext {
 
   val casClient: CasClient = new CasClient("", null, "mockCallerId") {
-    override def validateServiceTicket(service: String)(ticket: String): Task[Username] =
-      if (ticket.startsWith(MockSecurityContext.ticketPrefix(service))) {
-        val username = ticket.stripPrefix(MockSecurityContext.ticketPrefix(service))
+    override def validateServiceTicketWithVirkailijaUsername(service: String)(serviceTicket: String): Task[Username] =
+      if (serviceTicket.startsWith(MockSecurityContext.ticketPrefix(service))) {
+        val username = serviceTicket.stripPrefix(MockSecurityContext.ticketPrefix(service))
         Task.now(username)
       } else {
-        Task.fail(new RuntimeException("unrecognized ticket: " + ticket))
+        Task.fail(new RuntimeException("unrecognized ticket: " + serviceTicket))
       }
 
     override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] =

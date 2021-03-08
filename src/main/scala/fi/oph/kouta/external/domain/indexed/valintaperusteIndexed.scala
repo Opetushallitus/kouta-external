@@ -1,10 +1,9 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.time.LocalDateTime
 import java.util.UUID
 
+import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.domain.{Amm, Julkaisutila, Kieli, Koulutustyyppi}
 
 case class ValintaperusteIndexed(
     id: Option[UUID],
@@ -21,7 +20,7 @@ case class ValintaperusteIndexed(
     organisaatio: Organisaatio,
     muokkaaja: Muokkaaja,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) {
   def toValintaperuste: Valintaperuste = Valintaperuste(
     id = id,

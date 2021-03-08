@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.security.Authority
 import fi.vm.sade.utils.cas.CasClient.{SessionCookie, Username}
@@ -10,7 +11,7 @@ class MockSecurityContext(
     val casUrl: String,
     val casServiceIdentifier: String,
     users: Map[String, KayttooikeusUserDetails]
-) extends SecurityContext {
+) extends SecurityContext with CallerId {
 
   val casClient: CasClient = new CasClient("", null, "mockCallerId") {
     override def validateServiceTicketWithVirkailijaUsername(service: String)(serviceTicket: String): Task[Username] =

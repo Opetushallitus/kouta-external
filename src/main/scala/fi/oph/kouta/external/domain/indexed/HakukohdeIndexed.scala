@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.domain.indexed
 
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa}
+import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, HakukohdeMetadata, Kielistetty}
 
 import java.time.LocalDateTime
@@ -41,7 +41,7 @@ case class HakukohdeIndexed(
     metadata: Option[HakukohdeMetadataIndexed],
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime],
+    modified: Option[Modified],
     toteutus: Option[Tarjoajat],
     jarjestyspaikka: Option[Organisaatio]
 ) {

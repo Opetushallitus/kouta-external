@@ -17,7 +17,7 @@ case class ToteutusIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) {
   def toToteutus: Toteutus = Toteutus(
     oid = oid,

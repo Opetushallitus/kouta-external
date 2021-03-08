@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.domain.indexed
 
 import fi.oph.kouta.domain.oid.HakuOid
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli}
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, Modified}
 import fi.oph.kouta.external.domain._
 
 import java.time.LocalDateTime
@@ -26,7 +26,7 @@ class HakuIndexed(
     hakuajat: List[Ajanjakso],
     muokkaaja: Muokkaaja,
     kielivalinta: Seq[Kieli],
-    modified: Option[LocalDateTime]
+    modified: Option[Modified]
 ) {
   def toHaku: Haku = Haku(
     oid = oid,

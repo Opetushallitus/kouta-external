@@ -42,7 +42,6 @@ case class ValintaperusteIndexed(
 sealed trait ValintaperusteMetadataIndexed {
   def tyyppi: Koulutustyyppi
   def valintatavat: Seq[ValintatapaIndexed]
-  def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed]
   def valintakokeidenYleiskuvaus: Kielistetty
   def kuvaus: Kielistetty
 
@@ -53,7 +52,6 @@ case class AmmatillinenValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     valintatavat: Seq[ValintatapaIndexed],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     kuvaus: Kielistetty
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -61,7 +59,6 @@ case class AmmatillinenValintaperusteMetadataIndexed(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
-      kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
       kuvaus = kuvaus
     )
 }
@@ -74,7 +71,6 @@ case class YliopistoValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[ValintatapaIndexed],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     osaamistausta: Seq[KoodiUri],
     kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadataIndexed {
@@ -82,7 +78,6 @@ case class YliopistoValintaperusteMetadataIndexed(
     tyyppi = tyyppi,
     valintatavat = valintatavat.map(_.toValintatapa),
     valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
-    kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
     osaamistaustaKoodiUrit = osaamistausta.map(_.koodiUri),
     kuvaus = kuvaus
   )
@@ -92,7 +87,6 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[ValintatapaIndexed],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimusIndexed],
     osaamistausta: Seq[KoodiUri],
     kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadataIndexed {
@@ -101,46 +95,9 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
-      kielitaitovaatimukset = kielitaitovaatimukset.map(_.toValintaperusteKielitaitovaatimus),
       osaamistaustaKoodiUrit = osaamistausta.map(_.koodiUri),
       kuvaus = kuvaus
     )
-}
-
-case class ValintaperusteKielitaitovaatimusIndexed(
-    kieli: Option[KoodiUri],
-    kielitaidonVoiOsoittaa: Seq[KielitaidonVoiOsoittaaIndexed],
-    vaatimukset: Seq[KielitaitovaatimusIndexed]
-) {
-  def toValintaperusteKielitaitovaatimus: ValintaperusteKielitaitovaatimus = ValintaperusteKielitaitovaatimus(
-    kieliKoodiUri = kieli.map(_.koodiUri),
-    kielitaidonVoiOsoittaa = kielitaidonVoiOsoittaa.map(_.toKielitaito),
-    vaatimukset = vaatimukset.map(_.toKielitaitovaatimus)
-  )
-}
-
-case class KielitaidonVoiOsoittaaIndexed(kielitaito: Option[KoodiUri], lisatieto: Kielistetty) {
-  def toKielitaito: Kielitaito = Kielitaito(kielitaito.map(_.koodiUri), lisatieto = lisatieto)
-}
-
-case class KielitaitovaatimusIndexed(
-    kielitaitovaatimus: Option[KoodiUri],
-    kielitaitovaatimusKuvaukset: Seq[KielitaitovaatimusKuvausIndexed]
-) {
-  def toKielitaitovaatimus: Kielitaitovaatimus = Kielitaitovaatimus(
-    kielitaitovaatimusKoodiUri = kielitaitovaatimus.map(_.koodiUri),
-    kielitaitovaatimusKuvaukset = kielitaitovaatimusKuvaukset.map(_.toKielitaitovaatimusKuvaus)
-  )
-}
-
-case class KielitaitovaatimusKuvausIndexed(
-    kielitaitovaatimusKuvaus: Option[KoodiUri],
-    kielitaitovaatimusTaso: Option[String]
-) {
-  def toKielitaitovaatimusKuvaus: KielitaitovaatimusKuvaus = KielitaitovaatimusKuvaus(
-    kielitaitovaatimusKuvausKoodiUri = kielitaitovaatimusKuvaus.map(_.koodiUri),
-    kielitaitovaatimusTaso = kielitaitovaatimusTaso
-  )
 }
 
 case class ValintatapaIndexed(

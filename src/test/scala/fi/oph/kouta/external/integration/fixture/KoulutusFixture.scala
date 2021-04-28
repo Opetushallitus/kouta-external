@@ -16,7 +16,7 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService = new KoulutusService(new KoulutusClient(TempElasticDockerClient.client), organisaatioService)
+    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticDockerClient.client), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 
@@ -35,5 +35,24 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
     val koulutus = KoutaFixtureTool.DefaultKoulutusScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
     KoutaFixtureTool.addKoulutus(koulutusOid.s, modifier(koulutus))
     indexKoulutus(koulutusOid)
+  }
+
+  def addMockKoulutusTEMP(
+      koulutusOid: KoulutusOid,
+      sorakuvausId: UUID,
+      organisaatioOid: OrganisaatioOid = ChildOid,
+      modifier: Map[String, String] => Map[String, String] = identity
+  ): Unit = {
+    val koulutus = KoutaFixtureTool.DefaultKoulutusScala +
+      (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s) +
+      (KoutaFixtureTool.SorakuvausIdKey -> sorakuvausId.toString)
+    KoutaFixtureTool.addKoulutus(koulutusOid.s, modifier(koulutus))
+    indexKoulutus(koulutusOid)
+  }
+
+  def addMockSorakuvausTEMP(id: UUID, organisaatioOid: OrganisaatioOid): Unit = {
+    val sorakuvaus = KoutaFixtureTool.DefaultSorakuvausScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
+    KoutaFixtureTool.addSorakuvaus(id.toString, sorakuvaus)
+    indexSorakuvaus(id)
   }
 }

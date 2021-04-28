@@ -5,7 +5,10 @@ import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture}
+import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.security.Role
+
+import java.util.UUID
 
 class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGetTests[Koulutus, KoulutusOid] {
 
@@ -15,17 +18,19 @@ class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGe
   override val existingId: KoulutusOid    = KoulutusOid("1.2.246.562.13.00000000000000000009")
   override val nonExistingId: KoulutusOid = KoulutusOid("1.2.246.562.13.0")
 
-  val ophKoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000001")
-  val julkinenOid    = KoulutusOid("1.2.246.562.13.00000000000000000003")
-  val tarjoajaOid    = KoulutusOid("1.2.246.562.13.00000000000000000004")
+  val ophKoulutusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000001")
+  val julkinenOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000003")
+  val tarjoajaOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000004")
+  val sorakuvausId: UUID         = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
 
-    addMockKoulutus(existingId, ChildOid)
-    addMockKoulutus(ophKoulutusOid, OphOid)
-    addMockKoulutus(julkinenOid, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey  -> "true"))
-    addMockKoulutus(tarjoajaOid, LonelyOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
+    addMockSorakuvausTEMP(sorakuvausId, ChildOid)
+    addMockKoulutusTEMP(existingId, sorakuvausId, ChildOid)
+    addMockKoulutusTEMP(ophKoulutusOid, sorakuvausId, OphOid)
+    addMockKoulutusTEMP(julkinenOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey  -> "true"))
+    addMockKoulutusTEMP(tarjoajaOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
   }
 
   getTests()

@@ -29,16 +29,6 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
 
   def addMockKoulutus(
       koulutusOid: KoulutusOid,
-      organisaatioOid: OrganisaatioOid = ChildOid,
-      modifier: Map[String, String] => Map[String, String] = identity
-  ): Unit = {
-    val koulutus = KoutaFixtureTool.DefaultKoulutusScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
-    KoutaFixtureTool.addKoulutus(koulutusOid.s, modifier(koulutus))
-    indexKoulutus(koulutusOid)
-  }
-
-  def addMockKoulutusTEMP(
-      koulutusOid: KoulutusOid,
       sorakuvausId: UUID,
       organisaatioOid: OrganisaatioOid = ChildOid,
       modifier: Map[String, String] => Map[String, String] = identity
@@ -50,7 +40,7 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
     indexKoulutus(koulutusOid)
   }
 
-  def addMockSorakuvausTEMP(id: UUID, organisaatioOid: OrganisaatioOid): Unit = {
+  def addMockSorakuvaus(id: UUID, organisaatioOid: OrganisaatioOid): Unit = {
     val sorakuvaus = KoutaFixtureTool.DefaultSorakuvausScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
     KoutaFixtureTool.addSorakuvaus(id.toString, sorakuvaus)
     indexSorakuvaus(id)

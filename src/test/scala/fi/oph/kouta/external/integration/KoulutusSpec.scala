@@ -5,7 +5,6 @@ import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture}
-import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.security.Role
 
 import java.util.UUID
@@ -26,11 +25,11 @@ class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGe
   override def beforeAll(): Unit = {
     super.beforeAll()
 
-    addMockSorakuvausTEMP(sorakuvausId, ChildOid)
-    addMockKoulutusTEMP(existingId, sorakuvausId, ChildOid)
-    addMockKoulutusTEMP(ophKoulutusOid, sorakuvausId, OphOid)
-    addMockKoulutusTEMP(julkinenOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey  -> "true"))
-    addMockKoulutusTEMP(tarjoajaOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
+    addMockSorakuvaus(sorakuvausId, ChildOid)
+    addMockKoulutus(existingId, sorakuvausId, ChildOid)
+    addMockKoulutus(ophKoulutusOid, sorakuvausId, OphOid)
+    addMockKoulutus(julkinenOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey  -> "true"))
+    addMockKoulutus(tarjoajaOid, sorakuvausId, LonelyOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
   }
 
   getTests()

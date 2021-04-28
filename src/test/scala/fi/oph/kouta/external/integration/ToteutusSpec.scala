@@ -28,8 +28,8 @@ class ToteutusSpec
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    addMockSorakuvausTEMP(sorakuvausId, ChildOid)
-    addMockKoulutusTEMP(koulutusOid, sorakuvausId, ChildOid)
+    addMockSorakuvaus(sorakuvausId, ChildOid)
+    addMockKoulutus(koulutusOid, sorakuvausId, ChildOid)
     addMockToteutus(existingId, ChildOid, koulutusOid)
     addMockToteutus(toteutusWithTarjoajaOid, LonelyOid, koulutusOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
   }

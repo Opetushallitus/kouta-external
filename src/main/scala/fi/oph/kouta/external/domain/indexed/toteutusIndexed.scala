@@ -1,7 +1,5 @@
 package fi.oph.kouta.external.domain.indexed
 
-import java.time.LocalDateTime
-
 import fi.oph.kouta.domain._
 import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain._
@@ -46,9 +44,8 @@ case class OpetusIndexed(
     koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
     maksunMaara: Option[Double],
     lisatiedot: Seq[LisatietoIndexed],
-    onkoStipendia: Option[Boolean],
-    stipendinMaara: Option[Double],
-    stipendinKuvaus: Kielistetty
+    onkoApuraha: Option[Boolean],
+    apuraha: Option[ApurahaIndexed]
 ) {
   def toOpetus: Opetus = Opetus(
     opetuskieliKoodiUrit = opetuskieli.map(_.koodiUri),
@@ -62,10 +59,13 @@ case class OpetusIndexed(
     koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi),
     maksunMaara = maksunMaara,
     lisatiedot = lisatiedot.map(_.toLisatieto),
-    onkoStipendia = onkoStipendia,
-    stipendinMaara = stipendinMaara,
-    stipendinKuvaus = stipendinKuvaus
+    apuraha = apuraha.map(_.toApuraha),
+    onkoApuraha = onkoApuraha
   )
+}
+
+case class ApurahaIndexed(min: Option[Int], max: Option[Int], yksikko: Option[Apurahayksikko], kuvaus: Kielistetty) {
+  def toApuraha: Apuraha = Apuraha(min = min, max = max, yksikko = yksikko, kuvaus = kuvaus)
 }
 
 trait ToteutusMetadataIndexed {

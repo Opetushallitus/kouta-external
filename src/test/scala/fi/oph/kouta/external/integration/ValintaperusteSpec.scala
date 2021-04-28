@@ -19,16 +19,14 @@ class ValintaperusteSpec
   override val existingId: UUID    = UUID.fromString("03715370-2c2e-40b1-adf9-4de9e4eb3c73")
   override val nonExistingId: UUID = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
 
-  val sorakuvausId        = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
-  val ophValintaperusteId = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
-  val julkinenId          = UUID.fromString("db8acf4f-6e29-409d-93a4-06000fa9a4cd")
+  val ophValintaperusteId: UUID = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
+  val julkinenId: UUID          = UUID.fromString("db8acf4f-6e29-409d-93a4-06000fa9a4cd")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    addMockSorakuvaus(sorakuvausId, ChildOid)
-    addMockValintaperuste(existingId, ChildOid, sorakuvausId)
-    addMockValintaperuste(ophValintaperusteId, OphOid, sorakuvausId)
-    addMockValintaperuste(julkinenId, LonelyOid, sorakuvausId, _ + (KoutaFixtureTool.JulkinenKey -> "true"))
+    addMockValintaperuste(existingId, ChildOid)
+    addMockValintaperuste(ophValintaperusteId, OphOid)
+    addMockValintaperuste(julkinenId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey -> "true"))
   }
 
   getTests()

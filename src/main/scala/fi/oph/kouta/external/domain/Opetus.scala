@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.domain
 
+import fi.oph.kouta.domain.Apurahayksikko
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -87,7 +88,35 @@ case class Opetus(
     koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
     maksunMaara: Option[Double],
     lisatiedot: Seq[Lisatieto],
-    onkoStipendia: Option[Boolean],
-    stipendinMaara: Option[Double],
-    stipendinKuvaus: Kielistetty
+    apuraha: Option[Apuraha],
+    onkoApuraha: Option[Boolean],
 )
+
+@SwaggerModel(
+"""    Apuraha:
+  |      type: object
+  |      properties:
+  |        min:
+  |          type: int
+  |          description: Apurahan minimi euromäärä tai minimi prosenttiosuus lukuvuosimaksusta
+  |          example: 100
+  |        max:
+  |          type: int
+  |          description: Apurahan maksimi euromäärä tai maksimi prosenttiosuus lukuvuosimaksusta
+  |          example: 200
+  |        yksikko:
+  |          type: string
+  |          description: Apurahan yksikkö
+  |          enum:
+  |            - euro
+  |            - prosentti
+  |          example: euro
+  |        kuvaus:
+  |          type: object
+  |          description: Koulutuksen toteutuksen apurahaa tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+  |          $ref: '#/components/schemas/Kuvaus'
+  |""")
+case class Apuraha(min: Option[Int],
+                   max: Option[Int],
+                   yksikko: Option[Apurahayksikko],
+                   kuvaus: Kielistetty)

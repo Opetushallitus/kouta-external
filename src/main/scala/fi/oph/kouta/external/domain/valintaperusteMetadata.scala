@@ -18,11 +18,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
     |          example: amm
-    |        kielitaitovaatimukset:
-    |          type: array
-    |          description: Lista valintaperustekuvauksen kielitaitovaatimuksista
-    |          items:
-    |            $ref: '#/components/schemas/Kielitaitovaatimus'
     |        valintatavat:
     |          type: array
     |          description: Lista valintaperustekuvauksen valintatavoista
@@ -40,7 +35,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 sealed trait ValintaperusteMetadata {
   def tyyppi: Koulutustyyppi
   def valintatavat: Seq[Valintatapa]
-  def kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus]
   def valintakokeidenYleiskuvaus: Kielistetty
   def kuvaus: Kielistetty
 }
@@ -84,7 +78,6 @@ sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata
 case class AmmatillinenValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
     kuvaus: Kielistetty
 ) extends ValintaperusteMetadata
@@ -105,7 +98,6 @@ case class AmmatillinenValintaperusteMetadata(
 case class YliopistoValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
     osaamistaustaKoodiUrit: Seq[String],
     kuvaus: Kielistetty
@@ -127,78 +119,7 @@ case class YliopistoValintaperusteMetadata(
 case class AmmattikorkeakouluValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
     valintatavat: Seq[Valintatapa],
-    kielitaitovaatimukset: Seq[ValintaperusteKielitaitovaatimus],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
     osaamistaustaKoodiUrit: Seq[String],
     kuvaus: Kielistetty
 ) extends KorkeakoulutusValintaperusteMetadata
-
-case class ValintaperusteKielitaitovaatimus(
-    kieliKoodiUri: Option[String],
-    kielitaidonVoiOsoittaa: Seq[Kielitaito],
-    vaatimukset: Seq[Kielitaitovaatimus]
-)
-
-case class Kielitaito(kielitaitoKoodiUri: Option[String], lisatieto: Kielistetty = Map())
-
-@SwaggerModel(
-  """    Kielitaitovaatimus:
-    |      type: object
-    |      properties:
-    |        kieliKoodiUri:
-    |          type: string
-    |          description: Kielitaitovaatimuksen kieli.
-    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
-    |          example: kieli_en#1
-    |        kielitaidonVoiOsoittaa:
-    |          type: array
-    |          description: Lista tavoista, joilla kielitaidon voi osoittaa
-    |          items:
-    |            type: object
-    |            properties:
-    |              kielitaitoKoodiUri:
-    |                type: string
-    |                description: Kielitaidon osoittaminen.
-    |                  Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kielitaidonosoittaminen/1)
-    |                example: kielitaidonosoittaminen_01#1
-    |              lisatieto:
-    |                type: object
-    |                description: Kielitaidon osoittamisen lisätieto eri kielillä.
-    |                allOf:
-    |                  - $ref: '#/components/schemas/Lisatieto'
-    |        vaatimukset:
-    |          type: array
-    |          description: Lista kielitaitovaatimuksista
-    |          items:
-    |            type: object
-    |            properties:
-    |              kielitaitovaatimusKoodiUri:
-    |                type: string
-    |                description: Kielitaitovaatimuksen koodiUri.
-    |                  Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kielitaitovaatimustyypit/1)
-    |                example: kielitaitovaatimustyypit_01#1
-    |              kielitaitovaatimusKuvaukset:
-    |                type: array
-    |                description: Lista kielitaitovaatimusten kuvauksia eri kielillä.
-    |                items:
-    |                  type: object
-    |                  properties:
-    |                    kielitaitovaatimusKuvausKoodiUri:
-    |                      type: string
-    |                      description: Kielitaitovaatimuksen kuvauksen koodiUri.
-    |                        Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kielitaitovaatimustyypitkuvaus/1)
-    |                      example: kielitaitovaatimustyypitkuvaus_01#1
-    |                    kielitaitovaatimusTaso:
-    |                      type: string
-    |                      description: Kielitaitovaatimuksen taso
-    |                      example: A
-    |""")
-case class Kielitaitovaatimus(
-    kielitaitovaatimusKoodiUri: Option[String],
-    kielitaitovaatimusKuvaukset: Seq[KielitaitovaatimusKuvaus]
-)
-
-case class KielitaitovaatimusKuvaus(
-    kielitaitovaatimusKuvausKoodiUri: Option[String],
-    kielitaitovaatimusTaso: Option[String]
-)

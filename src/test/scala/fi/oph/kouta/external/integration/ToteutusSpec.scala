@@ -7,6 +7,8 @@ import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
 import fi.oph.kouta.security.Role
 
+import java.util.UUID
+
 class ToteutusSpec
     extends ToteutusFixture
     with KoulutusFixture
@@ -19,13 +21,15 @@ class ToteutusSpec
   override val existingId: ToteutusOid    = ToteutusOid("1.2.246.562.17.789")
   override val nonExistingId: ToteutusOid = ToteutusOid("1.2.246.562.17.0")
 
-  val koulutusOid = KoulutusOid("1.2.246.562.13.789")
+  val koulutusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.789")
+  val sorakuvausId: UUID       = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
-  val toteutusWithTarjoajaOid = ToteutusOid("1.2.246.562.17.00000000000000000004")
+  val toteutusWithTarjoajaOid: ToteutusOid = ToteutusOid("1.2.246.562.17.00000000000000000004")
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    addMockKoulutus(koulutusOid, ChildOid)
+    addMockSorakuvaus(sorakuvausId, ChildOid)
+    addMockKoulutus(koulutusOid, sorakuvausId, ChildOid)
     addMockToteutus(existingId, ChildOid, koulutusOid)
     addMockToteutus(toteutusWithTarjoajaOid, LonelyOid, koulutusOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
   }

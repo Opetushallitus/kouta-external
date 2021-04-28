@@ -45,10 +45,6 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: Valintaperustekuvaukseen liittyvä kohdejoukon tarkenne. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukontarkenne/1)
     |          example: haunkohdejoukontarkenne_1#1
-    |        sorakuvausId:
-    |          type: string
-    |          description: Valintaperustekuvaukseen liittyvän SORA-kuvauksen yksilöivä tunniste
-    |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        julkinen:
     |          type: boolean
     |          description: Voivatko muut oppilaitokset käyttää valintaperustekuvausta
@@ -107,18 +103,6 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |                  sv: Kynnysehto ruotsiksi
     |                enimmaispisteet: 18.1
     |                vahimmaispisteet: 10.1
-    |            kielitaitovaatimukset:
-    |              - kieliKoodiUri: kieli_en#1
-    |                kielitaidonVoiOsoittaa:
-    |                  - kielitaitoKoodiUri: kielitaidonosoittaminen_01#1
-    |                    lisatieto:
-    |                      fi: Lisätieto suomeksi
-    |                      sv: Lisätieto ruotsiksi
-    |                vaatimukset:
-    |                  - kielitaitovaatimusKoodiUri: kielitaitovaatimustyypit_01#1
-    |                    kielitaitovaatimusKuvaukset:
-    |                      kielitaitovaatimusKuvausKoodiUri: kielitaitovaatimustyypitkuvaus_01#1
-    |                      kielitaitovaatimusTaso: A
     |            koulutusalaKoodiUrit:
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
@@ -148,7 +132,6 @@ case class Valintaperuste(
     kohdejoukonTarkenneKoodiUri: Option[String],
     nimi: Kielistetty,
     julkinen: Boolean,
-    sorakuvausId: Option[UUID],
     valintakokeet: List[Valintakoe],
     metadata: Option[ValintaperusteMetadata],
     organisaatioOid: OrganisaatioOid,

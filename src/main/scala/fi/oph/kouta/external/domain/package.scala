@@ -324,4 +324,29 @@ package object domain {
                                      koulutuksenAlkamiskausiKoodiUri: Option[String] = None,
                                      koulutuksenAlkamisvuosi: Option[String] = None)
 
+  @SwaggerModel(
+    """    TutkinnonOsa:
+      |      type: object
+      |      properties:
+      |        ePerusteId:
+      |          type: number
+      |          description: Tutkinnon osan käyttämän ePerusteen id.
+      |          example: 4804100
+      |        koulutusKoodiUri:
+      |          type: string
+      |          description: Koulutuksen koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+      |          example: koulutus_371101#1
+      |        tutkinnonosaId:
+      |          type: number
+      |          description: Tutkinnon osan id ePerusteissa
+      |          example: 12345
+      |        tutkinnonosaViite:
+      |          type: number
+      |          description: Tutkinnon osan viite
+      |          example: 2449201
+      |""")
+  case class TutkinnonOsa(ePerusteId: Option[Long] = None,
+                          koulutusKoodiUri: Option[String] = None,
+                          tutkinnonosaId: Option[Long] = None,
+                          tutkinnonosaViite: Option[Long] = None)
 }

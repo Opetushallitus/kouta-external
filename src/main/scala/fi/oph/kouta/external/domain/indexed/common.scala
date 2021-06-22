@@ -80,3 +80,15 @@ case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskaus
     koulutuksenAlkamisvuosi = koulutuksenAlkamisvuosi
   )
 }
+
+case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
+                               koulutusKoodiUri: Option[KoodiUri] = None,
+                               tutkinnonosaId: Option[Long] = None,
+                               tutkinnonosaViite: Option[Long] = None) {
+  def toTutkinnonOsa: TutkinnonOsa = TutkinnonOsa(
+    ePerusteId = ePerusteId,
+    koulutusKoodiUri = koulutusKoodiUri.map(_.koodiUri),
+    tutkinnonosaId = tutkinnonosaId,
+    tutkinnonosaViite = tutkinnonosaViite
+  )
+}

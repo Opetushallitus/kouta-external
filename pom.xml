@@ -19,9 +19,9 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <kouta-backend.version>6.9.0-SNAPSHOT</kouta-backend.version>
+        <kouta-backend.version>6.12.0-SNAPSHOT</kouta-backend.version>
         <kouta-common.version>2.3.0-SNAPSHOT</kouta-common.version>
-        <kouta-indeksoija.version>8.1.0-SNAPSHOT</kouta-indeksoija.version>
+        <kouta-indeksoija.version>8.2.0-SNAPSHOT</kouta-indeksoija.version>
 
         <!-- Utility properties -->
         <scala-utils.version>1.2.2-SNAPSHOT</scala-utils.version>

@@ -15,6 +15,9 @@ import java.util.UUID
     |          type: string
     |          description: Hakukohteen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "1.2.246.562.20.00000000000000000009"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        toteutusOid:
     |          type: string
     |          description: Hakukohteeseen liitetyn toteutuksen yksilöivä tunniste.
@@ -35,18 +38,10 @@ import java.util.UUID
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Nimi'
-    |        alkamiskausiKoodiUri:
+    |        jarjestyspaikkaOid:
     |          type: string
-    |          description: Hakukohteen koulutusten alkamiskausi, jos ei käytetä haun alkamiskautta.
-    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
-    |          example: kausi_k#1
-    |        alkamisvuosi:
-    |          type: string
-    |          description: Hakukohteen koulutusten alkamisvuosi, jos ei käytetä haun alkamisvuotta
-    |          example: 2020
-    |        kaytetaanHaunAlkamiskautta:
-    |          type: boolean
-    |          description: Käytetäänkö haun alkamiskautta ja -vuotta vai onko hakukohteelle määritelty oma alkamisajankohta?
+    |          description: Hakukohteen järjestyspaikan organisaatio
+    |          example: 1.2.246.562.10.00101010101
     |        hakulomaketyyppi:
     |          type: string
     |          description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö Atarun (hakemuspalvelun) hakulomaketta, muuta hakulomaketta
@@ -71,42 +66,14 @@ import java.util.UUID
     |        kaytetaanHaunHakulomaketta:
     |          type: boolean
     |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake?
-    |        aloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen aloituspaikkojen lukumäärä
-    |          example: 100
-    |        minAloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen aloituspaikkojen minimimäärä
-    |          example: 75
-    |        maxAloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen aloituspaikkojen maksimimäärä
-    |          example: 110
-    |        ensikertalaisenAloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen ensikertalaisen aloituspaikkojen lukumäärä
-    |          example: 50
-    |        minEnsikertalaisenAloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen ensikertalaisen aloituspaikkojen minimimäärä
-    |          example: 45
-    |        maxEnsikertalaisenAloituspaikat:
-    |          type: integer
-    |          description: Hakukohteen ensikertalaisen aloituspaikkojen maksimimäärä
-    |          example: 60
     |        pohjakoulutusvaatimusKoodiUrit:
     |          type: array
-    |          description: Lista toisen asteen hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/pohjakoulutusvaatimustoinenaste/1)
+    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/pohjakoulutusvaatimuskouta/1)
     |          items:
     |            type: string
     |          example:
-    |            - pohjakoulutusvaatimustoinenaste_pk#1
-    |            - pohjakoulutusvaatimustoinenaste_yo#1
-    |        pohjakoulutusvaatimusTarkenne:
-    |          type: object
-    |          description: Pohjakoulutusvaatimuksen tarkenne eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |          $ref: '#/components/schemas/Kuvaus'
+    |            - pohjakoulutusvaatimuskouta_104#1
+    |      |     - pohjakoulutusvaatimuskouta_109#1
     |        muuPohjakoulutusvaatimus:
     |          type: object
     |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -182,28 +149,21 @@ import java.util.UUID
     |           type: string
     |           format: date-time
     |           description: Hakukohteen viimeisin muokkausaika. Järjestelmän generoima
-    |           example: 2019-08-23T09:55
-    |        jarjestyspaikkaOid:
-    |          type: string
-    |          description: Hakukohteen järjestyspaikan organisaatio
-    |          example: 1.2.246.562.10.00101010101
+    |           example: 2019-08-23T09:55:17
     |""")
 case class Hakukohde(
     oid: Option[HakukohdeOid],
+    externalId: Option[String],
     toteutusOid: ToteutusOid,
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
-    alkamiskausiKoodiUri: Option[String],
-    alkamisvuosi: Option[String],
-    kaytetaanHaunAlkamiskautta: Option[Boolean],
+    jarjestyspaikkaOid: Option[OrganisaatioOid],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
     kaytetaanHaunHakulomaketta: Option[Boolean],
-    aloituspaikat: Option[Int],
-    ensikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimusKoodiUrit: Seq[String],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
@@ -219,14 +179,34 @@ case class Hakukohde(
     valintakokeet: List[Valintakoe],
     hakuajat: List[Ajanjakso],
     muokkaaja: UserOid,
-    metadata: Option[HakukohdeMetadata] = None,
+    metadata: Option[HakukohdeMetadata],
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-    jarjestyspaikkaOid: Option[OrganisaatioOid] = None,
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
 }
+
+@SwaggerModel(
+  """    HakukohteenLinja:
+    |      type: object
+    |      properties:
+    |        linja:
+    |          type: string
+    |          description: Linjan koodiUri, tai tyhjä arvo (= yleislinja)
+    |          example: lukiopainotukset_0102#1
+    |        alinHyvaksyttyKeskiarvo:
+    |          type: number
+    |          description: Linjan alin hyväksytty keskiarvo
+    |          example: 8,2
+    |        lisatietoa:
+    |          type: object
+    |          description: Lisätietoa keskiarvosta
+    |          $ref: '#/components/schemas/Kuvaus'
+    |""")
+case class HakukohteenLinja(linja: Option[String] = None, // NOTE: None tarkoittaa Yleislinjaa
+                            alinHyvaksyttyKeskiarvo: Option[Double] = None,
+                            lisatietoa: Kielistetty = Map())
 
 @SwaggerModel(
   """    HakukohdeMetadata:
@@ -236,6 +216,15 @@ case class Hakukohde(
       |          type: object
       |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty hakukohteen kielivalinnassa.
       |          $ref: '#/components/schemas/Kuvaus'
+      |        kynnysehto:
+      |          type: object
+      |          description: Hakukohteen kynnysehto eri kielillä. Kielet on määritetty hakukohteen kielivalinnassa.
+      |          $ref: '#/components/schemas/Kuvaus'
+      |        valintaperusteenValintakokeidenLisatilaisuudet:
+      |          type: array
+      |          description: Hakukohteeseen liitetyn valintaperusteen valintakokeisiin liitetyt lisätilaisuudet
+      |          items:
+      |            $ref: '#/components/schemas/ValintakokeenLisatilaisuudet'
       |        koulutuksenAlkamiskausi:
       |          type: object
       |          description: Koulutuksen alkamiskausi
@@ -243,7 +232,21 @@ case class Hakukohde(
       |        kaytetaanHaunAlkamiskautta:
       |          type: boolean
       |          description: Käytetäänkö haun alkamiskautta ja -vuotta vai onko hakukohteelle määritelty oma alkamisajankohta?
-    |""")
+      |        aloituspaikat:
+      |          type: object
+      |          description: Hakukohteen aloituspaikkojen tiedot
+      |          $ref: '#/components/schemas/Aloituspaikat'
+      |        hakukohteenLinja:
+      |          type: object
+      |          description: Hakukohteen haluttu linja, määritelty ainoastaan lukiokohteille.
+      |          $ref: '#/components/schemas/HakukohteenLinja'
+      |""")
 case class HakukohdeMetadata(valintakokeidenYleiskuvaus: Kielistetty = Map(),
+                             kynnysehto: Kielistetty = Map(),
+                             valintaperusteenValintakokeidenLisatilaisuudet: Seq[ValintakokeenLisatilaisuudet] = Seq(),
                              koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
-                             kaytetaanHaunAlkamiskautta: Option[Boolean] = None)
+                             kaytetaanHaunAlkamiskautta: Option[Boolean] = None,
+                             aloituspaikat: Option[Aloituspaikat] = None,
+                             // hakukohteenLinja löytyy vain lukiohakukohteilta (pakollisena)
+                             hakukohteenLinja: Option[HakukohteenLinja] = None)
+

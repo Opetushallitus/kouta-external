@@ -8,6 +8,7 @@ import java.util.UUID
 
 case class KoulutusIndexed(
     oid: Option[KoulutusOid],
+    externalId: Option[String],
     johtaaTutkintoon: Boolean,
     koulutustyyppi: Koulutustyyppi,
     koulutukset: Seq[KoodiUri],
@@ -26,6 +27,7 @@ case class KoulutusIndexed(
 ) {
   def toKoulutus: Koulutus = Koulutus(
     oid = oid,
+    externalId = externalId,
     johtaaTutkintoon = johtaaTutkintoon,
     koulutustyyppi = koulutustyyppi,
     koulutuksetKoodiUri = koulutukset.map(_.koodiUri),

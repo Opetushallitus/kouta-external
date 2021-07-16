@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.Apurahayksikko
+import fi.oph.kouta.domain.{Apurahayksikko, Maksullisuustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -43,10 +43,14 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: object
     |          description: Koulutuksen toteutuksen opetustapoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
-    |        onkoMaksullinen:
-    |          type: boolean
-    |          decription: "Onko koulutus maksullinen?"
-    |        maksullisuusKuvaus:
+    |        maksullisuustyyppi:
+    |          type: string
+    |          description: Maksullisuuden tyyppi
+    |          enum:
+    |            - 'maksullinen'
+    |            - 'maksuton'
+    |            - 'lukuvuosimaksu'
+    |    |   maksullisuusKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen maksullisuutta tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
@@ -64,32 +68,43 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          items:
     |            type: object
     |            $ref: '#/components/schemas/Lisatieto'
-    |        onkoStipendia:
+    |        onkoApuraha:
     |          type: boolean
-    |          description: "Onko koulutukseen stipendiä?"
-    |        stipendinMaara:
-    |          type: double
-    |          description: Koulutuksen toteutuksen stipendin määrä.
-    |          example: 10.0
-    |        stipendinKuvaus:
+    |          description: Onko koulutukseen apurahaa?
+    |        apuraha:
     |          type: object
-    |          description: Koulutuksen toteutuksen stipendiä tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          description: Koulutuksen apurahatiedot
+    |          $ref: '#/components/schemas/Apuraha'
+    |        suunniteltuKestoVuodet:
+    |          type: integer
+    |          description: "Koulutuksen suunniteltu kesto vuosina"
+    |          example: 2
+    |        suunniteltuKestoKuukaudet:
+    |          type: integer
+    |          description: "Koulutuksen suunniteltu kesto kuukausina"
+    |          example: 2
+    |        suunniteltuKestoKuvaus:
+    |          type: object
+    |          description: "Koulutuksen toteutuksen suunnitellun keston kuvaus eri kielillä. Kielet on määritetty toteutuksen kielivalinnassa."
     |          $ref: '#/components/schemas/Kuvaus'
     |""")
 case class Opetus(
     opetuskieliKoodiUrit: Seq[String],
     opetuskieletKuvaus: Kielistetty,
     opetusaikaKoodiUrit: Seq[String],
-    opetusaikaKuvaus: Kielistetty,
+    opetusaikaKuvaus: Kielistetty = Map(),
     opetustapaKoodiUrit: Seq[String],
     opetustapaKuvaus: Kielistetty,
-    onkoMaksullinen: Option[Boolean],
-    maksullisuusKuvaus: Kielistetty,
+    maksullisuustyyppi: Option[Maksullisuustyyppi],
+    maksullisuusKuvaus: Kielistetty = Map(),
     koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
     maksunMaara: Option[Double],
     lisatiedot: Seq[Lisatieto],
+    onkoApuraha: Boolean,
     apuraha: Option[Apuraha],
-    onkoApuraha: Option[Boolean],
+    suunniteltuKestoVuodet: Option[Int],
+    suunniteltuKestoKuukaudet: Option[Int],
+    suunniteltuKestoKuvaus: Kielistetty
 )
 
 @SwaggerModel(

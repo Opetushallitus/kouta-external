@@ -148,12 +148,12 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       Extraction.decompose(j)
   }
 
-  private def valintatapaSisaltoSerializer = new CustomSerializer[ValintatapaSisalto](implicit formats => ( {
+  private def valintatapaSisaltoSerializer = new CustomSerializer[Sisalto](implicit formats => ( {
     case s: JObject =>
       Try(s \ "tyyppi").collect {
         case JString(tyyppi) if tyyppi == "teksti" =>
           Try(s \ "data").collect {
-            case teksti: JObject => ValintatapaSisaltoTeksti(teksti.extract[Kielistetty])
+            case teksti: JObject => SisaltoTeksti(teksti.extract[Kielistetty])
           }.get
         case JString(tyyppi) if tyyppi == "taulukko" =>
           Try(s \ "data").collect {
@@ -161,7 +161,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
           }.get
       }.get
   }, {
-    case j: ValintatapaSisaltoTeksti =>
+    case j: SisaltoTeksti =>
       implicit def formats: Formats = genericKoutaFormats
 
       JObject(List("tyyppi" -> JString("teksti"), "data" -> Extraction.decompose(j.teksti)))

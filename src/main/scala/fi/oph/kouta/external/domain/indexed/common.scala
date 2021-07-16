@@ -21,11 +21,13 @@ case class LisatietoIndexed(otsikko: KoodiUri, teksti: Kielistetty) {
 
 case class ValintakoeIndexed(id: Option[UUID],
                              tyyppi: Option[KoodiUri],
+                             nimi: Kielistetty,
                              metadata: Option[ValintaKoeMetadataIndexed],
                              tilaisuudet: List[ValintakoetilaisuusIndexed]) {
   def toValintakoe: Valintakoe = Valintakoe(
     id = id,
     tyyppiKoodiUri = tyyppi.map(_.koodiUri),
+    nimi = nimi,
     metadata = metadata.map(_.toValintakoeMetadata),
     tilaisuudet = tilaisuudet.map(_.toValintakoetilaisuus)
   )

@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.Koulutustyyppi
+import fi.oph.kouta.domain.{Hakulomaketyyppi, Hakutermi, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -78,6 +78,9 @@ sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
     |              example: amm
     |              enum:
     |                - amm
+    |            ammatillinenPerustutkintoErityisopetuksena:
+    |              type: boolean
+    |              description: Onko koulutuksen tyyppi \"Ammatillinen perustutkinto erityisopetuksena\"?
     |""")
 case class AmmatillinenToteutusMetadata(
     tyyppi: Koulutustyyppi,
@@ -86,8 +89,116 @@ case class AmmatillinenToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    ammatillinenPerustutkintoErityisopetuksena: Boolean
 ) extends ToteutusMetadata
+
+@SwaggerModel(
+  """    TutkintoonJohtamatonToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            hakutermi:
+    |              type: object
+    |              $ref: '#/components/schemas/Hakutermi'
+    |            hakulomaketyyppi:
+    |              type: string
+    |              description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö Atarun (hakemuspalvelun) hakulomaketta, muuta hakulomaketta
+    |                (jolloin voidaan lisätä hakulomakkeeseen linkki) tai onko niin, ettei sähkököistä hakulomaketta ole lainkaan, jolloin sille olisi hyvä lisätä kuvaus.
+    |              example: "ataru"
+    |              enum:
+    |                - ataru
+    |                - haku-app
+    |                - ei sähköistä
+    |                - muu
+    |            hakulomakeLinkki:
+    |              type: object
+    |              description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
+    |            lisatietoaHakeutumisesta:
+    |              type: object
+    |              description: Lisätietoa hakeutumisesta eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |              $ref: '#/components/schemas/Teksti'
+    |            lisatietoaValintaperusteista:
+    |              type: object
+    |              description: Lisätietoa valintaperusteista eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |              $ref: '#/components/schemas/Teksti'
+    |            hakuaika:
+    |              type: array
+    |              description: Toteutuksen hakuaika
+    |              $ref: '#/components/schemas/Ajanjakso'
+    |            aloituspaikat:
+    |              type: integer
+    |              description: Toteutuksen aloituspaikkojen lukumäärä
+    |              example: 100
+    |""")
+sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
+  def hakutermi: Option[Hakutermi]
+  def hakulomaketyyppi: Option[Hakulomaketyyppi]
+  def hakulomakeLinkki: Kielistetty
+  def lisatietoaHakeutumisesta: Kielistetty
+  def lisatietoaValintaperusteista: Kielistetty
+  def hakuaika: Option[Ajanjakso]
+  def aloituspaikat: Option[Int]
+}
+
+@SwaggerModel(
+  """    AmmatillinenTutkinnonOsaToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: amm-tutkinnon-osa
+    |              enum:
+    |                - amm-tutkinnon-osa
+    |""")
+case class AmmatillinenTutkinnonOsaToteutusMetadata(tyyppi: Koulutustyyppi,
+                                                    kuvaus: Kielistetty,
+                                                    opetus: Option[Opetus],
+                                                    asiasanat: List[Keyword],
+                                                    ammattinimikkeet: List[Keyword],
+                                                    yhteyshenkilot: Seq[Yhteyshenkilo],
+                                                    hakutermi: Option[Hakutermi],
+                                                    hakulomaketyyppi: Option[Hakulomaketyyppi],
+                                                    hakulomakeLinkki: Kielistetty,
+                                                    lisatietoaHakeutumisesta: Kielistetty,
+                                                    lisatietoaValintaperusteista: Kielistetty,
+                                                    hakuaika: Option[Ajanjakso],
+                                                    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel(
+  """    AmmatillinenOsaamisalaToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: amm-osaamisala
+    |              enum:
+    |                - amm-osaamisala
+    |"""
+)
+case class AmmatillinenOsaamisalaToteutusMetadata(tyyppi: Koulutustyyppi,
+                                                  kuvaus: Kielistetty,
+                                                  opetus: Option[Opetus],
+                                                  asiasanat: List[Keyword],
+                                                  ammattinimikkeet: List[Keyword],
+                                                  yhteyshenkilot: Seq[Yhteyshenkilo],
+                                                  hakutermi: Option[Hakutermi],
+                                                  hakulomaketyyppi: Option[Hakulomaketyyppi],
+                                                  hakulomakeLinkki: Kielistetty,
+                                                  lisatietoaHakeutumisesta: Kielistetty,
+                                                  lisatietoaValintaperusteista: Kielistetty,
+                                                  hakuaika: Option[Ajanjakso],
+                                                  aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(
   """    YliopistoToteutusMetadata:
@@ -136,4 +247,90 @@ case class AmmattikorkeakouluToteutusMetadata(
     alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
+
+@SwaggerModel(
+  """    LukiolinjaTieto:
+    |      type: object
+    |      description: Toteutuksen yksittäisen lukiolinjatiedon kentät
+    |      properties:
+    |        koodiUri:
+    |          type: string
+    |          description: Lukiolinjatiedon koodiUri.
+    |        kuvaus:
+    |          type: object
+    |          description: Lukiolinjatiedon kuvaus eri kielillä. Kielet on määritetty toteutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
+    |""")
+case class LukiolinjaTieto(koodiUri: String, kuvaus: Kielistetty)
+
+@SwaggerModel(
+  """    LukiodiplomiTieto:
+    |      type: object
+    |      description: Toteutuksen yksittäisen lukiodiplomitiedon kentät
+    |      properties:
+    |        koodiUri:
+    |          type: string
+    |          description: Lukiodiplomin koodiUri. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/moduulikoodistolops2021/1).
+    |        linkki:
+    |          type: object
+    |          description: Lukiodiplomin kielistetyt lisätietolinkit. Kielet on määritetty toteutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Linkki'
+    |        linkinAltTeksti:
+    |          type: object
+    |          description: Lukiodiplomin kielistettyjen lisätietolinkkien alt-tekstit. Kielet on määritetty toteutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Teksti'
+    |""")
+case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTeksti: Kielistetty)
+
+@SwaggerModel(
+  """    LukioToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: lk
+    |              enum:
+    |                - lk
+    |            kielivalikoima:
+    |              type: object
+    |              description: Koulutuksen kielivalikoima
+    |              $ref: '#/components/schemas/Kielivalikoima'
+    |            yleislinja:
+    |              type: boolean,
+    |              description: Onko lukio-toteutuksella yleislinja?
+    |            painotukset:
+    |              type: array
+    |              description: Lukio-toteutuksen painotukset. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/lukiopainotukset/1).
+    |              items:
+    |                type: object
+    |                $ref: '#/components/schemas/LukiolinjaTieto'
+    |            erityisetKoulutustehtavat:
+    |              type: array
+    |              description: Lukio-toteutuksen erityiset koulutustehtävät. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/lukiolinjaterityinenkoulutustehtava/1).
+    |              items:
+    |                type: object
+    |                $ref: '#/components/schemas/LukiolinjaTieto'
+    |            diplomit:
+    |              type: array
+    |              description: Lukio-toteutuksen diplomit
+    |              items:
+    |                type: object
+    |                $ref: '#/components/schemas/LukiodiplomiTieto'
+    |""")
+case class LukioToteutusMetadata(tyyppi: Koulutustyyppi,
+                                 kuvaus: Kielistetty,
+                                 opetus: Option[Opetus],
+                                 asiasanat: List[Keyword],
+                                 ammattinimikkeet: List[Keyword],
+                                 yhteyshenkilot: Seq[Yhteyshenkilo],
+                                 kielivalikoima: Option[Kielivalikoima],
+                                 yleislinja: Boolean,
+                                 painotukset: Seq[LukiolinjaTieto],
+                                 erityisetKoulutustehtavat: Seq[LukiolinjaTieto],
+                                 diplomit: Seq[LukiodiplomiTieto]
+) extends ToteutusMetadata
+
 

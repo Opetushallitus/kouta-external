@@ -15,12 +15,15 @@ import java.util.UUID
     |          type: string
     |          description: Koulutuksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "1.2.246.562.13.00000000000000000009"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        johtaaTutkintoon:
     |          type: boolean
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala'"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'muu' (muu koulutus)"
     |          enum:
     |            - amm
     |            - yo
@@ -28,6 +31,8 @@ import java.util.UUID
     |            - lk
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
+    |            - tuva
+    |            - muu
     |    |     example: amm
     |        koulutuksetKoodiUri:
     |          type: array
@@ -119,6 +124,7 @@ import java.util.UUID
     |""")
 case class Koulutus(
     oid: Option[KoulutusOid],
+    externalId: Option[String],
     johtaaTutkintoon: Boolean,
     koulutustyyppi: Koulutustyyppi,
     koulutuksetKoodiUri: Seq[String],

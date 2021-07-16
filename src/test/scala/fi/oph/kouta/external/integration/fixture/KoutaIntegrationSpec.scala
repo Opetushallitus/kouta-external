@@ -2,14 +2,14 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.time.Instant
 import java.util.UUID
-
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.TestSetups.{setupWithEmbeddedPostgres, setupWithTemplate}
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.servlet.KoutaServlet
+import fi.oph.kouta.external.servlet.KoutaServlet.LastModifiedHeader
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.integration.fixture.Oid
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
+import fi.oph.kouta.servlet.KoutaServlet
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
@@ -122,6 +122,18 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
       }
     }
   }
+
+  def get[E <: scala.AnyRef, I](path: String, id: I, sessionId: UUID, expected: E)(implicit equality: Equality[E], mf: Manifest[E]): String = {
+    get(s"$path/${id.toString}", headers = Seq(sessionHeader(sessionId))) {
+      withClue(body) {
+        status should equal(200)
+      }
+      debugJson(body, s"$path/${id.toString}")
+      read[E](body) should equal(expected)
+      header(KoutaServlet.LastModifiedHeader)
+    }
+  }
+
 
   def create[E <: scala.AnyRef, R](path: String, entity: E, sessionId: UUID, result: String => R): R = {
     post(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {

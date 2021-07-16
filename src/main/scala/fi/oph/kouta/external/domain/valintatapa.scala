@@ -28,8 +28,8 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          items:
     |            type: object
     |            oneOf:
-    |              - $ref: '#/components/schemas/ValintatapaSisaltoTeksti'
-    |              - $ref: '#/components/schemas/ValintatapaSisaltoTaulukko'
+    |              - $ref: '#/components/schemas/SisaltoTeksti'
+    |              - $ref: '#/components/schemas/SisaltoTaulukko'
     |        kaytaMuuntotaulukkoa:
     |          type: boolean
     |          description: "Käytetäänkö muuntotaulukkoa?"
@@ -51,17 +51,17 @@ case class Valintatapa(
     nimi: Kielistetty,
     valintatapaKoodiUri: Option[String],
     kuvaus: Kielistetty,
-    sisalto: Seq[ValintatapaSisalto],
+    sisalto: Seq[Sisalto],
     kaytaMuuntotaulukkoa: Boolean,
     kynnysehto: Kielistetty,
     enimmaispisteet: Option[Double],
     vahimmaispisteet: Option[Double]
 )
 
-sealed trait ValintatapaSisalto
+sealed trait Sisalto
 
 @SwaggerModel(
-  """    ValintatapaSisaltoTaulukko:
+  """    SisaltoTaulukko:
     |      type: object
     |      description: Taulukkomuotoinen valintatavan sisällön kuvaus
     |      properties:
@@ -102,10 +102,10 @@ sealed trait ValintatapaSisalto
     |                      allOf:
     |                        - $ref: '#/components/schemas/Teksti'
     |""")
-case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends ValintatapaSisalto
+case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends Sisalto
 
 @SwaggerModel(
-  """    ValintatapaSisaltoTeksti:
+  """    SisaltoTeksti:
     |      type: object
     |      description: Tekstimuotoinen valintatavan sisällön kuvaus
     |      properties:
@@ -115,7 +115,7 @@ case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends
     |          allOf:
     |            - $ref: '#/components/schemas/Teksti'
     |""")
-case class ValintatapaSisaltoTeksti(teksti: Kielistetty) extends ValintatapaSisalto
+case class SisaltoTeksti(teksti: Kielistetty) extends Sisalto
 
 case class Row(index: Int, isHeader: Boolean, columns: Seq[Column])
 

@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.Koulutustyyppi
+import fi.oph.kouta.domain.{Koulutustyyppi, Tuva}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -195,10 +195,44 @@ case class AmmattikorkeakouluKoulutusMetadata(
     |              type: string
     |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
     |              example: opintojenlaajuus_40#1
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |""")
 case class LukioKoulutusMetadata(tyyppi: Koulutustyyppi,
                                  kuvaus: Kielistetty,
                                  lisatiedot: Seq[Lisatieto],
                                  opintojenLaajuusKoodiUri: Option[String],
                                  koulutusalaKoodiUrit: Seq[String]
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    LukioKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: tuva
+    |              enum:
+    |                - tuva
+    |            linkkiEPerusteisiin:
+    |              type: object
+    |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |            opintojenLaajuusKoodiUri:
+    |              type: string
+    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
+    |              example: opintojenlaajuus_40#1
+    |""")
+case class TuvaKoulutusMetadata(tyyppi: Koulutustyyppi,
+                                kuvaus: Kielistetty,
+                                lisatiedot: Seq[Lisatieto],
+                                linkkiEPerusteisiin: Kielistetty,
+                                opintojenLaajuusKoodiUri: Option[String] = None
 ) extends KoulutusMetadata

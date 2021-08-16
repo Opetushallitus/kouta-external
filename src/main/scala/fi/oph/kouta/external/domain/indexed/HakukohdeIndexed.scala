@@ -2,27 +2,24 @@ package fi.oph.kouta.external.domain.indexed
 
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.domain._
-import fi.oph.kouta.external.domain.{Ajanjakso, Hakukohde, HakukohdeMetadata, Kielistetty}
+import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, ValintakokeenLisatilaisuudet}
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 case class HakukohdeIndexed(
     oid: Option[HakukohdeOid],
+    externalId: Option[String],
     toteutusOid: ToteutusOid,
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
-    alkamiskausi: Option[KoodiUri],
-    alkamisvuosi: Option[String],
-    kaytetaanHaunAlkamiskautta: Option[Boolean],
+    jarjestyspaikkaOid: Option[Organisaatio],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
     kaytetaanHaunHakulomaketta: Option[Boolean],
-    aloituspaikat: Option[Int],
-    ensikertalaisenAloituspaikat: Option[Int],
     pohjakoulutusvaatimus: Seq[KoodiUri],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
     muuPohjakoulutusvaatimus: Kielistetty,
@@ -42,25 +39,21 @@ case class HakukohdeIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-    toteutus: Option[Tarjoajat],
-    jarjestyspaikka: Option[Organisaatio]
+    toteutus: Option[Tarjoajat]
 ) {
   def toHakukohde: Hakukohde = Hakukohde(
     oid = oid,
+    externalId = externalId,
     toteutusOid = toteutusOid,
     hakuOid = hakuOid,
     tila = tila,
     nimi = nimi,
-    alkamiskausiKoodiUri = alkamiskausi.map(_.koodiUri),
-    alkamisvuosi = alkamisvuosi,
-    kaytetaanHaunAlkamiskautta = kaytetaanHaunAlkamiskautta,
+    jarjestyspaikkaOid = jarjestyspaikkaOid.map(_.oid),
     hakulomaketyyppi = hakulomaketyyppi,
     hakulomakeAtaruId = hakulomakeAtaruId,
     hakulomakeKuvaus = hakulomakeKuvaus,
     hakulomakeLinkki = hakulomakeLinkki,
     kaytetaanHaunHakulomaketta = kaytetaanHaunHakulomaketta,
-    aloituspaikat = aloituspaikat,
-    ensikertalaisenAloituspaikat = ensikertalaisenAloituspaikat,
     pohjakoulutusvaatimusKoodiUrit = pohjakoulutusvaatimus.map(_.koodiUri),
     pohjakoulutusvaatimusTarkenne = pohjakoulutusvaatimusTarkenne,
     muuPohjakoulutusvaatimus = muuPohjakoulutusvaatimus,
@@ -79,8 +72,7 @@ case class HakukohdeIndexed(
     metadata = metadata.map(_.toHakukohdeMetadata),
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
-    modified = modified,
-    jarjestyspaikkaOid = jarjestyspaikka.map(_.oid)
+    modified = modified
   )
 
   def tarjoajat: Seq[OrganisaatioOid] =
@@ -89,14 +81,33 @@ case class HakukohdeIndexed(
 
 case class Tarjoajat(tarjoajat: Seq[Organisaatio])
 
-class HakukohdeMetadataIndexed(valintakokeidenYleiskuvaus: Kielistetty,
+case class HakukohdeMetadataIndexed(valintakokeidenYleiskuvaus: Kielistetty,
+                               kynnysehto: Kielistetty,
+                               valintaperusteenValintakokeidenLisatilaisuudet: Seq[ValintakokeenLisatilaisuudetIndexed] = Seq(),
                                koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
-                               kaytetaanHaunAlkamiskautta: Option[Boolean]
+                               kaytetaanHaunAlkamiskautta: Option[Boolean],
+                               aloituspaikat: Option[Aloituspaikat],
+                               hakukohteenLinja: Option[HakukohteenLinja]
                               ) {
   def toHakukohdeMetadata: HakukohdeMetadata = HakukohdeMetadata(
     valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
+    kynnysehto = kynnysehto,
+    valintaperusteenValintakokeidenLisatilaisuudet = valintaperusteenValintakokeidenLisatilaisuudet.map(_.toValintakokeenLisatilaisuudet),
     koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi),
-    kaytetaanHaunAlkamiskautta = kaytetaanHaunAlkamiskautta
+    kaytetaanHaunAlkamiskautta = kaytetaanHaunAlkamiskautta,
+    aloituspaikat = aloituspaikat,
+    hakukohteenLinja = hakukohteenLinja
   )
 }
+
+case class ValintakokeenLisatilaisuudetIndexed(id: Option[UUID],
+                                               tilaisuudet: Seq[ValintakoetilaisuusIndexed] = Seq()
+                                              ) {
+  def toValintakokeenLisatilaisuudet: ValintakokeenLisatilaisuudet = ValintakokeenLisatilaisuudet(
+    id = id,
+    tilaisuudet = tilaisuudet.map(_.toValintakoetilaisuus)
+  )
+}
+
+
 

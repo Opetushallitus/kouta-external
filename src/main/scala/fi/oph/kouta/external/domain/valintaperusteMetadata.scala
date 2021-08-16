@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.{AmmOsaamisala, AmmTutkinnonOsa, Kielistetty, Koulutustyyppi, Lk, Muu, Sisalto, Tuva, ValintaperusteMetadata, Valintatapa}
+import fi.oph.kouta.domain.{Amk, Amm, AmmOsaamisala, AmmTutkinnonOsa, Koulutustyyppi, Lk, Muu, Tuva, Yo}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -61,7 +61,7 @@ sealed trait ValintaperusteMetadata {
     |            - amm
     |""")
 case class AmmatillinenValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amm,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty,
     hakukelpoisuus: Kielistetty = Map(),
@@ -84,7 +84,7 @@ case class AmmatillinenValintaperusteMetadata(
   |            - lk
   |""")
 case class LukioValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Lk,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
@@ -107,7 +107,7 @@ case class LukioValintaperusteMetadata(
     |            - yo
     |""")
 case class YliopistoValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Yo,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty,
     hakukelpoisuus: Kielistetty = Map(),
@@ -130,7 +130,7 @@ case class YliopistoValintaperusteMetadata(
     |            - amk
     |""")
 case class AmmattikorkeakouluValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amk,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty,
     hakukelpoisuus: Kielistetty = Map(),
@@ -154,7 +154,7 @@ case class AmmattikorkeakouluValintaperusteMetadata(
     |            - amm-tutkinnon-osa
     |""")
 case class AmmatillinenTutkinnonOsaValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
@@ -177,7 +177,7 @@ case class AmmatillinenTutkinnonOsaValintaperusteMetadata(
     |            - amm-osaamisala
     |""")
 case class AmmatillinenOsaamisalaValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmOsaamisala,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
@@ -200,7 +200,7 @@ case class AmmatillinenOsaamisalaValintaperusteMetadata(
     |            - tuva
     |""")
 case class TutkintokoulutukseenValmentavaValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Tuva,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),

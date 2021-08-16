@@ -18,7 +18,7 @@ object TestData {
 
   def kieliMap(text: String): Kielistetty = Map(Fi -> s"$text fi", Sv -> s"$text sv")
 
-  def getInvalidHakuajat = List(Ajanjakso(TestData.inFuture(9000), TestData.inFuture(3000)))
+  def getInvalidHakuajat = List(Ajanjakso(TestData.inFuture(9000), Some(TestData.inFuture(3000))))
 
   val Osoite1 = Osoite(
     osoite = Map(Fi -> "Kivatie 1", Sv -> "kivavägen 1"),
@@ -32,6 +32,7 @@ object TestData {
     wwwSivu = Map(Fi -> "http://opintopolku.fi", Sv -> "http://studieinfo.fi"))
 
   val JulkaistuHaku = Haku(
+    externalId = Some("ext1"),
     nimi = Map(Fi -> "Haku fi", Sv -> "Haku sv"),
     tila = Julkaistu,
     hakutapaKoodiUri = Some("hakutapa_03#1"),
@@ -46,7 +47,7 @@ object TestData {
     hakulomakeLinkki = Map(Fi -> "https://koulu.test/hakemusinfo-fi", Sv -> "https://koulu.test/hakemusinfo-sv"),
     metadata = Some(HakuMetadata(
       Seq(Yhteystieto1),
-      Seq(Ajanjakso(alkaa = now(), paattyy = inFuture())),
+      Seq(Ajanjakso(alkaa = now(), paattyy = Some(inFuture()))),
       koulutuksenAlkamiskausi = Some(KoulutuksenAlkamiskausi(
         alkamiskausityyppi = Some(AlkamiskausiJaVuosi),
         henkilokohtaisenSuunnitelmanLisatiedot = Map(Fi -> "Jotakin lisätietoa", Sv -> "Jotakin lisätietoa sv"),
@@ -54,7 +55,7 @@ object TestData {
         koulutuksenPaattymispaivamaara = None,
         koulutuksenAlkamiskausiKoodiUri = Some("kausi_k#1"),
         koulutuksenAlkamisvuosi = Some(LocalDate.now().getYear.toString))))),
-    hakuajat = List(Ajanjakso(alkaa = now(), paattyy = inFuture())),
+    hakuajat = List(Ajanjakso(alkaa = now(), paattyy = Some(inFuture()))),
     organisaatioOid = ChildOid,
     muokkaaja = TestUserOid,
     kielivalinta = Seq(Fi, Sv),

@@ -117,7 +117,7 @@ import java.util.UUID
     |""")
 case class Haku(
     oid: Option[HakuOid] = None,
-    externalId: Option[String],
+    externalId: Option[String] = None,
     tila: Julkaisutila = Tallennettu,
     nimi: Kielistetty = Map(),
     hakutapaKoodiUri: Option[String] = None,

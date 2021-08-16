@@ -38,6 +38,7 @@ private object TempDockerElastic extends Logging {
   private def startElasticContainer(): Unit = {
     logger.info("Starting Elasticsearch container:")
     runBlocking(
+      //s"docker run --rm -d --name $containerName --env discovery.type=single-node -p 127.0.0.1:$port:9200 docker.elastic.co/elasticsearch/elasticsearch:7.10.2"
       s"docker run --rm -d --name $containerName --env discovery.type=single-node -p 127.0.0.1:$port:9200 docker.elastic.co/elasticsearch/elasticsearch:6.8.13"
     )
 

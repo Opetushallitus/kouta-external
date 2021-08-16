@@ -41,6 +41,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case Lk => s.extract[LukioKoulutusMetadata]
         case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaKoulutusMetadata]
         case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaKoulutusMetadata]
+        case Tuva => s.extract[TuvaKoulutusMetadata]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {
@@ -63,6 +64,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case Lk => s.extract[LukioKoulutusMetadataIndexed]
         case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaKoulutusMetadataIndexed]
         case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaKoulutusMetadataIndexed]
+        case Tuva => s.extract[TuvaKoulutusMetadataIndexed]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {
@@ -80,8 +82,11 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case JString(tyyppi) => Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
         case Yo => s.extract[YliopistoToteutusMetadata]
-        case Amm => s.extract[AmmatillinenToteutusMetadata]
         case Amk => s.extract[AmmattikorkeakouluToteutusMetadata]
+        case Amm => s.extract[AmmatillinenToteutusMetadata]
+        case Lk => s.extract[LukioToteutusMetadata]
+        case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaToteutusMetadata]
+        case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaToteutusMetadata]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {
@@ -99,8 +104,11 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case JString(tyyppi) => Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
         case Yo => s.extract[YliopistoToteutusMetadataIndexed]
-        case Amm => s.extract[AmmatillinenToteutusMetadataIndexed]
         case Amk => s.extract[AmmattikorkeakouluToteutusMetadataIndexed]
+        case Amm => s.extract[AmmatillinenToteutusMetadataIndexed]
+        case Lk => s.extract[LukioToteutusMetadataIndexed]
+        case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaToteutusMetadataIndexed]
+        case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaToteutusMetadataIndexed]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {
@@ -118,8 +126,13 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case JString(tyyppi) => Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
         case Yo => s.extract[YliopistoValintaperusteMetadata]
-        case Amm => s.extract[AmmatillinenValintaperusteMetadata]
         case Amk => s.extract[AmmattikorkeakouluValintaperusteMetadata]
+        case Amm => s.extract[AmmatillinenValintaperusteMetadata]
+        case Lk => s.extract[LukioValintaperusteMetadata]
+        case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaValintaperusteMetadata]
+        case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaValintaperusteMetadata]
+        case Tuva => s.extract[TutkintokoulutukseenValmentavaValintaperusteMetadata]
+        case Muu => s.extract[MuuValintaperusteMetadata]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {
@@ -137,8 +150,13 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case JString(tyyppi) => Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
         case Yo => s.extract[YliopistoValintaperusteMetadataIndexed]
-        case Amm => s.extract[AmmatillinenValintaperusteMetadataIndexed]
         case Amk => s.extract[AmmattikorkeakouluValintaperusteMetadataIndexed]
+        case Amm => s.extract[AmmatillinenValintaperusteMetadataIndexed]
+        case Lk => s.extract[LukioValintaperusteMetadataIndexed]
+        case AmmTutkinnonOsa => s.extract[AmmatillinenTutkinnonOsaValintaperusteMetadataIndexed]
+        case AmmOsaamisala => s.extract[AmmatillinenOsaamisalaValintaperusteMetadataIndexed]
+        case Tuva => s.extract[TutkintokoulutukseenValmentavaValintaperusteMetadataIndexed]
+        case Muu => s.extract[MuuValintaperusteMetadataIndexed]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } {

@@ -46,42 +46,9 @@ sealed trait ValintaperusteMetadataIndexed {
   def hakukelpoisuus: Kielistetty
   def lisatiedot: Kielistetty
   def valintakokeidenYleiskuvaus: Kielistetty
-  def sisalto: Seq[SisaltoIndexed]
+  def sisalto: Seq[Sisalto]
 
   def toValintaperusteMetadata: ValintaperusteMetadata
-}
-
-sealed trait SisaltoIndexed {
-  def toSisalto: Sisalto
-}
-
-case class SisaltoTekstiIndexed(data: Kielistetty) extends SisaltoIndexed {
-  override def toSisalto: Sisalto = SisaltoTeksti(teksti = data)
-}
-
-case class SisaltoTaulukkoIndexed(data: SisaltoTaulukkoDataIndexed) extends SisaltoIndexed {
-  override def toSisalto: Sisalto =
-    Taulukko(
-      id = data.id,
-      nimi = data.nimi,
-      rows = data.rows.map(_.toSisaltoRow)
-    )
-}
-
-case class SisaltoTaulukkoDataIndexed(id: Option[UUID], nimi: Kielistetty, rows: Seq[SisaltoTaulukkoRowIndexed]) {
-}
-
-case class SisaltoTaulukkoRowIndexed(index: Int, isHeader: Boolean, columns: Seq[SisaltoTaulukkoColumnIndexed]) {
-  def toSisaltoRow : Row =
-    Row(
-      index = index,
-      isHeader = isHeader,
-      columns = columns.map(_.toSisaltoColumn)
-    )
-}
-
-case class SisaltoTaulukkoColumnIndexed(index: Int, text: Kielistetty) {
-  def toSisaltoColumn : Column = Column(index = index, text = text)
 }
 
 case class AmmatillinenValintaperusteMetadataIndexed(
@@ -90,7 +57,7 @@ case class AmmatillinenValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -100,7 +67,7 @@ case class AmmatillinenValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
     )
 }
@@ -111,7 +78,7 @@ case class LukioValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
   ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -121,7 +88,7 @@ case class LukioValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
     )
 }
@@ -132,7 +99,7 @@ case class YliopistoValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -142,7 +109,7 @@ case class YliopistoValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
   )
 }
@@ -153,7 +120,7 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -163,7 +130,7 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     )
 }
@@ -174,7 +141,7 @@ case class AmmatillinenTutkinnonOsaValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -184,7 +151,7 @@ case class AmmatillinenTutkinnonOsaValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     )
 }
@@ -195,7 +162,7 @@ case class AmmatillinenOsaamisalaValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -205,7 +172,7 @@ case class AmmatillinenOsaamisalaValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     )
 }
@@ -216,7 +183,7 @@ case class TutkintokoulutukseenValmentavaValintaperusteMetadataIndexed(
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -226,7 +193,7 @@ case class TutkintokoulutukseenValmentavaValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     )
 }
@@ -237,7 +204,7 @@ case class MuuValintaperusteMetadataIndexed(
     kuvaus: Kielistetty,
     hakukelpoisuus: Kielistetty = Map(),
     lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[SisaltoIndexed],
+    sisalto: Seq[Sisalto],
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
@@ -247,7 +214,7 @@ case class MuuValintaperusteMetadataIndexed(
       kuvaus = kuvaus,
       hakukelpoisuus = hakukelpoisuus,
       lisatiedot = lisatiedot,
-      sisalto = sisalto.map(_.toSisalto),
+      sisalto = sisalto,
       valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus,
     )
 }

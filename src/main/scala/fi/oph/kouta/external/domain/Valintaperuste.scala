@@ -15,6 +15,9 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: Valintaperustekuvauksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        tila:
     |          type: string
     |          example: "julkaistu"
@@ -25,12 +28,15 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          description: Valintaperustekuvauksen julkaisutila. Jos kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
     |        koulutustyyppi:
     |          type: string
-    |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
+    |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?  Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus)
     |          enum:
     |            - amm
     |            - yo
-    |            - amk
     |            - lk
+    |            - amk
+    |            - amm-tutkinnon-osa
+    |            - amm-osaamisala
+    |            - tuva
     |            - muu
     |          example: amm
     |        hakutapaKoodiUri:
@@ -41,10 +47,6 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: Valintaperustekuvaukseen liittyvä kohdejoukko. Valintaperusteen ja siihen hakukohteen kautta liittyvän haun kohdejoukon tulee olla sama. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukko/1)
     |          example: haunkohdejoukko_17#1
-    |        kohdejoukonTarkenneKoodiUri:
-    |          type: string
-    |          description: Valintaperustekuvaukseen liittyvä kohdejoukon tarkenne. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukontarkenne/1)
-    |          example: haunkohdejoukontarkenne_1#1
     |        julkinen:
     |          type: boolean
     |          description: Voivatko muut oppilaitokset käyttää valintaperustekuvausta
@@ -70,8 +72,13 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: object
     |          oneOf:
     |            - $ref: '#/components/schemas/YliopistoValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/LukioValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/TutkintokoulutukseenValmentavaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/MuuValintaperusteMetadata'
     |          example:
     |            tyyppi: amm
     |            valintatavat:
@@ -125,11 +132,11 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |""")
 case class Valintaperuste(
     id: Option[UUID],
+    externalId: Option[String],
     tila: Julkaisutila,
     koulutustyyppi: Koulutustyyppi,
     hakutapaKoodiUri: Option[String],
     kohdejoukkoKoodiUri: Option[String],
-    kohdejoukonTarkenneKoodiUri: Option[String],
     nimi: Kielistetty,
     julkinen: Boolean,
     valintakokeet: List[Valintakoe],

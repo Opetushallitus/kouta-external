@@ -4,6 +4,8 @@ import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid, UserO
 import fi.oph.kouta.domain.{Julkaisutila, Kieli, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
+import java.util.UUID
+
 @SwaggerModel(
   """    Toteutus:
     |      type: object
@@ -12,7 +14,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: string
     |          description: Toteutuksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "1.2.246.562.17.00000000000000000009"
-    |        tila:
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
+    |    |   tila:
     |          type: string
     |          example: "julkaistu"
     |          enum:
@@ -47,6 +52,9 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            - $ref: '#/components/schemas/YliopistoToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeaToteutusMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaToteutusMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaToteutusMetadata'
+    |            - $ref: '#/components/schemas/LukioToteutusMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:
@@ -132,6 +140,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |                wwwSivu:
     |                  fi: http://opintopolku.fi
     |                  sv: http://studieinfo.fi
+    |        sorakuvausId:
+    |          type: string
+    |          description: Toteutukseen liittyvän SORA-kuvauksen yksilöivä tunniste
+    |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        muokkaaja:
     |          type: string
     |          description: Toteutusta viimeksi muokanneen virkailijan henkilö-oid
@@ -152,11 +164,13 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |""")
 case class Toteutus(
     oid: Option[ToteutusOid],
+    externalId: Option[String],
     koulutusOid: KoulutusOid,
     tila: Julkaisutila,
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
     metadata: Option[ToteutusMetadata],
+    sorakuvausId: Option[UUID],
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],

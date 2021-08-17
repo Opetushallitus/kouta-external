@@ -15,15 +15,18 @@ import java.util.UUID
     |          type: string
     |          description: SORA-kuvauksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Minkä tyyppisiin koulutuksiin SORA-kuvaus liittyy. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'muu' (muu koulutus)"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'tuva' (tutkintokoulutukseen valmentava koulutus)"
     |          enum:
     |            - amm
     |            - yo
     |            - amk
     |            - lk
-    |            - muu
+    |            - tuva
     |          example: amm
     |        tila:
     |          type: string
@@ -80,6 +83,7 @@ import java.util.UUID
     |""")
 case class Sorakuvaus(
     id: Option[UUID],
+    externalId: Option[String],
     tila: Julkaisutila,
     nimi: Kielistetty,
     koulutustyyppi: Koulutustyyppi,

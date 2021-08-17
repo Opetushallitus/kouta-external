@@ -1,65 +1,50 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.Koulutustyyppi
+import fi.oph.kouta.domain.{Amk, Amm, AmmOsaamisala, AmmTutkinnonOsa, Koulutustyyppi, Lk, Muu, Tuva, Yo}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
   """    ValintaperusteMetadata:
     |      type: object
     |      properties:
-    |        tyyppi:
-    |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala'"
-    |          enum:
-    |            - amm
-    |            - yo
-    |            - amk
-    |            - lk
-    |            - amm-tutkinnon-osa
-    |            - amm-osaamisala
-    |          example: amm
     |        valintatavat:
     |          type: array
     |          description: Lista valintaperustekuvauksen valintatavoista
     |          items:
     |            $ref: '#/components/schemas/Valintatapa'
-    |        valintakokeidenYleiskuvaus:
-    |          type: object
-    |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
-    |          $ref: '#/components/schemas/Kuvaus'
     |        kuvaus:
     |          type: object
     |          description: Valintaperustekuvauksen kuvausteksti eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
+    |        hakukelpoisuus:
+    |          type: object
+    |          description: Valintaperustekuvauksen hakukelpoisuus eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
+    |        lisatiedot:
+    |          type: object
+    |          description: Valintaperustekuvauksen lisatiedot eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
+    |        valintakokeidenYleiskuvaus:
+    |          type: object
+    |          description: Valintakokeiden yleiskuvaus eri kielillä. Kielet on määritetty valintaperustekuvauksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
+    |        sisalto:
+    |          type: array
+    |          description: Valintaperusteen kuvauksen sisältö. Voi sisältää sekä teksti- että taulukkoelementtejä.
+    |          items:
+    |            type: object
+    |            oneOf:
+    |              - $ref: '#/components/schemas/SisaltoTeksti'
+    |              - $ref: '#/components/schemas/SisaltoTaulukko'
     |""")
 sealed trait ValintaperusteMetadata {
   def tyyppi: Koulutustyyppi
   def valintatavat: Seq[Valintatapa]
-  def valintakokeidenYleiskuvaus: Kielistetty
   def kuvaus: Kielistetty
-}
-
-@SwaggerModel(
-  """    KorkeakoulutusValintaperusteMetadata:
-    |      type: object
-    |      properties:
-    |        osaamistaustaKoodiUrit:
-    |          type: array
-    |          description: Lista valintaperustekuvauksen osaamistaustoista.
-    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/osaamistausta/1)
-    |          items:
-    |            - type: string
-    |          example:
-    |            - osaamistausta_001#1
-    |            - osaamistausta_002#1
-    |        kuvaus:
-    |          type: object
-    |          description: Valintaperustekuvauksen kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
-    |""")
-sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata {
-  def osaamistaustaKoodiUrit: Seq[String]
+  def hakukelpoisuus: Kielistetty
+  def lisatiedot: Kielistetty
+  def valintakokeidenYleiskuvaus: Kielistetty
+  def sisalto: Seq[Sisalto]
 }
 
 @SwaggerModel(
@@ -76,17 +61,43 @@ sealed trait KorkeakoulutusValintaperusteMetadata extends ValintaperusteMetadata
     |            - amm
     |""")
 case class AmmatillinenValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amm,
     valintatavat: Seq[Valintatapa],
-    valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    kuvaus: Kielistetty
+    kuvaus: Kielistetty,
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
+@SwaggerModel(
+"""    LukioValintaperusteMetadata:
+  |      type: object
+  |      allOf:
+  |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+  |      properties:
+  |        tyyppi:
+  |          type: string
+  |          description: Valintaperustekuvauksen metatiedon tyyppi
+  |          example: lk
+  |          enum:
+  |            - lk
+  |""")
+case class LukioValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = Lk,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
 @SwaggerModel(
   """    YliopistoValintaperusteMetadata:
     |      type: object
     |      allOf:
-    |        - $ref: '#/components/schemas/KorkeakoulutusValintaperusteMetadata'
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
     |      properties:
     |        tyyppi:
     |          type: string
@@ -96,18 +107,20 @@ case class AmmatillinenValintaperusteMetadata(
     |            - yo
     |""")
 case class YliopistoValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Yo,
     valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty,
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    osaamistaustaKoodiUrit: Seq[String],
-    kuvaus: Kielistetty
-) extends KorkeakoulutusValintaperusteMetadata
+) extends ValintaperusteMetadata
 
 @SwaggerModel(
   """    AmmattikorkeakouluValintaperusteMetadata:
     |      type: object
     |      allOf:
-    |        - $ref: '#/components/schemas/KorkeakoulutusValintaperusteMetadata'
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
     |      properties:
     |        tyyppi:
     |          type: string
@@ -117,9 +130,104 @@ case class YliopistoValintaperusteMetadata(
     |            - amk
     |""")
 case class AmmattikorkeakouluValintaperusteMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amk,
     valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty,
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
-    osaamistaustaKoodiUrit: Seq[String],
-    kuvaus: Kielistetty
-) extends KorkeakoulutusValintaperusteMetadata
+) extends ValintaperusteMetadata
+
+
+@SwaggerModel(
+  """    AmmatillinenTutkinnonOsaValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: amm-tutkinnon-osa
+    |          enum:
+    |            - amm-tutkinnon-osa
+    |""")
+case class AmmatillinenTutkinnonOsaValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
+@SwaggerModel(
+  """    AmmatillinenOsaamisalaValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: amm-osaamisala
+    |          enum:
+    |            - amm-osaamisala
+    |""")
+case class AmmatillinenOsaamisalaValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = AmmOsaamisala,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
+@SwaggerModel(
+  """    TutkintokoulutukseenValmentavaValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: tuva
+    |          enum:
+    |            - tuva
+    |""")
+case class TutkintokoulutukseenValmentavaValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = Tuva,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
+@SwaggerModel(
+  """    MuuValintaperusteMetadataModel:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: muu
+    |          enum:
+    |            - muu
+    |""")
+case class MuuValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = Muu,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata

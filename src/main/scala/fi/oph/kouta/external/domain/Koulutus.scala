@@ -5,6 +5,8 @@ import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 
+import java.util.UUID
+
 @SwaggerModel(
   """    Koulutus:
     |      type: object
@@ -13,23 +15,33 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: Koulutuksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: "1.2.246.562.13.00000000000000000009"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        johtaaTutkintoon:
     |          type: boolean
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'muu' (muu koulutus)"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'muu' (muu koulutus)"
     |          enum:
     |            - amm
     |            - yo
     |            - amk
     |            - lk
+    |            - amm-tutkinnon-osa
+    |            - amm-osaamisala
+    |            - tuva
     |            - muu
-    |          example: amm
-    |        koulutusKoodiUri:
-    |          type: string
-    |          description: Koulutuksen koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
-    |          example: koulutus_371101#1
+    |    |     example: amm
+    |        koulutuksetKoodiUri:
+    |          type: array
+    |          description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+    |          items:
+    |            type: string
+    |          example:
+    |            - koulutus_371101#1
+    |            - koulutus_201000#1
     |        tila:
     |          type: string
     |          example: "julkaistu"
@@ -68,7 +80,11 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - $ref: '#/components/schemas/YliopistoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeaKoulutusMetadata'
-    |          example:
+    |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/LukioKoulutusMetadata'
+    |            - $ref: '#/components/schemas/TuvaKoulutusMetadata'
+    |             example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
@@ -81,6 +97,10 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |                teksti:
     |                  fi: Opintojen suomenkielinen lisätietokuvaus
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
+    |        sorakuvausId:
+    |          type: string
+    |          description: Koulutukseen liittyvän SORA-kuvauksen yksilöivä tunniste
+    |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        muokkaaja:
     |          type: string
     |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid
@@ -93,26 +113,31 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: Koulutuksen Opintopolussa näytettävän teemakuvan URL.
     |          example: https://konfo-files.opintopolku.fi/koulutus-teema/1.2.246.562.13.00000000000000000009/f4ecc80a-f664-40ef-98e6-eaf8dfa57f6e.png
+    |        ePerusteId:
+    |          type: number
+    |          description: Koulutuksen käyttämän ePerusteen id.
+    |          example: 4804100
     |        modified:
-    |           type: string
-    |           format: date-time
-    |           description: Koulutuksen viimeisin muokkausaika. Järjestelmän generoima
-    |           example: 2019-08-23T09:55
+    |          type: string
+    |          format: date-time
+    |          description: Koulutuksen viimeisin muokkausaika. Järjestelmän generoima
+    |          example: 2019-08-23T09:55
     |""")
 case class Koulutus(
     oid: Option[KoulutusOid],
+    externalId: Option[String],
     johtaaTutkintoon: Boolean,
     koulutustyyppi: Koulutustyyppi,
-    koulutusKoodiUri: Option[String],
+    koulutuksetKoodiUri: Seq[String],
     tila: Julkaisutila,
     tarjoajat: List[OrganisaatioOid],
+    julkinen: Boolean,
+    kielivalinta: Seq[Kieli],
     nimi: Kielistetty,
     metadata: Option[KoulutusMetadata],
-    julkinen: Boolean,
-    esikatselu: Boolean = true,
+    sorakuvausId: Option[UUID],
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
-    kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
     ePerusteId: Option[Long],
     modified: Option[Modified]

@@ -20,16 +20,12 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
 
   def createUUIDInParams(x: Seq[UUID]): String = if( x.isEmpty) s"''" else x.map(s => s"'${s.toString}'").mkString(",")
 
-  def createRangeInParams(x: Seq[Ajanjakso]): String = if(x.isEmpty) s"''" else x.map(s => s"${toTsrangeString(s)}").mkString(",")
-
   def formatTimestampParam(value: Option[LocalDateTime]): String = value.map(ISO_LOCAL_DATE_TIME_FORMATTER.format).orNull
 
   def toJsonParam(value: AnyRef): String = Option(toJson(value)) match {
     case Some(s) if !s.isEmpty & !"{}".equals(s) => s
     case _ => null
   }
-
-  def toTsrangeString(a: Ajanjakso) = s"'[${ISO_LOCAL_DATE_TIME_FORMATTER.format(a.alkaa)}, ${ISO_LOCAL_DATE_TIME_FORMATTER.format(a.paattyy)})'"
 
   implicit object SetInstant extends SetParameter[Instant] {
     def apply(v: Instant, pp: PositionedParameters): Unit = {

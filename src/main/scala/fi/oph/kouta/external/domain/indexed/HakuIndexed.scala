@@ -9,6 +9,7 @@ import java.util.UUID
 
 class HakuIndexed(
     oid: Option[HakuOid],
+    externalId: Option[String],
     tila: Julkaisutila,
     nimi: Kielistetty,
     hakutapa: Option[KoodiUri],
@@ -30,6 +31,7 @@ class HakuIndexed(
 ) {
   def toHaku: Haku = Haku(
     oid = oid,
+    externalId = externalId,
     tila = tila,
     nimi = nimi,
     hakutapaKoodiUri = hakutapa.map(_.koodiUri),

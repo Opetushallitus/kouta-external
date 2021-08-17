@@ -7,6 +7,7 @@ import fi.oph.kouta.external.domain.{Kielistetty, Sorakuvaus, SorakuvausMetadata
 
 case class SorakuvausIndexed(
     id: Option[UUID],
+    externalId: Option[String],
     tila: Julkaisutila,
     nimi: Kielistetty,
     koulutustyyppi: Koulutustyyppi,
@@ -18,6 +19,7 @@ case class SorakuvausIndexed(
 ) {
   def toSorakuvaus: Sorakuvaus = Sorakuvaus(
     id = id,
+    externalId = externalId,
     tila = tila,
     nimi = nimi,
     koulutustyyppi = koulutustyyppi,

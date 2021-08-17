@@ -22,17 +22,20 @@ class ValintaperusteSpec
   val ophValintaperusteId: UUID = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
   val julkinenId: UUID          = UUID.fromString("db8acf4f-6e29-409d-93a4-06000fa9a4cd")
 
+  var ophValintaperuste: Valintaperuste = null
+  var julkinenValintaperuste: Valintaperuste = null
+
   override def beforeAll(): Unit = {
     super.beforeAll()
     addMockValintaperuste(existingId, ChildOid)
-    addMockValintaperuste(ophValintaperusteId, OphOid)
-    addMockValintaperuste(julkinenId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey -> "true"))
+    ophValintaperuste = addMockValintaperuste(ophValintaperusteId, OphOid)
+    julkinenValintaperuste = addMockValintaperuste(julkinenId, LonelyOid, _ + (KoutaFixtureTool.JulkinenKey -> "true"))
   }
 
   getTests()
 
   it should "allow the user of proper koulutustyyppi to read valintaperuste created by oph" in {
-    get(ophValintaperusteId, readSessionIds(ChildOid))
+    get(ophValintaperusteId, readSessionIds(ChildOid), ophValintaperuste)
   }
 
   it should "deny the user of wrong koulutustyyppi to read valintaperuste created by oph" in {
@@ -40,7 +43,7 @@ class ValintaperusteSpec
   }
 
   it should "allow the user of proper koulutustyyppi to read julkinen valintaperuste" in {
-    get(julkinenId, readSessionIds(ChildOid))
+    get(julkinenId, readSessionIds(ChildOid), julkinenValintaperuste)
   }
 
   it should "deny the user of wrong koulutustyyppi to read julkinen valintaperuste" in {

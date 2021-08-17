@@ -21,11 +21,13 @@ case class LisatietoIndexed(otsikko: KoodiUri, teksti: Kielistetty) {
 
 case class ValintakoeIndexed(id: Option[UUID],
                              tyyppi: Option[KoodiUri],
+                             nimi: Kielistetty,
                              metadata: Option[ValintaKoeMetadataIndexed],
                              tilaisuudet: List[ValintakoetilaisuusIndexed]) {
   def toValintakoe: Valintakoe = Valintakoe(
     id = id,
     tyyppiKoodiUri = tyyppi.map(_.koodiUri),
+    nimi = nimi,
     metadata = metadata.map(_.toValintakoeMetadata),
     tilaisuudet = tilaisuudet.map(_.toValintakoetilaisuus)
   )
@@ -78,5 +80,17 @@ case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskaus
     koulutuksenPaattymispaivamaara = koulutuksenPaattymispaivamaara,
     koulutuksenAlkamiskausiKoodiUri = koulutuksenAlkamiskausi.map(_.koodiUri),
     koulutuksenAlkamisvuosi = koulutuksenAlkamisvuosi
+  )
+}
+
+case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
+                               koulutusKoodiUri: Option[KoodiUri] = None,
+                               tutkinnonosaId: Option[Long] = None,
+                               tutkinnonosaViite: Option[Long] = None) {
+  def toTutkinnonOsa: TutkinnonOsa = TutkinnonOsa(
+    ePerusteId = ePerusteId,
+    koulutusKoodiUri = koulutusKoodiUri.map(_.koodiUri),
+    tutkinnonosaId = tutkinnonosaId,
+    tutkinnonosaViite = tutkinnonosaViite
   )
 }

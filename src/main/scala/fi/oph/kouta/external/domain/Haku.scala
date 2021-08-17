@@ -15,6 +15,9 @@ import java.util.UUID
     |          type: string
     |          description: Haun yksilöivä tunniste. Järjestelmän generoima.
     |          example: "1.2.246.562.29.00000000000000000009"
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        tila:
     |          type: string
     |          example: "julkaistu"
@@ -38,7 +41,7 @@ import java.util.UUID
     |          description: Viimeinen ajanhetki, jolloin hakuun saa liittää hakukohteen.
     |            Hakukohteita ei saa lisätä enää sen jälkeen, kun haku on käynnissä.
     |          example: 2019-08-23T09:55
-    |        hakukohteenMuokkaamiseenTakaraja:
+    |        hakukohteenMuokkaamisenTakaraja:
     |          type: string
     |          format: date-time
     |          description: Viimeinen ajanhetki, jolloin hakuun liitettyä hakukohdetta on sallittua muokata.
@@ -114,6 +117,7 @@ import java.util.UUID
     |""")
 case class Haku(
     oid: Option[HakuOid] = None,
+    externalId: Option[String] = None,
     tila: Julkaisutila = Tallennettu,
     nimi: Kielistetty = Map(),
     hakutapaKoodiUri: Option[String] = None,

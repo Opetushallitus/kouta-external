@@ -211,7 +211,7 @@ case class LukioKoulutusMetadata(tyyppi: Koulutustyyppi,
 ) extends KoulutusMetadata
 
 @SwaggerModel(
-  """    LukioKoulutusMetadata:
+  """    TuvaKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -228,7 +228,7 @@ case class LukioKoulutusMetadata(tyyppi: Koulutustyyppi,
     |            opintojenLaajuusKoodiUri:
     |              type: string
     |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |              example: opintojenlaajuus_40#1
+    |              example: opintojenlaajuus_38#1
     |""")
 case class TuvaKoulutusMetadata(tyyppi: Koulutustyyppi,
                                 kuvaus: Kielistetty,

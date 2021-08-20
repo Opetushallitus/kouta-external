@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.util
 
 import fi.oph.kouta.domain._
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain._
 import fi.oph.kouta.external.domain.indexed._
 import fi.oph.kouta.util.{GenericKoutaFormats, GenericKoutaJsonFormats}
@@ -23,10 +24,17 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
     valintatapaSisaltoSerializer,
     valintaperusteMetadataSerializer,
     valintaperusteMetadataIndexedSerializer,
+    stringSerializer(HakuOid),
   )
 
   private def serializer[A: Manifest](deserializer: PartialFunction[JValue, A])(serializer: PartialFunction[Any, JValue]) =
     new CustomSerializer[A](_ => (deserializer, serializer))
+
+  private def stringSerializer[A: Manifest](construct: String => A) = serializer { case JString(s) =>
+    construct(s)
+  } { case a: A =>
+    JString(a.toString)
+  }
 
   private def koulutusMetadataSerializer: CustomSerializer[KoulutusMetadata] = serializer[KoulutusMetadata] {
     case s: JObject =>

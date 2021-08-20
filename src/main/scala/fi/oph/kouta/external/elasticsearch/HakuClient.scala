@@ -1,10 +1,12 @@
 package fi.oph.kouta.external.elasticsearch
 
-import java.time.Instant
+import com.sksamuel.elastic4s.ElasticApi.{must, should, termsQuery}
+import com.sksamuel.elastic4s.http.ElasticDsl._
 
+import java.time.Instant
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
-import fi.oph.kouta.domain.oid.HakuOid
+import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.indexed.HakuIndexed
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -22,6 +24,11 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
       .map(_.to[HakuIndexed])
       .map(_.toHaku)
       .map(h => (h, TimeUtils.localDateTimeToInstant(h.modified.get.value)))
+
+  def findByOids(hakuOids: Set[HakuOid]): Future[Seq[Haku]] = {
+    val hakukohteetQuery = should(termsQuery("oid", hakuOids.map(_.toString)))
+    searchItems[HakuIndexed](Some(must(hakukohteetQuery))).map(_.map(_.toHaku))
+  }
 }
 
 object HakuClient extends HakuClient(ElasticsearchClient.client)

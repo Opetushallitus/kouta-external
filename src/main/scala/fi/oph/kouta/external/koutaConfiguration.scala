@@ -1,6 +1,7 @@
 package fi.oph.kouta.external
 
 import com.typesafe.config.{Config => TypesafeConfig}
+import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.config.{ApplicationSettings, ApplicationSettingsLoader, ApplicationSettingsParser, ConfigTemplateProcessor}
 import fi.vm.sade.utils.slf4j.Logging
@@ -21,6 +22,7 @@ case class SecurityConfiguration(
     casUrl: String,
     casServiceIdentifier: String,
     kayttooikeusUrl: String,
+    rootOrganisaatio: OrganisaatioOid
 )
 
 case class ElasticSearchConfiguration(elasticUrl: String)
@@ -47,6 +49,7 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
     casUrl = config.getString("cas.url"),
     casServiceIdentifier = config.getString("kouta-external.cas.service"),
     kayttooikeusUrl = config.getString("kayttooikeus-service.userDetails.byUsername"),
+    rootOrganisaatio = OrganisaatioOid("1.2.246.562.10.00000000001")
   )
 
   val elasticSearchConfiguration = ElasticSearchConfiguration(

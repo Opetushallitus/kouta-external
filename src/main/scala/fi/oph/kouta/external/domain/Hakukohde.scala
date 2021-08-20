@@ -73,7 +73,7 @@ import java.util.UUID
     |            type: string
     |          example:
     |            - pohjakoulutusvaatimuskouta_104#1
-    |      |     - pohjakoulutusvaatimuskouta_109#1
+    |            - pohjakoulutusvaatimuskouta_109#1
     |        muuPohjakoulutusvaatimus:
     |          type: object
     |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.

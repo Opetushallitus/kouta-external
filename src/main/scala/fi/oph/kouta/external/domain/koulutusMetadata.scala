@@ -108,7 +108,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |            example:
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
-    |    |   kuvauksenNimi:
+    |        kuvauksenNimi:
     |          type: object
     |          description: Koulutuksen kuvaukseni nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          allOf:

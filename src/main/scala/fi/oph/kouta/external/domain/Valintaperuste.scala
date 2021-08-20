@@ -28,7 +28,9 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          description: Valintaperustekuvauksen julkaisutila. Jos kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
     |        koulutustyyppi:
     |          type: string
-    |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?  Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus)
+    |          description: |
+    |            Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
+    |            Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus)
     |          enum:
     |            - amm
     |            - yo

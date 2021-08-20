@@ -33,7 +33,7 @@ import java.util.UUID
     |            - amm-osaamisala
     |            - tuva
     |            - muu
-    |    |     example: amm
+    |          example: amm
     |        koulutuksetKoodiUri:
     |          type: array
     |          description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
@@ -84,7 +84,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaKoulutusMetadata'
     |            - $ref: '#/components/schemas/LukioKoulutusMetadata'
     |            - $ref: '#/components/schemas/TuvaKoulutusMetadata'
-    |             example:
+    |          example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1

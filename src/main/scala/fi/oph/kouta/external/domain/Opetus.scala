@@ -50,7 +50,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            - 'maksullinen'
     |            - 'maksuton'
     |            - 'lukuvuosimaksu'
-    |    |   maksullisuusKuvaus:
+    |        maksullisuusKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen maksullisuutta tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'

@@ -17,7 +17,7 @@ import java.util.UUID
     |        externalId:
     |          type: string
     |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
-    |    |   tila:
+    |        tila:
     |          type: string
     |          example: "julkaistu"
     |          enum:

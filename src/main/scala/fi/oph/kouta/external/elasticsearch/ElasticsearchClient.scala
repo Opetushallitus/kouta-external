@@ -1,17 +1,24 @@
 package fi.oph.kouta.external.elasticsearch
 
-import java.util.NoSuchElementException
+import com.sksamuel.elastic4s.HitReader
 
+import java.util.NoSuchElementException
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.http.get.GetResponse
-import com.sksamuel.elastic4s.http.search.SearchResponse
+import com.sksamuel.elastic4s.http.search.{SearchIterator, SearchResponse}
 import com.sksamuel.elastic4s.http.{ElasticClient, ElasticProperties, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.searches.queries.Query
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.Serialization
 
+import java.util.concurrent.TimeUnit
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.{Duration, FiniteDuration}
+import scala.reflect.ClassTag
+import scala.util.{Failure, Success}
 
 object ElasticsearchClient {
   private val elasticUrl: String = KoutaConfigurationFactory.configuration.elasticSearchConfiguration.elasticUrl
@@ -61,6 +68,39 @@ trait ElasticsearchClient extends Logging {
         logger.debug(s"Elasticsearch response: [{}]", response.result.hits.hits.map(_.sourceAsString).mkString(","))
         Future.successful(response.result)
     }
+
+  protected def searchItems[T: HitReader: ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
+    timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
+      val notTallennettu = not(termsQuery("tila.keyword", "tallennettu"))
+      implicit val duration: FiniteDuration = Duration(1, TimeUnit.MINUTES)
+
+      query.fold[Future[IndexedSeq[T]]]({
+        Future(
+          SearchIterator.iterate[T](client, search(index).query(notTallennettu).keepAlive("1m").size(500)).toIndexedSeq
+        )
+      })(q => {
+        val request = search(index).bool(must(notTallennettu, q)).keepAlive("1m").size(500)
+        logger.info(s"Elasticsearch request: ${request.show}")
+        Future {
+          SearchIterator
+            .hits(client, request)
+            .toIndexedSeq
+            .map(hit => hit.safeTo[T])
+            .flatMap(entity =>
+              entity match {
+                case Success(value) => Some(value)
+                case Failure(exception) =>
+                  logger.error(
+                    s"Unable to deserialize json response to entity: ",
+                    exception
+                  )
+                  None
+              }
+            )
+        }
+      })
+    }
+  }
 
   private val debugJsonEnabled = false
 

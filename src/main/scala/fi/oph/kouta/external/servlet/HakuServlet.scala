@@ -5,7 +5,7 @@ import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{ActionResult, FutureSupport, Ok}
+import org.scalatra.{ActionResult, BadRequest, FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -120,4 +120,45 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
         ActionResult(status, message, Map.empty)
     }
   }
+
+  registerPath(
+    "/haku/findbyoids",
+    """    post:
+      |      summary: Etsi hakuja oideilla
+      |      operationId: Etsi hakuja oideilla
+      |      description: Etsii hakuja annetuilla oideilla
+      |      tags:
+      |        - Haku
+      |      requestBody:
+      |          description: Palautettavien hakujen oidit JSON-arrayna
+      |          example: ["1.2.246.562.29.00000000000000000009","1.2.246.562.29.00000000000000000186"]
+      |          content:
+      |             application/json:
+      |               schema:
+      |                 type: array
+      |                 items:
+      |                   type: string
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: array
+      |                items:
+      |                  $ref: '#/components/schemas/Haku'
+      |""".stripMargin
+  )
+  post("/findbyoids") {
+    implicit val authenticated: Authenticated = authenticate
+
+    val haku = parsedBody.extract[Set[HakuOid]]
+
+    haku match {
+      case oids if oids.exists(!_.isValid) =>
+        BadRequest(s"Invalid hakuOids ${oids.find(!_.isValid).get.toString}")
+      case hakuOids => hakuService.findByOids(hakuOids)
+    }
+  }
+
 }

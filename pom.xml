@@ -153,7 +153,6 @@
         <dependency>
             <groupId>fi.vm.sade</groupId>
             <artifactId>scala-logging_2.12</artifactId>
-            <version>${scala-logging.version}</version>
         </dependency>
         <dependency>
             <groupId>org.json4s</groupId>
@@ -589,6 +588,11 @@
                 <groupId>com.github.cb372</groupId>
                 <artifactId>scalacache-core_2.12</artifactId>
                 <version>0.28.0</version>
+            </dependency>
+            <dependency>
+                <groupId>fi.vm.sade</groupId>
+                <artifactId>scala-logging_2.12</artifactId>
+                <version>${scala-logging.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -210,7 +210,7 @@ case class TutkintokoulutukseenValmentavaValintaperusteMetadata(
 ) extends ValintaperusteMetadata
 
 @SwaggerModel(
-  """    MuuValintaperusteMetadataModel:
+  """    MuuValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'

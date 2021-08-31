@@ -20,33 +20,28 @@ class SwaggerServlet extends ScalatraServlet {
         |info:
         |  title: kouta-external
         |  description: >
-        |    Uuden koulutustarjonnan ulkoinen API.
-        |
-        |
-        |    Ohjeet kirjautumiseen rajapintojen kutsujalle:
-        |    [https://confluence.csc.fi/display/oppija/Rajapintojen+autentikaatio](https://confluence.csc.fi/display/oppija/Rajapintojen+autentikaatio)
-        |
-        |
-        |    Helpoin tapa kirjautua sisään Swagger-ui:n käyttäjälle on avata
-        |    [/kouta-external/auth/login](/kouta-external/auth/login) uuteen selainikkunaan.
-        |    Jos näkyviin tulee `{"personOid":"1.2.246.562.24.xxxx"}` on kirjautuminen onnistunut. Jos näkyviin tulee
-        |    opintopolun kirjautumisikkuna, kirjaudu sisään.
-        |  version: 0.1-SNAPSHOT
+        |    <p><strong>Uuden koulutustarjonnan Opintopolun ulkopuolisille palveluille tarkoitetut rajapinnat.</strong></p>
+            <p>Ohjeita rajapintojen kutsujalle:
+        |    <ul>
+        |    <li><a href="https://wiki.eduuni.fi/x/L95cCw" target="_blank">Autentikaatio</a></li>
+        |    <li><a href="https://wiki.eduuni.fi/x/0MeKCg" target="_blank">Kutsujan tunniste (caller-id)</a></li>
+        |    <li><a href="https://wiki.eduuni.fi/x/EL_hCw" target="_blank">CSRF-suojaus</a></li>
+        |    </ul>
+        |    </p>
+        |    <p>Helpoin tapa kirjautua sisään Swagger-ui:n käyttäjälle on avata
+        |    <a href="/kouta-external/auth/login" target="_blank">/kouta-external/auth/login</a> uuteen selainikkunaan.
+        |    Jos näkyviin tulee <code>{"personOid":"1.2.246.562.24.xxxx"}</code> on kirjautuminen onnistunut. Jos näkyviin tulee
+        |    opintopolun kirjautumisikkuna, kirjaudu sisään.</p>
         |  termsOfService: https://opintopolku.fi/wp/fi/opintopolku/tietoa-palvelusta/
         |  contact:
-        |    name: ""
+        |    name: "Opetushallitus"
         |    email: verkkotoimitus_opintopolku@oph.fi
-        |    url: ""
+        |    url: "https://www.oph.fi/"
         |  license:
         |    name: "EUPL 1.1 or latest approved by the European Commission"
         |    url: "http://www.osor.eu/eupl/"
         |servers:
         |  - url: /kouta-external/
-        |  - url: http://localhost:8097/kouta-external/
-        |  - url: https://virkailija.untuvaopintopolku.fi/kouta-external/
-        |  - url: https://virkailija.hahtuvaopintopolku.fi/kouta-external/
-        |  - url: https://virkailija.testiopintopolku.fi/kouta-external/
-        |  - url: https://virkailija.opintopolku.fi/kouta-external/
         |paths:
         |""".stripMargin
 

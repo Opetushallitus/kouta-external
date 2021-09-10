@@ -166,8 +166,7 @@ case class TuvaKoulutusMetadataIndexed (
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty = Map.empty,
-    opintojenLaajuus: Option[KoodiUri] = None,
-
+    opintojenLaajuus: Option[KoodiUri] = None
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: TuvaKoulutusMetadata = TuvaKoulutusMetadata (
     tyyppi = tyyppi,

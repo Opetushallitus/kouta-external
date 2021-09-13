@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.elasticsearch
 
-import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed

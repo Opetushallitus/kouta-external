@@ -1,12 +1,11 @@
 package fi.oph.kouta.external.elasticsearch
 
 import com.sksamuel.elastic4s.ElasticApi.{must, should, termsQuery}
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticClient
 
 import java.time.Instant
-import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakuOid}
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.indexed.HakuIndexed
 import fi.oph.kouta.external.util.KoutaJsonFormats

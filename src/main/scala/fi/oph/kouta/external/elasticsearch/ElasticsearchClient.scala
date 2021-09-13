@@ -1,13 +1,13 @@
 package fi.oph.kouta.external.elasticsearch
 
-import com.sksamuel.elastic4s.HitReader
+import com.sksamuel.elastic4s.ElasticDsl._
+import com.sksamuel.elastic4s.http.JavaClient
+import com.sksamuel.elastic4s.requests.get.GetResponse
+import com.sksamuel.elastic4s.requests.searches.queries.Query
+import com.sksamuel.elastic4s.requests.searches.{SearchIterator, SearchResponse}
+import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties, HitReader, RequestFailure, RequestSuccess}
 
 import java.util.NoSuchElementException
-import com.sksamuel.elastic4s.http.ElasticDsl._
-import com.sksamuel.elastic4s.http.get.GetResponse
-import com.sksamuel.elastic4s.http.search.{SearchIterator, SearchResponse}
-import com.sksamuel.elastic4s.http.{ElasticClient, ElasticProperties, RequestFailure, RequestSuccess}
-import com.sksamuel.elastic4s.searches.queries.Query
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.utils.slf4j.Logging
@@ -22,7 +22,7 @@ import scala.util.{Failure, Success}
 
 object ElasticsearchClient {
   private val elasticUrl: String = KoutaConfigurationFactory.configuration.elasticSearchConfiguration.elasticUrl
-  def client: ElasticClient = ElasticClient(ElasticProperties(elasticUrl))
+  def client: ElasticClient = ElasticClient(JavaClient(ElasticProperties(elasticUrl)))
 }
 
 trait ElasticsearchClient extends Logging {
@@ -33,7 +33,7 @@ trait ElasticsearchClient extends Logging {
 
   protected def getItem(id: String): Future[GetResponse] =
     client.execute {
-      val q = get(id).from(index)
+      val q = get(index, id)
       logger.debug(s"Elasticsearch query: {}", q.show)
       q
     }.flatMap {

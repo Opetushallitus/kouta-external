@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.servlet
 
-import com.sksamuel.elastic4s.http.ElasticClient
+import com.sksamuel.elastic4s.ElasticClient
 import fi.oph.kouta.external.domain.enums.ElasticsearchHealthStatus.{Green, Red, Unreachable, Yellow}
 import fi.oph.kouta.external.elasticsearch.{ElasticsearchClient, ElasticsearchHealth}
 import fi.oph.kouta.external.kouta.CasKoutaClient

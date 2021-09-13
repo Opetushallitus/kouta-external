@@ -7,7 +7,7 @@ import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.elasticsearch.SorakuvausClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, SorakuvausService}
 import fi.oph.kouta.external.servlet.SorakuvausServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 
 trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val SorakuvausPath = "/sorakuvaus"
@@ -15,7 +15,7 @@ trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val sorakuvausService = new SorakuvausService(new SorakuvausClient(TempElasticDockerClient.client), organisaatioService)
+    val sorakuvausService = new SorakuvausService(new SorakuvausClient(TempElasticClient.client), organisaatioService)
     addServlet(new SorakuvausServlet(sorakuvausService), SorakuvausPath)
   }
 

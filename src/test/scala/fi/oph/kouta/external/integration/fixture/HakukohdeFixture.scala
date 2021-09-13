@@ -6,7 +6,7 @@ import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, MockKoutaClient, TempElasticDockerClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, MockKoutaClient, TempElasticClient}
 
 trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val HakukohdePath = "/hakukohde"
@@ -16,8 +16,8 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val koutaClient = new MockKoutaClient(urlProperties.get)
 
-    val hakuService = new HakuService(new HakuClient(TempElasticDockerClient.client), koutaClient, organisaatioService)
-    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticDockerClient.client), organisaatioService, hakuService)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioService)
+    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticClient.client), organisaatioService, hakuService)
     addServlet(new HakukohdeServlet(hakukohdeService), HakukohdePath)
   }
 

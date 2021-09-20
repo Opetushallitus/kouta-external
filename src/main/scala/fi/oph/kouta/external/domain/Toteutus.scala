@@ -55,6 +55,8 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaToteutusMetadata'
     |            - $ref: '#/components/schemas/LukioToteutusMetadata'
+    |            - $ref: '#/components/schemas/VapaaSivistystyoOpistovuosiToteutusMetadata'
+    |            - $ref: '#/components/schemas/VapaaSivistystyoMuuMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:

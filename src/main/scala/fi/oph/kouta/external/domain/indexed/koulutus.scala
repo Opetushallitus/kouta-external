@@ -57,7 +57,7 @@ sealed trait KoulutusMetadataIndexed {
 case class AmmatillinenKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty = Map.empty,
-    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: AmmatillinenKoulutusMetadata =
     AmmatillinenKoulutusMetadata(
@@ -72,7 +72,6 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     tutkinnonOsat: Seq[TutkinnonOsaIndexed] = Seq.empty
-
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: AmmatillinenTutkinnonOsaKoulutusMetadata =
     AmmatillinenTutkinnonOsaKoulutusMetadata(
@@ -161,19 +160,35 @@ case class LukioKoulutusMetadataIndexed(
   )
 }
 
-case class TuvaKoulutusMetadataIndexed (
+case class TuvaKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Tuva,
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty = Map.empty,
-    opintojenLaajuus: Option[KoodiUri] = None,
-
+    opintojenLaajuus: Option[KoodiUri] = None
 ) extends KoulutusMetadataIndexed {
-  override def toKoulutusMetadata: TuvaKoulutusMetadata = TuvaKoulutusMetadata (
+  override def toKoulutusMetadata: TuvaKoulutusMetadata = TuvaKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     linkkiEPerusteisiin = linkkiEPerusteisiin,
     opintojenLaajuusKoodiUri = opintojenLaajuus.map(_.koodiUri)
   )
+}
+
+case class VapaaSivistystyoKoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed],
+    linkkiEPerusteisiin: Kielistetty,
+    opintojenLaajuusKoodiUri: Option[KoodiUri] = None
+) extends KoulutusMetadataIndexed {
+  override def toKoulutusMetadata: VapaaSivistystyoKoulutusMetadata =
+    VapaaSivistystyoKoulutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      lisatiedot = lisatiedot.map(_.toLisatieto),
+      linkkiEPerusteisiin = linkkiEPerusteisiin,
+      opintojenLaajuusKoodiUri = opintojenLaajuusKoodiUri.map(_.koodiUri)
+    )
 }

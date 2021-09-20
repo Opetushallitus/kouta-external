@@ -79,7 +79,8 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/TutkintokoulutukseenValmentavaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/VapaaSivistystyoValintaperusteMetadata'
     |            - $ref: '#/components/schemas/MuuValintaperusteMetadata'
     |          example:
     |            tyyppi: amm
@@ -131,7 +132,8 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |           format: date-time
     |           description: Valintaperustekuvauksen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
-    |""")
+    |"""
+)
 case class Valintaperuste(
     id: Option[UUID],
     externalId: Option[String],
@@ -147,6 +149,7 @@ case class Valintaperuste(
     muokkaaja: UserOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified]
-) extends PerustiedotWithId[Valintaperuste] with AuthorizableMaybeJulkinen[Valintaperuste] {
+) extends PerustiedotWithId[Valintaperuste]
+    with AuthorizableMaybeJulkinen[Valintaperuste] {
   override def withMuokkaaja(muokkaaja: UserOid): Valintaperuste = copy(muokkaaja = muokkaaja)
 }

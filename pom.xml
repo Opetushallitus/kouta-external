@@ -19,8 +19,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <kouta-backend.version>6.12.0-SNAPSHOT</kouta-backend.version>
-        <kouta-common.version>2.3.0-SNAPSHOT</kouta-common.version>
+        <kouta-backend.version>6.16.0-SNAPSHOT</kouta-backend.version>
+        <kouta-common.version>2.5.0-SNAPSHOT</kouta-common.version>
         <kouta-indeksoija.version>8.2.0-SNAPSHOT</kouta-indeksoija.version>
 
         <!-- Utility properties -->
@@ -52,6 +52,7 @@
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
         <mockserver-netty.version>5.5.1</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>
+        <scalactic.version>3.1.1</scalactic.version>
 
         <!-- Plugin properties -->
         <enforce.java.version>[1.8,)</enforce.java.version>
@@ -593,6 +594,11 @@
                 <groupId>fi.vm.sade</groupId>
                 <artifactId>scala-logging_2.12</artifactId>
                 <version>${scala-logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scalactic</groupId>
+                <artifactId>scalactic_2.12</artifactId>
+                <version>${scalactic.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -51,7 +51,7 @@
         <jetty.version>9.4.17.v20190418</jetty.version>
         <embedded-elasticsearch.version>2.10.0</embedded-elasticsearch.version>
         <mockserver-netty.version>5.5.1</mockserver-netty.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <scalactic.version>3.1.1</scalactic.version>
 
         <!-- Plugin properties -->

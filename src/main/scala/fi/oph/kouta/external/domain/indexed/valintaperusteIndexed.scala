@@ -177,7 +177,7 @@ case class AmmatillinenOsaamisalaValintaperusteMetadataIndexed(
     )
 }
 
-case class TutkintokoulutukseenValmentavaValintaperusteMetadataIndexed(
+case class TuvaValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi = Tuva,
     valintatavat: Seq[ValintatapaIndexed],
     kuvaus: Kielistetty = Map(),
@@ -187,7 +187,7 @@ case class TutkintokoulutukseenValmentavaValintaperusteMetadataIndexed(
     valintakokeidenYleiskuvaus: Kielistetty = Map(),
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
-    TutkintokoulutukseenValmentavaValintaperusteMetadata(
+    TuvaValintaperusteMetadata(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
       kuvaus = kuvaus,

@@ -199,7 +199,7 @@ case class AmmatillinenOsaamisalaValintaperusteMetadata(
     |          enum:
     |            - tuva
     |""")
-case class TutkintokoulutukseenValmentavaValintaperusteMetadata(
+case class TuvaValintaperusteMetadata(
     tyyppi: Koulutustyyppi = Tuva,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),

@@ -310,15 +310,9 @@ case class TuvaToteutusMetadataIndexed(
   asiasanat: List[Keyword],
   ammattinimikkeet: List[Keyword],
   yhteyshenkilot: Seq[Yhteyshenkilo],
-  hakutermi: Option[Hakutermi],
-  hakulomaketyyppi: Option[Hakulomaketyyppi],
-  hakulomakeLinkki: Kielistetty,
-  lisatietoaHakeutumisesta: Kielistetty,
-  lisatietoaValintaperusteista: Kielistetty,
-  hakuaika: Option[Ajanjakso],
   aloituspaikat: Option[Int],
   tuvaErityisopetuksena: Boolean
-) extends TutkintoonJohtamatonToteutusMetadataIndexed {
+) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: TuvaToteutusMetadata = {
     TuvaToteutusMetadata(
       tyyppi = tyyppi,
@@ -327,12 +321,6 @@ case class TuvaToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      hakutermi = hakutermi,
-      hakulomaketyyppi = hakulomaketyyppi,
-      hakulomakeLinkki = hakulomakeLinkki,
-      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
-      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
-      hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
       tuvaErityisopetuksena = tuvaErityisopetuksena
     )

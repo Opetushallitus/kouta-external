@@ -340,12 +340,6 @@ case class TuvaToteutusMetadata(
   asiasanat: List[Keyword],
   ammattinimikkeet: List[Keyword],
   yhteyshenkilot: Seq[Yhteyshenkilo],
-  hakutermi: Option[Hakutermi],
-  hakulomaketyyppi: Option[Hakulomaketyyppi],
-  hakulomakeLinkki: Kielistetty,
-  lisatietoaHakeutumisesta: Kielistetty,
-  lisatietoaValintaperusteista: Kielistetty,
-  hakuaika: Option[Ajanjakso],
   aloituspaikat: Option[Int],
   tuvaErityisopetuksena: Boolean
-) extends TutkintoonJohtamatonToteutusMetadata
+) extends ToteutusMetadata

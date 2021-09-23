@@ -18,15 +18,15 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          items:
     |            type: object
     |            $ref: '#/components/schemas/Lisatieto'
-    |""")
+    |"""
+)
 sealed trait KoulutusMetadata {
   val tyyppi: Koulutustyyppi
   val kuvaus: Kielistetty
   val lisatiedot: Seq[Lisatieto]
 }
 
-@SwaggerModel(
-  """    AmmatillinenKoulutusMetadata:
+@SwaggerModel("""    AmmatillinenKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -41,11 +41,10 @@ sealed trait KoulutusMetadata {
 case class AmmatillinenKoulutusMetadata(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
-    lisatiedot: Seq[Lisatieto],
+    lisatiedot: Seq[Lisatieto]
 ) extends KoulutusMetadata
 
-@SwaggerModel(
-  """    AmmatillinenTutkinnonOsaKoulutusMetadata:
+@SwaggerModel("""    AmmatillinenTutkinnonOsaKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -87,7 +86,8 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |              description: Osaamisala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/osaamisala/1)
     |              example: osaamisala_10#1
     |
-    |""")
+    |"""
+)
 case class AmmatillinenOsaamisalaKoulutusMetadata(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
@@ -125,7 +125,8 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |          type: string
     |          description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
     |          example: opintojenlaajuus_40#1
-    |""")
+    |"""
+)
 trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
   val kuvauksenNimi: Kielistetty
   val tutkintonimikeKoodiUrit: Seq[String]
@@ -133,8 +134,7 @@ trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
   val koulutusalaKoodiUrit: Seq[String]
 }
 
-@SwaggerModel(
-  """    YliopistoKoulutusMetadata:
+@SwaggerModel("""    YliopistoKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluMetadata'
     |        - type: object
@@ -156,8 +156,7 @@ case class YliopistoKoulutusMetadata(
     kuvauksenNimi: Kielistetty
 ) extends KorkeakoulutusKoulutusMetadata
 
-@SwaggerModel(
-  """    AmmattikorkeaKoulutusMetadata:
+@SwaggerModel("""    AmmattikorkeaKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluMetadata'
     |        - type: object
@@ -202,12 +201,14 @@ case class AmmattikorkeakouluKoulutusMetadata(
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
-    |""")
-case class LukioKoulutusMetadata(tyyppi: Koulutustyyppi,
-                                 kuvaus: Kielistetty,
-                                 lisatiedot: Seq[Lisatieto],
-                                 opintojenLaajuusKoodiUri: Option[String],
-                                 koulutusalaKoodiUrit: Seq[String]
+    |"""
+)
+case class LukioKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    opintojenLaajuusKoodiUri: Option[String],
+    koulutusalaKoodiUrit: Seq[String]
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -229,12 +230,43 @@ case class LukioKoulutusMetadata(tyyppi: Koulutustyyppi,
     |              type: string
     |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
     |              example: opintojenlaajuus_38#1
-    |""")
-case class TuvaKoulutusMetadata(tyyppi: Koulutustyyppi,
-                                kuvaus: Kielistetty,
-                                lisatiedot: Seq[Lisatieto],
-                                linkkiEPerusteisiin: Kielistetty,
-                                opintojenLaajuusKoodiUri: Option[String] = None
+    |"""
+)
+case class TuvaKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    linkkiEPerusteisiin: Kielistetty,
+    opintojenLaajuusKoodiUri: Option[String] = None
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    TelmaKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: telma
+    |              enum:
+    |                - telma
+    |            linkkiEPerusteisiin:
+    |              type: object
+    |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |            opintojenLaajuusKoodiUri:
+    |              type: string
+    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
+    |              example: opintojenlaajuus_38#1
+    |"""
+)
+case class TelmaKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    linkkiEPerusteisiin: Kielistetty,
+    opintojenLaajuusKoodiUri: Option[String] = None
 ) extends KoulutusMetadata
 
 @SwaggerModel(

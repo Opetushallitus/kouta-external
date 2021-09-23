@@ -30,7 +30,8 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Lista toteutukseen liittyvistä ammattinimikkeistä, joiden avulla opiskelija voi hakea koulutusta Opintopolusta
     |          items:
     |            $ref: '#/components/schemas/Ammattinimike'
-    |""")
+    |"""
+)
 sealed trait ToteutusMetadata {
   val tyyppi: Koulutustyyppi
   val kuvaus: Kielistetty
@@ -361,6 +362,31 @@ case class TuvaToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     aloituspaikat: Option[Int],
     tuvaErityisopetuksena: Boolean
+) extends ToteutusMetadata
+
+@SwaggerModel("""    TelmaToteutusMetadata:
+                |      allOf:
+                |        - $ref: '#/components/schemas/ToteutusMetadata'
+                |        - type: object
+                |          properties:
+                |            koulutustyyppi:
+                |              type: string
+                |              description: Koulutuksen metatiedon tyyppi
+                |              example: telma
+                |              enum:
+                |                - telma
+                |            tuvaErityisopetuksena:
+                |              type: boolean
+                |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
+                |""")
+case class TelmaToteutusMetadata(
+    tyyppi: Koulutustyyppi = Telma,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    aloituspaikat: Option[Int]
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:

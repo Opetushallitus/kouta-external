@@ -65,17 +65,13 @@ sealed trait SessionSQL extends SQLHelpers {
         case None =>
           deleteSession(id).andThen(DBIO.successful(None))
         case Some(t) =>
-          updateLastRead(id).andThen(DBIO.successful(Some(t)))
+          DBIO.successful(Some(t))
       }
 
   private def getSessionQuery(id: UUID) =
     sql"""select cas_ticket, person from sessions
-          where id = $id and last_read > now() - interval '60 minutes'"""
+          where id = $id and last_read > now() - interval '4 hours'"""
       .as[(Option[String], String)].headOption
-
-  private def updateLastRead(id: UUID) =
-    sqlu"""update sessions set last_read = now()
-           where id = $id and last_read < now() - interval '30 minutes'"""
 
   protected def searchAuthoritiesBySession(sessionId: UUID) =
     sql"""select authority from authorities where session = $sessionId""".as[String]

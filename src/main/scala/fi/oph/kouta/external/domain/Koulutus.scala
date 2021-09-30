@@ -86,6 +86,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaKoulutusMetadata'
     |            - $ref: '#/components/schemas/LukioKoulutusMetadata'
     |            - $ref: '#/components/schemas/TuvaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/TelmaKoulutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoKoulutusMetadata'
     |          example:
     |            koulutustyyppi: amm

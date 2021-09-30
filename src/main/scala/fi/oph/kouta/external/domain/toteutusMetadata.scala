@@ -340,7 +340,7 @@ case class LukioToteutusMetadata(
 
 @SwaggerModel("""    TuvaToteutusMetadata:
     |      allOf:
-    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
     |            koulutustyyppi:
@@ -360,15 +360,9 @@ case class TuvaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    hakutermi: Option[Hakutermi],
-    hakulomaketyyppi: Option[Hakulomaketyyppi],
-    hakulomakeLinkki: Kielistetty,
-    lisatietoaHakeutumisesta: Kielistetty,
-    lisatietoaValintaperusteista: Kielistetty,
-    hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
     tuvaErityisopetuksena: Boolean
-) extends TutkintoonJohtamatonToteutusMetadata
+) extends ToteutusMetadata
 
 @SwaggerModel("""    TelmaToteutusMetadata:
                 |      allOf:

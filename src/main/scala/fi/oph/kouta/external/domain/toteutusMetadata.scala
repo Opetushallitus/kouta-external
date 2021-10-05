@@ -349,7 +349,7 @@ case class LukioToteutusMetadata(
     |              example: tuva
     |              enum:
     |                - tuva
-    |            tuvaErityisopetuksena:
+    |            jarjestetaanErityisopetuksena:
     |              type: boolean
     |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
     |""")
@@ -361,7 +361,7 @@ case class TuvaToteutusMetadata(
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
     aloituspaikat: Option[Int],
-    tuvaErityisopetuksena: Boolean
+    jarjestetaanErityisopetuksena: Boolean
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TelmaToteutusMetadata:
@@ -375,7 +375,7 @@ case class TuvaToteutusMetadata(
                 |              example: telma
                 |              enum:
                 |                - telma
-                |            tuvaErityisopetuksena:
+                |            jarjestetaanErityisopetuksena:
                 |              type: boolean
                 |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
                 |""")

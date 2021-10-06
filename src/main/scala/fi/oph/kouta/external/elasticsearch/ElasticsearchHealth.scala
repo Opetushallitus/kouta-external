@@ -1,8 +1,9 @@
 package fi.oph.kouta.external.elasticsearch
 
-import com.sksamuel.elastic4s.http.ElasticDsl._
-import com.sksamuel.elastic4s.http.cluster.ClusterHealthResponse
-import com.sksamuel.elastic4s.http.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.ElasticApi.{RichFuture, clusterHealth}
+import com.sksamuel.elastic4s.ElasticDsl.ClusterHealthHandler
+import com.sksamuel.elastic4s.{ElasticClient, RequestFailure, RequestSuccess}
+import com.sksamuel.elastic4s.requests.cluster.ClusterHealthResponse
 import fi.oph.kouta.external.domain.enums.ElasticsearchHealthStatus
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.utils.slf4j.Logging

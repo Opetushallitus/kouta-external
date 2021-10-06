@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.elasticsearch
 
-import java.util.UUID
+import com.sksamuel.elastic4s.ElasticClient
 
-import com.sksamuel.elastic4s.http.ElasticClient
+import java.util.UUID
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.domain.indexed.SorakuvausIndexed

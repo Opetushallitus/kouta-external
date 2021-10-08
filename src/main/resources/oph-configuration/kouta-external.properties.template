@@ -16,7 +16,7 @@ kouta-external.db.initializationFailTimeout=1000
 kouta-external.db.timeoutSeconds=20
 kouta-external.db.leakDetectionThresholdMillis=1800000
 
-kouta-external.elasticsearch.url={{kouta_external_elasticsearch_url}}
+kouta-external.elasticsearch.url={{kouta_external_elasticsearch7_url}}
 
 host.virkailija={{host_virkailija}}
 kayttooikeus-service.userDetails.byUsername=http://{{host_alb_virkailija}}/kayttooikeus-service/userDetails/$1

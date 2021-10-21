@@ -202,6 +202,28 @@ case class TuvaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
+@SwaggerModel("""    TelmaValintaperusteMetadata:
+                |      type: object
+                |      allOf:
+                |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+                |      properties:
+                |        tyyppi:
+                |          type: string
+                |          description: Valintaperustekuvauksen metatiedon tyyppi
+                |          example: telma
+                |          enum:
+                |            - telma
+                |""")
+case class TelmaValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = Telma,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
 @SwaggerModel("""    VapaaSivistystyoValintaperusteMetadata:
     |      type: object
     |      allOf:

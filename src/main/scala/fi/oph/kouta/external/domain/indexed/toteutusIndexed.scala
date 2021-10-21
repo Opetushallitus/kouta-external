@@ -310,7 +310,7 @@ case class TuvaToteutusMetadataIndexed(
   ammattinimikkeet: List[Keyword],
   yhteyshenkilot: Seq[Yhteyshenkilo],
   aloituspaikat: Option[Int],
-  tuvaErityisopetuksena: Boolean
+  jarjestetaanErityisopetuksena: Boolean
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: TuvaToteutusMetadata = {
     TuvaToteutusMetadata(
@@ -321,7 +321,29 @@ case class TuvaToteutusMetadataIndexed(
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
       aloituspaikat = aloituspaikat,
-      tuvaErityisopetuksena = tuvaErityisopetuksena
+      jarjestetaanErityisopetuksena = jarjestetaanErityisopetuksena
+    )
+  }
+}
+
+case class TelmaToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    aloituspaikat: Option[Int]
+) extends ToteutusMetadataIndexed {
+  override def toToteutusMetadata: TelmaToteutusMetadata = {
+    TelmaToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      aloituspaikat = aloituspaikat
     )
   }
 }

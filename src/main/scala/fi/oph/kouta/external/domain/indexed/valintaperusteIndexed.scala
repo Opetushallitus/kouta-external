@@ -198,6 +198,27 @@ case class TuvaValintaperusteMetadataIndexed(
     )
 }
 
+case class TelmaValintaperusteMetadataIndexed(
+    tyyppi: Koulutustyyppi = Telma,
+    valintatavat: Seq[ValintatapaIndexed],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto],
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadataIndexed {
+  override def toValintaperusteMetadata: ValintaperusteMetadata =
+    TelmaValintaperusteMetadata(
+      tyyppi = tyyppi,
+      valintatavat = valintatavat.map(_.toValintatapa),
+      kuvaus = kuvaus,
+      hakukelpoisuus = hakukelpoisuus,
+      lisatiedot = lisatiedot,
+      sisalto = sisalto,
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
+    )
+}
+
 case class MuuValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi = Muu,
     valintatavat: Seq[ValintatapaIndexed],

@@ -71,15 +71,14 @@ trait ElasticsearchClient extends Logging {
 
   protected def searchItems[T: HitReader: ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
     timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
-      val notTallennettu = not(termsQuery("tila.keyword", "tallennettu"))
       implicit val duration: FiniteDuration = Duration(1, TimeUnit.MINUTES)
 
       query.fold[Future[IndexedSeq[T]]]({
         Future(
-          SearchIterator.iterate[T](client, search(index).query(notTallennettu).keepAlive("1m").size(500)).toIndexedSeq
+          SearchIterator.iterate[T](client, search(index).keepAlive("1m").size(500)).toIndexedSeq
         )
       })(q => {
-        val request = search(index).bool(must(notTallennettu, q)).keepAlive("1m").size(500)
+        val request = search(index).bool(must(q)).keepAlive("1m").size(500)
         logger.info(s"Elasticsearch request: ${request.show}")
         Future {
           SearchIterator

@@ -2,14 +2,14 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.util.UUID
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.{Amm, Julkaistu, Julkaisutila, Kieli, Koulutustyyppi, Modified}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Koulutustyyppi, Modified}
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, UserOid}
-import fi.oph.kouta.external.KoutaFixtureTool.{EPerusteIdKey, ExternalIdKey, ISO_MODIFIED_FORMATTER, JohtaaTutkintoonKey, JulkinenKey, KielivalintaKey, KoulutuksetKoodiUriKey, KoulutustyyppiKey, MetadataKey, ModifiedKey, MuokkaajaKey, NimiKey, OrganisaatioKey, SorakuvausIdKey, TarjoajatKey, TeemakuvaKey, TilaKey}
+import fi.oph.kouta.external.KoutaFixtureTool.{EPerusteIdKey, ExternalIdKey, JohtaaTutkintoonKey, JulkinenKey, KielivalintaKey, KoulutuksetKoodiUriKey, KoulutustyyppiKey, MetadataKey, ModifiedKey, MuokkaajaKey, NimiKey, OrganisaatioKey, SorakuvausIdKey, TarjoajatKey, TeemakuvaKey, TilaKey}
 import fi.oph.kouta.external.domain.{Kielistetty, Koulutus, KoulutusMetadata}
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 import org.json4s.jackson.Serialization.read
 
 import java.time.LocalDateTime
@@ -20,7 +20,7 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticDockerClient.client), organisaatioService)
+    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

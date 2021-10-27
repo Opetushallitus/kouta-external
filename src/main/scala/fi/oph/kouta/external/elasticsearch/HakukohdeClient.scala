@@ -1,8 +1,7 @@
 package fi.oph.kouta.external.elasticsearch
 
 import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termsQuery}
-import com.sksamuel.elastic4s.http.ElasticClient
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.domain.indexed.HakukohdeIndexed

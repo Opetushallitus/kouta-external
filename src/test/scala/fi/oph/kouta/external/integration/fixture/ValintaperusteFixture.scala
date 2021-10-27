@@ -9,7 +9,7 @@ import fi.oph.kouta.external.domain.{Valintakoe, Valintaperuste, ValintaperusteM
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ValintaperusteService}
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticDockerClient}
+import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
 import org.json4s.jackson.{Serialization}
 
 import java.time.LocalDateTime
@@ -20,7 +20,7 @@ trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticDockerClient.client), organisaatioService)
+    val valintaperusteService = new ValintaperusteService(new ValintaperusteClient(TempElasticClient.client), organisaatioService)
     addServlet(new ValintaperusteServlet(valintaperusteService), ValintaperustePath)
   }
 

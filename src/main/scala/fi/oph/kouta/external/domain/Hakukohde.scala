@@ -158,7 +158,7 @@ case class Hakukohde(
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
-    jarjestyspaikkaOid: Option[OrganisaatioOid],
+    tarjoaja: Option[OrganisaatioOid],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,

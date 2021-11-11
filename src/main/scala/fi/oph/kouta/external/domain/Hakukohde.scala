@@ -38,9 +38,9 @@ import java.util.UUID
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Nimi'
-    |        jarjestyspaikkaOid:
+    |        tarjoaja:
     |          type: string
-    |          description: Hakukohteen järjestyspaikan organisaatio
+    |          description: Hakukohteen järjestyspaikan organisaatioOid
     |          example: 1.2.246.562.10.00101010101
     |        hakulomaketyyppi:
     |          type: string
@@ -158,7 +158,7 @@ case class Hakukohde(
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
-    jarjestyspaikkaOid: Option[OrganisaatioOid],
+    tarjoaja: Option[OrganisaatioOid],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,

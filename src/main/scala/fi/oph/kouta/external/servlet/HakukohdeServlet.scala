@@ -4,6 +4,7 @@ import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.service.RoleAuthorizationFailedException
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{BadRequest, FutureSupport, Ok}
 
@@ -46,11 +47,16 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   )
   get("/:oid") {
     implicit val authenticated: Authenticated = authenticate
-
-    hakukohdeService.get(HakukohdeOid(params("oid")))
-      .map { hakukohde: Hakukohde =>
-        Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
-      }
+    val hakukohdeOid = HakukohdeOid(params("oid"))
+    hakukohdeService.get(hakukohdeOid)
+      .map { hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+      }.recoverWith {
+      case _: RoleAuthorizationFailedException =>
+        hakukohdeService.getHakukohdeAuthorizeByHakukohderyhma(hakukohdeOid)
+          .map {
+            hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+          }
+    }
   }
 
   registerPath(

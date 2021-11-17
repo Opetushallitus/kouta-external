@@ -27,3 +27,7 @@ kouta-backend.service=https://{{host_virkailija}}/kouta-backend
 kouta-backend.health=https://{{host_virkailija}}/kouta-backend/healthcheck
 kouta-backend.session=https://{{host_virkailija}}/kouta-backend/auth/session
 kouta-backend.haku=https://{{host_virkailija}}/kouta-backend/external/haku
+
+hakukohderyhmapalvelu.service=https://{{host_virkailija}}/hakukohderyhmapalvelu
+hakukohderyhmapalvelu.hakukohderyhmat=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohde/$1/hakukohderyhmat
+hakukohderyhmapalvelu.hakukohteet=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohderyhma/$1/hakukohteet

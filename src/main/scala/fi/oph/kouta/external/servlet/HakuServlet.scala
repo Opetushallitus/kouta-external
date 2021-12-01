@@ -9,6 +9,7 @@ import org.scalatra.{ActionResult, BadRequest, FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.Try
 
 object HakuServlet extends HakuServlet(HakuService)
 
@@ -152,12 +153,14 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   post("/findbyoids") {
     implicit val authenticated: Authenticated = authenticate
 
-    val haku = parsedBody.extract[Set[HakuOid]]
-
-    haku match {
-      case oids if oids.exists(!_.isValid) =>
+    Try(parsedBody.extract[Set[HakuOid]]).toEither match {
+      case Left(e) =>
+        logger.warn("Failed to parse hakuOids", e)
+        BadRequest(s"Failed to parse hakuOids: ${e.getMessage}")
+      case Right(oids) if oids.isEmpty => Set()
+      case Right(oids) if oids.exists(!_.isValid) =>
         BadRequest(s"Invalid hakuOids ${oids.find(!_.isValid).get.toString}")
-      case hakuOids => hakuService.findByOids(hakuOids)
+      case Right(hakuOids) => hakuService.findByOids(hakuOids)
     }
   }
 

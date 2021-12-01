@@ -153,13 +153,14 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   post("/findbyoids") {
     implicit val authenticated: Authenticated = authenticate
 
-    val haku = Try(parsedBody.extract[Set[HakuOid]]).toOption
-
-    haku match {
-      case Some(oids) if oids.exists(!_.isValid) =>
+    Try(parsedBody.extract[Set[HakuOid]]).toEither match {
+      case Left(e) =>
+        logger.warn("Failed to parse hakuOids", e)
+        BadRequest(s"Failed to parse hakuOids: ${e.getMessage}")
+      case Right(oids) if oids.isEmpty => Set()
+      case Right(oids) if oids.exists(!_.isValid) =>
         BadRequest(s"Invalid hakuOids ${oids.find(!_.isValid).get.toString}")
-      case Some(hakuOids) => hakuService.findByOids(hakuOids)
-      case None => BadRequest(s"No hakuOids found in body!")
+      case Right(hakuOids) => hakuService.findByOids(hakuOids)
     }
   }
 

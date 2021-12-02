@@ -66,5 +66,9 @@ case class Liite(
     |          type: object
     |          description: Sähköpostiosoite, johon liite voidaan toimittaa
     |          $ref: '#/components/schemas/Teksti'
+    |        verkkosivu:
+    |          type: object
+    |          description: Verkkosivu, jonka kautta liitteet voidaan toimittaa
+    |          $ref: '#/components/schemas/Teksti'
     |""")
 case class LiitteenToimitusosoite(osoite: Osoite, sahkoposti: Option[String])

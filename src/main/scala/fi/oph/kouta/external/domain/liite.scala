@@ -21,13 +21,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        nimi:
     |          type: object
     |          description: Liitteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
+    |          $ref: '#/components/schemas/Nimi'
     |        kuvaus:
     |          type: object
     |          description: Liitteen Opintopolussa näytettävä kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        toimitusaika:
     |          type: string
     |          description: Liitteen toimitusaika, jos ei ole sama kuin kaikilla hakukohteen liitteillä
@@ -44,8 +42,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        toimitusosoite:
     |          type: object
     |          description: Liitteen toimitusosoite, jos ei ole sama kuin kaikilla hakukohteen liitteillä
-    |          allOf:
-    |            - $ref: '#/components/schemas/LiitteenToimitusosoite'
+    |          $ref: '#/components/schemas/LiitteenToimitusosoite'
     |""")
 case class Liite(
     id: Option[UUID],
@@ -64,12 +61,10 @@ case class Liite(
     |        osoite:
     |          type: object
     |          description: Liitteen toimitusosoite
-    |          allOf:
-    |            - $ref: '#/components/schemas/Osoite'
+    |          $ref: '#/components/schemas/Osoite'
     |        sahkoposti:
     |          type: object
     |          description: Sähköpostiosoite, johon liite voidaan toimittaa
-    |          allOf:
-    |            - $ref: '#/components/schemas/Teksti'
+    |          $ref: '#/components/schemas/Teksti'
     |""")
 case class LiitteenToimitusosoite(osoite: Osoite, sahkoposti: Option[String])

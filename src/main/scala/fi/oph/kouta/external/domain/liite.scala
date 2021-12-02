@@ -63,12 +63,10 @@ case class Liite(
     |          description: Liitteen toimitusosoite
     |          $ref: '#/components/schemas/Osoite'
     |        sahkoposti:
-    |          type: object
-    |          description: Sähköpostiosoite, johon liite voidaan toimittaa
-    |          $ref: '#/components/schemas/Teksti'
+    |          type: string
+    |          description: Sähköpostiosoite, johon liitteet voidaan toimittaa
     |        verkkosivu:
-    |          type: object
+    |          type: string
     |          description: Verkkosivu, jonka kautta liitteet voidaan toimittaa
-    |          $ref: '#/components/schemas/Teksti'
     |""")
-case class LiitteenToimitusosoite(osoite: Osoite, sahkoposti: Option[String])
+case class LiitteenToimitusosoite(osoite: Osoite, sahkoposti: Option[String], verkkosivu: Option[String])

@@ -26,7 +26,7 @@ case class LiiteIndexed(
   )
 }
 
-case class LiitteenToimitusosoiteIndexed(osoite: OsoiteIndexed, sahkoposti: Option[String]) {
+case class LiitteenToimitusosoiteIndexed(osoite: OsoiteIndexed, sahkoposti: Option[String], verkkosivu: Option[String]) {
   def toLiitteenToimitusosoite: LiitteenToimitusosoite =
-    LiitteenToimitusosoite(osoite = osoite.toOsoite, sahkoposti = sahkoposti)
+    LiitteenToimitusosoite(osoite = osoite.toOsoite, sahkoposti = sahkoposti, verkkosivu = verkkosivu)
 }

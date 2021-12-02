@@ -15,6 +15,9 @@ trait IndeksoijaFixture {
   private val indexerFixture = "kouta-indeksoija-service.fixture.kouta-indexer-fixture"
   require.invoke(Clojure.read(indexerFixture))
 
+  private val cljLog = "clj-log.access-log"
+  require.invoke(Clojure.read(cljLog))
+
   private val _indexAll           = Clojure.`var`(indexerFixture, "index-all")
   private val indexWithoutRelated = Clojure.`var`(indexerFixture, "index-oids-without-related-indices")
   private val teardown            = Clojure.`var`(indexerFixture, "teardown")

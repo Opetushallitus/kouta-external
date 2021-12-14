@@ -462,4 +462,41 @@ package object domain {
   case class Aloituspaikat(lukumaara: Option[Int] = None,
                            ensikertalaisille: Option[Int] = None,
                            kuvaus: Kielistetty = Map())
+
+  @SwaggerModel(
+    """    Koodi:
+      |      type: object
+      |      properties:
+      |        koodiUri:
+      |          type: string
+      |          description: Koodin uri
+      |          example: koulutus_851401#1
+      |        nimi:
+      |          type: object
+      |          description: Koodin nimi
+      |          $ref: '#/components/schemas/KoodiNimi'
+      |""")
+  case class Koodi(koodiUri: Option[String] = None,
+                   nimi: Option[KoodiNimi] = None)
+
+  @SwaggerModel(
+    """    KoodiNimi:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          description: Koodin suomenkielinen nimi
+      |          example: Tekn. lis., kemian tekniikka
+      |        sv:
+      |          type: string
+      |          description: Koodin ruotsinkielinen nimi
+      |          example: Tekn. lic., kemisk teknik
+      |        en:
+      |          type: string
+      |          description: Koodin englanninkielinen nimi
+      |          example: LicSc, Chemical Eng.
+      |""")
+  case class KoodiNimi(fi: Option[String] = None,
+                       sv: Option[String] = None,
+                       en: Option[String] = None)
 }

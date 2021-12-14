@@ -192,9 +192,9 @@ case class Hakukohde(
     |      type: object
     |      properties:
     |        linja:
-    |          type: string
-    |          description: Linjan koodiUri, tai tyhjä arvo (= yleislinja)
-    |          example: lukiopainotukset_0102#1
+    |          type: object
+    |          description: Lukion linja, tai tyhjä arvo (= yleislinja).
+    |          $ref: '#/components/schemas/Koodi'
     |        alinHyvaksyttyKeskiarvo:
     |          type: number
     |          description: Linjan alin hyväksytty keskiarvo
@@ -204,7 +204,7 @@ case class Hakukohde(
     |          description: Lisätietoa keskiarvosta
     |          $ref: '#/components/schemas/Kuvaus'
     |""")
-case class HakukohteenLinja(linja: Option[String] = None, // NOTE: None tarkoittaa Yleislinjaa
+case class HakukohteenLinja(linja: Option[Koodi] = None, // NOTE: None tarkoittaa Yleislinjaa
                             alinHyvaksyttyKeskiarvo: Option[Double] = None,
                             lisatietoa: Kielistetty = Map())
 

@@ -1,14 +1,10 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.hakukohderyhmapalvelu.HakukohderyhmaClient
-import fi.oph.kouta.security.{Authority, Role, RoleEntity}
-import fi.oph.kouta.service.{
-  OrganisaatioService,
-  OrganizationAuthorizationFailedException,
-  RoleEntityAuthorizationService
-}
+import fi.oph.kouta.security.{Role, RoleEntity}
+import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
@@ -23,19 +19,15 @@ class HakukohderyhmaService(hakukohderyhmaClient: HakukohderyhmaClient, val orga
 
   def executor: ExecutionContext      = global
   override val roleEntity: RoleEntity = Role.Hakukohde
-  private def authorityToHakukohderyhmaOid(authority: Authority): HakukohderyhmaOid = {
-    HakukohderyhmaOid(authority.authority.split("_").last)
-  }
 
   private def authorizeHakukohdeByHakukohderyhma(
-      hakukohderyhmaOids: Seq[HakukohderyhmaOid],
-      hakukohdeAuthorities: Seq[Authority],
+      hakukohderyhmaOids: Set[HakukohderyhmaOid],
+      authorizedHakukohderyhmas: Set[HakukohderyhmaOid],
       oid: HakukohdeOid
   ): Future[Boolean] = {
-    val authorizedHakukohderyhmaOids = hakukohdeAuthorities
+    val authorizedHakukohderyhmaOids = authorizedHakukohderyhmas
       .map(a => {
-        val oid = authorityToHakukohderyhmaOid(a)
-        if (hakukohderyhmaOids contains oid) Some(OrganisaatioOid(oid.toString())) else None
+        if (hakukohderyhmaOids contains a) Some(a) else None
       })
       .filter(_.nonEmpty)
       .flatten
@@ -45,19 +37,26 @@ class HakukohderyhmaService(hakukohderyhmaClient: HakukohderyhmaClient, val orga
     } else Future.successful(false)
   }
 
+  def getAuthorizedHakukohderyhmaOids()(implicit authenticated: Authenticated): Set[HakukohderyhmaOid] = {
+    authenticated.session.authorities
+      .filter(a => a.authority.startsWith("APP_KOUTA_HAKUKOHDE"))
+      .filter(a => HakukohderyhmaOid.apply(a.authority.split("_").last).isValid)
+      .map(a => HakukohderyhmaOid(a.authority.split("_").last))
+      .toSet
+  }
+
   def authorizeHakukohde(oid: HakukohdeOid, hakukohde: Hakukohde)(implicit
       authenticated: Authenticated
   ): Future[Hakukohde] = {
-    val hakukohdeAuthorities: Seq[Authority] =
-      authenticated.session.authorities.filter(a => a.authority.startsWith("APP_KOUTA_HAKUKOHDE")).toSeq
-    hakukohderyhmaClient
-      .getHakukohderyhmat(oid)
-      .flatMap(result => {
-        authorizeHakukohdeByHakukohderyhma(result, hakukohdeAuthorities, oid).flatMap { authorized =>
+    val authorizedHakukohderyhmas: Set[HakukohderyhmaOid] = getAuthorizedHakukohderyhmaOids
+
+    getHakukohderyhmatByHakukohdeOid(oid)
+      .flatMap(hakukohderyhmaOids => {
+        authorizeHakukohdeByHakukohderyhma(hakukohderyhmaOids.toSet, authorizedHakukohderyhmas, oid).flatMap { authorized =>
           if (authorized) {
             Future.successful(hakukohde)
           } else {
-            val errorString: String = s"User has no rights to hakukohde: $oid via hakukohderyhma roles."
+            val errorString: String = s"Authorization failed. User has no rights to hakukohde: $oid via hakukohderyhma roles."
             logger.warn(errorString)
             Future.failed(OrganizationAuthorizationFailedException(errorString))
           }

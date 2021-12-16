@@ -3,9 +3,9 @@ package fi.oph.kouta.external.elasticsearch
 import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termsQuery}
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.domain.indexed.HakukohdeIndexed
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -23,9 +23,11 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
   def search(
               hakuOid: Option[HakuOid],
               tarjoajaOids: Option[Set[OrganisaatioOid]],
-              q: Option[String]
+              q: Option[String],
+              hakukohdeOids: Option[Set[HakukohdeOid]]
             ): Future[Seq[Hakukohde]] = {
     val hakuQuery = hakuOid.map(oid => termsQuery("hakuOid", oid.toString))
+    val hakukohdeQuery = hakukohdeOids.map(oids => should(oids.map(oid => must(termsQuery("oid", oid.toString())))))
     val tarjoajaQuery = tarjoajaOids.map(oids =>
       should(
         oids.map(oid =>
@@ -49,7 +51,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         termsQuery("toteutus.tarjoajat.nimi.en.keyword", q)
       )
     )
-    searchItems[HakukohdeIndexed](Some(must(hakuQuery ++ tarjoajaQuery ++ qQuery)))
+    searchItems[HakukohdeIndexed](Some(must(hakuQuery ++ tarjoajaQuery ++ qQuery ++ hakukohdeQuery)))
       .map(_.map(_.toHakukohde))
   }
 }

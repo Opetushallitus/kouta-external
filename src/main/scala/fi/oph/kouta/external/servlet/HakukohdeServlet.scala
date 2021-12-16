@@ -52,6 +52,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       .map { hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
       }.recoverWith {
       case _: RoleAuthorizationFailedException =>
+        logger.info(s"Authorization failed hakukohde $hakukohdeOid, retrying with hakukohderyhmä rights.")
         hakukohdeService.getHakukohdeAuthorizeByHakukohderyhma(hakukohdeOid)
           .map {
             hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
@@ -112,20 +113,25 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   get("/search") {
     implicit val authenticated: Authenticated = authenticate
 
-    val hakuOid  = params.get("haku").map(HakuOid)
+    val hakuOid = params.get("haku").map(HakuOid)
     val tarjoaja = params.get("tarjoaja").map(s => s.split(",").map(OrganisaatioOid).toSet)
-    val q        = params.get("q")
+    val q = params.get("q")
     val all = params.get("all").exists {
-      case "true"  => true
+      case "true" => true
       case "false" => false
     }
 
     (hakuOid, tarjoaja) match {
-      case (None, None)                     => BadRequest("Query parameter is required")
+      case (None, None) => BadRequest("Query parameter is required")
       case (Some(oid), _) if !oid.isValid => BadRequest(s"Invalid haku ${oid.toString}")
       case (_, Some(oids)) if oids.exists(!_.isValid) =>
         BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}")
       case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all)
+        .recoverWith {
+          case _: RoleAuthorizationFailedException =>
+            logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
+            hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all)
+        }
     }
   }
 }

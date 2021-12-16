@@ -1,33 +1,34 @@
-cas.url={{cas_url}}
-kouta-external.cas.service={{kouta_external_cas_service}}
-kouta-external.cas.username={{kouta_external_cas_username}}
-kouta-external.cas.password={{kouta_external_cas_password}}
+ cas.url={{cas_url}}
+ kouta-external.cas.service={{kouta_external_cas_service}}
+ kouta-external.cas.username: kouta-external
+ kouta-external.cas.password: hzB9mjKVbrk2Q5CLRgQHdJVsX!
 
-kouta-external.db.url=jdbc:postgresql://{{host_postgresql_koutaexternal}}:{{host_postgresql_koutaexternal_port}}/koutaexternal
-kouta-external.db.user={{postgres_app_user}}
-kouta-external.db.password={{host_postgresql_koutaexternal_app_password}}
-kouta-external.db.connectionPool=HikariCP
-kouta-external.db.numThreads=10
-kouta-external.db.maxConnections=50
-kouta-external.db.minConnections=10
-kouta-external.db.queueSize=10000
-kouta-external.db.registerMbeans=true
-kouta-external.db.initializationFailTimeout=1000
-kouta-external.db.timeoutSeconds=20
-kouta-external.db.leakDetectionThresholdMillis=1800000
+ kouta-external.db.url=jdbc:postgresql://{{host_postgresql_koutaexternal}}:{{host_postgresql_koutaexternal_port}}/koutaexternal
+ kouta-external.db.user={{postgres_app_user}}
+ kouta-external.db.password={{host_postgresql_koutaexternal_app_password}}
+ kouta-external.db.connectionPool=HikariCP
+ kouta-external.db.numThreads=10
+ kouta-external.db.maxConnections=50
+ kouta-external.db.minConnections=10
+ kouta-external.db.queueSize=10000
+ kouta-external.db.registerMbeans=true
+ kouta-external.db.initializationFailTimeout=1000
+ kouta-external.db.timeoutSeconds=20
+ kouta-external.db.leakDetectionThresholdMillis=1800000
 
-kouta-external.elasticsearch.url={{kouta_external_elasticsearch7_url}}
+ kouta-external.elasticsearch.url={{kouta_external_elasticsearch7_url}}
 
-host.virkailija={{host_virkailija}}
-kayttooikeus-service.userDetails.byUsername=http://{{host_alb_virkailija}}/kayttooikeus-service/userDetails/$1
-organisaatio-service.organisaatio.oid.jalkelaiset=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/$1/jalkelaiset
-root.organisaatio.oid=1.2.246.562.10.00000000001
+ host.virkailija={{host_virkailija}}
+ kayttooikeus-service.userDetails.byUsername=http://{{host_alb_virkailija}}/kayttooikeus-service/userDetails/$1
+ organisaatio-service.organisaatio.oid.jalkelaiset=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/$1/jalkelaiset
+ root.organisaatio.oid=1.2.246.562.10.00000000001
 
-kouta-backend.service=https://{{host_virkailija}}/kouta-backend
-kouta-backend.health=https://{{host_virkailija}}/kouta-backend/healthcheck
-kouta-backend.session=https://{{host_virkailija}}/kouta-backend/auth/session
-kouta-backend.haku=https://{{host_virkailija}}/kouta-backend/external/haku
+ kouta-backend.service=https://{{host_virkailija}}/kouta-backend
+ kouta-backend.health=https://{{host_virkailija}}/kouta-backend/healthcheck
+ kouta-backend.session=https://{{host_virkailija}}/kouta-backend/auth/session
+ kouta-backend.haku=https://{{host_virkailija}}/kouta-backend/external/haku
 
-hakukohderyhmapalvelu.service=https://{{host_virkailija}}/hakukohderyhmapalvelu
-hakukohderyhmapalvelu.hakukohderyhmat=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohde/$1/hakukohderyhmat
-hakukohderyhmapalvelu.hakukohteet=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohderyhma/$1/hakukohteet
+ hakukohderyhmapalvelu.service=https://{{host_virkailija}}/hakukohderyhmapalvelu
+ hakukohderyhmapalvelu.hakukohderyhmat=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohde/$1/hakukohderyhmat
+ hakukohderyhmapalvelu.hakukohteet=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohderyhma/$1/hakukohteet
+

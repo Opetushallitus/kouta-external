@@ -1,6 +1,5 @@
 package fi.oph.kouta.external.integration.fixture
 
-import java.util.UUID
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.database.SessionDAO
@@ -9,6 +8,7 @@ import fi.oph.kouta.mocks.OrganisaatioServiceMock
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
+import java.util.UUID
 import scala.collection.mutable
 
 case class TestUser(oid: String, username: String, sessionId: UUID) {
@@ -45,6 +45,7 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
   val UnknownOid = OrganisaatioOid("1.2.246.562.10.99999999998")
   val YoOid = OrganisaatioOid("1.2.246.562.10.46312206843")
   val hakukohderyhmaOid = HakukohderyhmaOid("1.2.246.562.28.00000000000000000015")
+  val searchHakukohderyhmaOid = HakukohderyhmaOid("1.2.246.562.28.00000000000000000025")
 
   val crudSessions: mutable.Map[OrganisaatioOid, (UUID, CasSession)] = mutable.Map.empty
   val hakukohderyhmaCrudSessions: mutable.Map[HakukohderyhmaOid, (UUID, CasSession)] = mutable.Map.empty
@@ -54,6 +55,7 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
   def hakukohderyhmaCrudSessionIds(oid: HakukohderyhmaOid): UUID = hakukohderyhmaCrudSessions(oid)._1
   def readSessionIds(oid: OrganisaatioOid): UUID = readSessions(oid)._1
 
+  var ophPaakayttajaSessionId: UUID = _
   var indexerSessionId: UUID = _
   var fakeIndexerSessionId: UUID = _
   var otherRoleSessionId: UUID = _
@@ -93,10 +95,11 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
       readSessions.update(org, addTestSession(roleEntities.map(_.Read.asInstanceOf[Role]), org))
     }
 
-    Seq(hakukohderyhmaOid).foreach { h =>
+    Seq(hakukohderyhmaOid, searchHakukohderyhmaOid).foreach { h =>
       hakukohderyhmaCrudSessions.update(h, addTestSession(roleEntities.map(_.Read.asInstanceOf[Role]), h))
     }
 
+    ophPaakayttajaSessionId = addTestSession(Role.Paakayttaja, OphOid)._1
     indexerSessionId = addTestSession(Role.Indexer, OphOid)._1
     fakeIndexerSessionId = addTestSession(Role.Indexer, ChildOid)._1
     otherRoleSessionId = addTestSession(Role.UnknownRole("APP_OTHER"), ChildOid)._1

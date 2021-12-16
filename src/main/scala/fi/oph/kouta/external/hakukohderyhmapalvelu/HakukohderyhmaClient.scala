@@ -8,6 +8,7 @@ import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import org.http4s.client.Client
 import org.http4s.client.blaze.defaultClient
 import org.http4s.{Headers, Method}
+import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,6 +17,8 @@ import scala.concurrent.Future
 object HakukohderyhmaClient
 
 class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonFormats {
+
+  private implicit val formats = DefaultFormats
 
   private def params = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration
@@ -30,7 +33,11 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
 
   lazy protected val client: Client = {
     CasAuthenticatingClient(
-      new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, org.http4s.client.blaze.defaultClient, callerId),
+      new CasClient(
+        KoutaConfigurationFactory.configuration.securityConfiguration.casUrl,
+        org.http4s.client.blaze.defaultClient,
+        callerId
+      ),
       casParams = params,
       serviceClient = defaultClient,
       clientCallerId = callerId,
@@ -39,16 +46,21 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
   }
 
   def getHakukohderyhmat(oid: HakukohdeOid): Future[Seq[HakukohderyhmaOid]] = {
-    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat"), None, Headers.empty).flatMap {
-      case (200, body) => Future.successful(parse(body).extract[Seq[HakukohderyhmaOid]])
-      case (status, body) => Future.failed(new RuntimeException(s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body"))
+    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat", oid), None, Headers.empty).flatMap {
+      case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohderyhmaOid(s)))
+      case (status, body) =>
+        Future.failed(
+          new RuntimeException(s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body")
+        )
     }
   }
   def getHakukohteet(oid: HakukohderyhmaOid): Future[Seq[HakukohdeOid]] = {
-    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohteet"), None, Headers.empty).flatMap {
-      case (200, body) => Future.successful(parse(body).extract[Seq[HakukohdeOid]])
-      case (status, body) => Future.failed(new RuntimeException(s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body"))
+    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohteet", oid), None, Headers.empty).flatMap {
+      case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohdeOid(s)))
+      case (status, body) =>
+        Future.failed(
+          new RuntimeException(s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body")
+        )
     }
   }
 }
-

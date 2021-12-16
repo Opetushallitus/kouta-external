@@ -120,4 +120,15 @@ class HakukohdeSpec
   it should "allow the user with rights to hakukohderyhma" in {
     get(hakukohdeWithHakukohderyhmaOid, hakukohderyhmaCrudSessionIds(testiHakukohderyhmaOid))
   }
+
+  it should "deny the user to search without rights to haku" in {
+    search(Some(hakuOid), None, None, true, otherRoleSessionId, 403)
+  }
+
+  it should "allow the user with pääkäyttäjä rights to search" in {
+    search(Some(hakuOid), None, None, true, ophPaakayttajaSessionId)
+  }
+  it should "allow the user with hakukohderyhmä rights to search" in {
+    search(Some(hakuOid), None, None, true, hakukohderyhmaCrudSessionIds(searchHakukohderyhmaOid))
+  }
 }

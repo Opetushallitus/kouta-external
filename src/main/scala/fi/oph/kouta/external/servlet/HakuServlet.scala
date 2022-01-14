@@ -7,6 +7,7 @@ import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{ActionResult, BadRequest, FutureSupport, Ok}
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
@@ -53,10 +54,10 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
 
   registerPath( "/haku/",
     """    post:
-      |      summary: Tallenna uusi haku
+      |      summary: Tallenna uusi haku - EI VIELÄ TOTEUTETTU!
       |      operationId: Tallenna uusi haku
       |      description: Tallenna uuden haun tiedot.
-      |        Rajapinta palauttaa haulle generoidun yksilöivän haku-oidin.
+      |        Rajapinta palauttaa haulle generoidun yksilöivän haku-oidin - EI VIELÄ TOTEUTETTU!
       |      tags:
       |        - Haku
       |      requestBody:
@@ -82,20 +83,22 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   post("/") {
     implicit val authenticated: Authenticated = authenticate
 
-    hakuService.create(parsedBody.extract[Haku]) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
-    }
+//    hakuService.create(parsedBody.extract[Haku]) map {
+//      case Right(oid) =>
+//        Ok("oid" -> oid)
+//      case Left((status, message)) =>
+//        ActionResult(status, message, Map.empty)
+//    }
+    ActionResult(501, s"Marty, ${LocalDate.now()} is not future yet! - Doc Brown", Map.empty)
+
   }
 
   registerPath("/haku/",
     """    put:
-      |      summary: Muokkaa olemassa olevaa hakua
+      |      summary: Muokkaa olemassa olevaa hakua - EI VIELÄ TOTEUTETTU!
       |      operationId: Muokkaa hakua
       |      description: Muokkaa olemassa olevaa hakua. Rajapinnalle annetaan haun kaikki tiedot,
-      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |        ja muuttuneet tiedot tallennetaan kantaan- EI VIELÄ TOTEUTETTU!
       |      tags:
       |        - Haku
       |      parameters:
@@ -114,12 +117,14 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   put("/") {
     implicit val authenticated: Authenticated = authenticate
 
-    hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
-    }
+//    hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
+//      case Right(response) =>
+//        Ok(response)
+//      case Left((status, message)) =>
+//        ActionResult(status, message, Map.empty)
+//    }
+
+    ActionResult(501, s"Marty, ${LocalDate.now()} is not future yet! - Doc Brown", Map.empty)
   }
 
   registerPath(

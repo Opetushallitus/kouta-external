@@ -1,7 +1,7 @@
  cas.url={{cas_url}}
  kouta-external.cas.service={{kouta_external_cas_service}}
- kouta-external.cas.username: kouta-external
- kouta-external.cas.password: hzB9mjKVbrk2Q5CLRgQHdJVsX!
+ kouta-external.cas.username={{kouta_external_cas_username}}
+ kouta-external.cas.password={{kouta_external_cas_password}}
 
  kouta-external.db.url=jdbc:postgresql://{{host_postgresql_koutaexternal}}:{{host_postgresql_koutaexternal_port}}/koutaexternal
  kouta-external.db.user={{postgres_app_user}}

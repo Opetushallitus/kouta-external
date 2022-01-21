@@ -70,11 +70,10 @@ class HakukohdeService(
     }
     ).map(_.flatten).flatMap {
       case oids if oids.nonEmpty =>
-        val checkHakuExists = hakuOid.fold(Future.successful(()))(hakuClient.getHaku(_).map(_ => ()))
         val tarjoajaOidsWithChilds = Some(
           tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
         )
-        checkHakuExists.flatMap(_ => hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids)))
+        hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids))
       case _ => val errorString: String = s"User missing rights to search hakukohteet via hakukohderyhma roles."
         logger.warn(errorString)
         throw new OrganizationAuthorizationFailedException(errorString)

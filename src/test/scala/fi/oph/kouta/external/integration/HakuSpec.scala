@@ -36,49 +36,51 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
 
   getTests()
 
-  "Create haku" should "create a haku" in {
-    mockCreateHaku(haku(ParentOid), "1.2.246.562.29.123456789")
+// Testit disabloitu API:en disabloinnin yhteydessä.
 
-    create(haku("1.2.246.562.29.123456789", ParentOid))
-  }
+//  "Create haku" should "create a haku" in {
+//    mockCreateHaku(haku(ParentOid), "1.2.246.562.29.123456789")
+//
+//    create(haku("1.2.246.562.29.123456789", ParentOid))
+//  }
 
-  it should "return the error code and message" in {
-    val testError = "{\"error\": \"test error\"}"
-    mockCreateHaku(haku(ChildOid), 400, testError)
+//  it should "return the error code and message" in {
+//    val testError = "{\"error\": \"test error\"}"
+//    mockCreateHaku(haku(ChildOid), 400, testError)
+//
+//    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
+//  }
 
-    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
-  }
+//  it should "include the caller's authentication in the call" in {
+//    val (sessionId, session) = crudSessions(EvilChildOid)
+//    mockCreateHaku(haku(EvilChildOid), "1.2.246.562.29.123456789", sessionId, session)
+//    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
+//  }
 
-  it should "include the caller's authentication in the call" in {
-    val (sessionId, session) = crudSessions(EvilChildOid)
-    mockCreateHaku(haku(EvilChildOid), "1.2.246.562.29.123456789", sessionId, session)
-    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
-  }
+//  "Update haku" should "update a haku" in {
+//    val now = Instant.now()
+//    mockUpdateHaku(haku("1.2.246.562.29.1"), now)
+//
+//    update(haku("1.2.246.562.29.1"), now)
+//  }
 
-  "Update haku" should "update a haku" in {
-    val now = Instant.now()
-    mockUpdateHaku(haku("1.2.246.562.29.1"), now)
+//  it should "require x-If-Unmodified-Since header" in {
+//    update(HakuPath, haku("1.2.246.562.29.1"), defaultSessionId, 400, "{\"error\":\"Otsake x-If-Unmodified-Since on pakollinen.\"}")
+//  }
 
-    update(haku("1.2.246.562.29.1"), now)
-  }
+//  it should "return the error code and message" in {
+//    val testError = "{\"error\": \"test error\"}"
+//    val now = Instant.now()
+//
+//    mockUpdateHaku(haku("1.2.246.562.29.2"), now, 400, testError)
+//    update(HakuPath, haku("1.2.246.562.29.2"), now, defaultSessionId, 400, testError)
+//  }
 
-  it should "require x-If-Unmodified-Since header" in {
-    update(HakuPath, haku("1.2.246.562.29.1"), defaultSessionId, 400, "{\"error\":\"Otsake x-If-Unmodified-Since on pakollinen.\"}")
-  }
-
-  it should "return the error code and message" in {
-    val testError = "{\"error\": \"test error\"}"
-    val now = Instant.now()
-
-    mockUpdateHaku(haku("1.2.246.562.29.2"), now, 400, testError)
-    update(HakuPath, haku("1.2.246.562.29.2"), now, defaultSessionId, 400, testError)
-  }
-
-  it should "include the caller's authentication in the call" in {
-    val now = Instant.now()
-    val (sessionId, session) = crudSessions(EvilChildOid)
-
-    mockUpdateHaku(haku("1.2.246.562.29.3"), now, sessionId, session)
-    update(haku("1.2.246.562.29.3"), now, sessionId)
-  }
+//  it should "include the caller's authentication in the call" in {
+//    val now = Instant.now()
+//    val (sessionId, session) = crudSessions(EvilChildOid)
+//
+//    mockUpdateHaku(haku("1.2.246.562.29.3"), now, sessionId, session)
+//    update(haku("1.2.246.562.29.3"), now, sessionId)
+//  }
 }

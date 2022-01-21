@@ -5,7 +5,6 @@ import java.util.UUID
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.TestSetups.{setupWithEmbeddedPostgres, setupWithTemplate}
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.servlet.KoutaServlet.LastModifiedHeader
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.integration.fixture.Oid
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}

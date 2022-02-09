@@ -25,7 +25,12 @@ case class SecurityConfiguration(
     rootOrganisaatio: OrganisaatioOid
 )
 
-case class ElasticSearchConfiguration(elasticUrl: String)
+case class ElasticSearchConfiguration(
+    elasticUrl: String,
+    authEnabled: Boolean,
+    username: String,
+    password: String
+)
 
 case class CasClientConfiguration(username: String, password: String)
 
@@ -53,7 +58,10 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
   )
 
   val elasticSearchConfiguration = ElasticSearchConfiguration(
-    config.getString("kouta-external.elasticsearch.url")
+    config.getString("kouta-external.elasticsearch.url"),
+    config.getBoolean("kouta-external.elasticsearch.auth-enabled"),
+    config.getString("kouta-external.elasticsearch.username"),
+    config.getString("kouta-external.elasticsearch.password")
   )
 
   val clientConfiguration = CasClientConfiguration(

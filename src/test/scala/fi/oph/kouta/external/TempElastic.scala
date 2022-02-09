@@ -3,6 +3,7 @@ package fi.oph.kouta.external
 import com.sksamuel.elastic4s.http.JavaClient
 import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties}
 import org.testcontainers.elasticsearch.ElasticsearchContainer
+import org.testcontainers.utility.DockerImageName
 
 object TempElasticClient {
   val url    = s"http://localhost:${TempElastic.start()}"
@@ -21,7 +22,8 @@ private object TempElastic {
   }
 
   def create(): ElasticsearchContainer = {
-    val embeddedElastic = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:7.10.2")
+    val dockerImager = DockerImageName.parse("190073735177.dkr.ecr.eu-west-1.amazonaws.com/utility/elasticsearch-kouta:7.16.3").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch")
+    val embeddedElastic = new ElasticsearchContainer(dockerImager)
 
     embeddedElastic.start()
     elastic = Some(embeddedElastic)

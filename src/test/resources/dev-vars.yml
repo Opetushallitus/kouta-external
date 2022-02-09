@@ -2,11 +2,17 @@
 host_postgresql_koutaexternal: localhost
 host_postgresql_koutaexternal_port: 5432
 postgres_app_user: oph
-host_postgresql_koutaexternal_app_password:
+host_postgresql_koutaexternal_app_password: oph
 
 cas_url: https://virkailija.hahtuvaopintopolku.fi/cas
 kouta_external_cas_service: http://localhost:8097/kouta-external/auth/login
+kouta_external_cas_username: DUMMY
+kouta_external_cas_password: DUMMY
 
 kouta_external_elasticsearch7_url: http://localhost:9200
+kouta_external_elasticsearch_auth_enabled: false
+kouta_external_elasticsearch_username: DUMMY
+kouta_external_elasticsearch_password: DUMMY
 
 host_virkailija: virkailija.hahtuvaopintopolku.fi
+host_alb_virkailija: virkailija.hahtuvaopintopolku.fi

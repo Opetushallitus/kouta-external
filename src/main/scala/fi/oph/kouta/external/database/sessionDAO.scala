@@ -33,7 +33,7 @@ object SessionDAO extends SessionSQL {
     runBlockingTransactionally(deleteSession(ticket), timeout = Duration(10, TimeUnit.SECONDS), ReadCommitted).get
 
   def get(id: UUID): Option[Session] = {
-    runBlockingTransactionally(getSession(id), timeout = Duration(2, TimeUnit.SECONDS), ReadCommitted).get.map {
+    runBlockingTransactionally(getSession(id), timeout = Duration(30, TimeUnit.SECONDS), ReadCommitted).get.map {
       case (casTicket, personOid) =>
         val authorities = runBlocking(searchAuthoritiesBySession(id), Duration(2, TimeUnit.SECONDS))
         CasSession(ServiceTicket(casTicket.get), personOid, authorities.map(Authority(_)).toSet)

@@ -54,7 +54,11 @@ class HakukohdeService(
     checkHakuExists.flatMap(_ => hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, None))
   }
 
-  def searchAuthorizeByHakukohderyhma(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean)(
+  def searchAuthorizeByHakukohderyhma(hakuOid: Option[HakuOid],
+                                      tarjoajaOids: Option[Set[OrganisaatioOid]],
+                                      q: Option[String],
+                                      all: Boolean,
+                                      withHakukohderyhmat: Boolean)(
     implicit authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
     val authorizedHakukohderyhmaOids: Set[HakukohderyhmaOid] = hakukohderyhmaService.getAuthorizedHakukohderyhmaOids match {
@@ -73,7 +77,21 @@ class HakukohdeService(
         val tarjoajaOidsWithChilds = Some(
           tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
         )
-        hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids))
+
+        val hakukohteet: Future[Seq[Hakukohde]] = hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids))
+
+        if(withHakukohderyhmat) {
+
+          val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future.sequence(oids.map(
+            oid =>
+            hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map(hoids => Map(oid -> hoids)))).map(_.reduce(_ ++ _))
+
+          hakukohteet.flatMap(hk =>
+            fetchedHakukohderyhmat.map(mk =>
+              hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty)))))
+        } else {
+          hakukohteet
+        }
       case _ => val errorString: String = s"User missing rights to search hakukohteet via hakukohderyhma roles."
         logger.warn(errorString)
         throw new OrganizationAuthorizationFailedException(errorString)

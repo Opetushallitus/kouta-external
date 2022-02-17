@@ -120,7 +120,10 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       case "true" => true
       case "false" => false
     }
-
+    val withHakukohderyhmat = params.get("withHakukohderyhmat").exists {
+      case "true" => true
+      case "false" => false
+    }
     (hakuOid, tarjoaja) match {
       case (None, None) => BadRequest("Query parameter is required")
       case (Some(oid), _) if !oid.isValid => BadRequest(s"Invalid haku ${oid.toString}")
@@ -130,7 +133,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
         .recoverWith {
           case _: RoleAuthorizationFailedException =>
             logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
-            hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all)
+            hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
         }
     }
   }

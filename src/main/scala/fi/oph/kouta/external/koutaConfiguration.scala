@@ -6,6 +6,8 @@ import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.config.{ApplicationSettings, ApplicationSettingsLoader, ApplicationSettingsParser, ConfigTemplateProcessor}
 import fi.vm.sade.utils.slf4j.Logging
 
+import scala.concurrent.duration.DurationInt
+
 case class KoutaDatabaseConfiguration(
     url: String,
     username: String,
@@ -34,8 +36,14 @@ case class ElasticSearchConfiguration(
 
 case class CasClientConfiguration(username: String, password: String)
 
+case class HakukohderyhmaConfiguration(cacheTtlMinutes: Long)
+
 case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperties)
     extends ApplicationSettings(config) {
+
+  val hakukohderyhmaConfiguration: HakukohderyhmaConfiguration =
+    HakukohderyhmaConfiguration(cacheTtlMinutes =
+      config.getLong("kouta-external.hakukohderyhma.cacheTtlMinutes"))
 
   val databaseConfiguration: KoutaDatabaseConfiguration =
     KoutaDatabaseConfiguration(

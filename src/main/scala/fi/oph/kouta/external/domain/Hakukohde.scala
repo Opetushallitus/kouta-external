@@ -163,6 +163,7 @@ case class Hakukohde(
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
+    hakukohderyhmat: Option[Seq[HakukohderyhmaOid]],
     kaytetaanHaunHakulomaketta: Option[Boolean],
     pohjakoulutusvaatimusKoodiUrit: Seq[String],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
@@ -185,6 +186,7 @@ case class Hakukohde(
     modified: Option[Modified],
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
+  def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))
 }
 
 @SwaggerModel(

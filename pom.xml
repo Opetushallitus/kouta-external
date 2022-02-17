@@ -74,6 +74,12 @@
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
             <version>${kouta-common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.blemale</groupId>
+                    <artifactId>scaffeine_2.12</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

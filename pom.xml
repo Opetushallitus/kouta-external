@@ -76,8 +76,8 @@
             <version>${kouta-common.version}</version>
             <exclusions>
                 <exclusion>
-                    <groupId>com.github.blemale</groupId>
-                    <artifactId>scaffeine_2.12</artifactId>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -88,6 +88,12 @@
             <version>${kouta-common.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -314,6 +320,10 @@
                 <exclusion>
                     <groupId>com.github.java-json-tools</groupId>
                     <artifactId>json-schema-validator</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-java8-compat_2.12</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>

@@ -99,6 +99,13 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |          required: false
       |          description: Haetaanko myös muiden, kuin annettujen tarjoajien hakukohteet
       |          example: true
+      |        - in: query
+      |          name: withHakukohderyhmat
+      |          schema:
+      |            type: boolean
+      |          required: false
+      |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
+      |          example: true
       |      responses:
       |        '200':
       |          description: Ok

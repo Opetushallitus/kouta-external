@@ -22,6 +22,14 @@ import java.util.UUID
     |          type: string
     |          description: Hakukohteeseen liitetyn toteutuksen yksilöivä tunniste.
     |          example: "1.2.246.562.17.00000000000000000009"
+    |        hakukohderyhmat:
+    |          type: array
+    |          description: Hakukohderyhmien tunnisteet
+    |          items:
+    |            type: string
+    |          example:
+    |            - "1.2.246.562.28.00000000000000000001"
+    |            - "1.2.246.562.28.00000000000000000002"
     |        hakuOid:
     |          type: string
     |          description: Hakukohteeseen liitetyn haun yksilöivä tunniste.

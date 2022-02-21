@@ -137,7 +137,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       case (Some(oid), _) if !oid.isValid => BadRequest(s"Invalid haku ${oid.toString}")
       case (_, Some(oids)) if oids.exists(!_.isValid) =>
         BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}")
-      case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all)
+      case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
         .recoverWith {
           case _: RoleAuthorizationFailedException =>
             logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")

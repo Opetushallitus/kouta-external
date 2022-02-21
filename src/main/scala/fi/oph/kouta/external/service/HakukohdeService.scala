@@ -48,14 +48,34 @@ class HakukohdeService(
     }
   }
 
-  def search(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean)(
+  private def hakukohteetWithHakukohderyhmat(oids: Set[HakukohdeOid], hakukohteet: Future[Seq[Hakukohde]])(implicit authenticated: Authenticated): Future[Seq[Hakukohde]] = {
+    val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future.sequence(oids.map(
+      oid =>
+        hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map(hoids => Map(oid -> hoids)))).map(_.reduce(_ ++ _))
+
+    hakukohteet.flatMap(hk =>
+      fetchedHakukohderyhmat.map(mk =>
+        hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty)))))
+  }
+
+  def search(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String],
+             all: Boolean,
+             withHakukohderyhmat: Boolean)(
     implicit authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
     val checkHakuExists = hakuOid.fold(Future.successful(()))(hakuService.get(_).map(_ => ()))
     val tarjoajaOidsWithChilds = Some(
       tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
     )
-    checkHakuExists.flatMap(_ => hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, None))
+    checkHakuExists.flatMap(_ => {
+      val hakukohteet = hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, None)
+
+      if(withHakukohderyhmat) {
+        hakukohteet.flatMap(hk => hakukohteetWithHakukohderyhmat(hk.flatMap(_.oid).toSet, Future.successful(hk)))
+      } else {
+        hakukohteet
+      }
+    })
   }
 
   def searchAuthorizeByHakukohderyhma(hakuOid: Option[HakuOid],
@@ -85,14 +105,7 @@ class HakukohdeService(
         val hakukohteet: Future[Seq[Hakukohde]] = hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids))
 
         if(withHakukohderyhmat) {
-
-          val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future.sequence(oids.map(
-            oid =>
-            hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map(hoids => Map(oid -> hoids)))).map(_.reduce(_ ++ _))
-
-          hakukohteet.flatMap(hk =>
-            fetchedHakukohderyhmat.map(mk =>
-              hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty)))))
+          hakukohteetWithHakukohderyhmat(oids, hakukohteet)
         } else {
           hakukohteet
         }

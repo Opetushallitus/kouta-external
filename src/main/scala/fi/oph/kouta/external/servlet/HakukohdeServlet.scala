@@ -103,6 +103,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |          name: withHakukohderyhmat
       |          schema:
       |            type: boolean
+      |            default: false
       |          required: false
       |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
       |          example: true

@@ -61,7 +61,7 @@ class HakukohderyhmaService(hakukohderyhmaClient: HakukohderyhmaClient, val orga
   }
   def getHakukohderyhmatByHakukohdeOid(
       oid: HakukohdeOid
-  )(implicit authenticated: Authenticated): Future[Seq[HakukohderyhmaOid]] = {
+  ): Future[Seq[HakukohderyhmaOid]] = {
     cache.getFuture(oid, hakukohderyhmaClient.getHakukohderyhmat)
   }
 }

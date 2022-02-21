@@ -37,10 +37,14 @@ class HakukohdeService(
   }
 
   def get(oid: HakukohdeOid)(implicit authenticated: Authenticated): Future[Hakukohde] = {
-    hakukohdeClient.getHakukohde(oid).map {
+    hakukohdeClient.getHakukohde(oid).flatMap {
+      case (hakukohde, tarjoajat) =>
+        hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map(oids => (hakukohde.withHakukohderyhmat(oids), tarjoajat))
+    }.map {
       case (hakukohde, tarjoajat) =>
         val rules = AuthorizationRules(roleEntity.readRoles.filterNot(_ == Indexer), additionalAuthorizedOrganisaatioOids = tarjoajat)
         authorizeGet(hakukohde, rules)
+
     }
   }
 

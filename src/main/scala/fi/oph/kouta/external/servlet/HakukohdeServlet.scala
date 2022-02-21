@@ -106,7 +106,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |            default: false
       |          required: false
       |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
-      |          example: true
+      |          example: false
       |      responses:
       |        '200':
       |          description: Ok

@@ -9,16 +9,10 @@ import fi.oph.kouta.security.Role
 class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec {
 
   override val roleEntities = Seq(Role.Valintaperuste)
-  val existingId: UUID = UUID.fromString("03715370-2c2e-40b1-adf9-4de9e4eb3c73")
+  val existingId: UUID = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
   val nonExistingId: UUID = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
 
   val ophSorakuvausId = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
-
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    addMockSorakuvaus(existingId, ChildOid)
-    addMockSorakuvaus(ophSorakuvausId, OphOid)
-  }
 
   s"GET $SorakuvausPath/:id" should s"get sorakuvaus from elastic search" in {
     get(existingId, defaultSessionId)

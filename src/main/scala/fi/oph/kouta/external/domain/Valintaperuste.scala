@@ -28,17 +28,20 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          description: Valintaperustekuvauksen julkaisutila. Jos kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
     |        koulutustyyppi:
     |          type: string
-    |          description: |
-    |            Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
-    |            Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus)
+    |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
     |          enum:
     |            - amm
     |            - yo
-    |            - lk
     |            - amk
+    |            - lk
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
+    |            - amm-muu
     |            - tuva
+    |            - telma
+    |            - vapaa-sivistystyo-opistovuosi
+    |            - vapaa-sivistystyo-muu
+    |            - aikuisten-perusopetus
     |            - muu
     |          example: amm
     |        hakutapaKoodiUri:
@@ -80,7 +83,10 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/TelmaValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenMuuValintaperusteMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AikuistenPerusopetusValintaperusteMetadata'
     |            - $ref: '#/components/schemas/MuuValintaperusteMetadata'
     |          example:
     |            tyyppi: amm

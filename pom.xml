@@ -72,12 +72,6 @@
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
             <version>${kouta-common.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.ben-manes.caffeine</groupId>
-                    <artifactId>caffeine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -86,12 +80,6 @@
             <version>${kouta-common.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.ben-manes.caffeine</groupId>
-                    <artifactId>caffeine</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -240,11 +228,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${jdbc.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.blemale</groupId>
-            <artifactId>scaffeine_2.12</artifactId>
-            <version>5.1.1</version>
         </dependency>
 
         <!-- Test dependencies -->

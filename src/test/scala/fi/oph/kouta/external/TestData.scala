@@ -1,14 +1,16 @@
 package fi.oph.kouta.external
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kielistetty, Sv}
-import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, Osoite, Yhteyshenkilo, KoulutuksenAlkamiskausi}
+import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kieli, Sv}
+import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, KoulutuksenAlkamiskausi, Osoite, Yhteyshenkilo}
 
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 
 object TestData {
+
+  type Kielistetty = Map[Kieli, String]
 
   def now() = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
 

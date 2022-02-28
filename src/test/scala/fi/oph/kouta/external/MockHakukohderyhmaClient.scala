@@ -13,7 +13,7 @@ class MockHakukohderyhmaClient(mockProperties: OphProperties) extends Hakukohder
   override protected lazy val client: Client = defaultClient
 
   override def getHakukohderyhmat(oid: HakukohdeOid): Future[Seq[HakukohderyhmaOid]] = {
-    if (oid == HakukohdeOid("1.2.246.562.20.00000000000000000015")) {
+    if (oid == HakukohdeOid("1.2.246.562.20.00000000000000000003")) {
       Future.successful(
         Seq(
           HakukohderyhmaOid("1.2.246.562.28.00000000000000000015"),

@@ -19,9 +19,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
-        <kouta-backend.version>6.21.0-SNAPSHOT</kouta-backend.version>
-        <kouta-common.version>2.8.0-SNAPSHOT</kouta-common.version>
-        <kouta-indeksoija.version>9.1.0-SNAPSHOT</kouta-indeksoija.version>
+        <kouta-common.version>2.8.1-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
         <scala-utils.version>1.2.3-SNAPSHOT</scala-utils.version>
@@ -82,33 +80,6 @@
             <version>${kouta-common.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-backend</artifactId>
-            <version>${kouta-backend.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>fi.oph.kouta</groupId>
-                    <artifactId>kouta-common</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-backend</artifactId>
-            <version>${kouta-backend.version}</version>
-            <classifier>tests</classifier>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>fi.oph.kouta</groupId>
-                    <artifactId>kouta-common</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -268,22 +239,9 @@
         </dependency>
 
         <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.8.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>elasticsearch</artifactId>
             <version>${testcontainers.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.java.dev.jna</groupId>
-                    <artifactId>jna</artifactId>
-                </exclusion>
-            </exclusions>
             <scope>test</scope>
         </dependency>
 
@@ -293,32 +251,6 @@
             <version>${mockserver-netty.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Indeksoija dependencies for testing -->
-
-        <dependency>
-            <groupId>kouta-indeksoija-service</groupId>
-            <artifactId>kouta-indeksoija-service</artifactId>
-            <version>${kouta-indeksoija.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>pl.allegro.tech</groupId>
-                    <artifactId>embedded-elasticsearch</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.java-json-tools</groupId>
-                    <artifactId>json-schema-validator</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ring</groupId>
-            <artifactId>ring-core</artifactId>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <dependencyManagement>
@@ -329,19 +261,9 @@
                 <version>${scala-utils.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.scalatra.scalate</groupId>
-                <artifactId>scalate-core_2.12</artifactId>
-                <version>1.9.5</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>1.11</version>
             </dependency>
             <dependency>
                 <groupId>commons-logging</groupId>
@@ -424,16 +346,6 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-cbor</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
@@ -442,26 +354,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.9</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-s3</artifactId>
-                <version>1.11.728</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-core</artifactId>
-                <version>1.11.728</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-sqs</artifactId>
-                <version>1.11.728</version>
-            </dependency>
-            <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>jmespath-java</artifactId>
-                <version>1.11.728</version>
             </dependency>
             <dependency>
                 <groupId>com.typesafe.slick</groupId>
@@ -484,59 +376,9 @@
                 <version>1.7.30</version>
             </dependency>
             <dependency>
-                <groupId>clj-time</groupId>
-                <artifactId>clj-time</artifactId>
-                <version>0.14.3</version>
-            </dependency>
-            <dependency>
-                <groupId>clj-http</groupId>
-                <artifactId>clj-http</artifactId>
-                <version>3.8.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clojure</groupId>
-                <artifactId>tools.reader</artifactId>
-                <version>0.10.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clojure</groupId>
-                <artifactId>tools.macro</artifactId>
-                <version>0.1.5</version>
-            </dependency>
-            <dependency>
-                <groupId>ring</groupId>
-                <artifactId>ring-core</artifactId>
-                <version>1.5.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clojure</groupId>
-                <artifactId>algo.generic</artifactId>
-                <version>0.1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>prismatic</groupId>
-                <artifactId>schema</artifactId>
-                <version>1.1.3</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.libphonenumber</groupId>
-                <artifactId>libphonenumber</artifactId>
-                <version>8.0.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.clojure</groupId>
-                <artifactId>clojure</artifactId>
-                <version>1.10.1</version>
-            </dependency>
-            <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax.servlet-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>1.10.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -554,49 +396,14 @@
                 <version>4.1.3</version>
             </dependency>
             <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>1.25</version>
-            </dependency>
-            <dependency>
-                <groupId>com.typesafe.akka</groupId>
-                <artifactId>akka-stream_2.12</artifactId>
-                <version>2.5.6</version>
-            </dependency>
-            <dependency>
-                <groupId>com.typesafe.akka</groupId>
-                <artifactId>akka-actor_2.12</artifactId>
-                <version>2.5.6</version>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-webapp</artifactId>
                 <version>9.4.17.v20190418</version>
             </dependency>
             <dependency>
-                <groupId>potemkin</groupId>
-                <artifactId>potemkin</artifactId>
-                <version>0.4.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.reactivestreams</groupId>
-                <artifactId>reactive-streams</artifactId>
-                <version>1.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpmime</artifactId>
-                <version>4.5.6</version>
-            </dependency>
-            <dependency>
                 <groupId>org.javassist</groupId>
                 <artifactId>javassist</artifactId>
                 <version>3.22.0-GA</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mozilla</groupId>
-                <artifactId>rhino</artifactId>
-                <version>1.7.7.1</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>
@@ -617,11 +424,6 @@
                 <groupId>com.google.errorprone</groupId>
                 <artifactId>error_prone_annotations</artifactId>
                 <version>2.3.3</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sf.jopt-simple</groupId>
-                <artifactId>jopt-simple</artifactId>
-                <version>5.0.3</version>
             </dependency>
             <dependency>
                 <groupId>javax.xml.bind</groupId>
@@ -659,24 +461,10 @@
                 <version>${scalactic.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>2.16.0</version>
-            </dependency>
-            <dependency>
-                <groupId>oph</groupId>
-                <artifactId>clj-elasticsearch</artifactId>
-                <version>0.5.0-SNAPSHOT</version>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.8.0</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

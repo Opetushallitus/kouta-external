@@ -4,7 +4,7 @@ language: scala
 scala:
   - 2.12.2
 jdk:
-  - openjdk8
+  - openjdk11
 services:
   - docker
   - postgresql
@@ -50,7 +50,7 @@ script:
   - mv target/kouta-external-*-jar-with-dependencies.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
   - cp -vr src/main/resources/* $DOCKER_BUILD_DIR/config/
 
-  - export BASE_IMAGE="baseimage-fatjar-openjdk8:master"
+  - export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
   - ./ci-tools/common/pull-image.sh
   - ./ci-tools/build/build-fatjar.sh $ARTIFACT_NAME
 

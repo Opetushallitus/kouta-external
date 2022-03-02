@@ -18,7 +18,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
     getItem(oid.s)
       .map(debugJson)
       .map(_.to[HakukohdeIndexed])
-      .map(h => (h.toHakukohde, h.tarjoajat))
+      .map(h => (h.toHakukohde(None), h.tarjoajat))
 
   def search(
               hakuOid: Option[HakuOid],
@@ -52,7 +52,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       )
     )
     searchItems[HakukohdeIndexed](Some(must(hakuQuery ++ tarjoajaQuery ++ qQuery ++ hakukohdeQuery)))
-      .map(_.map(_.toHakukohde))
+      .map(_.map(_.toHakukohde(None)))
   }
 }
 

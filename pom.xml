@@ -16,8 +16,8 @@
         <!-- Korjaa käännösvirheen:
              [ERROR] Source option 5 is no longer supported. Use 6 or later.
              [ERROR] Target option 1.5 is no longer supported. Use 1.6 or later. -->
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <kouta-backend.version>6.21.0-SNAPSHOT</kouta-backend.version>
         <kouta-common.version>2.8.0-SNAPSHOT</kouta-common.version>
@@ -59,7 +59,7 @@
         <scalactic.version>3.1.1</scalactic.version>
 
         <!-- Plugin properties -->
-        <enforce.java.version>[1.8,)</enforce.java.version>
+        <enforce.java.version>[11,)</enforce.java.version>
 
         <plugin.scala-maven-plugin.version>4.3.1</plugin.scala-maven-plugin.version>
         <plugin.maven-enforcer-plugin.version>3.0.0-M2</plugin.maven-enforcer-plugin.version>
@@ -74,6 +74,12 @@
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
             <version>${kouta-common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -82,6 +88,12 @@
             <version>${kouta-common.version}</version>
             <classifier>tests</classifier>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -309,6 +321,10 @@
                     <groupId>com.github.java-json-tools</groupId>
                     <artifactId>json-schema-validator</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.scala-lang.modules</groupId>
+                    <artifactId>scala-java8-compat_2.12</artifactId>
+                </exclusion>
             </exclusions>
             <scope>test</scope>
         </dependency>
@@ -318,7 +334,11 @@
             <artifactId>ring-core</artifactId>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.github.blemale</groupId>
+            <artifactId>scaffeine_2.12</artifactId>
+            <version>5.1.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

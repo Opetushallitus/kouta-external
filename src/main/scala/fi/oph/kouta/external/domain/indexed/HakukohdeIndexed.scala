@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain.indexed
 
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, ValintakokeenLisatilaisuudet}
 
@@ -41,7 +41,7 @@ case class HakukohdeIndexed(
     modified: Option[Modified],
     toteutus: Option[Tarjoajat]
 ) {
-  def toHakukohde: Hakukohde = Hakukohde(
+  def toHakukohde(hakukohderyhmat: Option[Seq[HakukohderyhmaOid]]): Hakukohde = Hakukohde(
     oid = oid,
     externalId = externalId,
     toteutusOid = toteutusOid,
@@ -53,6 +53,7 @@ case class HakukohdeIndexed(
     hakulomakeAtaruId = hakulomakeAtaruId,
     hakulomakeKuvaus = hakulomakeKuvaus,
     hakulomakeLinkki = hakulomakeLinkki,
+    hakukohderyhmat = hakukohderyhmat,
     kaytetaanHaunHakulomaketta = kaytetaanHaunHakulomaketta,
     pohjakoulutusvaatimusKoodiUrit = pohjakoulutusvaatimus.map(_.koodiUri),
     pohjakoulutusvaatimusTarkenne = pohjakoulutusvaatimusTarkenne,

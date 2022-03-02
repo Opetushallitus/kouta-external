@@ -22,6 +22,14 @@ import java.util.UUID
     |          type: string
     |          description: Hakukohteeseen liitetyn toteutuksen yksilöivä tunniste.
     |          example: "1.2.246.562.17.00000000000000000009"
+    |        hakukohderyhmat:
+    |          type: array
+    |          description: Hakukohderyhmien tunnisteet
+    |          items:
+    |            type: string
+    |          example:
+    |            - "1.2.246.562.28.00000000000000000001"
+    |            - "1.2.246.562.28.00000000000000000002"
     |        hakuOid:
     |          type: string
     |          description: Hakukohteeseen liitetyn haun yksilöivä tunniste.
@@ -163,6 +171,7 @@ case class Hakukohde(
     hakulomakeAtaruId: Option[UUID],
     hakulomakeKuvaus: Kielistetty,
     hakulomakeLinkki: Kielistetty,
+    hakukohderyhmat: Option[Seq[HakukohderyhmaOid]],
     kaytetaanHaunHakulomaketta: Option[Boolean],
     pohjakoulutusvaatimusKoodiUrit: Seq[String],
     pohjakoulutusvaatimusTarkenne: Kielistetty,
@@ -185,6 +194,7 @@ case class Hakukohde(
     modified: Option[Modified],
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
+  def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))
 }
 
 @SwaggerModel(

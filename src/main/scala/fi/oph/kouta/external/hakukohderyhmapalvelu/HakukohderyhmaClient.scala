@@ -7,13 +7,14 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
 import org.http4s.client.Client
-import org.http4s.client.blaze.defaultClient
+import org.http4s.client.blaze.{BlazeClientConfig, SimpleHttp1Client}
 import org.http4s.{Headers, Method}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.concurrent.duration.{Duration, SECONDS}
 
 object HakukohderyhmaClient
 
@@ -32,15 +33,21 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
     )
   }
 
+  private def blazeClientConfig: BlazeClientConfig = BlazeClientConfig.defaultConfig.copy(
+    responseHeaderTimeout = Duration(120, SECONDS),
+    idleTimeout = Duration(120, SECONDS),
+    requestTimeout = Duration(120, SECONDS)
+  )
+
   lazy protected val client: Client = {
     CasAuthenticatingClient(
       new CasClient(
         KoutaConfigurationFactory.configuration.securityConfiguration.casUrl,
-        org.http4s.client.blaze.defaultClient,
+        SimpleHttp1Client(blazeClientConfig),
         callerId
       ),
       casParams = params,
-      serviceClient = defaultClient,
+      serviceClient = SimpleHttp1Client(blazeClientConfig),
       clientCallerId = callerId,
       sessionCookieName = "ring-session"
     )

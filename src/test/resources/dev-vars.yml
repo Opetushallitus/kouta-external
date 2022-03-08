@@ -14,5 +14,5 @@ kouta_external_elasticsearch_auth_enabled: false
 kouta_external_elasticsearch_username: DUMMY
 kouta_external_elasticsearch_password: DUMMY
 
-host_virkailija: virkailija.hahtuvaopintopolku.fi
-host_alb_virkailija: virkailija.hahtuvaopintopolku.fi
+host_virkailija: https://virkailija.hahtuvaopintopolku.fi
+host_alb_virkailija: https://virkailija.hahtuvaopintopolku.fi

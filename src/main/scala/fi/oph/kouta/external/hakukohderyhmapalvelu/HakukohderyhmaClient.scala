@@ -12,7 +12,6 @@ import org.http4s.{Headers, Method}
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, SECONDS}
 

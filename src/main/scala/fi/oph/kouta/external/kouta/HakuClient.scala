@@ -4,7 +4,6 @@ import java.time.Instant
 
 import fi.oph.kouta.domain.oid.HakuOid
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 trait HakuClient {

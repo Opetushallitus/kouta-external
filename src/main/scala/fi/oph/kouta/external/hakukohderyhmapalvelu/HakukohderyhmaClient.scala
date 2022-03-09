@@ -15,6 +15,7 @@ import org.json4s.jackson.JsonMethods.parse
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, SECONDS}
+import scala.util.{Failure, Success}
 
 object HakukohderyhmaClient
 
@@ -58,10 +59,16 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
       case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohderyhmaOid(s)))
       case (status, body) =>
         val errorString = s"Hakukohderyhmät fetch failed for hakukohdeoid: $oid with status $status, body: $body"
-        logger.error(errorString)
-        Future.failed(
-          new RuntimeException(errorString)
-        )
+        logger.warn(errorString)
+        fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat", oid), None, Headers.empty).flatMap {
+          case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohderyhmaOid(s)))
+          case (status, body) =>
+            val errorString = s"Hakukohderyhmät fetch failed for hakukohdeoid: $oid with status $status, body: $body"
+            logger.error(errorString)
+            Future.failed(
+              new RuntimeException(errorString)
+            )
+        }
     }
   }
   def getHakukohteet(oid: HakukohderyhmaOid): Future[Seq[HakukohdeOid]] = {

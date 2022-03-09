@@ -6,10 +6,11 @@ import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.service.RoleAuthorizationFailedException
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{BadRequest, FutureSupport, Ok}
+import org.scalatra.{ActionResult, AsyncResult, BadRequest, FutureSupport, Ok}
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.{Duration, DurationInt}
 
 object HakukohdeServlet extends HakukohdeServlet(HakukohdeService)
 
@@ -132,17 +133,22 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       case "true" => true
       case "false" => false
     }
-    (hakuOid, tarjoaja) match {
-      case (None, None) => BadRequest("Query parameter is required")
-      case (Some(oid), _) if !oid.isValid => BadRequest(s"Invalid haku ${oid.toString}")
-      case (_, Some(oids)) if oids.exists(!_.isValid) =>
-        BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}")
-      case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
-        .recoverWith {
-          case _: RoleAuthorizationFailedException =>
-            logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
-            hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
-        }
+
+    new AsyncResult() {
+      override implicit def timeout: Duration = 5.minutes
+
+      override val is: Future[ActionResult] = (hakuOid, tarjoaja) match {
+        case (None, None) =>  Future.successful(BadRequest("Query parameter is required"))
+        case (Some(oid), _) if !oid.isValid =>  Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
+        case (_, Some(oids)) if oids.exists(!_.isValid) =>
+          Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))
+        case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_))
+          .recoverWith {
+            case _: RoleAuthorizationFailedException =>
+              logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
+              hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_))
+          }
+      }
     }
   }
 }

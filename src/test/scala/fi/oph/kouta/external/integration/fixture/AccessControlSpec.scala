@@ -23,7 +23,7 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMock {
   override def startServiceMocking(): Unit = {
     super.startServiceMocking()
     urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties
-      .addOverride("host.virkailija", s"localhost:$mockPort")
+      .addOverride("host.virkailija", s"http://localhost:$mockPort")
       .addOverride("host.kouta-backend", s"http://localhost:$mockPort"))
   }
 

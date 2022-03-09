@@ -1,8 +1,7 @@
 package fi.oph.kouta.external.kouta
 
 import java.time.Instant
-import java.util.concurrent.TimeUnit
-
+import java.util.concurrent.{Executors, TimeUnit}
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -19,9 +18,8 @@ import org.json4s.jackson.JsonMethods.parse
 import org.json4s.{Extraction, Writer}
 import scalaz.concurrent.Task
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Future, Promise}
 
 object CasKoutaClient extends KoutaClient with CallerId {
 
@@ -48,6 +46,9 @@ object CasKoutaClient extends KoutaClient with CallerId {
 }
 
 abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient {
+
+  implicit val executor: ExecutionContext =
+    ExecutionContext.fromExecutor(Executors.newFixedThreadPool(10))
 
   type KoutaResponse[T] = Either[(Int, String), T]
 

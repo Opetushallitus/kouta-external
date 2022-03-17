@@ -42,6 +42,7 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
       case (status, body) =>
         val errorString = s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body"
         logger.error(errorString)
+
         Future.failed(
           new RuntimeException(errorString)
         )

@@ -81,7 +81,7 @@
                 </exclusion>
                 <exclusion>
                     <groupId>fi.vm.sade.java-utils</groupId>
-                    <artifactId>java-http</artifactId>
+                    <artifactId>java-cas</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

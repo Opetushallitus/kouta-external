@@ -4,15 +4,13 @@ import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
 import fi.oph.kouta.external.hakukohderyhmapalvelu.HakukohderyhmaClient
 import fi.vm.sade.javautils.nio.cas.CasClient
 import fi.vm.sade.properties.OphProperties
-import org.http4s.client.Client
-import org.http4s.client.blaze.defaultClient
-import org.mockito.Mock
+import org.mockito.{Mock, Mockito}
 
 import scala.concurrent.Future
 
 class MockHakukohderyhmaClient(mockProperties: OphProperties) extends HakukohderyhmaClient {
   override def urlProperties                 = mockProperties
-  override protected lazy val client: CasClient = Mock[CasClient]
+  override protected lazy val client: CasClient = Mockito.mock[CasClient](classOf[CasClient])
 
   override def getHakukohderyhmat(oid: HakukohdeOid): Future[Seq[HakukohderyhmaOid]] = {
     if (oid == HakukohdeOid("1.2.246.562.20.00000000000000000015")) {

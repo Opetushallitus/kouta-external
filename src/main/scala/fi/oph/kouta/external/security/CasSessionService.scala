@@ -30,10 +30,14 @@ abstract class CasSessionService(val securityContext: SecurityContext, val userD
 
   private def validateServiceTicket(ticket: ServiceTicket): Either[Throwable, String] = {
     val ServiceTicket(s) = ticket
-    Try(casClient
-      .validateServiceTicketWithVirkailijaUsername(securityContext.casServiceIdentifier, s)
-      .get(30, TimeUnit.SECONDS))
-      .toEither
+    try {
+      Right(casClient
+        .validateServiceTicketWithVirkailijaUsername(securityContext.casServiceIdentifier, s)
+        .get(30, TimeUnit.SECONDS))
+    } catch {
+      case t: Throwable =>
+        Left(AuthenticationFailedException(s"Failed to validate service ticket $s", t))
+    }
   }
 
   private def storeSession(ticket: ServiceTicket, user: KayttooikeusUserDetails): (UUID, CasSession) = {

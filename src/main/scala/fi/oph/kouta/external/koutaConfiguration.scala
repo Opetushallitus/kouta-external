@@ -21,6 +21,8 @@ case class KoutaDatabaseConfiguration(
 )
 
 case class SecurityConfiguration(
+    username: String,
+    password: String,
     casUrl: String,
     casServiceIdentifier: String,
     kayttooikeusUrl: String,
@@ -59,6 +61,8 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
     )
 
   val securityConfiguration = SecurityConfiguration(
+    username = config.getString("kouta-external.cas.username"),
+    password = config.getString("kouta-external.cas.password"),
     casUrl = config.getString("cas.url"),
     casServiceIdentifier = config.getString("kouta-external.cas.service"),
     kayttooikeusUrl = config.getString("kayttooikeus-service.userDetails.byUsername"),

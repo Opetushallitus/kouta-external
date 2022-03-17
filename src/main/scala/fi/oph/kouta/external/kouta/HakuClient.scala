@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.kouta
 
 import java.time.Instant
-
 import fi.oph.kouta.domain.oid.HakuOid
+import fi.oph.kouta.external.kouta.KoutaClient.KoutaResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

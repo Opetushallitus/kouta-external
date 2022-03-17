@@ -1,12 +1,11 @@
 package fi.oph.kouta.external.service
 
 import java.time.Instant
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
-import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.kouta.CasKoutaClient.KoutaResponse
 import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaClient, KoutaHakuRequest, UpdateResponse}
+import fi.oph.kouta.external.kouta.KoutaClient.KoutaResponse
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}

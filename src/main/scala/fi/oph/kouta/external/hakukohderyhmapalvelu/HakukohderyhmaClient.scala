@@ -15,7 +15,7 @@ import scala.concurrent.Future
 class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonFormats with Logging {
 
   override protected val loginParams: String = "auth/cas"
-  override protected val sessionCookieName: String  = "session"
+  override protected val sessionCookieName: String  = "ring-session"
 
   private implicit val formats = DefaultFormats
 

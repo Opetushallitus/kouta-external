@@ -20,11 +20,6 @@ import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object CasKoutaClient extends KoutaClient with CallerId {
-  override protected val loginParams: String = "auth/login"
-  override protected val sessionCookieName: String = "ring-session"
-}
-
 object KoutaClient {
 
   type KoutaResponse[T] = Either[(Int, String), T]

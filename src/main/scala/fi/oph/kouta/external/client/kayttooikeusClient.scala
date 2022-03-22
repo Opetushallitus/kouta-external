@@ -14,7 +14,7 @@ trait KayttooikeusClient extends HttpClient with CallerId with Logging {
 
   import org.json4s._
 
-  private implicit val formats   = DefaultFormats
+  private implicit val formats: DefaultFormats.type = DefaultFormats
   private lazy val urlProperties = KoutaConfigurationFactory.configuration.urlProperties
 
   def getUserByUsername(username: String): KayttooikeusUserDetails = {

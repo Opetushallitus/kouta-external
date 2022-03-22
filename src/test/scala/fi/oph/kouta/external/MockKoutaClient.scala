@@ -11,4 +11,5 @@ class MockKoutaClient(mockProperties: OphProperties) extends KoutaClient {
   override protected lazy val client = Mockito.mock[CasClient](classOf[CasClient])
   override protected val loginParams: String = ""
   override protected val sessionCookieName: String = ""
+  override protected val serviceName: String = ""
 }

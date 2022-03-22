@@ -22,7 +22,7 @@ import scala.concurrent.Future
 
 object CasKoutaClient extends KoutaClient with CallerId {
   override protected val loginParams: String = "auth/login"
-  override protected val sessionCookieName: String = "session"
+  override protected val sessionCookieName: String = "ring-session"
 }
 
 object KoutaClient {

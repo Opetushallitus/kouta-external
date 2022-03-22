@@ -32,6 +32,7 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
 
   protected val loginParams: String
   protected val sessionCookieName: String
+  protected val serviceName: String
 
   lazy protected val client: CasClient = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration
@@ -39,7 +40,7 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
       config.username,
       config.password,
       urlProperties.url("cas.url"),
-      urlProperties.url("kouta-backend.service"),
+      serviceName,
       callerId,
       callerId,
       loginParams,

@@ -16,6 +16,7 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
 
   override protected val loginParams: String = "auth/cas"
   override protected val sessionCookieName: String  = "ring-session"
+  override protected val serviceName: String = urlProperties.url("hakukohderyhmapalvelu.service")
 
   private implicit val formats = DefaultFormats
 
@@ -48,5 +49,6 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
         )
     }
   }
+
 
 }

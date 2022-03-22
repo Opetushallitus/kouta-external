@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object HakuKoutaClient extends KoutaClient with CallerId {
-  override protected val loginParams: String = "auth/login"
+  override protected val loginParams: String = "/auth/login"
   override protected val sessionCookieName: String = "session"
   override protected val serviceName: String = urlProperties.url("kouta-backend.service")
 }

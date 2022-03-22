@@ -22,7 +22,7 @@ object ProductionSecurityContext extends CallerId {
       config.casUrl,
       config.kayttooikeusUrl,
       csrf = callerId, callerId = callerId,
-      serviceUrlSuffix = "j_spring_cas_security_check",
+      serviceUrlSuffix = "/j_spring_cas_security_check",
       jSessionName = "JSESSIONID"
     ))
     ProductionSecurityContext(config.casUrl, casClient, config.casServiceIdentifier)

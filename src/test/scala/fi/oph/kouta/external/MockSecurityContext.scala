@@ -3,11 +3,9 @@ package fi.oph.kouta.external
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.security.Authority
-import fi.vm.sade.javautils.nio.cas.{CasClient}
+import fi.vm.sade.javautils.nio.cas.CasClient
 import fi.vm.sade.utils.cas.CasClient.SessionCookie
 import org.asynchttpclient.{Request, Response}
-
-import java.util
 import java.util.concurrent.CompletableFuture
 
 class MockSecurityContext(

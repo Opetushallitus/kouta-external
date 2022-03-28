@@ -1,12 +1,11 @@
 package fi.oph.kouta.external.service
 
 import java.time.Instant
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
-import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.kouta.CasKoutaClient.KoutaResponse
-import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaClient, KoutaHakuRequest, UpdateResponse}
+import fi.oph.kouta.external.kouta.{CallerId, KoutaClient, KoutaHakuRequest, UpdateResponse}
+import fi.oph.kouta.external.kouta.KoutaClient.KoutaResponse
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
@@ -16,7 +15,13 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object HakuService extends HakuService(HakuClient, CasKoutaClient, OrganisaatioServiceImpl)
+object HakuKoutaClient extends KoutaClient with CallerId {
+  override protected val loginParams: String = "/auth/login"
+  override protected val sessionCookieName: String = "session"
+  override protected val serviceName: String = urlProperties.url("kouta-backend.service")
+}
+
+object HakuService extends HakuService(HakuClient, HakuKoutaClient, OrganisaatioServiceImpl)
 
 class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val organisaatioService: OrganisaatioService)
   extends RoleEntityAuthorizationService[Haku]

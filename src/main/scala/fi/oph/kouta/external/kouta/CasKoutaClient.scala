@@ -1,80 +1,51 @@
 package fi.oph.kouta.external.kouta
 
 import java.time.Instant
-import java.util.concurrent.TimeUnit
-
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.{KoutaJsonFormats, ScalaCasConfig}
 import fi.oph.kouta.util.TimeUtils
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder}
 import fi.vm.sade.properties.OphProperties
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
-import org.http4s._
-import org.http4s.client.Client
-import org.http4s.client.blaze.defaultClient
-import org.http4s.json4s.jackson.jsonEncoderOf
+import org.asynchttpclient.{RequestBuilder, Response}
+import org.http4s.{Header, Headers, Method}
 import org.json4s.JsonAST.{JNothing, JObject}
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.{Extraction, Writer}
-import scalaz.concurrent.Task
+import org.json4s.jackson.JsonMethods._
 
+import java.util.concurrent.CompletableFuture
+import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Future, Promise}
+import scala.concurrent.Future
 
-object CasKoutaClient extends KoutaClient with CallerId {
-
-  private def params = {
-    val config = KoutaConfigurationFactory.configuration.clientConfiguration
-
-    CasParams(
-      urlProperties.url("kouta-backend.service"),
-      "auth/login",
-      config.username,
-      config.password
-    )
-  }
-
-  override lazy protected val client: Client = {
-    CasAuthenticatingClient(
-      new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, defaultClient, callerId),
-      casParams = params,
-      serviceClient = defaultClient,
-      clientCallerId = callerId,
-      sessionCookieName = "session"
-    )
-  }
-}
-
-abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient {
+object KoutaClient {
 
   type KoutaResponse[T] = Either[(Int, String), T]
+}
+
+abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient with CallerId {
+
 
   protected def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
 
-  protected def client: Client
+  protected val loginParams: String
+  protected val sessionCookieName: String
+  protected val serviceName: String
 
-  def session(): Boolean = {
-    val url = urlProperties.url("kouta-backend.session")
-
-    Uri
-      .fromString(url)
-      .fold(
-        Task.fail,
-        url => {
-          client.fetch(Request(Method.GET, url)) {
-            case r if r.status.code == 200 =>
-              Task.now(true)
-            case r =>
-              readStringBody(r).flatMap { body =>
-                Task.fail(new RuntimeException(s"Url $url returned status code ${r.status} $body"))
-              }
-          }
-        }
-      )
-      .unsafePerformSyncAttemptFor(Duration(5, TimeUnit.SECONDS))
-      .fold(throw _, x => x)
+  lazy protected val client: CasClient = {
+    val config = KoutaConfigurationFactory.configuration.clientConfiguration
+    CasClientBuilder.build(ScalaCasConfig(
+      config.username,
+      config.password,
+      urlProperties.url("cas.url"),
+      serviceName,
+      callerId,
+      callerId,
+      loginParams,
+      sessionCookieName)
+    )
   }
 
   protected def create[T](url: String, body: T): Future[Either[(Int, String), IdResponse]] =
@@ -107,42 +78,22 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
     }
   }
 
-  private def readStringBody(r: Response) = readBody[String](r)(s => s)
+  protected def fetch[T](method: Method, url: String, body: T, headers: Headers): Future[(Int, String)] = {
+    implicit val writer: Writer[T] = (obj: T) => Extraction.decompose(obj)
+    val requestBuilder = new RequestBuilder()
+      .setMethod(method.name)
+      .setUrl(url)
+      .setBody(compact(render(writer.write(body))))
+    headers.foreach(h => requestBuilder.addHeader(h.name, h.value))
 
-  private def readBody[A](r: Response)(handler: String => A) =
-    r.bodyAsText.runLog
-      .map(a => a.mkString)
-      .map(
-        response => handler(response)
-      )
+    val request = requestBuilder.build()
 
-  protected def fetch[T](method: Method, url: String, body: T, headers: Headers): Future[(Int, String)] =
-    Uri
-      .fromString(url)
-      .fold(
-        Task.fail,
-        url => {
-          implicit val writer: Writer[T] = (obj: T) => Extraction.decompose(obj)
-          client.fetch(Request(method, url, headers = headers).withBody(body)(jsonEncoderOf[T])) { r =>
-            readBody[(Int, String)](r)(body => (r.status.code, body))
-          }
-        }
-      )
-      .runFuture()
-
-  implicit class TaskExtensionOps[A](x: => Task[A]) {
-
-    import scalaz.{-\/, \/-}
-
-    def runFuture(): Future[A] = {
-      val p: Promise[A] = Promise()
-      x.unsafePerformAsync {
-        case -\/(ex) =>
-          p.failure(ex); ()
-        case \/-(r) => p.success(r); ()
-      }
-      p.future
+    def responseToStatusAndBody(r: Response): (Int, String) = {
+      (r.getStatusCode, r.getResponseBody)
     }
+
+    val future: CompletableFuture[(Int, String)] = client.execute(request).thenApply(responseToStatusAndBody)
+    toScala(future)
   }
 
 }

@@ -3,7 +3,7 @@ package fi.oph.kouta.external.security
 import fi.oph.kouta.external.SecurityConfiguration
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.util.ScalaCasConfig
-import fi.vm.sade.javautils.nio.cas.CasClient
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder}
 
 trait SecurityContext {
   def casUrl: String
@@ -16,7 +16,7 @@ case class ProductionSecurityContext(casUrl: String, casClient: CasClient, casSe
 
 object ProductionSecurityContext extends CallerId {
   def apply(config: SecurityConfiguration): ProductionSecurityContext = {
-    val casClient = new CasClient(ScalaCasConfig(
+    val casClient = CasClientBuilder.build(ScalaCasConfig(
       config.username,
       config.password,
       config.casUrl,

@@ -5,7 +5,7 @@ import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.{KoutaJsonFormats, ScalaCasConfig}
 import fi.oph.kouta.util.TimeUtils
-import fi.vm.sade.javautils.nio.cas.{CasClient, CasConfig}
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder}
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.slf4j.Logging
 import org.asynchttpclient.{RequestBuilder, Response}
@@ -36,7 +36,7 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
 
   lazy protected val client: CasClient = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration
-    new CasClient(ScalaCasConfig(
+    CasClientBuilder.build(ScalaCasConfig(
       config.username,
       config.password,
       urlProperties.url("cas.url"),

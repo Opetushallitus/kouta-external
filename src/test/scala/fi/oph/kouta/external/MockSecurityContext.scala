@@ -2,9 +2,8 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
-import fi.oph.kouta.external.util.ScalaCasConfig
 import fi.oph.kouta.security.Authority
-import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder}
+import fi.vm.sade.javautils.nio.cas.{CasClient}
 import fi.vm.sade.utils.cas.CasClient.SessionCookie
 import org.asynchttpclient.{Request, Response}
 
@@ -30,7 +29,7 @@ class MockSecurityContext(
 
     override def execute(request: Request): CompletableFuture[Response] = ???
 
-    override def validateServiceTicketWithOppijaAttributes(s: SessionCookie, s1: SessionCookie): CompletableFuture[util.HashMap[SessionCookie, SessionCookie]] = ???
+    override def validateServiceTicketWithOppijaAttributes(s: SessionCookie, s1: SessionCookie): CompletableFuture[java.util.HashMap[SessionCookie, SessionCookie]] = ???
   }
 }
 

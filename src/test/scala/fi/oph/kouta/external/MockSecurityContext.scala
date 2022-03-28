@@ -4,9 +4,11 @@ import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.external.util.ScalaCasConfig
 import fi.oph.kouta.security.Authority
-import fi.vm.sade.javautils.nio.cas.CasClient
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder}
 import fi.vm.sade.utils.cas.CasClient.SessionCookie
+import org.asynchttpclient.{Request, Response}
 
+import java.util
 import java.util.concurrent.CompletableFuture
 
 class MockSecurityContext(
@@ -15,7 +17,7 @@ class MockSecurityContext(
     users: Map[String, KayttooikeusUserDetails]
 ) extends SecurityContext with CallerId {
 
-  val casClient: CasClient = new CasClient(ScalaCasConfig("","","","","","","","")) {
+  val casClient: CasClient = new CasClient {
     override def validateServiceTicketWithVirkailijaUsername(service: String, serviceTicket: String): CompletableFuture[String] = {
 
       if (serviceTicket.startsWith(MockSecurityContext.ticketPrefix(service).toString)) {
@@ -25,6 +27,10 @@ class MockSecurityContext(
         CompletableFuture.failedFuture(new RuntimeException("unrecognized ticket: " + serviceTicket))
       }
     }
+
+    override def execute(request: Request): CompletableFuture[Response] = ???
+
+    override def validateServiceTicketWithOppijaAttributes(s: SessionCookie, s1: SessionCookie): CompletableFuture[util.HashMap[SessionCookie, SessionCookie]] = ???
   }
 }
 

@@ -18,9 +18,11 @@ class KoulutusSpec extends KoulutusFixture with GenericGetTests[Koulutus, Koulut
 
   val nonExistingSessionId: UUID = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
-  val ophKoulutusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000002")
-  val julkinenOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000003")
-  val tarjoajaOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000004")
+  val ophKoulutusOid: KoulutusOid =           KoulutusOid("1.2.246.562.13.00000000000000000002")
+  val julkinenOid: KoulutusOid =              KoulutusOid("1.2.246.562.13.00000000000000000003")
+  val tarjoajaOid: KoulutusOid =              KoulutusOid("1.2.246.562.13.00000000000000000004")
+  val ammMuuOid: KoulutusOid =                KoulutusOid("1.2.246.562.13.00000000000000000005")
+  val aikuistenPerusopetusOid: KoulutusOid =  KoulutusOid("1.2.246.562.13.00000000000000000006")
 
   val sorakuvausId: UUID         = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
@@ -56,5 +58,13 @@ class KoulutusSpec extends KoulutusFixture with GenericGetTests[Koulutus, Koulut
 
   it should "allow the user of a descendant of a tarjoaja organization" in {
     get(tarjoajaOid, crudSessionIds(GrandChildOid))
+  }
+
+  it should "allow the user to read muu ammatillinen koulutus" in {
+    get(ammMuuOid, crudSessionIds(ChildOid))
+  }
+
+  it should "allow the user to read aikuisten perusopetus -koulutus" in {
+    get(aikuistenPerusopetusOid, crudSessionIds(ChildOid))
   }
 }

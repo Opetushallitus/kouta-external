@@ -19,8 +19,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <kouta-backend.version>6.21.0-SNAPSHOT</kouta-backend.version>
-        <kouta-common.version>2.8.0-SNAPSHOT</kouta-common.version>
+        <kouta-backend.version>6.25.0-SNAPSHOT</kouta-backend.version>
+        <kouta-common.version>2.8.2-SNAPSHOT</kouta-common.version>
         <kouta-indeksoija.version>9.1.0-SNAPSHOT</kouta-indeksoija.version>
 
         <!-- Utility properties -->

@@ -30,7 +30,15 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          type: string
     |          description: |
     |            Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
-    |            Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus)
+    |            Sallitut arvot:
+    |            'amm' (ammatillinen),
+    |            'yo' (yliopisto),
+    |            'lk' (lukio),
+    |            'amk' (ammattikorkea),
+    |            'amm-ope-erityisope-ja-opo',
+    |            'amm-tutkinnon-osa',
+    |            'amm-osaamisala',
+    |            'tuva' (tutkintokoulutukseen valmentava koulutus)
     |          enum:
     |            - amm
     |            - yo
@@ -77,6 +85,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - $ref: '#/components/schemas/LukioValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'

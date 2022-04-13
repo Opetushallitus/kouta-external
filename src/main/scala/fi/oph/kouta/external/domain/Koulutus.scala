@@ -23,11 +23,21 @@ import java.util.UUID
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'muu' (muu koulutus)"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot:
+    |            'amm' (ammatillinen),
+    |            'yo' (yliopisto),
+    |            'lk' (lukio),
+    |            'amk' (ammattikorkea),
+    |            'amm-ope-erityisope-ja-opo' (Ammatillinen opettaja-, erityisopettaja ja opinto-ohjaajakoulutus),
+    |            'amm-tutkinnon-osa',
+    |            'amm-osaamisala',
+    |            'tuva' (tutkintokoulutukseen valmentava koulutus),
+    |            'muu' (muu koulutus)"
     |          enum:
     |            - amm
     |            - yo
     |            - amk
+    |            - amm-ope-erityisope-ja-opo
     |            - lk
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
@@ -82,6 +92,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/YliopistoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaKoulutusMetadata'
     |            - $ref: '#/components/schemas/LukioKoulutusMetadata'

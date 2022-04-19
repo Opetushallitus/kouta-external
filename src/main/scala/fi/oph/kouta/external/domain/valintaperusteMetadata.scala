@@ -251,28 +251,6 @@ case class TelmaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    AmmatillinenMuuValintaperusteMetadata:
-                |      type: object
-                |      allOf:
-                |        - $ref: '#/components/schemas/ValintaperusteMetadata'
-                |      properties:
-                |        tyyppi:
-                |          type: string
-                |          description: Valintaperustekuvauksen metatiedon tyyppi
-                |          example: amm-muu
-                |          enum:
-                |            - amm-muu
-                |""")
-case class AmmatillinenMuuValintaperusteMetadata(
-    tyyppi: Koulutustyyppi = AmmMuu,
-    valintatavat: Seq[Valintatapa],
-    kuvaus: Kielistetty = Map(),
-    hakukelpoisuus: Kielistetty = Map(),
-    lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[Sisalto] = Seq(),
-    valintakokeidenYleiskuvaus: Kielistetty = Map()
-) extends ValintaperusteMetadata {}
-
 @SwaggerModel("""    VapaaSivistystyoValintaperusteMetadata:
     |      type: object
     |      allOf:
@@ -288,28 +266,6 @@ case class AmmatillinenMuuValintaperusteMetadata(
     |""")
 case class VapaaSivistystyoValintaperusteMetadata(
     tyyppi: Koulutustyyppi,
-    valintatavat: Seq[Valintatapa],
-    kuvaus: Kielistetty = Map(),
-    hakukelpoisuus: Kielistetty = Map(),
-    lisatiedot: Kielistetty = Map(),
-    sisalto: Seq[Sisalto] = Seq(),
-    valintakokeidenYleiskuvaus: Kielistetty = Map()
-) extends ValintaperusteMetadata
-
-@SwaggerModel("""    AikuistenPerusopetusValintaperusteMetadata:
-    |      type: object
-    |      allOf:
-    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
-    |      properties:
-    |        tyyppi:
-    |          type: string
-    |          description: Valintaperustekuvauksen metatiedon tyyppi
-    |          example: aikuisten-perusopetus
-    |          enum:
-    |            - aikuisten-perusopetus
-    |""")
-case class AikuistenPerusopetusValintaperusteMetadata(
-    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     valintatavat: Seq[Valintatapa],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),

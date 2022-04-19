@@ -3,6 +3,7 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
+import fi.oph.kouta.external.kouta.{KoulutusKoutaClient, KoutaKoulutusRequest, KoutaResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
@@ -12,9 +13,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object KoulutusService extends KoulutusService(KoulutusClient, OrganisaatioServiceImpl)
+object KoulutusService extends KoulutusService(KoulutusClient, KoulutusKoutaClient, OrganisaatioServiceImpl)
 
-class KoulutusService(koulutusClient: KoulutusClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Koulutus] with Logging {
+class KoulutusService(koulutusClient: KoulutusClient, val koulutusKoutaClient: KoulutusKoutaClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Koulutus] with Logging {
 
   override val roleEntity: RoleEntity = Role.Koulutus
 
@@ -30,5 +31,9 @@ class KoulutusService(koulutusClient: KoulutusClient, val organisaatioService: O
         )
       )
     }
+  }
+
+  def create(koulutus: Koulutus)(implicit authenticated: Authenticated): Future[KoutaResponse[KoulutusOid]] = {
+    koulutusKoutaClient.createKoulutus(KoutaKoulutusRequest(authenticated, koulutus))
   }
 }

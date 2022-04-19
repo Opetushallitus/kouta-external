@@ -199,39 +199,6 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     )
 }
 
-case class AmmatillinenMuuToteutusMetadataIndexed(
-    tyyppi: Koulutustyyppi = AmmMuu,
-    kuvaus: Kielistetty,
-    opetus: Option[OpetusIndexed],
-    asiasanat: List[Keyword],
-    ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
-    hakutermi: Option[Hakutermi],
-    hakulomaketyyppi: Option[Hakulomaketyyppi],
-    hakulomakeLinkki: Kielistetty,
-    lisatietoaHakeutumisesta: Kielistetty,
-    lisatietoaValintaperusteista: Kielistetty,
-    hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
-) extends TutkintoonJohtamatonToteutusMetadataIndexed {
-  def toToteutusMetadata: AmmatillinenMuuToteutusMetadata =
-    AmmatillinenMuuToteutusMetadata(
-      tyyppi = tyyppi,
-      kuvaus = kuvaus,
-      opetus = opetus.map(_.toOpetus),
-      asiasanat = asiasanat,
-      ammattinimikkeet = ammattinimikkeet,
-      yhteyshenkilot = yhteyshenkilot,
-      hakutermi = hakutermi,
-      hakulomaketyyppi = hakulomaketyyppi,
-      hakulomakeLinkki = hakulomakeLinkki,
-      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
-      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
-      hakuaika = hakuaika,
-      aloituspaikat = aloituspaikat
-    )
-}
-
 case class AmmattikorkeakouluToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amk,
     kuvaus: Kielistetty,

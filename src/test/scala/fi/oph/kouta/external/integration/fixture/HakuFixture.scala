@@ -2,13 +2,13 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.time.Instant
 import java.util.UUID
-
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.domain.Julkaisutila
 import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external._
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
+import fi.oph.kouta.external.kouta.HakuKoutaClient
 import fi.oph.kouta.external.service.{HakuService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakuServlet
 
@@ -20,7 +20,7 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val koutaClient = new MockKoutaClient(urlProperties.get)
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioService)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new HakuKoutaClient(koutaClient), organisaatioService)
     addServlet(new HakuServlet(hakuService), HakuPath)
   }
 

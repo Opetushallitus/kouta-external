@@ -135,7 +135,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
 
 
   def create[E <: scala.AnyRef, R](path: String, entity: E, sessionId: UUID, result: String => R): R = {
-    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
+    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
       withClue(body) {
         status should equal(200)
       }
@@ -147,7 +147,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
     create(path, entity, defaultSessionId, result)
 
   def create[E <: scala.AnyRef](path: String, entity: E, sessionId: UUID, expectedStatus: Int, expectedBody: String): Unit =
-    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
+    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
       withClue(body) {
         status should equal(expectedStatus)
         body should equal(expectedBody)
@@ -155,7 +155,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
     }
 
   def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
-    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId), ifUnmodifiedSinceHeader(ifUnmodifiedSince))) {
+    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId), ifUnmodifiedSinceHeader(ifUnmodifiedSince))) {
       withClue(body) {
         status should equal(200)
         (parse(body).asInstanceOf[JObject] \\ "updated").asInstanceOf[JBool].value shouldEqual true
@@ -166,7 +166,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
     update(path, entity, ifUnmodifiedSince, defaultSessionId)
 
   def update[E <: scala.AnyRef](path: String, entity: E, headers: Seq[(String, String)], expectedStatus: Int, expectedBody: String): Unit =
-    put(path, bytes(entity), headers = headers) {
+    post(path, bytes(entity), headers = headers) {
       withClue(body) {
         status should equal(expectedStatus)
         body should equal(expectedBody)

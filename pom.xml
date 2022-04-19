@@ -19,7 +19,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <kouta-common.version>2.8.2-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>2.8.3-SNAPSHOT</kouta-common.version>
+        <kouta-backend.version>6.26.0-SNAPSHOT</kouta-backend.version>
 
         <!-- Utility properties -->
         <scala-utils.version>1.2.3-SNAPSHOT</scala-utils.version>
@@ -79,6 +80,19 @@
             <artifactId>kouta-common</artifactId>
             <version>${kouta-common.version}</version>
             <classifier>tests</classifier>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-backend</artifactId>
+            <version>${kouta-backend.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>fi.oph.kouta</groupId>
+                    <artifactId>kouta-common</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
 

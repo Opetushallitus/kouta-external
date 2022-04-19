@@ -1,8 +1,8 @@
 package fi.oph.kouta.external
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, EiSähköistä, Fi, Julkaistu, Kieli, Sv}
-import fi.oph.kouta.external.domain.{Ajanjakso, Haku, HakuMetadata, KoulutuksenAlkamiskausi, Osoite, Yhteyshenkilo}
+import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, Amm, EiSähköistä, Fi, Julkaistu, Kieli, Sv}
+import fi.oph.kouta.external.domain.{Ajanjakso, AmmatillinenKoulutusMetadata, Haku, HakuMetadata, KoulutuksenAlkamiskausi, Koulutus, Lisatieto, Osoite, Yhteyshenkilo}
 
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime}
@@ -69,4 +69,28 @@ object TestData {
     kielivalinta = Seq(Fi, Sv),
     nimi = kieliMap("Minimi haku"),
     modified = None)
+
+  val AmmKoulutus = Koulutus(
+    oid = None,
+    externalId = Some("extKoulutus1"),
+    johtaaTutkintoon = true,
+    koulutustyyppi = Amm,
+    koulutuksetKoodiUri = Seq("koulutus_371101#1"),
+    tila = Julkaistu,
+    tarjoajat = List(GrandChildOid, EvilGrandChildOid, EvilCousin),
+    nimi = Map(Fi -> "Koulutus fi", Sv -> "Koulutus sv"),
+    sorakuvausId = Some(UUID.randomUUID()),
+    metadata = Some(AmmatillinenKoulutusMetadata(
+      kuvaus = Map(Fi -> "kuvaus", Sv -> "kuvaus sv"),
+      lisatiedot = Seq(
+        Lisatieto(otsikkoKoodiUri = "koulutuksenlisatiedot_03#1",
+          teksti = Map(Fi -> "Opintojen lisätieto ", Sv -> "Opintojen lisätieto sv"))))),
+    julkinen = true,
+    muokkaaja = TestUserOid,
+    organisaatioOid = ChildOid,
+    kielivalinta = Seq(Fi, Sv),
+    teemakuva = None,
+    ePerusteId = Some(1234567),
+    modified = None
+  )
 }

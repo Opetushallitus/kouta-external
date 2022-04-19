@@ -97,23 +97,6 @@ case class AmmatillinenOsaamisalaKoulutusMetadataIndexed(
     )
 }
 
-case class AmmatillinenMuuKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi = AmmMuu,
-    kuvaus: Kielistetty = Map.empty,
-    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
-    koulutusala: Seq[KoodiUri],
-    opintojenLaajuus: Option[KoodiUri] = None
-) extends KoulutusMetadataIndexed {
-  override def toKoulutusMetadata: AmmatillinenMuuKoulutusMetadata =
-    AmmatillinenMuuKoulutusMetadata(
-      tyyppi = tyyppi,
-      kuvaus = kuvaus,
-      lisatiedot = lisatiedot.map(_.toLisatieto),
-      koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
-      opintojenLaajuusKoodiUri = opintojenLaajuus.map(_.koodiUri)
-    )
-}
-
 sealed trait KorkeakoulutusKoulutusMetadataIndexed extends KoulutusMetadataIndexed {
   val kuvauksenNimi: Kielistetty
   val tutkintonimike: Seq[KoodiUri]

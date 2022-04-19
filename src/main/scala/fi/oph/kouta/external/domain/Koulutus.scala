@@ -63,22 +63,15 @@ import java.util.UUID
     |          example:
     |            - 1.2.246.562.10.00101010101
     |            - 1.2.246.562.10.00101010102
-    |        julkinen:
-    |          type: boolean
-    |          description: Voivatko muut oppilaitokset käyttää koulutusta
-    |        kielivalinta:
-    |          type: array
-    |          description: Kielet, joille koulutuksen nimi, kuvailutiedot ja muut tekstit on käännetty
-    |          items:
-    |            $ref: '#/components/schemas/Kieli'
-    |          example:
-    |            - fi
-    |            - sv
     |        nimi:
     |          type: object
     |          description: Koulutuksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
+    |        sorakuvausId:
+    |          type: string
+    |          description: Koulutukseen liittyvän SORA-kuvauksen yksilöivä tunniste
+    |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        metadata:
     |          type: object
     |          oneOf:
@@ -106,18 +99,25 @@ import java.util.UUID
     |                teksti:
     |                  fi: Opintojen suomenkielinen lisätietokuvaus
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
-    |        sorakuvausId:
-    |          type: string
-    |          description: Koulutukseen liittyvän SORA-kuvauksen yksilöivä tunniste
-    |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
+    |        julkinen:
+    |          type: boolean
+    |          description: Voivatko muut oppilaitokset käyttää koulutusta
     |        muokkaaja:
     |          type: string
     |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid
-    |          example: 1.2.246.562.10.00101010101
+    |          example: 1.2.246.562.24.00101010101
     |        organisaatioOid:
     |           type: string
     |           description: Koulutuksen luoneen organisaation oid
     |           example: 1.2.246.562.10.00101010101
+    |        kielivalinta:
+    |          type: array
+    |          description: Kielet, joille koulutuksen nimi, kuvailutiedot ja muut tekstit on käännetty
+    |          items:
+    |            $ref: '#/components/schemas/Kieli'
+    |          example:
+    |            - fi
+    |            - sv
     |        teemakuva:
     |          type: string
     |          description: Koulutuksen Opintopolussa näytettävän teemakuvan URL.
@@ -140,13 +140,13 @@ case class Koulutus(
     koulutuksetKoodiUri: Seq[String],
     tila: Julkaisutila,
     tarjoajat: List[OrganisaatioOid],
-    julkinen: Boolean,
-    kielivalinta: Seq[Kieli],
     nimi: Kielistetty,
-    metadata: Option[KoulutusMetadata],
     sorakuvausId: Option[UUID],
+    metadata: Option[KoulutusMetadata],
+    julkinen: Boolean,
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
+    kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
     ePerusteId: Option[Long],
     modified: Option[Modified]

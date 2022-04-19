@@ -1,11 +1,13 @@
 package fi.oph.kouta.external.integration
 
+import fi.oph.kouta.TestOids.{ChildOid, EvilChildOid, ParentOid}
 import fi.oph.kouta.domain.oid.HakuOid
+import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
 import fi.oph.kouta.security.Role
 
-class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] {
+class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
 
   override val roleEntities = Seq(Role.Haku)
   override val getPath: String = HakuPath
@@ -15,26 +17,23 @@ class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[H
 
   getTests()
 
-// Testit disabloitu API:en disabloinnin yhteydessä.
+  "Create haku" should "create a haku" in {
+    mockCreateHaku(haku(ParentOid), responseStringWithOid("1.2.246.562.29.123456789"))
+    create(haku("1.2.246.562.29.123456789", ParentOid))
+  }
 
-//  "Create haku" should "create a haku" in {
-//    mockCreateHaku(haku(ParentOid), "1.2.246.562.29.123456789")
-//
-//    create(haku("1.2.246.562.29.123456789", ParentOid))
-//  }
+  it should "return the error code and message" in {
+    val testError = "{\"error\": \"test error\"}"
+    mockCreateHaku(haku(ChildOid), testError, 400)
 
-//  it should "return the error code and message" in {
-//    val testError = "{\"error\": \"test error\"}"
-//    mockCreateHaku(haku(ChildOid), 400, testError)
-//
-//    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
-//  }
+    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
+  }
 
-//  it should "include the caller's authentication in the call" in {
-//    val (sessionId, session) = crudSessions(EvilChildOid)
-//    mockCreateHaku(haku(EvilChildOid), "1.2.246.562.29.123456789", sessionId, session)
-//    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
-//  }
+  it should "include the caller's authentication in the call" in {
+    val (sessionId, session) = crudSessions(EvilChildOid)
+    mockCreateHaku(haku(EvilChildOid), responseStringWithOid("1.2.246.562.29.123456789"), 200, Some((sessionId, session)))
+    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
+  }
 
 //  "Update haku" should "update a haku" in {
 //    val now = Instant.now()

@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.{Koulutustyyppi, Tuva}
+import fi.oph.kouta.domain.{Amm, Koulutustyyppi, Tuva}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -39,7 +39,7 @@ sealed trait KoulutusMetadata {
     |                - amm
     |""")
 case class AmmatillinenKoulutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto]
 ) extends KoulutusMetadata
@@ -312,6 +312,13 @@ case class AmmatillinenMuuKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusKoodiUri:
     |              type: string
     |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
@@ -323,7 +330,8 @@ case class VapaaSivistystyoKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[String] = None
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
+    opintojenLaajuusKoodiUri: Option[String] = None,
 ) extends KoulutusMetadata
 
 @SwaggerModel(

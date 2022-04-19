@@ -203,34 +203,6 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
-@SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
-    |            allOf:
-    |              - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
-    |              - type: object
-    |                properties:
-    |                  tyyppi:
-    |                    type: string
-    |                    description: Toteutuksen metatiedon tyyppi
-    |                    example: amm-muu
-    |                    enum:
-    |                      - amm-muu
-    |""")
-case class AmmatillinenMuuToteutusMetadata(
-    tyyppi: Koulutustyyppi = AmmMuu,
-    kuvaus: Kielistetty,
-    opetus: Option[Opetus],
-    asiasanat: List[Keyword],
-    ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
-    hakutermi: Option[Hakutermi],
-    hakulomaketyyppi: Option[Hakulomaketyyppi],
-    hakulomakeLinkki: Kielistetty,
-    lisatietoaHakeutumisesta: Kielistetty,
-    lisatietoaValintaperusteista: Kielistetty,
-    hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
-) extends TutkintoonJohtamatonToteutusMetadata
-
 @SwaggerModel("""    YliopistoToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
@@ -452,34 +424,6 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |""")
 case class VapaaSivistystyoMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoMuu,
-    kuvaus: Kielistetty,
-    opetus: Option[Opetus],
-    asiasanat: List[Keyword],
-    ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
-    hakutermi: Option[Hakutermi],
-    hakulomaketyyppi: Option[Hakulomaketyyppi],
-    hakulomakeLinkki: Kielistetty,
-    lisatietoaHakeutumisesta: Kielistetty,
-    lisatietoaValintaperusteista: Kielistetty,
-    hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
-) extends TutkintoonJohtamatonToteutusMetadata
-
-@SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
-    |      allOf:
-    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
-    |        - type: object
-    |          properties:
-    |            koulutustyyppi:
-    |              type: string
-    |              description: Toteutuksen metatiedon tyyppi
-    |              example: aikuisten-perusopetus
-    |              enum:
-    |                - aikuisten-perusopetus
-    |""")
-case class AikuistenPerusopetusToteutusMetadata(
-    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

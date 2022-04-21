@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.kouta
 
-import fi.oph.kouta.external.domain.{Haku, Koulutus}
+import fi.oph.kouta.external.domain.{Haku, Koulutus, Toteutus}
 import fi.oph.kouta.servlet.Authenticated
 
 trait ExternalRequest[T] {
@@ -12,3 +12,5 @@ trait ExternalRequest[T] {
 case class KoutaHakuRequest(authenticated: Authenticated, entity: Haku) extends ExternalRequest[Haku]
 
 case class KoutaKoulutusRequest(authenticated: Authenticated, entity: Koulutus) extends ExternalRequest[Koulutus]
+
+case class KoutaToteutusRequest(authenticated: Authenticated, entity: Toteutus) extends ExternalRequest[Toteutus]

@@ -2,6 +2,7 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
+import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
 import fi.oph.kouta.security.Role
@@ -12,7 +13,8 @@ class ToteutusSpec
     extends ToteutusFixture
     with KoulutusFixture
     with AccessControlSpec
-    with GenericGetTests[Toteutus, ToteutusOid] {
+    with GenericGetTests[Toteutus, ToteutusOid]
+    with KoutaBackendMock {
 
   override val roleEntities               = Seq(Role.Toteutus)
   override val getPath: String            = ToteutusPath
@@ -37,5 +39,23 @@ class ToteutusSpec
 
   it should "allow the user of a descendant of a tarjoaja organization" in {
     get(toteutusWithTarjoajaOid, crudSessionIds(GrandChildOid))
+  }
+
+  "Create toteutus" should "create a toteutus" in {
+    mockCreateToteutus(toteutus(ParentOid), responseStringWithOid("1.2.246.562.17.123456789"))
+    create(toteutus("1.2.246.562.17.123456789", ParentOid))
+  }
+
+  it should "return the error code and message" in {
+    val testError = "{\"error\": \"test error\"}"
+    mockCreateToteutus(toteutus(ChildOid), testError, 400 )
+
+    create(ToteutusPath, toteutus(ChildOid), defaultSessionId, 400, testError)
+  }
+
+  it should "include the caller's authentication in the call" in {
+    val (sessionId, session) = crudSessions(EvilChildOid)
+    mockCreateToteutus(toteutus(EvilChildOid), responseStringWithOid("1.2.246.562.17.123456789"), 200, Some((sessionId, session)))
+    create(toteutus("1.2.246.562.17.123456789", EvilChildOid), sessionId)
   }
 }

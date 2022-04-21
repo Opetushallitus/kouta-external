@@ -31,8 +31,12 @@ root.organisaatio.oid=1.2.246.562.10.00000000001
 kouta-backend.service=https://{{host_virkailija}}/kouta-backend
 kouta-backend.health=https://{{host_virkailija}}/kouta-backend/healthcheck
 kouta-backend.session=https://{{host_virkailija}}/kouta-backend/auth/session
-kouta-backend.haku=https://{{host_virkailija}}/kouta-backend/haku
 kouta-backend.koulutus=https://{{host_virkailija}}/kouta-backend/koulutus
+kouta-backend.toteutus=https://{{host_virkailija}}/kouta-backend/toteutus
+kouta-backend.haku=https://{{host_virkailija}}/kouta-backend/haku
+kouta-backend.hakukohde=https://{{host_virkailija}}/kouta-backend/hakukohde
+kouta-backend.sorakuvaus=https://{{host_virkailija}}/kouta-backend/sorakuvaus
+kouta-backend.valintaperuste=https://{{host_virkailija}}/kouta-backend/valintaperuste
 
 hakukohderyhmapalvelu.service=https://{{host_virkailija}}/hakukohderyhmapalvelu
 hakukohderyhmapalvelu.hakukohderyhmat=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohde/$1/hakukohderyhmat

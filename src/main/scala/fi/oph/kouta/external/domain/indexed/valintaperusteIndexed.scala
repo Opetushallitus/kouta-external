@@ -305,7 +305,7 @@ case class VapaaSivistystyoValintaperusteMetadataIndexed(
 }
 
 case class AikuistenPerusopetusValintaperusteMetadataIndexed(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     valintatavat: Seq[ValintatapaIndexed],
     kuvaus: Kielistetty = Map(),
     hakukelpoisuus: Kielistetty = Map(),

@@ -436,7 +436,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
 }
 
 case class AikuistenPerusopetusToteutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],

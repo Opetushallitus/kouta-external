@@ -216,7 +216,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[KoodiUri] = None
+    opintojenLaajuus: Option[KoodiUri] = None
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: VapaaSivistystyoKoulutusMetadata =
     VapaaSivistystyoKoulutusMetadata(
@@ -224,7 +224,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
       kuvaus = kuvaus,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin,
-      opintojenLaajuusKoodiUri = opintojenLaajuusKoodiUri.map(_.koodiUri)
+      opintojenLaajuusKoodiUri = opintojenLaajuus.map(_.koodiUri)
     )
 }
 

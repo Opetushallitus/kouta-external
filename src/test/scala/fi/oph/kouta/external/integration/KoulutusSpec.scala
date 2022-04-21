@@ -86,11 +86,5 @@ class KoulutusSpec extends KoulutusFixture with AccessControlSpec with GenericGe
     mockCreateKoulutus(koulutus(EvilChildOid), responseStringWithOid("1.2.246.562.13.123456789"), 200, Some((sessionId, session)))
     create(koulutus("1.2.246.562.13.123456789", EvilChildOid), sessionId)
   }
-
-  it should "include the caller's authentication in the call" in {
-    val (sessionId, session) = crudSessions(EvilChildOid)
-    mockCreateKoulutus(koulutus(EvilChildOid), responseStringWithOid("1.2.246.562.13.123456789"), 200, Some((sessionId, session)))
-    create(koulutus("1.2.246.562.13.123456789", EvilChildOid), sessionId)
-  }
 }
 

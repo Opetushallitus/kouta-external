@@ -4,11 +4,10 @@ import java.util.UUID
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
-import fi.oph.kouta.external.kouta.KoulutusKoutaClient
 import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
 import fi.oph.kouta.external.TestData.AmmKoulutus
-import fi.oph.kouta.external.{KoutaBackendMock, MockKoutaClient, TempElasticClient}
+import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
 
 trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val KoulutusPath = "/koulutus"

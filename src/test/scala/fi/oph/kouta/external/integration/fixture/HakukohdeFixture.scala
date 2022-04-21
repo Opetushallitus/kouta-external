@@ -3,7 +3,6 @@ package fi.oph.kouta.external.integration.fixture
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
-import fi.oph.kouta.external.kouta.HakuKoutaClient
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}

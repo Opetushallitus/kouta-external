@@ -3,7 +3,7 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.kouta.{CasKoutaClient, HakuKoutaClient, KoutaHakuRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakuRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}

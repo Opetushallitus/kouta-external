@@ -18,8 +18,7 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koutaClient = new MockKoutaClient(urlProperties.get)
-    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client), new KoulutusKoutaClient(koutaClient), organisaatioService)
+    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

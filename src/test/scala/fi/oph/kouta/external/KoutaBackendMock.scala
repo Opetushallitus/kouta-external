@@ -2,7 +2,7 @@ package fi.oph.kouta.external
 
 import java.time.Instant
 import java.util.UUID
-import fi.oph.kouta.external.domain.{Haku, Koulutus}
+import fi.oph.kouta.external.domain.{Haku, Koulutus, Toteutus}
 import fi.oph.kouta.external.integration.KoutaBackendConverters
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -102,6 +102,20 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
     addCreateMock(
       KoutaBackendConverters.convertKoulutus(koulutus),
       "kouta-backend.koulutus",
+      responseString,
+      session,
+      responseStatus
+    )
+
+  def mockCreateToteutus(
+      toteutus: Toteutus,
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addCreateMock(
+      KoutaBackendConverters.convertToteutus(toteutus),
+      "kouta-backend.toteutus",
       responseString,
       session,
       responseStatus

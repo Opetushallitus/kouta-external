@@ -3,6 +3,7 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.ToteutusOid
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaToteutusRequest, OidResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
@@ -12,9 +13,9 @@ import fi.vm.sade.utils.slf4j.Logging
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object ToteutusService extends ToteutusService(ToteutusClient, OrganisaatioServiceImpl)
+object ToteutusService extends ToteutusService(ToteutusClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class ToteutusService(toteutusClient: ToteutusClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Toteutus] with Logging {
+class ToteutusService(toteutusClient: ToteutusClient, val koutaClient: CasKoutaClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Toteutus] with Logging {
 
   override val roleEntity: RoleEntity = Role.Toteutus
 
@@ -31,4 +32,13 @@ class ToteutusService(toteutusClient: ToteutusClient, val organisaatioService: O
           )
         )
       }
+
+  def create(toteutus: Toteutus)(implicit authenticated: Authenticated): Future[KoutaResponse[ToteutusOid]] =
+    koutaClient.create("kouta-backend.toteutus", KoutaToteutusRequest(authenticated, toteutus)).map {
+      case Right(response: OidResponse)  =>
+        Right(ToteutusOid(response.oid.s))
+      case Right(response: UuidResponse) => Left((200, response.id.toString))
+      case Left(x)                       =>
+        Left(x)
+    }
 }

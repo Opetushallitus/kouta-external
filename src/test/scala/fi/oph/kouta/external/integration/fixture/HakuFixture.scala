@@ -8,7 +8,6 @@ import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external._
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.kouta.HakuKoutaClient
 import fi.oph.kouta.external.service.{HakuService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakuServlet
 
@@ -19,8 +18,7 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koutaClient = new MockKoutaClient(urlProperties.get)
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new HakuKoutaClient(koutaClient), organisaatioService)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new HakuServlet(hakuService), HakuPath)
   }
 

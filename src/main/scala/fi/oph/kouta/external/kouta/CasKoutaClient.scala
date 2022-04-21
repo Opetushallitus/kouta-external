@@ -76,7 +76,8 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging {
       .fold(throw _, x => x)
   }
 
-  def create[T](url: String, body: T): Future[Either[(Int, String), IdResponse]] = {
+  def create[T](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] = {
+    val url = urlProperties.url(urlKey)
     fetch(Method.PUT, url, body, Headers.empty).map {
       case (200, body) =>
         Right(parse(body) match {
@@ -91,10 +92,11 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging {
   }
 
   def update[T](
-      url: String,
+      urlKey: String,
       body: T,
       ifUnmodifiedSince: Instant
   ): Future[Either[(Int, String), UpdateResponse]] = {
+    val url = urlProperties.url(urlKey)
     val headers = Headers(
       Header(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince)),
       Header("Content-Type", "application/json")

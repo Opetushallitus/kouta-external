@@ -1,10 +1,11 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.domain.oid.ToteutusOid
+import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.service.ToteutusService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{FutureSupport, Ok}
+import org.scalatra.{ActionResult, FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,6 +50,46 @@ class ToteutusServlet(toteutusService: ToteutusService)
       .map { toteutus =>
         Ok(toteutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(toteutus)))
       }
+  }
+
+  registerPath( "/toteutus/",
+    """    put:
+      |      summary: Tallenna uusi toteutus
+      |      operationId: Tallenna uusi toteutus
+      |      description: Tallenna uuden toteutuksen tiedot.
+      |        Rajapinta palauttaa toteutukselle generoidun yksilöivän toteutus-oidin.
+      |      tags:
+      |        - Toteutus
+      |      requestBody:
+      |        description: Tallennettava toteutus
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Toteutus'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: object
+      |                properties:
+      |                  oid:
+      |                    type: string
+      |                    description: Uuden toteutuksen yksilöivä oid
+      |                    example: 1.2.246.562.17.00000000000000000009
+      |""".stripMargin)
+  put("/") {
+
+    implicit val authenticated: Authenticated = authenticate
+
+    toteutusService.create(parsedBody.extract[Toteutus]) map {
+      case Right(oid) =>
+        Ok("oid" -> oid)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
   }
 
 }

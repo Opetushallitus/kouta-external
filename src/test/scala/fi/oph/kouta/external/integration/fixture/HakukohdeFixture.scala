@@ -17,10 +17,9 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koutaClient = new MockKoutaClient(urlProperties.get)
     val hakukohderyhmaClient = new MockHakukohderyhmaClient(urlProperties.get)
 
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new HakuKoutaClient(koutaClient), organisaatioService)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
     val hakukohderyhmaService = new HakukohderyhmaService(hakukohderyhmaClient, organisaatioService)
     val hakukohdeService = new HakukohdeService(new HakuClient(TempElasticClient.client), new HakukohdeClient(TempElasticClient.client),hakukohderyhmaService, organisaatioService, hakuService)
     addServlet(new HakukohdeServlet(hakukohdeService), HakukohdePath)

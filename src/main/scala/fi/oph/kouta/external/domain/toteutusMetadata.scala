@@ -84,7 +84,7 @@ sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
     |              description: Onko koulutuksen tyyppi \"Ammatillinen perustutkinto erityisopetuksena\"?
     |""")
 case class AmmatillinenToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
     osaamisalat: List[AmmatillinenOsaamisala],
     opetus: Option[Opetus],
@@ -158,7 +158,7 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
     |                - amm-tutkinnon-osa
     |""")
 case class AmmatillinenTutkinnonOsaToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -188,7 +188,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     |"""
 )
 case class AmmatillinenOsaamisalaToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmOsaamisala,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -216,7 +216,7 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     |                - yo
     |""")
 case class YliopistoToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Yo,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -239,7 +239,7 @@ case class YliopistoToteutusMetadata(
     |                - amk
     |""")
 case class AmmattikorkeakouluToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amk,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -325,7 +325,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |"""
 )
 case class LukioToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

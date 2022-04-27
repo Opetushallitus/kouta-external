@@ -241,6 +241,11 @@
             <artifactId>postgresql</artifactId>
             <version>${jdbc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.blemale</groupId>
+            <artifactId>scaffeine_2.12</artifactId>
+            <version>5.1.1</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>

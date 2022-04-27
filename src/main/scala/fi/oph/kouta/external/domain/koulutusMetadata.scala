@@ -270,6 +270,38 @@ case class TelmaKoulutusMetadata(
 ) extends KoulutusMetadata
 
 @SwaggerModel(
+  """    AmmatillinenMuuKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusnumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 10
+    |"""
+)
+case class AmmatillinenMuuKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double] = None
+) extends KoulutusMetadata
+
+@SwaggerModel(
   """    VapaaSivistystyoKoulutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
@@ -297,4 +329,32 @@ case class VapaaSivistystyoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
     opintojenLaajuusKoodiUri: Option[String] = None
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    AikuistenPerusopetusKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            linkkiEPerusteisiin:
+    |              type: object
+    |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusnumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 10
+    |"""
+)
+case class AikuistenPerusopetusKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    linkkiEPerusteisiin: Kielistetty,
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double] = None
 ) extends KoulutusMetadata

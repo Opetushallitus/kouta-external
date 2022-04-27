@@ -23,17 +23,20 @@ import java.util.UUID
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'muu' (muu koulutus)"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-tutkinnon-osa', 'amm-osaamisala', 'amm-muu', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'telma' (työhön ja itsenäiseen elämään valmentava koulutus), 'vapaa-sivistystyö-opistovuosi', 'vapaa-sivistystyo-muu', 'aikuisten-perusopetus', 'muu'"
     |          enum:
     |            - amm
     |            - yo
-    |            - amk
     |            - lk
+    |            - amk
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
+    |            - amm-muu
     |            - tuva
+    |            - telma
     |            - vapaa-sivistystyo-opistovuosi
     |            - vapaa-sivistystyo-muu
+    |            - aikuisten-perusopetus
     |            - muu
     |          example: amm
     |        koulutuksetKoodiUri:
@@ -87,7 +90,9 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/LukioKoulutusMetadata'
     |            - $ref: '#/components/schemas/TuvaKoulutusMetadata'
     |            - $ref: '#/components/schemas/TelmaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenMuuKoulutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoKoulutusMetadata'
+    |            - $ref: '#/components/schemas/AikuistenPerusopetusKoulutusMetadata'
     |          example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:

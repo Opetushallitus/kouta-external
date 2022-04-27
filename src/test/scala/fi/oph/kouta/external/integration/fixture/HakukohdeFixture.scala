@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.integration.fixture
 
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, ToteutusOid}
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
+import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
 
 import java.util.UUID
 
@@ -66,21 +66,5 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def search(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean, sessionId: UUID, errorStatus: Int): Unit = {
     val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
     get(searchPath, sessionId, errorStatus)
-  }
-
-  def addMockHakukohde(
-      hakukohdeOid: HakukohdeOid,
-      organisaatioOid: OrganisaatioOid,
-      hakuOid: HakuOid,
-      toteutusOid: ToteutusOid,
-      valintaperusteId: UUID
-  ): Unit = {
-    val hakukohde = KoutaFixtureTool.DefaultHakukohdeScala +
-      (KoutaFixtureTool.OrganisaatioKey     -> organisaatioOid.s) +
-      (KoutaFixtureTool.HakuOidKey          -> hakuOid.s) +
-      (KoutaFixtureTool.ToteutusOidKey      -> toteutusOid.s) +
-      (KoutaFixtureTool.ValintaperusteIdKey -> valintaperusteId.toString)
-    KoutaFixtureTool.addHakukohde(hakukohdeOid.s, hakukohde)
-    indexHakukohde(hakukohdeOid)
   }
 }

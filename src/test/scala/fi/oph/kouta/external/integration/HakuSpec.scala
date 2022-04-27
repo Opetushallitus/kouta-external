@@ -1,38 +1,17 @@
 package fi.oph.kouta.external.integration
 
-import java.time.Instant
-import java.util.UUID
-
-import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.HakuOid
-import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
 import fi.oph.kouta.security.Role
 
-class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
+class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] {
 
   override val roleEntities = Seq(Role.Haku)
   override val getPath: String = HakuPath
   override val entityName   = "haku"
-  val existingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000009")
-  val nonExistingId: HakuOid = HakuOid("1.2.246.562.29.0")
-
-  val ataruId1: UUID = UUID.randomUUID()
-  val ataruId2: UUID = UUID.randomUUID()
-  val ataruId3: UUID = UUID.randomUUID()
-
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    addMockHaku(existingId, ChildOid)
-
-    addMockHaku(HakuOid("1.2.246.562.29.301"), ChildOid, Some(ataruId1))
-    addMockHaku(HakuOid("1.2.246.562.29.302"), ChildOid, Some(ataruId1))
-    addMockHaku(HakuOid("1.2.246.562.29.303"), ChildOid, Some(ataruId2))
-    addMockHaku(HakuOid("1.2.246.562.29.304"), ChildOid, Some(ataruId2))
-    addMockHaku(HakuOid("1.2.246.562.29.305"), ParentOid, Some(ataruId1))
-    addMockHaku(HakuOid("1.2.246.562.29.306"), EvilChildOid, Some(ataruId1))
-  }
+  val existingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000001")
+  val nonExistingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000000")
 
   getTests()
 

@@ -1,13 +1,12 @@
 package fi.oph.kouta.external.integration.fixture
 
-import java.util.UUID
-
-import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.TempElasticClient
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.elasticsearch.SorakuvausClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, SorakuvausService}
 import fi.oph.kouta.external.servlet.SorakuvausServlet
-import fi.oph.kouta.external.{KoutaFixtureTool, TempElasticClient}
+
+import java.util.UUID
 
 trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val SorakuvausPath = "/sorakuvaus"
@@ -24,14 +23,4 @@ trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def get(id: UUID, sessionId: UUID): Sorakuvaus = get[Sorakuvaus](SorakuvausPath, id, sessionId)
 
   def get(id: UUID, sessionId: UUID, errorStatus: Int): Unit = get(s"$SorakuvausPath/$id", sessionId, errorStatus)
-
-  def addMockSorakuvaus(
-      id: UUID,
-      organisaatioOid: OrganisaatioOid,
-      modifier: Map[String, String] => Map[String, String] = identity
-  ): Unit = {
-    val sorakuvaus = KoutaFixtureTool.DefaultSorakuvausScala + (KoutaFixtureTool.OrganisaatioKey -> organisaatioOid.s)
-    KoutaFixtureTool.addSorakuvaus(id.toString, modifier(sorakuvaus))
-    indexSorakuvaus(id)
-  }
 }

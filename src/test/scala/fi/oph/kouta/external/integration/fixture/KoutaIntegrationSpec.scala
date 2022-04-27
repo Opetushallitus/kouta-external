@@ -6,9 +6,7 @@ import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.TestSetups.{setupWithEmbeddedPostgres, setupWithTemplate}
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.integration.fixture.Oid
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
-import fi.oph.kouta.servlet.KoutaServlet
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
@@ -19,7 +17,7 @@ import slick.jdbc.GetResult
 
 import scala.reflect.Manifest
 
-trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with IndeksoijaFixture with DatabaseSpec {
+trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseSpec with ElasticDumpFixture {
 
   val serviceIdentifier  = KoutaIntegrationSpec.serviceIdentifier
   val rootOrganisaatio   = KoutaIntegrationSpec.rootOrganisaatio
@@ -46,7 +44,6 @@ trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with Indeksoij
   override def afterAll(): Unit = {
     super.afterAll()
     truncateDatabase()
-    resetIndices()
   }
 }
 
@@ -71,9 +68,12 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
   }
 
   def jsonHeader = "Content-Type" -> "application/json; charset=utf-8"
+  val IfUnmodifiedSinceHeader: String = "x-If-Unmodified-Since"
+  val LastModifiedHeader: String = "x-Last-Modified"
+
 
   def ifUnmodifiedSinceHeader(lastModified: Instant): (String, String) =
-    KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(lastModified)
+    IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(lastModified)
 
   def sessionHeader(sessionId: String): (String, String) = "Cookie" -> s"session=$sessionId"
   def sessionHeader(sessionId: UUID): (String, String)   = sessionHeader(sessionId.toString)
@@ -129,7 +129,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
       }
       debugJson(body, s"$path/${id.toString}")
       read[E](body) should equal(expected)
-      header(KoutaServlet.LastModifiedHeader)
+      header(LastModifiedHeader)
     }
   }
 

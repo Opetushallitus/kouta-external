@@ -219,6 +219,27 @@ case class TelmaValintaperusteMetadataIndexed(
     )
 }
 
+case class AmmatillinenMuuValintaperusteMetadataIndexed(
+    tyyppi: Koulutustyyppi = AmmMuu,
+    valintatavat: Seq[ValintatapaIndexed],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto],
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadataIndexed {
+  override def toValintaperusteMetadata: ValintaperusteMetadata =
+    AmmatillinenMuuValintaperusteMetadata(
+      tyyppi = tyyppi,
+      valintatavat = valintatavat.map(_.toValintatapa),
+      kuvaus = kuvaus,
+      hakukelpoisuus = hakukelpoisuus,
+      lisatiedot = lisatiedot,
+      sisalto = sisalto,
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
+    )
+}
+
 case class MuuValintaperusteMetadataIndexed(
     tyyppi: Koulutustyyppi = Muu,
     valintatavat: Seq[ValintatapaIndexed],
@@ -273,6 +294,27 @@ case class VapaaSivistystyoValintaperusteMetadataIndexed(
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
     VapaaSivistystyoValintaperusteMetadata(
+      tyyppi = tyyppi,
+      valintatavat = valintatavat.map(_.toValintatapa),
+      kuvaus = kuvaus,
+      hakukelpoisuus = hakukelpoisuus,
+      lisatiedot = lisatiedot,
+      sisalto = sisalto,
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
+    )
+}
+
+case class AikuistenPerusopetusValintaperusteMetadataIndexed(
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
+    valintatavat: Seq[ValintatapaIndexed],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto],
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadataIndexed {
+  override def toValintaperusteMetadata: ValintaperusteMetadata =
+    AikuistenPerusopetusValintaperusteMetadata(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
       kuvaus = kuvaus,

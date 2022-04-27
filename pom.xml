@@ -27,7 +27,7 @@
         <!--1. json4s.version>3.6.7</json4s.version-->
         <!--json4s.version>4.0.3</json4s.version-->
         <json4s.version>3.6.11</json4s.version>
-        <jackson.version>2.12.2</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <logback-access.version>1.2.3</logback-access.version>
 
         <!-- Cas properties -->

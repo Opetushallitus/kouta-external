@@ -203,6 +203,34 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
+@SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
+    |            allOf:
+    |              - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |              - type: object
+    |                properties:
+    |                  tyyppi:
+    |                    type: string
+    |                    description: Toteutuksen metatiedon tyyppi
+    |                    example: amm-muu
+    |                    enum:
+    |                      - amm-muu
+    |""")
+case class AmmatillinenMuuToteutusMetadata(
+    tyyppi: Koulutustyyppi = AmmMuu,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
 @SwaggerModel("""    YliopistoToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
@@ -388,20 +416,20 @@ case class TuvaToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TelmaToteutusMetadata:
-                |      allOf:
-                |        - $ref: '#/components/schemas/ToteutusMetadata'
-                |        - type: object
-                |          properties:
-                |            koulutustyyppi:
-                |              type: string
-                |              description: Koulutuksen metatiedon tyyppi
-                |              example: telma
-                |              enum:
-                |                - telma
-                |            jarjestetaanErityisopetuksena:
-                |              type: boolean
-                |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
-                |""")
+    |      allOf:
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: telma
+    |              enum:
+    |                - telma
+    |            jarjestetaanErityisopetuksena:
+    |              type: boolean
+    |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
+    |""")
 case class TelmaToteutusMetadata(
     tyyppi: Koulutustyyppi = Telma,
     kuvaus: Kielistetty,
@@ -447,6 +475,34 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |""")
 case class VapaaSivistystyoMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoMuu,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: aikuisten-perusopetus
+    |              enum:
+    |                - aikuisten-perusopetus
+    |""")
+case class AikuistenPerusopetusToteutusMetadata(
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

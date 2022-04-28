@@ -4,7 +4,6 @@ import java.util.UUID
 
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, KoulutusOid, ToteutusOid, HakukohderyhmaOid}
-import fi.oph.kouta.external.KoutaFixtureTool
 import fi.oph.kouta.external.integration.fixture._
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.security.Role
@@ -21,36 +20,20 @@ class HakukohdeSpec
   val getPath: String             = HakukohdePath
   val entityName: String          = "hakukohde"
   val index: String               = s"$entityName-kouta"
-  val existingId: HakukohdeOid    = HakukohdeOid("1.2.246.562.20.00000000000000000009")
-  val nonExistingId: HakukohdeOid = HakukohdeOid("1.2.246.562.20.0")
+  val existingId: HakukohdeOid    = HakukohdeOid("1.2.246.562.20.00000000000000000001")
+  val nonExistingId: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000000")
 
-  val hakuOid: HakuOid         = HakuOid("1.2.246.562.29.00000000000000000010")
-  val toteutusId: ToteutusOid  = ToteutusOid("1.2.246.562.17.00000000000000000010")
-  val koulutusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000010")
+  val hakuOid: HakuOid         = HakuOid("1.2.246.562.29.00000000000000000001")
+  val toteutusId: ToteutusOid  = ToteutusOid("1.2.246.562.17.00000000000000000001")
+  val koulutusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000001")
   val valintaperusteId: UUID   = UUID.fromString("fa7fcb96-3f80-4162-8d19-5b74731cf90c")
   val sorakuvausId: UUID       = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
 
-  val toteutusWithTarjoajaOid: ToteutusOid   = ToteutusOid("1.2.246.562.17.00000000000000000014")
-  val hakukohdeWithTarjoajaOid: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000014")
-  val hakukohdeWithHakukohderyhmaOid: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000015")
+  val toteutusWithTarjoajaOid: ToteutusOid   = ToteutusOid("1.2.246.562.17.00000000000000000002")
+  val hakukohdeWithTarjoajaOid: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000002")
+  val hakukohdeWithHakukohderyhmaOid: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000003")
   val testiHakukohderyhmaOid: HakukohderyhmaOid = HakukohderyhmaOid("1.2.246.562.28.00000000000000000015")
 
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-
-    addMockHaku(hakuOid, ChildOid)
-    addMockSorakuvaus(sorakuvausId, ChildOid)
-    addMockKoulutus(koulutusOid, sorakuvausId, ChildOid)
-    addMockToteutus(toteutusId, ChildOid, koulutusOid)
-
-    addMockValintaperuste(valintaperusteId, ChildOid)
-
-    addMockHakukohde(existingId, ChildOid, hakuOid, toteutusId, valintaperusteId)
-
-    addMockToteutus(toteutusWithTarjoajaOid, LonelyOid, koulutusOid, _ + (KoutaFixtureTool.TarjoajatKey -> ChildOid.s))
-    addMockHakukohde(hakukohdeWithTarjoajaOid, LonelyOid, hakuOid, toteutusWithTarjoajaOid, valintaperusteId)
-    addMockHakukohde(hakukohdeWithHakukohderyhmaOid, LonelyOid, hakuOid, toteutusWithTarjoajaOid, valintaperusteId)
-  }
     s"GET /hakukohde/:id" should s"get hakukohde from elastic search" in {
       get(existingId, defaultSessionId)
     }

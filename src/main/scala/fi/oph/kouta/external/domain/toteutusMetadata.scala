@@ -203,6 +203,34 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
+@SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: amm-muu
+    |              enum:
+    |                - amm-muu
+    |""")
+case class AmmatillinenMuuToteutusMetadata(
+    tyyppi: Koulutustyyppi = AmmMuu,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
 @SwaggerModel("""    YliopistoToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
@@ -226,7 +254,8 @@ case class YliopistoToteutusMetadata(
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
 
-@SwaggerModel("""    AmmattikorkeaToteutusMetadata:
+@SwaggerModel(
+  """    AmmattikorkeaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
@@ -361,7 +390,8 @@ case class LukioToteutusMetadata(
     diplomit: Seq[LukiodiplomiTieto]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    TuvaToteutusMetadata:
+@SwaggerModel(
+  """    TuvaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -387,7 +417,8 @@ case class TuvaToteutusMetadata(
     jarjestetaanErityisopetuksena: Boolean
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    TelmaToteutusMetadata:
+@SwaggerModel(
+  """    TelmaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -412,7 +443,8 @@ case class TelmaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:
+@SwaggerModel(
+  """    VapaaSivistystyoOpistovuosiToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -433,7 +465,8 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
+@SwaggerModel(
+  """    VapaaSivistystyoMuuToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -447,6 +480,35 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |""")
 case class VapaaSivistystyoMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoMuu,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel(
+  """    AikuistenPerusopetusToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            koulutustyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: aikuisten-perusopetus
+    |              enum:
+    |                - aikuisten-perusopetus
+    |""")
+case class AikuistenPerusopetusToteutusMetadata(
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

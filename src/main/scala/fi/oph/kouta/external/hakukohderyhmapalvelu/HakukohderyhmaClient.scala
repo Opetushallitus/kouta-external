@@ -15,7 +15,6 @@ import org.json4s.jackson.JsonMethods.parse
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, SECONDS}
-import scala.util.{Failure, Success}
 
 object HakukohderyhmaClient
 

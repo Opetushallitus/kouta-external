@@ -39,10 +39,13 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def get(oid: KoulutusOid, sessionId: UUID, expected: Koulutus): String =
     get[Koulutus, KoulutusOid](KoulutusPath, oid, sessionId, expected)
 
-  def create(koulutus: Koulutus): String =
-    create(KoulutusPath, koulutus, parseOid)
+  def create(oid: String, organisaatioOid: OrganisaatioOid): String =
+    create(KoulutusPath, koulutus(oid, organisaatioOid), parseOid)
 
-  def create(koulutus: Koulutus, sessionId: UUID): String =
-    create(KoulutusPath, koulutus, sessionId, parseOid)
+  def create(organisaatioOid: OrganisaatioOid, expectedStatus: Int, expectedBody: String): Unit =
+    create(KoulutusPath, koulutus(organisaatioOid), defaultSessionId, expectedStatus, expectedBody)
+
+  def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
+    create(KoulutusPath, koulutus(organisaatioOid), sessionId, parseOid)
 
 }

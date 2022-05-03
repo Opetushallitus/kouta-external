@@ -2,10 +2,9 @@ package fi.oph.kouta.external.kouta
 
 import java.time.Instant
 import java.util.concurrent.TimeUnit
-
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.{KoutaBackendJsonAdapter, KoutaJsonFormats}
 import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
@@ -48,7 +47,7 @@ class CasKoutaClient extends KoutaClient with CallerId {
     )
   }
 }
-abstract class KoutaClient extends KoutaJsonFormats with Logging {
+abstract class KoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging {
 
   def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
 
@@ -124,7 +123,7 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging {
       .fold(
         Task.fail,
         url => {
-          implicit val writer: Writer[T] = (obj: T) => Extraction.decompose(obj)
+          implicit val writer: Writer[T] = (obj: T) => adaptToKoutaBackendJson(obj, Extraction.decompose(obj))
           client.fetch(Request(method, url, headers = headers).withBody(body)(jsonEncoderOf[T])) { r =>
             readBody[(Int, String)](r)(body => (r.status.code, body))
           }

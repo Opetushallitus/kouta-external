@@ -35,10 +35,12 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def get(oid: ToteutusOid, sessionId: UUID, errorStatus: Int): Unit =
     get(s"$ToteutusPath/$oid", sessionId, errorStatus)
 
-  def create(toteutus: Toteutus): String =
-    create(ToteutusPath, toteutus, parseOid)
+  def create(oid: String, organisaatioOid: OrganisaatioOid): String =
+    create(ToteutusPath, toteutus(oid, organisaatioOid), parseOid)
 
-  def create(toteutus: Toteutus, sessionId: UUID): String =
-    create(ToteutusPath, toteutus, sessionId, parseOid)
+  def create(organisaatioOid: OrganisaatioOid, expectedStatus: Int, expectedBody: String): Unit =
+    create(ToteutusPath, toteutus(organisaatioOid), defaultSessionId, expectedStatus, expectedBody)
 
+  def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
+    create(ToteutusPath, toteutus(organisaatioOid), sessionId, parseOid)
 }

@@ -22,7 +22,7 @@ trait ElasticDumpFixture {
 
     println("Importing elasticsearch data...")
     if (elasticEmpty()) {
-      runBlocking(s"src/test/resources/load_elastic_dump.sh $elasticHost data,mapping,analyzer,alias,settings,template")
+      runBlocking(s"src/test/resources/load_elastic_dump.sh $elasticHost data,mapping,alias,settings,template")
     } else {
       println("Elasticsearch not empty. Data already imported. Doing nothing.")
     }

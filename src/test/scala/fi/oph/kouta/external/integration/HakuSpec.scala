@@ -1,41 +1,47 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.TestOids.{ChildOid, EvilChildOid, ParentOid}
-import fi.oph.kouta.domain.oid.HakuOid
+import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
-import fi.oph.kouta.security.Role
+import fi.oph.kouta.security.{CasSession, Role}
 
-class HakuSpec extends HakuFixture with AccessControlSpec with GenericGetTests[Haku, HakuOid] with KoutaBackendMock {
+import java.util.UUID
 
-  override val roleEntities = Seq(Role.Haku)
-  override val getPath: String = HakuPath
-  override val entityName   = "haku"
-  val existingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000001")
-  val nonExistingId: HakuOid = HakuOid("1.2.246.562.29.00000000000000000000")
+class HakuSpec
+    extends HakuFixture
+    with AccessControlSpec
+    with GenericGetTests[Haku, HakuOid]
+    with GenericCreateTests[Haku]
+    with KoutaBackendMock {
+
+  override val roleEntities       = Seq(Role.Haku)
+  override val entityPath: String = HakuPath
+  override val entityName         = "haku"
+  val existingId: HakuOid         = HakuOid("1.2.246.562.29.00000000000000000001")
+  val nonExistingId: HakuOid      = HakuOid("1.2.246.562.29.00000000000000000000")
+  override val createdOid          = "1.2.246.562.29.123456789"
+
+  def mockCreate(
+      organisaatioOid: OrganisaatioOid,
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addCreateMock(
+      KoutaBackendConverters.convertHaku(haku(organisaatioOid)),
+      "kouta-backend.haku",
+      responseString,
+      session,
+      responseStatus
+    )
 
   getTests()
 
-  "Create haku" should "create a haku" in {
-    mockCreateHaku(haku(ParentOid), responseStringWithOid("1.2.246.562.29.123456789"))
-    create(haku("1.2.246.562.29.123456789", ParentOid))
-  }
+  genericCreateTests()
 
-  it should "return the error code and message" in {
-    val testError = "{\"error\": \"test error\"}"
-    mockCreateHaku(haku(ChildOid), testError, 400)
-
-    create(HakuPath, haku(ChildOid), defaultSessionId, 400, testError)
-  }
-
-  it should "include the caller's authentication in the call" in {
-    val (sessionId, session) = crudSessions(EvilChildOid)
-    mockCreateHaku(haku(EvilChildOid), responseStringWithOid("1.2.246.562.29.123456789"), 200, Some((sessionId, session)))
-    create(haku("1.2.246.562.29.123456789", EvilChildOid), sessionId)
-  }
-
-//  "Update haku" should "update a haku" in {
+  //  "Update haku" should "update a haku" in {
 //    val now = Instant.now()
 //    mockUpdateHaku(haku("1.2.246.562.29.1"), now)
 //

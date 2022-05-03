@@ -1,23 +1,23 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
+import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
-import fi.oph.kouta.security.Role
+import fi.oph.kouta.security.{CasSession, Role}
 
 import java.util.UUID
 
 class ToteutusSpec
     extends ToteutusFixture
-    with KoulutusFixture
     with AccessControlSpec
     with GenericGetTests[Toteutus, ToteutusOid]
+    with GenericCreateTests[Toteutus]
     with KoutaBackendMock {
 
   override val roleEntities               = Seq(Role.Toteutus)
-  override val getPath: String            = ToteutusPath
+  override val entityPath: String            = ToteutusPath
   override val entityName: String         = "toteutus"
   override val existingId: ToteutusOid    = ToteutusOid("1.2.246.562.17.00000000000000000001")
   override val nonExistingId: ToteutusOid = ToteutusOid("1.2.246.562.17.00000000000000000000")
@@ -26,6 +26,22 @@ class ToteutusSpec
   val sorakuvausId: UUID       = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
   val toteutusWithTarjoajaOid: ToteutusOid = ToteutusOid("1.2.246.562.17.00000000000000000002")
+
+  override val createdOid = "1.2.246.562.17.123456789"
+
+  def mockCreate(
+      organisaatioOid: OrganisaatioOid,
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addCreateMock(
+      KoutaBackendConverters.convertToteutus(toteutus(organisaatioOid)),
+      "kouta-backend.toteutus",
+      responseString,
+      session,
+      responseStatus
+    )
 
   getTests()
 
@@ -41,21 +57,5 @@ class ToteutusSpec
     get(toteutusWithTarjoajaOid, crudSessionIds(GrandChildOid))
   }
 
-  "Create toteutus" should "create a toteutus" in {
-    mockCreateToteutus(toteutus(ParentOid), responseStringWithOid("1.2.246.562.17.123456789"))
-    create(toteutus("1.2.246.562.17.123456789", ParentOid))
-  }
-
-  it should "return the error code and message" in {
-    val testError = "{\"error\": \"test error\"}"
-    mockCreateToteutus(toteutus(ChildOid), testError, 400 )
-
-    create(ToteutusPath, toteutus(ChildOid), defaultSessionId, 400, testError)
-  }
-
-  it should "include the caller's authentication in the call" in {
-    val (sessionId, session) = crudSessions(EvilChildOid)
-    mockCreateToteutus(toteutus(EvilChildOid), responseStringWithOid("1.2.246.562.17.123456789"), 200, Some((sessionId, session)))
-    create(toteutus("1.2.246.562.17.123456789", EvilChildOid), sessionId)
-  }
+  genericCreateTests()
 }

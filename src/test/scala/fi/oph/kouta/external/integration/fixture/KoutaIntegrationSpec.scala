@@ -10,7 +10,7 @@ import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
-import org.json4s.{JBool, JObject}
+import org.json4s.{Extraction, JBool, JObject}
 import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
@@ -28,6 +28,12 @@ trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseS
   def addDefaultSession(): Unit = {
     SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
   }
+
+  def responseStringWithOid(oid: String): String =
+    s"""{"oid": "$oid"}"""
+  def responseStringWithId(id: String): String =
+    s"""{"id": "$id"}"""
+
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -85,6 +91,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
   def bytes(o: AnyRef) = write(o).getBytes
 
   val parseOid = (body: String) => read[Oid](body).oid
+  val parseId = (body: String) => read[Uuid](body).id
 
   def get[E <: scala.AnyRef](path: String, id: Object)(
       implicit equality: Equality[E],

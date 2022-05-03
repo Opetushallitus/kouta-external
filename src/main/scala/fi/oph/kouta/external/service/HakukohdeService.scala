@@ -3,6 +3,7 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, OidResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
@@ -13,12 +14,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
 object HakukohdeService
-    extends HakukohdeService(HakuClient,HakukohdeClient, HakukohderyhmaService, OrganisaatioServiceImpl, HakuService)
+    extends HakukohdeService(HakukohdeClient, HakukohderyhmaService, CasKoutaClient, OrganisaatioServiceImpl, HakuService)
 
 class HakukohdeService(
-    hakuClient: HakuClient,
     hakukohdeClient: HakukohdeClient,
     hakukohderyhmaService: HakukohderyhmaService,
+    koutaClient: CasKoutaClient,
     val organisaatioService: OrganisaatioService,
     hakuService: HakuService
 ) extends RoleEntityAuthorizationService[Hakukohde]
@@ -112,6 +113,14 @@ class HakukohdeService(
       case _ => val errorString: String = s"User missing rights to search hakukohteet via hakukohderyhma roles."
         logger.warn(errorString)
         throw new OrganizationAuthorizationFailedException(errorString)
+    }
+  }
+
+  def create(hakukohde: Hakukohde)(implicit authenticated: Authenticated): Future[KoutaResponse[HakukohdeOid]] = {
+    koutaClient.create("kouta-backend.hakukohde", KoutaHakukohdeRequest(authenticated, hakukohde)).map {
+      case Right(response: OidResponse)  => Right(HakukohdeOid(response.oid.s))
+      case Right(response: UuidResponse) => Left((200, response.id.toString))
+      case Left(x)                       => Left(x)
     }
   }
 }

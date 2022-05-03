@@ -61,6 +61,45 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     }
   }
 
+  registerPath( "/hakukohde/",
+    """    put:
+      |      summary: Tallenna uusi hakukohde
+      |      operationId: Tallenna uusi haku
+      |      description: Tallenna uuden hakukohteen tiedot.
+      |        Rajapinta palauttaa hakukohteelle generoidun yksilöivän hakukohde-oidin
+      |      tags:
+      |        - Hakukohde
+      |      requestBody:
+      |        description: Tallennettava hakukohde
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Hakukohde'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: object
+      |                properties:
+      |                  oid:
+      |                    type: string
+      |                    description: Uuden hakukohteen yksilöivä oid
+      |                    example: 1.2.246.562.20.00000000000000000009
+      |""".stripMargin)
+  put("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    hakukohdeService.create(parsedBody.extract[Hakukohde]) map {
+      case Right(oid) =>
+        Ok("oid" -> oid)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
   registerPath(
     "/hakukohde/search",
     """    get:

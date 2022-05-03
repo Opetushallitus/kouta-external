@@ -1,19 +1,22 @@
 package fi.oph.kouta.external.integration
 
 import java.util.UUID
-
 import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, ValintaperusteFixture}
-import fi.oph.kouta.security.Role
+import fi.oph.kouta.security.{CasSession, Role}
 
 class ValintaperusteSpec
     extends ValintaperusteFixture
     with AccessControlSpec
-    with GenericGetTests[Valintaperuste, UUID] {
+    with GenericGetTests[Valintaperuste, UUID]
+    with GenericCreateTests[Valintaperuste]
+    with KoutaBackendMock {
 
   override val roleEntities        = Seq(Role.Valintaperuste)
-  override val getPath: String     = ValintaperustePath
+  override val entityPath: String  = ValintaperustePath
   override val entityName: String  = "valintaperuste"
   override val existingId: UUID    = UUID.fromString("fa7fcb96-3f80-4162-8d19-5b74731cf90c")
   override val nonExistingId: UUID = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
@@ -21,8 +24,24 @@ class ValintaperusteSpec
   val ophValintaperusteId: UUID = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
   val julkinenId: UUID          = UUID.fromString("db8acf4f-6e29-409d-93a4-06000fa9a4cd")
 
-  var ophValintaperuste: Valintaperuste = null
+  var ophValintaperuste: Valintaperuste      = null
   var julkinenValintaperuste: Valintaperuste = null
+
+  override val createdId = "fa7fcb96-3f80-4162-8d19-5b74731cf90c"
+
+  def mockCreate(
+      organisaatioOid: OrganisaatioOid,
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addCreateMock(
+      KoutaBackendConverters.convertValintaperuste(valintaperuste(organisaatioOid)),
+      "kouta-backend.valintaperuste",
+      responseString,
+      session,
+      responseStatus
+    )
 
   getTests()
 
@@ -42,4 +61,5 @@ class ValintaperusteSpec
     get(julkinenId, readSessionIds(YoOid), 403)
   }
 
+  genericCreateTests()
 }

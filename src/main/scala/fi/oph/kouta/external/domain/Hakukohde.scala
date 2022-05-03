@@ -92,11 +92,6 @@ import java.util.UUID
     |        kaytetaanHaunAikataulua:
     |          type: boolean
     |          description: Käytetäänkö haun hakuaikoja vai onko hakukohteelle määritelty omat hakuajat?
-    |        hakuajat:
-    |          type: array
-    |          description: Hakukohteen hakuajat, jos ei käytetä haun hakuaikoja
-    |          items:
-    |            $ref: '#/components/schemas/Ajanjakso'
     |        valintaperusteId:
     |          type: string
     |          description: Hakukohteeseen liittyvän valintaperustekuvauksen yksilöivä tunniste
@@ -134,6 +129,22 @@ import java.util.UUID
     |          description: Hakukohteeseen liittyvät valintakokeet
     |          items:
     |            $ref: '#/components/schemas/Valintakoe'
+    |        hakuajat:
+    |          type: array
+    |          description: Hakukohteen hakuajat, jos ei käytetä haun hakuaikoja
+    |          items:
+    |            $ref: '#/components/schemas/Ajanjakso'
+    |        metadata:
+    |          type: object
+    |          $ref: '#/components/schemas/HakukohdeMetadata'
+    |        muokkaaja:
+    |          type: string
+    |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid
+    |          example: 1.2.246.562.10.00101010101
+    |        organisaatioOid:
+    |           type: string
+    |           description: Hakukohteen luoneen organisaation oid
+    |           example: 1.2.246.562.10.00101010101
     |        kielivalinta:
     |          type: array
     |          description: Kielet, joille hakukohteen nimi, kuvailutiedot ja muut tekstit on käännetty
@@ -142,17 +153,6 @@ import java.util.UUID
     |          example:
     |            - fi
     |            - sv
-    |        muokkaaja:
-    |          type: string
-    |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid
-    |          example: 1.2.246.562.10.00101010101
-    |        metadata:
-    |          type: object
-    |          $ref: '#/components/schemas/HakukohdeMetadata'
-    |        organisaatioOid:
-    |           type: string
-    |           description: Hakukohteen luoneen organisaation oid
-    |           example: 1.2.246.562.10.00101010101
     |        modified:
     |           type: string
     |           format: date-time
@@ -187,12 +187,12 @@ case class Hakukohde(
     liitteet: List[Liite],
     valintakokeet: List[Valintakoe],
     hakuajat: List[Ajanjakso],
-    muokkaaja: UserOid,
     metadata: Option[HakukohdeMetadata],
+    muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-) extends PerustiedotWithOid[HakukohdeOid, Hakukohde] {
+) extends PerustiedotWithOid[HakukohdeOid, Hakukohde]  {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
   def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))
 }
@@ -250,6 +250,10 @@ case class HakukohteenLinja(linja: Option[Koodi] = None, // NOTE: None tarkoitta
       |          type: object
       |          description: Hakukohteen haluttu linja, määritelty ainoastaan lukiokohteille.
       |          $ref: '#/components/schemas/HakukohteenLinja'
+      |        uudenOpiskelijanUrl:
+      |          type: object
+      |          description: Uuden opiskelijan ohjeita sisältävän verkkosivun URL
+      |          $ref: '#/components/schemas/Linkki'
       |""")
 case class HakukohdeMetadata(valintakokeidenYleiskuvaus: Kielistetty = Map(),
                              kynnysehto: Kielistetty = Map(),
@@ -258,5 +262,5 @@ case class HakukohdeMetadata(valintakokeidenYleiskuvaus: Kielistetty = Map(),
                              kaytetaanHaunAlkamiskautta: Option[Boolean] = None,
                              aloituspaikat: Option[Aloituspaikat] = None,
                              // hakukohteenLinja löytyy vain lukiohakukohteilta (pakollisena)
-                             hakukohteenLinja: Option[HakukohteenLinja] = None)
-
+                             hakukohteenLinja: Option[HakukohteenLinja] = None,
+                             uudenOpiskelijanUrl: Kielistetty = Map())

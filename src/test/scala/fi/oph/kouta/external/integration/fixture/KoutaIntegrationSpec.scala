@@ -161,13 +161,14 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
       }
     }
 
-  def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+  def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant, sessionId: UUID): Unit = {
     post(path, bytes(entity), headers = Seq(sessionHeader(sessionId), ifUnmodifiedSinceHeader(ifUnmodifiedSince))) {
       withClue(body) {
         status should equal(200)
         (parse(body).asInstanceOf[JObject] \\ "updated").asInstanceOf[JBool].value shouldEqual true
       }
     }
+  }
 
   def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant): Unit =
     update(path, entity, ifUnmodifiedSince, defaultSessionId)

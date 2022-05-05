@@ -8,11 +8,14 @@ import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, ValintaperusteFixture}
 import fi.oph.kouta.security.{CasSession, Role}
 
+import java.time.Instant
+
 class ValintaperusteSpec
     extends ValintaperusteFixture
     with AccessControlSpec
     with GenericGetTests[Valintaperuste, UUID]
     with GenericCreateTests[Valintaperuste]
+    with GenericUpdateTests[Valintaperuste]
     with KoutaBackendMock {
 
   override val roleEntities        = Seq(Role.Valintaperuste)
@@ -27,7 +30,8 @@ class ValintaperusteSpec
   var ophValintaperuste: Valintaperuste      = null
   var julkinenValintaperuste: Valintaperuste = null
 
-  override val createdId = "fa7fcb96-3f80-4162-8d19-5b74731cf90c"
+  override val createdId     = "fa7fcb96-3f80-4162-8d19-5b74731cf90c"
+  override val updatedIdBase = "fa7fcb96-3f80-4162-8d19-5b74731cf90"
 
   def mockCreate(
       organisaatioOid: OrganisaatioOid,
@@ -40,6 +44,22 @@ class ValintaperusteSpec
       "kouta-backend.valintaperuste",
       responseString,
       session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      KoutaBackendConverters.convertValintaperuste(valintaperuste(oidOrId)),
+      "kouta-backend.valintaperuste",
+      ifUnmodifiedSince,
+      session,
+      responseString,
       responseStatus
     )
 
@@ -62,4 +82,6 @@ class ValintaperusteSpec
   }
 
   genericCreateTests()
+
+  genericUpdateTests()
 }

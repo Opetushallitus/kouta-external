@@ -92,4 +92,34 @@ class ToteutusServlet(toteutusService: ToteutusService)
     }
   }
 
+  registerPath("/toteutus/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa toteutusta
+      |      operationId: Muokkaa toteutusta
+      |      description: Muokkaa olemassa olevaa toteutusta. Rajapinnalle annetaan toteutuksen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Toteutus
+      |      requestBody:
+      |        description: Muokattavan toteutuksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Toteutus'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    toteutusService.update(parsedBody.extract[Toteutus], getIfUnmodifiedSince) map {
+      case Right(response) =>
+        Ok(response)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
 }

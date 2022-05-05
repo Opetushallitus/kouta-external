@@ -100,6 +100,37 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     }
   }
 
+  registerPath("/hakukohde/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa hakukohdetta
+      |      operationId: Muokkaa hakukohdetta
+      |      description: Muokkaa olemassa olevaa hakukohdetta. Rajapinnalle annetaan hakukohteen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Hakukohde
+      |      requestBody:
+      |        description: Muokattavan hakukohteen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Hakukohde'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    hakukohdeService.update(parsedBody.extract[Hakukohde], getIfUnmodifiedSince) map {
+      case Right(response) =>
+        Ok(response)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
+
   registerPath(
     "/hakukohde/search",
     """    get:

@@ -7,7 +7,9 @@ import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
+import fi.oph.kouta.repository.HakukohdeDAO
 
+import java.time.Instant
 import java.util.UUID
 
 trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
@@ -52,6 +54,8 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
     s"$HakukohdeSearchPath?$hakuString$tarjoajaString$queryString$allString"
   }
 
+  def hakukohde(oid: String): Hakukohde = hakukohde.copy(oid = Some(HakukohdeOid(oid)))
+
   def hakukohde(organisaatioOid: OrganisaatioOid): Hakukohde =
     hakukohde.copy(organisaatioOid = organisaatioOid)
 
@@ -83,4 +87,16 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
     val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
     get(searchPath, sessionId, errorStatus)
   }
+
+  def update(oid: String, ifUnmodifiedSince: Instant): Unit =
+    update(HakukohdePath, hakukohde(oid), ifUnmodifiedSince)
+
+  def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(HakukohdePath, hakukohde(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(HakukohdePath, hakukohde(oid), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(oid: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(HakukohdePath, hakukohde(oid), ifUnmodifiedSince, sessionId)
 }

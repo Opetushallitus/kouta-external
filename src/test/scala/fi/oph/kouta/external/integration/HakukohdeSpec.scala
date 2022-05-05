@@ -9,10 +9,13 @@ import fi.oph.kouta.external.integration.fixture._
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.security.{CasSession, Role}
 
+import java.time.Instant
+
 class HakukohdeSpec
     extends HakukohdeFixture
     with AccessControlSpec
     with GenericCreateTests[Hakukohde]
+    with GenericUpdateTests[Hakukohde]
     with KoutaBackendMock {
 
   override val roleEntities       = Seq(Role.Hakukohde)
@@ -32,7 +35,8 @@ class HakukohdeSpec
   val hakukohdeWithTarjoajaOid: HakukohdeOid       = HakukohdeOid("1.2.246.562.20.00000000000000000002")
   val hakukohdeWithHakukohderyhmaOid: HakukohdeOid = HakukohdeOid("1.2.246.562.20.00000000000000000003")
   val testiHakukohderyhmaOid: HakukohderyhmaOid    = HakukohderyhmaOid("1.2.246.562.28.00000000000000000015")
-  override val createdOid                           = "1.2.246.562.20.123456789"
+  override val createdOid                          = "1.2.246.562.20.123456789"
+  override val updatedOidBase                      = "1.2.246.562.20.1"
 
   def mockCreate(
       organisaatioOid: OrganisaatioOid,
@@ -45,6 +49,22 @@ class HakukohdeSpec
       "kouta-backend.hakukohde",
       responseString,
       session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      KoutaBackendConverters.convertHakukohde(hakukohde(oidOrId)),
+      "kouta-backend.hakukohde",
+      ifUnmodifiedSince,
+      session,
+      responseString,
       responseStatus
     )
 
@@ -130,4 +150,6 @@ class HakukohdeSpec
   }
 
   genericCreateTests()
+
+  genericUpdateTests()
 }

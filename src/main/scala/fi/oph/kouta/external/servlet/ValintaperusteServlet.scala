@@ -93,4 +93,34 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
     }
   }
 
+  registerPath("/valintaperuste/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa valintaperustekuvausta
+      |      operationId: Muokkaa valintaperustetta
+      |      description: Muokkaa olemassa olevaa valintaperustekuvausta. Rajapinnalle annetaan valintaperusteen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Valintaperuste
+      |      requestBody:
+      |        description: Muokattavan valintaperustekuvauksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Valintaperuste'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    valintaperusteService.update(parsedBody.extract[Valintaperuste], getIfUnmodifiedSince) map {
+      case Right(response) =>
+        Ok(response)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
 }

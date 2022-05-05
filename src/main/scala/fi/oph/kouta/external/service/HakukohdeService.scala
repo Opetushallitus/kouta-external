@@ -3,13 +3,14 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
-import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, OidResponse, UuidResponse}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -123,4 +124,10 @@ class HakukohdeService(
       case Left(x)                       => Left(x)
     }
   }
+
+  def update(hakukohde: Hakukohde, ifUnmodifiedSince: Instant)(
+    implicit authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]] =
+    koutaClient.update("kouta-backend.hakukohde", KoutaHakukohdeRequest(authenticated, hakukohde), ifUnmodifiedSince)
+
 }

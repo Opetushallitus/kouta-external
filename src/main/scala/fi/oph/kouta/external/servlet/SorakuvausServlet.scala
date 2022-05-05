@@ -93,4 +93,34 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
     }
   }
 
+  registerPath("/sorakuvaus/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa SORA-kuvausta
+      |      operationId: Muokkaa sorakuvausta
+      |      description: Muokkaa olemassa olevaa SORA-kuvausta. Rajapinnalle annetaan SORA-kuvauksen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Sorakuvaus
+      |      requestBody:
+      |        description: Muokattavan SORA-kuvauksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Sorakuvaus'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    sorakuvausService.update(parsedBody.extract[Sorakuvaus], getIfUnmodifiedSince) map {
+      case Right(response) =>
+        Ok(response)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
 }

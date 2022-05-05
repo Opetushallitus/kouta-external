@@ -51,9 +51,15 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(HakuPath, haku(organisaatioOid), sessionId, parseOid)
 
-  def update(haku: Haku, ifUnmodifiedSince: Instant): Unit =
-    update(HakuPath, haku, ifUnmodifiedSince)
+  def update(oid: String, ifUnmodifiedSince: Instant): Unit =
+    update(HakuPath, haku(oid), ifUnmodifiedSince)
 
-  def update(haku: Haku, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
-    update(HakuPath, haku, ifUnmodifiedSince, sessionId)
+  def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(HakuPath, haku(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(HakuPath, haku(oid), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(oid: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(HakuPath, haku(oid), ifUnmodifiedSince, sessionId)
 }

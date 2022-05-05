@@ -7,6 +7,7 @@ import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture}
 import fi.oph.kouta.security.{CasSession, Role}
 
+import java.time.Instant
 import java.util.UUID
 
 class KoulutusSpec
@@ -14,6 +15,7 @@ class KoulutusSpec
     with AccessControlSpec
     with GenericGetTests[Koulutus, KoulutusOid]
     with GenericCreateTests[Koulutus]
+    with GenericUpdateTests[Koulutus]
     with KoutaBackendMock {
 
   override val roleEntities               = Seq(Role.Koulutus)
@@ -21,7 +23,8 @@ class KoulutusSpec
   override val entityName                 = "koulutus"
   override val existingId: KoulutusOid    = KoulutusOid("1.2.246.562.13.00000000000000000001")
   override val nonExistingId: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000000")
-  override val createdOid                  = "1.2.246.562.17.123456789"
+  override val createdOid                 = "1.2.246.562.13.123456789"
+  override val updatedOidBase             = "1.2.246.562.13.1"
 
   val nonExistingSessionId: UUID = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
@@ -44,6 +47,22 @@ class KoulutusSpec
       "kouta-backend.koulutus",
       responseString,
       session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      KoutaBackendConverters.convertKoulutus(koulutus(oidOrId)),
+      "kouta-backend.koulutus",
+      ifUnmodifiedSince,
+      session,
+      responseString,
       responseStatus
     )
 
@@ -90,4 +109,6 @@ class KoulutusSpec
   }
 
   genericCreateTests()
+
+  genericUpdateTests()
 }

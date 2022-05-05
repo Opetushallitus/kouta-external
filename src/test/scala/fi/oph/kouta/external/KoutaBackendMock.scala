@@ -1,11 +1,7 @@
 package fi.oph.kouta.external
 
-import fi.oph.kouta.domain.oid.OrganisaatioOid
-
 import java.time.Instant
 import java.util.UUID
-import fi.oph.kouta.external.domain.{Haku, Hakukohde, Koulutus, Sorakuvaus, Toteutus, Valintaperuste}
-import fi.oph.kouta.external.integration.KoutaBackendConverters
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.mocks.ServiceMocks
@@ -40,26 +36,6 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
 
   def authenticated(sessionId: UUID, session: CasSession) = Map("id" -> sessionId.toString, "session" -> session)
 
-  protected def mockUpdate(
-      key: String,
-      json: AnyRef,
-      ifUnmodifiedSince: Option[Instant],
-      responseStatus: Int,
-      responseString: String
-  ): Unit = {
-    val headers = ifUnmodifiedSince
-      .map(i => KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(i))
-      .toMap
-    mockPost(
-      path = getMockPath(key),
-      body = json,
-      headers = headers,
-      statusCode = responseStatus,
-      responseString = responseString,
-      matchType = MatchType.ONLY_MATCHING_FIELDS
-    )
-  }
-
   protected def addCreateMock(
       entity: AnyRef,
       pathKey: String,
@@ -77,32 +53,27 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
       matchType = MatchType.ONLY_MATCHING_FIELDS
     )
 
-  private def addUpdateHakuMock(
-      haku: Haku,
+  protected def addUpdateMock(
+      entity: AnyRef,
+      pathKey: String,
       ifUnmodifiedSince: Option[Instant] = None,
       session: Option[(UUID, CasSession)] = None,
-      responseStatus: Int = 200,
-      responseString: String = s"""{"updated": true}"""
-  ): Unit =
-    mockUpdate(
-      key = "kouta-backend.haku",
-      json = session.map { case (sessionId, session) =>
+      responseString: String,
+      responseStatus: Int = 200
+  ): Unit = {
+    val headers = ifUnmodifiedSince
+      .map(i => KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(i))
+      .toMap + ("Content-Type" -> "application/json")
+
+    mockPost(
+      path = getMockPath(pathKey),
+      body = session.map { case (sessionId, session) =>
         Seq("authenticated" -> authenticated(sessionId, session))
-      }.getOrElse(Seq()).toMap + ("haku" -> KoutaBackendConverters.convertHaku(haku)),
-      ifUnmodifiedSince,
-      responseStatus,
-      responseString
+      }.getOrElse(Seq()).toMap + ("entity" -> entity),
+      headers = headers,
+      statusCode = responseStatus,
+      responseString = responseString,
+      matchType = MatchType.ONLY_MATCHING_FIELDS
     )
-
-  def mockUpdateHaku(haku: Haku, ifUnmodifiedSince: Instant): Unit =
-    addUpdateHakuMock(haku, Some(ifUnmodifiedSince))
-
-  def mockUpdateHaku(haku: Haku, ifUnmodifiedSince: Instant, sessionId: UUID, session: CasSession): Unit =
-    addUpdateHakuMock(haku, Some(ifUnmodifiedSince), Some((sessionId, session)))
-
-  def mockUpdateHaku(haku: Haku, ifUnmodifiedSince: Instant, responseStatus: Int, responseString: String): Unit =
-    addUpdateHakuMock(haku, Some(ifUnmodifiedSince), responseStatus = responseStatus, responseString = responseString)
-
-  def mockUpdateHaku(haku: Haku, responseStatus: Int, responseString: String): Unit =
-    addUpdateHakuMock(haku, responseStatus = responseStatus, responseString = responseString)
+  }
 }

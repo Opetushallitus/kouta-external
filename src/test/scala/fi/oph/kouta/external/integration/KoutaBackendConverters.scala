@@ -1,10 +1,10 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.{Haku => BackendHaku, Hakukohde => BackendHakukohde, Koulutus => BackendKoulutus, Sorakuvaus => BackendSorakuvaus, Toteutus => BackendToteutus, Valintaperuste => BackendValintaperuste}
-import fi.oph.kouta.external.domain.{Haku, Hakukohde, Koulutus, Sorakuvaus, Toteutus, Valintaperuste}
+import fi.oph.kouta.external.domain._
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.util.{KoutaJsonFormats => BackendJsonFormats}
-import org.json4s.{Extraction, JArray, JField, JObject, JString, JValue}
+import org.json4s.{Extraction, JValue}
 
 object KoutaBackendConverters extends KoutaJsonFormats {
 

@@ -3,13 +3,14 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.oid.ToteutusOid
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
-import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaToteutusRequest, OidResponse, UuidResponse}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaToteutusRequest, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -41,4 +42,9 @@ class ToteutusService(toteutusClient: ToteutusClient, val koutaClient: CasKoutaC
       case Left(x)                       =>
         Left(x)
     }
+
+  def update(toteutus: Toteutus, ifUnmodifiedSince: Instant)(
+    implicit authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]] =
+    koutaClient.update("kouta-backend.toteutus", KoutaToteutusRequest(authenticated, toteutus), ifUnmodifiedSince)
 }

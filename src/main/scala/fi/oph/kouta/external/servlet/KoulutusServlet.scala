@@ -92,4 +92,35 @@ class KoulutusServlet(koulutusService: KoulutusService)
         ActionResult(status, message, Map.empty)
     }
   }
+
+  registerPath("/koulutus/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa koulutusta
+      |      operationId: Muokkaa koulutusta
+      |      description: Muokkaa olemassa olevaa koulutusta. Rajapinnalle annetaan koulutuksen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Koulutus
+      |      requestBody:
+      |        description: Muokattavan koulutuksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Koulutus'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |""".stripMargin)
+  post("/") {
+    implicit val authenticated: Authenticated = authenticate
+
+    koulutusService.update(parsedBody.extract[Koulutus], getIfUnmodifiedSince) map {
+      case Right(response) =>
+        Ok(response)
+      case Left((status, message)) =>
+        ActionResult(status, message, Map.empty)
+    }
+  }
+
 }

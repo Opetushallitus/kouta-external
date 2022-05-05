@@ -7,6 +7,7 @@ import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
 import fi.oph.kouta.security.{CasSession, Role}
 
+import java.time.Instant
 import java.util.UUID
 
 class ToteutusSpec
@@ -14,10 +15,11 @@ class ToteutusSpec
     with AccessControlSpec
     with GenericGetTests[Toteutus, ToteutusOid]
     with GenericCreateTests[Toteutus]
+    with GenericUpdateTests[Toteutus]
     with KoutaBackendMock {
 
   override val roleEntities               = Seq(Role.Toteutus)
-  override val entityPath: String            = ToteutusPath
+  override val entityPath: String         = ToteutusPath
   override val entityName: String         = "toteutus"
   override val existingId: ToteutusOid    = ToteutusOid("1.2.246.562.17.00000000000000000001")
   override val nonExistingId: ToteutusOid = ToteutusOid("1.2.246.562.17.00000000000000000000")
@@ -27,7 +29,8 @@ class ToteutusSpec
 
   val toteutusWithTarjoajaOid: ToteutusOid = ToteutusOid("1.2.246.562.17.00000000000000000002")
 
-  override val createdOid = "1.2.246.562.17.123456789"
+  override val createdOid       = "1.2.246.562.17.123456789"
+  override val updatedOidBase   = "1.2.246.562.17.1"
 
   def mockCreate(
       organisaatioOid: OrganisaatioOid,
@@ -40,6 +43,22 @@ class ToteutusSpec
       "kouta-backend.toteutus",
       responseString,
       session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      KoutaBackendConverters.convertToteutus(toteutus(oidOrId)),
+      "kouta-backend.toteutus",
+      ifUnmodifiedSince,
+      session,
+      responseString,
       responseStatus
     )
 
@@ -58,4 +77,6 @@ class ToteutusSpec
   }
 
   genericCreateTests()
+
+  genericUpdateTests()
 }

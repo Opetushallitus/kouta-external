@@ -9,18 +9,22 @@ import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, SorakuvausFixture}
 import fi.oph.kouta.security.{CasSession, Role}
 
+import java.time.Instant
+
 class SorakuvausSpec
     extends SorakuvausFixture
     with AccessControlSpec
     with GenericCreateTests[Sorakuvaus]
+    with GenericUpdateTests[Sorakuvaus]
     with KoutaBackendMock {
 
   override val roleEntities = Seq(Role.Valintaperuste)
   val existingId: UUID      = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
   val nonExistingId: UUID   = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
 
-  val entityName = "sorakuvaus"
-  override val createdId  = "e17773b2-f5a0-418d-a49f-34578c4b3625"
+  val entityName             = "sorakuvaus"
+  override val createdId     = "e17773b2-f5a0-418d-a49f-34578c4b3625"
+  override val updatedIdBase = "e17773b2-f5a0-418d-a49f-34578c4b362"
 
   def mockCreate(
       organisaatioOid: OrganisaatioOid,
@@ -33,6 +37,22 @@ class SorakuvausSpec
       "kouta-backend.sorakuvaus",
       responseString,
       session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      KoutaBackendConverters.convertSorakuvaus(sorakuvaus(oidOrId)),
+      "kouta-backend.sorakuvaus",
+      ifUnmodifiedSince,
+      session,
+      responseString,
       responseStatus
     )
 
@@ -96,4 +116,6 @@ class SorakuvausSpec
   }
 
   genericCreateTests()
+
+  genericUpdateTests()
 }

@@ -8,6 +8,7 @@ import fi.oph.kouta.external.elasticsearch.SorakuvausClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, SorakuvausService}
 import fi.oph.kouta.external.servlet.SorakuvausServlet
 
+import java.time.Instant
 import java.util.UUID
 
 trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
@@ -21,6 +22,8 @@ trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   }
 
   val sorakuvaus = AmmSorakuvaus
+
+  def sorakuvaus(id: String): Sorakuvaus = sorakuvaus.copy(id = Some(UUID.fromString(id)))
 
   def sorakuvaus(organisaatioOid: OrganisaatioOid): Sorakuvaus =
     sorakuvaus.copy(organisaatioOid = organisaatioOid)
@@ -43,4 +46,17 @@ trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
 
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(SorakuvausPath, sorakuvaus(organisaatioOid), sessionId, parseId)
+
+  def update(id: String, ifUnmodifiedSince: Instant): Unit =
+    update(SorakuvausPath, sorakuvaus(id), ifUnmodifiedSince)
+
+  def update(id: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(SorakuvausPath, sorakuvaus(id), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(SorakuvausPath, sorakuvaus(id), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(id: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(SorakuvausPath, sorakuvaus(id), ifUnmodifiedSince, sessionId)
+
 }

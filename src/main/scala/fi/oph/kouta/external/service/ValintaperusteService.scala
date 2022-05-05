@@ -4,13 +4,14 @@ import java.util.UUID
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.elasticsearch.ValintaperusteClient
 import fi.oph.kouta.external.kouta
-import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaValintaperusteRequest, OidResponse, UuidResponse}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaValintaperusteRequest, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.RoleEntityAuthorizationService
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -45,5 +46,10 @@ class ValintaperusteService(
       case Left(x)                       => Left(x)
     }
   }
+
+  def update(valintaperuste: Valintaperuste, ifUnmodifiedSince: Instant)(
+    implicit authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]] =
+    koutaClient.update("kouta-backend.valintaperuste", KoutaValintaperusteRequest(authenticated, valintaperuste), ifUnmodifiedSince)
 
 }

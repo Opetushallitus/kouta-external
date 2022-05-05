@@ -9,6 +9,8 @@ import fi.oph.kouta.external.servlet.KoulutusServlet
 import fi.oph.kouta.external.TestData.AmmKoulutus
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
 
+import java.time.Instant
+
 trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   val KoulutusPath = "/koulutus"
 
@@ -21,13 +23,14 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 
+  def koulutus(oid: String): Koulutus =
+    koulutus.copy(oid = Some(KoulutusOid(oid)))
+
   def koulutus(organisaatioOid: OrganisaatioOid): Koulutus =
     koulutus.copy(organisaatioOid = organisaatioOid)
 
   def koulutus(oid: String, organisaatioOid: OrganisaatioOid): Koulutus =
     koulutus.copy(oid = Some(KoulutusOid(oid)), organisaatioOid = organisaatioOid)
-
-  def koulutus(organisaatioOid: String): Koulutus = koulutus(OrganisaatioOid(organisaatioOid))
 
   def get(oid: KoulutusOid): Koulutus = get[Koulutus](KoulutusPath, oid)
 
@@ -48,4 +51,15 @@ trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(KoulutusPath, koulutus(organisaatioOid), sessionId, parseOid)
 
+  def update(oid: String, ifUnmodifiedSince: Instant): Unit =
+    update(KoulutusPath, koulutus(oid), ifUnmodifiedSince)
+
+  def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(KoulutusPath, koulutus(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(KoulutusPath, koulutus(oid), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(oid: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(KoulutusPath, koulutus(oid), ifUnmodifiedSince, sessionId)
 }

@@ -8,6 +8,7 @@ import fi.oph.kouta.external.elasticsearch.ToteutusClient
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ToteutusService}
 import fi.oph.kouta.external.servlet.ToteutusServlet
 
+import java.time.Instant
 import java.util.UUID
 
 trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
@@ -21,6 +22,9 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
     val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new ToteutusServlet(toteutusService), ToteutusPath)
   }
+
+
+  def toteutus(oid: String): Toteutus = toteutus.copy(oid = Some(ToteutusOid(oid)))
 
   def toteutus(oid: String, organisaatioOid: OrganisaatioOid): Toteutus =
     toteutus.copy(oid = Some(ToteutusOid(oid)), organisaatioOid = organisaatioOid)
@@ -43,4 +47,16 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
 
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(ToteutusPath, toteutus(organisaatioOid), sessionId, parseOid)
+
+  def update(oid: String, ifUnmodifiedSince: Instant): Unit =
+    update(ToteutusPath, toteutus(oid), ifUnmodifiedSince)
+
+  def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(ToteutusPath, toteutus(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(ToteutusPath, toteutus(oid), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(oid: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(ToteutusPath, toteutus(oid), ifUnmodifiedSince, sessionId)
 }

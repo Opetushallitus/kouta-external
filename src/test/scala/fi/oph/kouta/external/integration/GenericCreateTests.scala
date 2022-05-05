@@ -34,14 +34,14 @@ trait GenericCreateTests[E] {
       create(if (createdOid.isEmpty) createdId else createdOid, ParentOid)
     }
 
-    it should "return the error code and message" in {
+    it should s"return the error code and message when creating $entityName" in {
       val testError = "{\"error\": \"test error\"}"
       mockCreate(ChildOid, testError, 400)
 
       create(ChildOid, 400, testError)
     }
 
-    it should "include the caller's authentication in the call" in {
+    it should s"include the caller's authentication in the call when creating $entityName" in {
       val (sessionId, session) = crudSessions(EvilChildOid)
       mockCreate(
         EvilChildOid,

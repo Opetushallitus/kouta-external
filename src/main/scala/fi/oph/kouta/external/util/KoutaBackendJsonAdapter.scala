@@ -21,15 +21,15 @@ trait KoutaBackendJsonAdapter {
   }
 
   private def adaptKoulutusJson(koulutusJson: JValue): JValue = {
-    addDefaultEsikatselu("koulutus", koulutusJson)
+    addDefaultEsikatselu(koulutusJson)
   }
 
   private def adaptToteutusJson(toteutusJson: JValue): JValue = {
-    addDefaultEsikatselu("toteutus", toteutusJson)
+    addDefaultEsikatselu(toteutusJson)
   }
 
   private def adaptHakukohdeJson(hakukohdeJson: JValue): JValue = {
-    val adapted = addDefaultEsikatselu("hakukohde", hakukohdeJson)
+    val adapted = addDefaultEsikatselu(hakukohdeJson)
     adapted mapField {
       case ("tarjoaja", JString(org)) =>
         ("jarjestyspaikkaOid", JString(org))
@@ -38,13 +38,25 @@ trait KoutaBackendJsonAdapter {
   }
 
   private def adaptValintaperusteJson(valintaperusteJson: JValue): JValue = {
-    addDefaultEsikatselu("valintaperuste", valintaperusteJson)
+    addDefaultEsikatselu(valintaperusteJson)
   }
+  private def addDefaultEsikatselu(json: JValue): JValue =
+    addEntityFieldToJson(json, "esikatselu", JBool(false))
 
-  private def addDefaultEsikatselu(entityName: String, json: JValue): JValue =
+  private def addEntityFieldToJson(json: JValue, fieldName: String, fieldValue: JValue): JValue =
     json mapField {
-      case (entityName, JObject(elems: List[(String, JValue)])) =>
-        (entityName, JObject(elems ++ List(("esikatselu", JBool(false)))))
+      case ("koulutus", JObject(elems: List[(String, JValue)])) =>
+        ("koulutus", JObject(elems ++ List((fieldName, fieldValue))))
+      case ("toteutus", JObject(elems: List[(String, JValue)])) =>
+        ("toteutus", JObject(elems ++ List((fieldName, fieldValue))))
+      case ("haku", JObject(elems: List[(String, JValue)])) =>
+        ("haku", JObject(elems ++ List((fieldName, fieldValue))))
+      case ("hakukohde", JObject(elems: List[(String, JValue)])) =>
+        ("hakukohde", JObject(elems ++ List((fieldName, fieldValue))))
+      case ("valintaperuste", JObject(elems: List[(String, JValue)])) =>
+        ("valintaperuste", JObject(elems ++ List((fieldName, fieldValue))))
+      case ("sorakuvaus", JObject(elems: List[(String, JValue)])) =>
+        ("sorakuvaus", JObject(elems ++ List((fieldName, fieldValue))))
       case other => other
     }
 }

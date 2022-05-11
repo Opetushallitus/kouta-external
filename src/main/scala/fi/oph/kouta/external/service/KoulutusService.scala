@@ -34,7 +34,8 @@ class KoulutusService(koulutusClient: KoulutusClient, val koutaClient: CasKoutaC
     }
   }
 
-  def create(koulutus: Koulutus)(implicit authenticated: Authenticated): Future[KoutaResponse[KoulutusOid]] =
+  def create(koulutus: Koulutus)(implicit authenticated: Authenticated): Future[KoutaResponse[KoulutusOid]] = {
+    logger.debug("Creating koulutus to koulutus-backend")
     koutaClient.create("kouta-backend.koulutus", KoutaKoulutusRequest(authenticated, koulutus)).map {
       case Right(response: OidResponse)  =>
         Right(KoulutusOid(response.oid.s))
@@ -42,6 +43,7 @@ class KoulutusService(koulutusClient: KoulutusClient, val koutaClient: CasKoutaC
       case Left(x)                       =>
         Left(x)
     }
+  }
 
   def update(koulutus: Koulutus, ifUnmodifiedSince: Instant)(
     implicit authenticated: Authenticated

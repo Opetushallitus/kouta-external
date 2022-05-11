@@ -84,7 +84,7 @@ class KoulutusServlet(koulutusService: KoulutusService)
   put("/") {
 
     implicit val authenticated: Authenticated = authenticate
-
+    logger.debug("Creating koulutus")
     koulutusService.create(parsedBody.extract[Koulutus]) map {
       case Right(oid) =>
         Ok("oid" -> oid)

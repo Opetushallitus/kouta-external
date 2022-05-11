@@ -33,6 +33,7 @@ class SorakuvausSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertSorakuvaus(sorakuvaus(organisaatioOid)),
       "kouta-backend.sorakuvaus",
       responseString,
@@ -48,6 +49,7 @@ class SorakuvausSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertSorakuvaus(sorakuvaus(oidOrId)),
       "kouta-backend.sorakuvaus",
       ifUnmodifiedSince,

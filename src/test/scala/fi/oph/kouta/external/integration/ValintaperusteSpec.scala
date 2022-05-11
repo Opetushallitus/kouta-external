@@ -40,6 +40,7 @@ class ValintaperusteSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertValintaperuste(valintaperuste(organisaatioOid)),
       "kouta-backend.valintaperuste",
       responseString,
@@ -55,6 +56,7 @@ class ValintaperusteSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertValintaperuste(valintaperuste(oidOrId)),
       "kouta-backend.valintaperuste",
       ifUnmodifiedSince,

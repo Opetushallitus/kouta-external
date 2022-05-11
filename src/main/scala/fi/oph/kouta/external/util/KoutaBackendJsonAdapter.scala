@@ -21,15 +21,15 @@ trait KoutaBackendJsonAdapter {
   }
 
   private def adaptKoulutusJson(koulutusJson: JValue): JValue = {
-    addDefaultEsikatselu(koulutusJson)
+    addDefaultEsikatselu("koulutus", koulutusJson)
   }
 
   private def adaptToteutusJson(toteutusJson: JValue): JValue = {
-    addDefaultEsikatselu(toteutusJson)
+    addDefaultEsikatselu("toteutus", toteutusJson)
   }
 
   private def adaptHakukohdeJson(hakukohdeJson: JValue): JValue = {
-    val adapted = addDefaultEsikatselu(hakukohdeJson)
+    val adapted = addDefaultEsikatselu("hakukohde", hakukohdeJson)
     adapted mapField {
       case ("tarjoaja", JString(org)) =>
         ("jarjestyspaikkaOid", JString(org))
@@ -38,13 +38,13 @@ trait KoutaBackendJsonAdapter {
   }
 
   private def adaptValintaperusteJson(valintaperusteJson: JValue): JValue = {
-    addDefaultEsikatselu(valintaperusteJson)
+    addDefaultEsikatselu("valintaperuste", valintaperusteJson)
   }
 
-  private def addDefaultEsikatselu(json: JValue): JValue =
+  private def addDefaultEsikatselu(entityName: String, json: JValue): JValue =
     json mapField {
-      case ("entity", JObject(elems: List[(String, JValue)])) =>
-        ("entity", JObject(elems ++ List(("esikatselu", JBool(false)))))
+      case (entityName, JObject(elems: List[(String, JValue)])) =>
+        (entityName, JObject(elems ++ List(("esikatselu", JBool(false)))))
       case other => other
     }
 }

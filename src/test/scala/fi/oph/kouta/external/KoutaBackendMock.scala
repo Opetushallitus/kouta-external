@@ -37,6 +37,7 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
   def authenticated(sessionId: UUID, session: CasSession) = Map("id" -> sessionId.toString, "session" -> session)
 
   protected def addCreateMock(
+      entityName: String,
       entity: AnyRef,
       pathKey: String,
       responseString: String,
@@ -47,13 +48,14 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
       path = getMockPath(pathKey),
       body = session.map { case (sessionId, session) =>
         Seq("authenticated" -> authenticated(sessionId, session))
-      }.getOrElse(Seq()).toMap + ("entity" -> entity),
+      }.getOrElse(Seq()).toMap + (entityName -> entity),
       statusCode = responseStatus,
       responseString = responseString,
       matchType = MatchType.ONLY_MATCHING_FIELDS
     )
 
   protected def addUpdateMock(
+      entityName: String,
       entity: AnyRef,
       pathKey: String,
       ifUnmodifiedSince: Option[Instant] = None,
@@ -69,7 +71,7 @@ trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJson
       path = getMockPath(pathKey),
       body = session.map { case (sessionId, session) =>
         Seq("authenticated" -> authenticated(sessionId, session))
-      }.getOrElse(Seq()).toMap + ("entity" -> entity),
+      }.getOrElse(Seq()).toMap + (entityName -> entity),
       headers = headers,
       statusCode = responseStatus,
       responseString = responseString,

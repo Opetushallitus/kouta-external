@@ -39,6 +39,7 @@ class ToteutusSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertToteutus(toteutus(organisaatioOid)),
       "kouta-backend.toteutus",
       responseString,
@@ -54,6 +55,7 @@ class ToteutusSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertToteutus(toteutus(oidOrId)),
       "kouta-backend.toteutus",
       ifUnmodifiedSince,

@@ -33,6 +33,7 @@ class HakuSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertHaku(haku(organisaatioOid)),
       "kouta-backend.haku",
       responseString,
@@ -48,6 +49,7 @@ class HakuSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertHaku(haku(oidOrId)),
       "kouta-backend.haku",
       ifUnmodifiedSince,

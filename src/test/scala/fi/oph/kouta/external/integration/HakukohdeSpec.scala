@@ -45,6 +45,7 @@ class HakukohdeSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertHakukohde(hakukohde(organisaatioOid)),
       "kouta-backend.hakukohde",
       responseString,
@@ -60,6 +61,7 @@ class HakukohdeSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertHakukohde(hakukohde(oidOrId)),
       "kouta-backend.hakukohde",
       ifUnmodifiedSince,

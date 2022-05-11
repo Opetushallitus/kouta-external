@@ -43,6 +43,7 @@ class KoulutusSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addCreateMock(
+      entityName,
       KoutaBackendConverters.convertKoulutus(koulutus(organisaatioOid)),
       "kouta-backend.koulutus",
       responseString,
@@ -58,6 +59,7 @@ class KoulutusSpec
       session: Option[(UUID, CasSession)] = None
   ): Unit =
     addUpdateMock(
+      entityName,
       KoutaBackendConverters.convertKoulutus(koulutus(oidOrId)),
       "kouta-backend.koulutus",
       ifUnmodifiedSince,

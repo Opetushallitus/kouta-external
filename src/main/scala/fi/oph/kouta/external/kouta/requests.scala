@@ -3,20 +3,19 @@ package fi.oph.kouta.external.kouta
 import fi.oph.kouta.external.domain.{Haku, Hakukohde, Koulutus, Sorakuvaus, Toteutus, Valintaperuste}
 import fi.oph.kouta.servlet.Authenticated
 
-trait ExternalRequest[T] {
+trait ExternalRequest {
   val authenticated: Authenticated
-  val entity: T
 }
 
-case class KoutaKoulutusRequest(authenticated: Authenticated, entity: Koulutus) extends ExternalRequest[Koulutus]
+case class KoutaKoulutusRequest(authenticated: Authenticated, koulutus: Koulutus) extends ExternalRequest
 
-case class KoutaToteutusRequest(authenticated: Authenticated, entity: Toteutus) extends ExternalRequest[Toteutus]
+case class KoutaToteutusRequest(authenticated: Authenticated, toteutus: Toteutus) extends ExternalRequest
 
-case class KoutaHakuRequest(authenticated: Authenticated, entity: Haku) extends ExternalRequest[Haku]
+case class KoutaHakuRequest(authenticated: Authenticated, haku: Haku) extends ExternalRequest
 
-case class KoutaHakukohdeRequest(authenticated: Authenticated, entity: Hakukohde) extends ExternalRequest[Hakukohde]
+case class KoutaHakukohdeRequest(authenticated: Authenticated, hakukohde: Hakukohde) extends ExternalRequest
 
-case class KoutaValintaperusteRequest(authenticated: Authenticated, entity: Valintaperuste) extends ExternalRequest[Valintaperuste]
+case class KoutaValintaperusteRequest(authenticated: Authenticated, valintaperuste: Valintaperuste) extends ExternalRequest
 
-case class KoutaSorakuvausRequest(authenticated: Authenticated, entity: Sorakuvaus) extends ExternalRequest[Sorakuvaus]
+case class KoutaSorakuvausRequest(authenticated: Authenticated, sorakuvaus: Sorakuvaus) extends ExternalRequest
 

@@ -101,6 +101,8 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
       |        ja muuttuneet tiedot tallennetaan kantaan.
       |      tags:
       |        - Valintaperuste
+      |      parameters:
+      |        - $ref: '#/components/parameters/xIfUnmodifiedSince'
       |      requestBody:
       |        description: Muokattavan valintaperustekuvauksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
       |        required: true

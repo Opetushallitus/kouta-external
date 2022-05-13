@@ -3,7 +3,6 @@ package fi.oph.kouta.external.servlet
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 import java.util.{ConcurrentModificationException, NoSuchElementException}
-
 import fi.oph.kouta.external.domain.Perustiedot
 import fi.oph.kouta.external.elasticsearch.ElasticSearchException
 import fi.oph.kouta.external.security._
@@ -88,7 +87,7 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
 object KoutaServlet {
   val IfUnmodifiedSinceHeader = "x-If-Unmodified-Since"
   val LastModifiedHeader      = "x-Last-Modified"
-  val SampleHttpDate: String  = renderHttpDate(Instant.EPOCH)
+  val SampleHttpDate: String  = renderHttpDate(Instant.now())
 
   def parseHttpDate(string: String): Try[Instant] = Try {
     Instant.from(DateTimeFormatter.RFC_1123_DATE_TIME.parse(string))

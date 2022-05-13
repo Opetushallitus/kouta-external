@@ -101,6 +101,8 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
       |        ja muuttuneet tiedot tallennetaan kantaan.
       |      tags:
       |        - Sorakuvaus
+      |      parameters:
+      |        - $ref: '#/components/parameters/xIfUnmodifiedSince'
       |      requestBody:
       |        description: Muokattavan SORA-kuvauksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
       |        required: true

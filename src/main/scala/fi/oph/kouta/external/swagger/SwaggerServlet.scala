@@ -63,8 +63,9 @@ class SwaggerServlet extends ScalatraServlet {
          |      name: ${KoutaServlet.IfUnmodifiedSinceHeader}
          |      schema:
          |        type: string
+         |        default: ${KoutaServlet.SampleHttpDate}
          |      required: true
-         |      description: Vastaavan GETin ${KoutaServlet.LastModifiedHeader} <br/><br/> <i>Example value</i> &colon; ${KoutaServlet.SampleHttpDate}
+         |      description: Vastaavan GETin ${KoutaServlet.LastModifiedHeader}
          |    callerId:
          |      in: header
          |      name: Caller-Id

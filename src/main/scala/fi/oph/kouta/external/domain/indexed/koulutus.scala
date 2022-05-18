@@ -163,6 +163,26 @@ case class AmmattikorkeakouluKoulutusMetadataIndexed(
   )
 }
 
+case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed],
+    koulutusala: Seq[KoodiUri],
+    tutkintonimike: Seq[KoodiUri],
+    opintojenLaajuus: Option[KoodiUri],
+    kuvauksenNimi: Kielistetty
+) extends KorkeakoulutusKoulutusMetadataIndexed {
+  override def toKoulutusMetadata: AmmOpeErityisopeJaOpoKoulutusMetadata = AmmOpeErityisopeJaOpoKoulutusMetadata(
+    tyyppi = tyyppi,
+    kuvaus = kuvaus,
+    lisatiedot = lisatiedot.map(_.toLisatieto),
+    koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
+    tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
+    opintojenLaajuusKoodiUri = opintojenLaajuus.map(_.koodiUri),
+    kuvauksenNimi = kuvauksenNimi
+  )
+}
+
 case class LukioKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty = Map.empty,

@@ -1,7 +1,6 @@
 package fi.oph.kouta.external.domain.indexed
 
 import java.util.UUID
-
 import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain._
 
@@ -125,6 +124,27 @@ case class AmmattikorkeakouluValintaperusteMetadataIndexed(
 ) extends ValintaperusteMetadataIndexed {
   override def toValintaperusteMetadata: ValintaperusteMetadata =
     AmmattikorkeakouluValintaperusteMetadata(
+      tyyppi = tyyppi,
+      valintatavat = valintatavat.map(_.toValintatapa),
+      kuvaus = kuvaus,
+      hakukelpoisuus = hakukelpoisuus,
+      lisatiedot = lisatiedot,
+      sisalto = sisalto,
+      valintakokeidenYleiskuvaus = valintakokeidenYleiskuvaus
+    )
+}
+
+case class AmmOpeErityisopeJaOpoValintaperusteMetadataIndexed(
+    tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
+    valintatavat: Seq[ValintatapaIndexed],
+    kuvaus: Kielistetty = Map(),
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto],
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadataIndexed {
+  override def toValintaperusteMetadata: AmmOpeErityisopeJaOpoValintaperusteMetadata =
+    AmmOpeErityisopeJaOpoValintaperusteMetadata(
       tyyppi = tyyppi,
       valintatavat = valintatavat.map(_.toValintatapa),
       kuvaus = kuvaus,

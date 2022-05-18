@@ -277,6 +277,29 @@ case class AmmattikorkeakouluToteutusMetadata(
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
 
+@SwaggerModel("""    AmmOpeErityisopeJaOpoToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: amm-ope-erityisope-ja-opo
+    |              enum:
+    |                - amm-ope-erityisope-ja-opo
+    |""")
+case class AmmOpeErityisopeJaOpoToteutusMetadata(
+    tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
+    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+) extends KorkeakoulutusToteutusMetadata
+
 @SwaggerModel(
   """    LukiolinjaTieto:
     |      type: object

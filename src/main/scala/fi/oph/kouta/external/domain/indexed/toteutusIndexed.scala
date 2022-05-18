@@ -254,6 +254,30 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
   )
 }
 
+case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
+    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
+) extends KorkeakoulutusToteutusMetadata {
+  override def toToteutusMetadata: AmmOpeErityisopeJaOpoToteutusMetadata = {
+    AmmOpeErityisopeJaOpoToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
+      ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
+    )
+  }
+}
+
 case class YliopistoToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Yo,
     kuvaus: Kielistetty,

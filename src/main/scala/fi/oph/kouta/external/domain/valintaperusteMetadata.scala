@@ -136,6 +136,33 @@ case class AmmattikorkeakouluValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
+@SwaggerModel("""    AmmOpeErityisopeJaOpoValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        valintatavat:
+    |          type: array
+    |          description: Lista valintaperustekuvauksen valintatavoista
+    |          items:
+    |            $ref: '#/components/schemas/Valintatapa'
+    |        koulutustyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: amm-ope-erityisope-ja-opo
+    |          enum:
+    |            - amm-ope-erityisope-ja-opo
+    |""")
+case class AmmOpeErityisopeJaOpoValintaperusteMetadata(
+    tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
+    valintatavat: Seq[Valintatapa],
+    kuvaus: Kielistetty,
+    hakukelpoisuus: Kielistetty = Map(),
+    lisatiedot: Kielistetty = Map(),
+    sisalto: Seq[Sisalto] = Seq(),
+    valintakokeidenYleiskuvaus: Kielistetty = Map()
+) extends ValintaperusteMetadata
+
 @SwaggerModel("""    AmmatillinenTutkinnonOsaValintaperusteMetadata:
     |      type: object
     |      allOf:

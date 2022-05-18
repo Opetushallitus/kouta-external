@@ -33,6 +33,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - amm
     |            - yo
     |            - amk
+    |            - amm-ope-erityisope-ja-opo
     |            - lk
     |            - amm-tutkinnon-osa
     |            - amm-osaamisala
@@ -80,6 +81,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - $ref: '#/components/schemas/LukioValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
     |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'

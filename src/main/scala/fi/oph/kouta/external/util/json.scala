@@ -48,6 +48,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case Yo                          => s.extract[YliopistoKoulutusMetadata]
         case Amm                         => s.extract[AmmatillinenKoulutusMetadata]
         case Amk                         => s.extract[AmmattikorkeakouluKoulutusMetadata]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoKoulutusMetadata]
         case Lk                          => s.extract[LukioKoulutusMetadata]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaKoulutusMetadata]
         case AmmOsaamisala               => s.extract[AmmatillinenOsaamisalaKoulutusMetadata]
@@ -74,6 +75,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       }.getOrElse(Amm) match {
         case Yo                          => s.extract[YliopistoKoulutusMetadataIndexed]
         case Amk                         => s.extract[AmmattikorkeakouluKoulutusMetadataIndexed]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoKoulutusMetadataIndexed]
         case Amm                         => s.extract[AmmatillinenKoulutusMetadataIndexed]
         case Lk                          => s.extract[LukioKoulutusMetadataIndexed]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaKoulutusMetadataIndexed]
@@ -101,6 +103,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       }.getOrElse(Amm) match {
         case Yo                          => s.extract[YliopistoToteutusMetadata]
         case Amk                         => s.extract[AmmattikorkeakouluToteutusMetadata]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoToteutusMetadata]
         case Amm                         => s.extract[AmmatillinenToteutusMetadata]
         case Lk                          => s.extract[LukioToteutusMetadata]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaToteutusMetadata]
@@ -128,6 +131,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       }.getOrElse(Amm) match {
         case Yo                          => s.extract[YliopistoToteutusMetadataIndexed]
         case Amk                         => s.extract[AmmattikorkeakouluToteutusMetadataIndexed]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoToteutusMetadataIndexed]
         case Amm                         => s.extract[AmmatillinenToteutusMetadataIndexed]
         case Lk                          => s.extract[LukioToteutusMetadataIndexed]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaToteutusMetadataIndexed]
@@ -155,6 +159,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       }.getOrElse(Amm) match {
         case Yo                          => s.extract[YliopistoValintaperusteMetadata]
         case Amk                         => s.extract[AmmattikorkeakouluValintaperusteMetadata]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoValintaperusteMetadata]
         case Amm                         => s.extract[AmmatillinenValintaperusteMetadata]
         case Lk                          => s.extract[LukioValintaperusteMetadata]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaValintaperusteMetadata]
@@ -183,6 +188,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       }.getOrElse(Amm) match {
         case Yo                          => s.extract[YliopistoValintaperusteMetadataIndexed]
         case Amk                         => s.extract[AmmattikorkeakouluValintaperusteMetadataIndexed]
+        case AmmOpeErityisopeJaOpo       => s.extract[AmmOpeErityisopeJaOpoValintaperusteMetadataIndexed]
         case Amm                         => s.extract[AmmatillinenValintaperusteMetadataIndexed]
         case Lk                          => s.extract[LukioValintaperusteMetadataIndexed]
         case AmmTutkinnonOsa             => s.extract[AmmatillinenTutkinnonOsaValintaperusteMetadataIndexed]

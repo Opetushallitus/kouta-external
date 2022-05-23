@@ -10,7 +10,7 @@ import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
-import org.json4s.{JBool, JObject}
+import org.json4s.{Extraction, JBool, JObject}
 import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
@@ -28,6 +28,12 @@ trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseS
   def addDefaultSession(): Unit = {
     SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
   }
+
+  def responseStringWithOid(oid: String): String =
+    s"""{"oid": "$oid"}"""
+  def responseStringWithId(id: String): String =
+    s"""{"id": "$id"}"""
+
 
   override def beforeAll(): Unit = {
     super.beforeAll()
@@ -85,6 +91,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
   def bytes(o: AnyRef) = write(o).getBytes
 
   val parseOid = (body: String) => read[Oid](body).oid
+  val parseId = (body: String) => read[Uuid](body).id
 
   def get[E <: scala.AnyRef](path: String, id: Object)(
       implicit equality: Equality[E],
@@ -135,7 +142,7 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
 
 
   def create[E <: scala.AnyRef, R](path: String, entity: E, sessionId: UUID, result: String => R): R = {
-    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
+    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
       withClue(body) {
         status should equal(200)
       }
@@ -147,26 +154,27 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
     create(path, entity, defaultSessionId, result)
 
   def create[E <: scala.AnyRef](path: String, entity: E, sessionId: UUID, expectedStatus: Int, expectedBody: String): Unit =
-    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
+    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId))) {
       withClue(body) {
         status should equal(expectedStatus)
         body should equal(expectedBody)
       }
     }
 
-  def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
-    put(path, bytes(entity), headers = Seq(sessionHeader(sessionId), ifUnmodifiedSinceHeader(ifUnmodifiedSince))) {
+  def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant, sessionId: UUID): Unit = {
+    post(path, bytes(entity), headers = Seq(sessionHeader(sessionId), ifUnmodifiedSinceHeader(ifUnmodifiedSince))) {
       withClue(body) {
         status should equal(200)
         (parse(body).asInstanceOf[JObject] \\ "updated").asInstanceOf[JBool].value shouldEqual true
       }
     }
+  }
 
   def update[E <: scala.AnyRef](path: String, entity: E, ifUnmodifiedSince: Instant): Unit =
     update(path, entity, ifUnmodifiedSince, defaultSessionId)
 
   def update[E <: scala.AnyRef](path: String, entity: E, headers: Seq[(String, String)], expectedStatus: Int, expectedBody: String): Unit =
-    put(path, bytes(entity), headers = headers) {
+    post(path, bytes(entity), headers = headers) {
       withClue(body) {
         status should equal(expectedStatus)
         body should equal(expectedBody)

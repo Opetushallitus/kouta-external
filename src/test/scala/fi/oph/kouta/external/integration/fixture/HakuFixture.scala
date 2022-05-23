@@ -2,7 +2,6 @@ package fi.oph.kouta.external.integration.fixture
 
 import java.time.Instant
 import java.util.UUID
-
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.domain.Julkaisutila
 import fi.oph.kouta.external.TestData.JulkaistuHaku
@@ -19,8 +18,7 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koutaClient = new MockKoutaClient(urlProperties.get)
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), koutaClient, organisaatioService)
+    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new HakuServlet(hakuService), HakuPath)
   }
 
@@ -44,15 +42,24 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
 
   def get(oid: HakuOid, sessionId: UUID, errorStatus: Int): Unit = get(s"$HakuPath/$oid", sessionId, errorStatus)
 
-  def create(haku: Haku): String =
-    create(HakuPath, haku, parseOid)
+  def create(oid: String, organisaatioOid: OrganisaatioOid): String =
+    create(HakuPath, haku(oid, organisaatioOid), parseOid)
 
-  def create(haku: Haku, sessionId: UUID): String =
-    create(HakuPath, haku, sessionId, parseOid)
+  def create(organisaatioOid: OrganisaatioOid, expectedStatus: Int, expectedBody: String): Unit =
+    create(HakuPath, haku(organisaatioOid), defaultSessionId, expectedStatus, expectedBody)
 
-  def update(haku: Haku, ifUnmodifiedSince: Instant): Unit =
-    update(HakuPath, haku, ifUnmodifiedSince)
+  def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
+    create(HakuPath, haku(organisaatioOid), sessionId, parseOid)
 
-  def update(haku: Haku, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
-    update(HakuPath, haku, ifUnmodifiedSince, sessionId)
+  def update(oid: String, ifUnmodifiedSince: Instant): Unit =
+    update(HakuPath, haku(oid), ifUnmodifiedSince)
+
+  def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
+    ifUnmodifiedSince match {
+      case Some(ifUnmodifiedSinceVal) => update(HakuPath, haku(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case _ => update(HakuPath, haku(oid), defaultSessionId, expectedStatus, expectedBody)
+    }
+
+  def update(oid: String, ifUnmodifiedSince: Instant, sessionId: UUID): Unit =
+    update(HakuPath, haku(oid), ifUnmodifiedSince, sessionId)
 }

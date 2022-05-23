@@ -1,24 +1,22 @@
 package fi.oph.kouta.external.service
 
-import java.time.Instant
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
-import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
-import fi.oph.kouta.external.kouta.CasKoutaClient.KoutaResponse
-import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaClient, KoutaHakuRequest, UpdateResponse}
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakuRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object HakuService extends HakuService(HakuClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val organisaatioService: OrganisaatioService)
+class HakuService(val hakuClient: HakuClient, val koutaClient: CasKoutaClient, val organisaatioService: OrganisaatioService)
   extends RoleEntityAuthorizationService[Haku]
     with Logging {
 
@@ -30,13 +28,17 @@ class HakuService(val hakuClient: HakuClient, val koutaClient: KoutaClient, val 
     hakuClient.getHaku(oid).map(Some(_)).map(authorizeGet(_, readRules).get)
 
   def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] = {
-    koutaClient.createHaku(KoutaHakuRequest(authenticated, haku))
+    koutaClient.create("kouta-backend.haku", KoutaHakuRequest(authenticated, haku)).map {
+      case Right(response: OidResponse)  => Right(HakuOid(response.oid.s))
+      case Right(response: UuidResponse) => Left((200, response.id.toString))
+      case Left(x)                       => Left(x)
+    }
   }
 
   def update(haku: Haku, ifUnmodifiedSince: Instant)(
       implicit authenticated: Authenticated
   ): Future[KoutaResponse[UpdateResponse]] =
-    koutaClient.updateHaku(KoutaHakuRequest(authenticated, haku), ifUnmodifiedSince)
+    koutaClient.update("kouta-backend.haku", KoutaHakuRequest(authenticated, haku), ifUnmodifiedSince)
 
   def findByOids(hakuOids: Set[HakuOid])(implicit authenticated: Authenticated
   ): Future[Seq[Haku]] = {

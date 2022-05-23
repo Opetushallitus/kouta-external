@@ -61,6 +61,86 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     }
   }
 
+  registerPath( "/hakukohde/",
+    """    put:
+      |      summary: Tallenna uusi hakukohde
+      |      operationId: Tallenna uusi haku
+      |      description: Tallenna uuden hakukohteen tiedot.
+      |        Rajapinta palauttaa hakukohteelle generoidun yksilöivän hakukohde-oidin
+      |      tags:
+      |        - Hakukohde
+      |      requestBody:
+      |        description: Tallennettava hakukohde
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Hakukohde'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: object
+      |                properties:
+      |                  oid:
+      |                    type: string
+      |                    description: Uuden hakukohteen yksilöivä oid
+      |                    example: 1.2.246.562.20.00000000000000000009
+      |""".stripMargin)
+  put("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
+
+      hakukohdeService.create(parsedBody.extract[Hakukohde]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
+  }
+
+  registerPath("/hakukohde/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa hakukohdetta
+      |      operationId: Muokkaa hakukohdetta
+      |      description: Muokkaa olemassa olevaa hakukohdetta. Rajapinnalle annetaan hakukohteen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Hakukohde
+      |      parameters:
+      |        - $ref: '#/components/parameters/xIfUnmodifiedSince'
+      |      requestBody:
+      |        description: Muokattavan hakukohteen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Hakukohde'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  post("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
+
+      hakukohdeService.update(parsedBody.extract[Hakukohde], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
+  }
+
+
   registerPath(
     "/hakukohde/search",
     """    get:

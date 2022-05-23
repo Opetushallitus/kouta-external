@@ -84,7 +84,7 @@ sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
     |              description: Onko koulutuksen tyyppi \"Ammatillinen perustutkinto erityisopetuksena\"?
     |""")
 case class AmmatillinenToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
     osaamisalat: List[AmmatillinenOsaamisala],
     opetus: Option[Opetus],
@@ -158,7 +158,7 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
     |                - amm-tutkinnon-osa
     |""")
 case class AmmatillinenTutkinnonOsaToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -188,7 +188,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     |"""
 )
 case class AmmatillinenOsaamisalaToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AmmOsaamisala,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -204,16 +204,16 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
-    |            allOf:
-    |              - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
-    |              - type: object
-    |                properties:
-    |                  tyyppi:
-    |                    type: string
-    |                    description: Toteutuksen metatiedon tyyppi
-    |                    example: amm-muu
-    |                    enum:
-    |                      - amm-muu
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: amm-muu
+    |              enum:
+    |                - amm-muu
     |""")
 case class AmmatillinenMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmMuu,
@@ -244,7 +244,7 @@ case class AmmatillinenMuuToteutusMetadata(
     |                - yo
     |""")
 case class YliopistoToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Yo,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -254,7 +254,8 @@ case class YliopistoToteutusMetadata(
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
 
-@SwaggerModel("""    AmmattikorkeaToteutusMetadata:
+@SwaggerModel(
+  """    AmmattikorkeaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
@@ -267,7 +268,7 @@ case class YliopistoToteutusMetadata(
     |                - amk
     |""")
 case class AmmattikorkeakouluToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Amk,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -376,7 +377,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |"""
 )
 case class LukioToteutusMetadata(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
@@ -389,7 +390,8 @@ case class LukioToteutusMetadata(
     diplomit: Seq[LukiodiplomiTieto]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    TuvaToteutusMetadata:
+@SwaggerModel(
+  """    TuvaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -415,7 +417,8 @@ case class TuvaToteutusMetadata(
     jarjestetaanErityisopetuksena: Boolean
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    TelmaToteutusMetadata:
+@SwaggerModel(
+  """    TelmaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -440,7 +443,8 @@ case class TelmaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:
+@SwaggerModel(
+  """    VapaaSivistystyoOpistovuosiToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -461,7 +465,8 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
-@SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
+@SwaggerModel(
+  """    VapaaSivistystyoMuuToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -489,7 +494,8 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
-@SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
+@SwaggerModel(
+  """    AikuistenPerusopetusToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object

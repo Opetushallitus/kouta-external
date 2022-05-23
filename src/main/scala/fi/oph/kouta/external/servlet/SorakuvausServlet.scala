@@ -1,11 +1,12 @@
 package fi.oph.kouta.external.servlet
 
-import java.util.UUID
+import fi.oph.kouta.external.domain.{Hakukohde, Sorakuvaus}
 
+import java.util.UUID
 import fi.oph.kouta.external.service.SorakuvausService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{FutureSupport, Ok}
+import org.scalatra.{ActionResult, FutureSupport, Ok}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,4 +54,82 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
       }
   }
 
+  registerPath( "/sorakuvaus/",
+    """    put:
+      |      summary: Tallenna uusi sorakuvaus
+      |      operationId: Tallenna uusi sorakuvaus
+      |      description: Tallenna uuden sorakuvauksen tiedot.
+      |        Rajapinta palauttaa sorakuvaukselle generoidun yksilöivän id:n
+      |      tags:
+      |        - Sorakuvaus
+      |      requestBody:
+      |        description: Tallennettava sorakuvaus
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Sorakuvaus'
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: object
+      |                properties:
+      |                  oid:
+      |                    type: string
+      |                    description: Uuden SORA-kuvauksen yksilöivä id
+      |                    example: ea596a9c-5940-497e-b5b7-aded3a2352a7
+      |""".stripMargin)
+  put("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
+
+      sorakuvausService.create(parsedBody.extract[Sorakuvaus]) map {
+        case Right(id) =>
+          Ok("id" -> id)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
+  }
+
+  registerPath("/sorakuvaus/",
+    """    post:
+      |      summary: Muokkaa olemassa olevaa SORA-kuvausta
+      |      operationId: Muokkaa sorakuvausta
+      |      description: Muokkaa olemassa olevaa SORA-kuvausta. Rajapinnalle annetaan SORA-kuvauksen kaikki tiedot,
+      |        ja muuttuneet tiedot tallennetaan kantaan.
+      |      tags:
+      |        - Sorakuvaus
+      |      parameters:
+      |        - $ref: '#/components/parameters/xIfUnmodifiedSince'
+      |      requestBody:
+      |        description: Muokattavan SORA-kuvauksen kaikki tiedot. Kantaan tallennetaan muuttuneet tiedot.
+      |        required: true
+      |        content:
+      |          application/json:
+      |            schema:
+      |              $ref: '#/components/schemas/Sorakuvaus'
+      |      responses:
+      |        '200':
+      |          description: O
+      |""".stripMargin)
+  post("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
+
+      sorakuvausService.update(parsedBody.extract[Sorakuvaus], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
+  }
 }

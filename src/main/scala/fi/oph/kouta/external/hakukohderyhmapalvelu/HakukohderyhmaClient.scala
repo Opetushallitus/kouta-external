@@ -2,7 +2,7 @@ package fi.oph.kouta.external.hakukohderyhmapalvelu
 
 import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
 import fi.oph.kouta.external.KoutaConfigurationFactory
-import fi.oph.kouta.external.kouta.{CallerId, KoutaClient}
+import fi.oph.kouta.external.kouta.{CallerId, CasKoutaClient, KoutaClient}
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.vm.sade.utils.slf4j.Logging
@@ -15,11 +15,10 @@ import org.json4s.jackson.JsonMethods.parse
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, SECONDS}
-import scala.util.{Failure, Success}
 
 object HakukohderyhmaClient
 
-class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonFormats with Logging {
+class HakukohderyhmaClient extends CasKoutaClient with CallerId with KoutaJsonFormats with Logging {
 
   private implicit val formats = DefaultFormats
 
@@ -40,7 +39,7 @@ class HakukohderyhmaClient extends KoutaClient with CallerId with KoutaJsonForma
     requestTimeout = Duration(120, SECONDS)
   )
 
-  lazy protected val client: Client = {
+  override lazy protected val client: Client = {
     CasAuthenticatingClient(
       new CasClient(
         KoutaConfigurationFactory.configuration.securityConfiguration.casUrl,

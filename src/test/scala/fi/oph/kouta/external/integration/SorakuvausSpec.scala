@@ -2,15 +2,61 @@ package fi.oph.kouta.external.integration
 
 import java.util.UUID
 import fi.oph.kouta.TestOids._
+import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.KoutaBackendMock
+import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, SorakuvausFixture}
-import fi.oph.kouta.security.Role
+import fi.oph.kouta.security.{CasSession, Role}
 
-class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec {
+import java.time.Instant
+
+class SorakuvausSpec
+    extends SorakuvausFixture
+    with AccessControlSpec
+    with GenericCreateTests[Sorakuvaus]
+    with GenericUpdateTests[Sorakuvaus]
+    with KoutaBackendMock {
 
   override val roleEntities = Seq(Role.Valintaperuste)
-  val existingId: UUID = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
-  val nonExistingId: UUID = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
+  val existingId: UUID      = UUID.fromString("e17773b2-f5a0-418d-a49f-34578c4b3625")
+  val nonExistingId: UUID   = UUID.fromString("cc76da4a-d4cb-4ef2-a5d1-34b14c1a64bd")
+
+  val entityName             = "sorakuvaus"
+  override val createdId     = "e17773b2-f5a0-418d-a49f-34578c4b3625"
+  override val updatedIdBase = "e17773b2-f5a0-418d-a49f-34578c4b362"
+
+  def mockCreate(
+      organisaatioOid: OrganisaatioOid,
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addCreateMock(
+      entityName,
+      KoutaBackendConverters.convertSorakuvaus(sorakuvaus(organisaatioOid)),
+      "kouta-backend.sorakuvaus",
+      responseString,
+      session,
+      responseStatus
+    )
+
+  def mockUpdate(
+      oidOrId: String,
+      ifUnmodifiedSince: Option[Instant],
+      responseString: String,
+      responseStatus: Int = 200,
+      session: Option[(UUID, CasSession)] = None
+  ): Unit =
+    addUpdateMock(
+      entityName,
+      KoutaBackendConverters.convertSorakuvaus(sorakuvaus(oidOrId)),
+      "kouta-backend.sorakuvaus",
+      ifUnmodifiedSince,
+      session,
+      responseString,
+      responseStatus
+    )
 
   val ophSorakuvausId = UUID.fromString("171c3d2c-a43e-4155-a68f-f5c9816f3154")
 
@@ -70,4 +116,8 @@ class SorakuvausSpec extends SorakuvausFixture with AccessControlSpec {
   it should "deny the user of wrong koulutustyyppi to read sorakuvaus created by oph" in {
     get(ophSorakuvausId, readSessionIds(YoOid), 403)
   }
+
+  genericCreateTests()
+
+  genericUpdateTests()
 }

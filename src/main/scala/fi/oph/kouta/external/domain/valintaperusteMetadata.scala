@@ -48,7 +48,8 @@ sealed trait ValintaperusteMetadata {
   def sisalto: Seq[Sisalto]
 }
 
-@SwaggerModel("""    AmmatillinenValintaperusteMetadata:
+@SwaggerModel(
+  """    AmmatillinenValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -70,18 +71,19 @@ case class AmmatillinenValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    LukioValintaperusteMetadata:
-  |      type: object
-  |      allOf:
-  |        - $ref: '#/components/schemas/ValintaperusteMetadata'
-  |      properties:
-  |        tyyppi:
-  |          type: string
-  |          description: Valintaperustekuvauksen metatiedon tyyppi
-  |          example: lk
-  |          enum:
-  |            - lk
-  |""")
+@SwaggerModel(
+  """    LukioValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: lk
+    |          enum:
+    |            - lk
+    |""")
 case class LukioValintaperusteMetadata(
     tyyppi: Koulutustyyppi = Lk,
     valintatavat: Seq[Valintatapa],
@@ -92,7 +94,8 @@ case class LukioValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    YliopistoValintaperusteMetadata:
+@SwaggerModel(
+  """    YliopistoValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -114,7 +117,8 @@ case class YliopistoValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    AmmattikorkeakouluValintaperusteMetadata:
+@SwaggerModel(
+  """    AmmattikorkeakouluValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -185,7 +189,8 @@ case class AmmatillinenTutkinnonOsaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    AmmatillinenOsaamisalaValintaperusteMetadata:
+@SwaggerModel(
+  """    AmmatillinenOsaamisalaValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -207,7 +212,8 @@ case class AmmatillinenOsaamisalaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    TuvaValintaperusteMetadata:
+@SwaggerModel(
+  """    TuvaValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -229,18 +235,19 @@ case class TuvaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    TelmaValintaperusteMetadata:
-                |      type: object
-                |      allOf:
-                |        - $ref: '#/components/schemas/ValintaperusteMetadata'
-                |      properties:
-                |        tyyppi:
-                |          type: string
-                |          description: Valintaperustekuvauksen metatiedon tyyppi
-                |          example: telma
-                |          enum:
-                |            - telma
-                |""")
+@SwaggerModel(
+  """    TelmaValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: telma
+    |          enum:
+    |            - telma
+    |""")
 case class TelmaValintaperusteMetadata(
     tyyppi: Koulutustyyppi = Telma,
     valintatavat: Seq[Valintatapa],
@@ -251,18 +258,19 @@ case class TelmaValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    AmmatillinenMuuValintaperusteMetadata:
-                |      type: object
-                |      allOf:
-                |        - $ref: '#/components/schemas/ValintaperusteMetadata'
-                |      properties:
-                |        tyyppi:
-                |          type: string
-                |          description: Valintaperustekuvauksen metatiedon tyyppi
-                |          example: amm-muu
-                |          enum:
-                |            - amm-muu
-                |""")
+@SwaggerModel(
+  """    AmmatillinenMuuValintaperusteMetadata:
+    |      type: object
+    |      allOf:
+    |        - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon tyyppi
+    |          example: amm-muu
+    |          enum:
+    |            - amm-muu
+    |""")
 case class AmmatillinenMuuValintaperusteMetadata(
     tyyppi: Koulutustyyppi = AmmMuu,
     valintatavat: Seq[Valintatapa],
@@ -271,9 +279,10 @@ case class AmmatillinenMuuValintaperusteMetadata(
     lisatiedot: Kielistetty = Map(),
     sisalto: Seq[Sisalto] = Seq(),
     valintakokeidenYleiskuvaus: Kielistetty = Map()
-) extends ValintaperusteMetadata {}
+) extends ValintaperusteMetadata
 
-@SwaggerModel("""    VapaaSivistystyoValintaperusteMetadata:
+@SwaggerModel(
+  """    VapaaSivistystyoValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -296,7 +305,8 @@ case class VapaaSivistystyoValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    AikuistenPerusopetusValintaperusteMetadata:
+@SwaggerModel(
+  """    AikuistenPerusopetusValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'
@@ -318,7 +328,8 @@ case class AikuistenPerusopetusValintaperusteMetadata(
     valintakokeidenYleiskuvaus: Kielistetty = Map()
 ) extends ValintaperusteMetadata
 
-@SwaggerModel("""    MuuValintaperusteMetadata:
+@SwaggerModel(
+  """    MuuValintaperusteMetadata:
     |      type: object
     |      allOf:
     |        - $ref: '#/components/schemas/ValintaperusteMetadata'

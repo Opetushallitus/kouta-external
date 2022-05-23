@@ -1,22 +1,28 @@
 package fi.oph.kouta.external.service
 
-import java.util.UUID
+import fi.oph.kouta.domain.oid.HakukohdeOid
 
-import fi.oph.kouta.external.domain.Sorakuvaus
+import java.util.UUID
+import fi.oph.kouta.external.domain.{Hakukohde, Sorakuvaus}
 import fi.oph.kouta.external.elasticsearch.SorakuvausClient
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, KoutaSorakuvausRequest, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
+import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-object SorakuvausService extends SorakuvausService(SorakuvausClient, OrganisaatioServiceImpl)
+object SorakuvausService extends SorakuvausService(SorakuvausClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class SorakuvausService(sorakuvausClient: SorakuvausClient, val organisaatioService: OrganisaatioService)
-    extends RoleEntityAuthorizationService[Sorakuvaus]
+class SorakuvausService(
+    sorakuvausClient: SorakuvausClient,
+    koutaClient: CasKoutaClient,
+    val organisaatioService: OrganisaatioService
+) extends RoleEntityAuthorizationService[Sorakuvaus]
     with Logging {
 
   override val roleEntity: RoleEntity = Role.Valintaperuste
@@ -34,4 +40,17 @@ class SorakuvausService(sorakuvausClient: SorakuvausClient, val organisaatioServ
           )
         )
       )
+
+  def create(sorakuvaus: Sorakuvaus)(implicit authenticated: Authenticated): Future[KoutaResponse[UUID]] = {
+    koutaClient.create("kouta-backend.sorakuvaus", KoutaSorakuvausRequest(authenticated, sorakuvaus)).map {
+      case Right(response: UuidResponse) => Right(response.id)
+      case Right(response: OidResponse)  => Left((200, response.oid.s))
+      case Left(x)                       => Left(x)
+    }
+  }
+
+  def update(sorakuvaus: Sorakuvaus, ifUnmodifiedSince: Instant)(
+    implicit authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]] =
+    koutaClient.update("kouta-backend.sorakuvaus", KoutaSorakuvausRequest(authenticated, sorakuvaus), ifUnmodifiedSince)
 }

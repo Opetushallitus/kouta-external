@@ -2,10 +2,9 @@ package fi.oph.kouta.external.kouta
 
 import java.time.Instant
 import java.util.concurrent.TimeUnit
-
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.servlet.KoutaServlet
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.{KoutaBackendJsonAdapter, KoutaJsonFormats}
 import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
@@ -23,7 +22,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Future, Promise}
 
-object CasKoutaClient extends KoutaClient with CallerId {
+object CasKoutaClient extends CasKoutaClient
+
+class CasKoutaClient extends KoutaClient with CallerId {
 
   private def params = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration
@@ -36,7 +37,7 @@ object CasKoutaClient extends KoutaClient with CallerId {
     )
   }
 
-  override lazy protected val client: Client = {
+  protected lazy val client: Client = {
     CasAuthenticatingClient(
       new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, defaultClient, callerId),
       casParams = params,
@@ -46,12 +47,9 @@ object CasKoutaClient extends KoutaClient with CallerId {
     )
   }
 }
+abstract class KoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging {
 
-abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient {
-
-  type KoutaResponse[T] = Either[(Int, String), T]
-
-  protected def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
+  def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
 
   protected def client: Client
 
@@ -77,24 +75,27 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
       .fold(throw _, x => x)
   }
 
-  protected def create[T](url: String, body: T): Future[Either[(Int, String), IdResponse]] =
+  def create[T](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] = {
+    val url = urlProperties.url(urlKey)
     fetch(Method.PUT, url, body, Headers.empty).map {
       case (200, body) =>
         Right(parse(body) match {
-          case obj: JObject if (obj \ "id") != JNothing =>
-            obj.extract[UuidResponse]
           case obj: JObject if (obj \ "oid") != JNothing =>
             obj.extract[OidResponse]
+          case obj: JObject if (obj \ "id") != JNothing =>
+            obj.extract[UuidResponse]
         })
       case (code, body) =>
         Left(code, body)
     }
+  }
 
-  protected def update[T](
-      url: String,
+  def update[T](
+      urlKey: String,
       body: T,
       ifUnmodifiedSince: Instant
   ): Future[Either[(Int, String), UpdateResponse]] = {
+    val url = urlProperties.url(urlKey)
     val headers = Headers(
       Header(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince)),
       Header("Content-Type", "application/json")
@@ -117,12 +118,12 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
       )
 
   protected def fetch[T](method: Method, url: String, body: T, headers: Headers): Future[(Int, String)] =
-    Uri
+      Uri
       .fromString(url)
       .fold(
         Task.fail,
         url => {
-          implicit val writer: Writer[T] = (obj: T) => Extraction.decompose(obj)
+          implicit val writer: Writer[T] = (obj: T) => adaptToKoutaBackendJson(obj, Extraction.decompose(obj))
           client.fetch(Request(method, url, headers = headers).withBody(body)(jsonEncoderOf[T])) { r =>
             readBody[(Int, String)](r)(body => (r.status.code, body))
           }
@@ -138,8 +139,9 @@ abstract class KoutaClient extends KoutaJsonFormats with Logging with HakuClient
       val p: Promise[A] = Promise()
       x.unsafePerformAsync {
         case -\/(ex) =>
-          p.failure(ex); ()
-        case \/-(r) => p.success(r); ()
+            p.failure(ex); ()
+        case \/-(r) =>
+          p.success(r); ()
       }
       p.future
     }

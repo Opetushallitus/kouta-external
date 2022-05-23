@@ -83,7 +83,7 @@ import java.util.UUID
     |""")
 case class Sorakuvaus(
     id: Option[UUID],
-    externalId: Option[String],
+    externalId: Option[String] = None,
     tila: Julkaisutila,
     nimi: Kielistetty,
     koulutustyyppi: Koulutustyyppi,

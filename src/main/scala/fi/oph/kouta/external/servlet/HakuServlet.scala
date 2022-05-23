@@ -53,11 +53,11 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   }
 
   registerPath( "/haku/",
-    """    post:
-      |      summary: Tallenna uusi haku - EI VIELÄ TOTEUTETTU!
+    """    put:
+      |      summary: Tallenna uusi haku
       |      operationId: Tallenna uusi haku
       |      description: Tallenna uuden haun tiedot.
-      |        Rajapinta palauttaa haulle generoidun yksilöivän haku-oidin - EI VIELÄ TOTEUTETTU!
+      |        Rajapinta palauttaa haulle generoidun yksilöivän haku-oidin
       |      tags:
       |        - Haku
       |      requestBody:
@@ -80,25 +80,27 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |                    description: Uuden haun yksilöivä oid
       |                    example: 1.2.246.562.29.00000000000000000009
       |""".stripMargin)
-  post("/") {
-    implicit val authenticated: Authenticated = authenticate
+  put("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-//    hakuService.create(parsedBody.extract[Haku]) map {
-//      case Right(oid) =>
-//        Ok("oid" -> oid)
-//      case Left((status, message)) =>
-//        ActionResult(status, message, Map.empty)
-//    }
-    ActionResult(501, s"Marty, ${LocalDate.now()} is not future yet! - Doc Brown", Map.empty)
-
+      hakuService.create(parsedBody.extract[Haku]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
   }
 
   registerPath("/haku/",
-    """    put:
-      |      summary: Muokkaa olemassa olevaa hakua - EI VIELÄ TOTEUTETTU!
+    """    post:
+      |      summary: Muokkaa olemassa olevaa hakua
       |      operationId: Muokkaa hakua
       |      description: Muokkaa olemassa olevaa hakua. Rajapinnalle annetaan haun kaikki tiedot,
-      |        ja muuttuneet tiedot tallennetaan kantaan- EI VIELÄ TOTEUTETTU!
+      |        ja muuttuneet tiedot tallennetaan kantaan
       |      tags:
       |        - Haku
       |      parameters:
@@ -114,17 +116,19 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |        '200':
       |          description: O
       |""".stripMargin)
-  put("/") {
-    implicit val authenticated: Authenticated = authenticate
+  post("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-//    hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
-//      case Right(response) =>
-//        Ok(response)
-//      case Left((status, message)) =>
-//        ActionResult(status, message, Map.empty)
-//    }
-
-    ActionResult(501, s"Marty, ${LocalDate.now()} is not future yet! - Doc Brown", Map.empty)
+      hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
+    }
   }
 
   registerPath(

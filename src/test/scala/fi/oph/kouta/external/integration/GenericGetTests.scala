@@ -9,7 +9,7 @@ import fi.oph.kouta.TestOids._
 trait GenericGetTests[E, ID] {
   this: KoutaIntegrationSpec with AccessControlSpec =>
 
-  def getPath: String
+  def entityPath: String
   def entityName: String
   def index: String = s"$entityName-kouta"
   def existingId: ID
@@ -20,12 +20,12 @@ trait GenericGetTests[E, ID] {
 
   def getTests(): Unit = { // Metodin sisällä, jotta entityName bindataan vasta sen jälkeen kun se on overridattu
 
-    s"GET $getPath/:id" should s"get $entityName from elastic search" in {
+    s"GET $entityPath/:id" should s"get $entityName from elastic search" in {
       get(existingId, defaultSessionId)
     }
 
     it should s"have ${KoutaServlet.LastModifiedHeader} header in the response" in {
-      get(s"$getPath/$existingId", headers = Seq(defaultSessionHeader)) {
+      get(s"$entityPath/$existingId", headers = Seq(defaultSessionHeader)) {
         status should equal(200)
         header.get(KoutaServlet.LastModifiedHeader) should not be empty
         KoutaServlet.parseHttpDate(header(KoutaServlet.LastModifiedHeader)).toOption should not be empty
@@ -33,14 +33,14 @@ trait GenericGetTests[E, ID] {
     }
 
     it should s"return 404 if $entityName not found" in {
-      get(s"$getPath/$nonExistingId", headers = Seq(defaultSessionHeader)) {
+      get(s"$entityPath/$nonExistingId", headers = Seq(defaultSessionHeader)) {
         status should equal(404)
         body should include(s"Didn't find id $nonExistingId from $index")
       }
     }
 
     it should "return 401 without a valid session" in {
-      get(s"$getPath/$nonExistingId") {
+      get(s"$entityPath/$nonExistingId") {
         status should equal(401)
         body should include("Unauthorized")
       }

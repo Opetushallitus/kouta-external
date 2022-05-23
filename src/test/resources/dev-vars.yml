@@ -16,3 +16,5 @@ kouta_external_elasticsearch_password: PwXsHvSXcuHZJcAsyQnFhMGA
 
 host_virkailija: https://virkailija.testiopintopolku.fi
 host_alb_virkailija: https://virkailija.testiopintopolku.fi
+
+kouta_external_api_modify_enabled: true

@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object KoulutusServlet extends KoulutusServlet(KoulutusService)
 
 class KoulutusServlet(koulutusService: KoulutusService)
-  extends KoutaServlet
+    extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
@@ -47,13 +47,13 @@ class KoulutusServlet(koulutusService: KoulutusService)
   get("/:oid") {
     implicit val authenticated: Authenticated = authenticate
 
-    koulutusService.get(KoulutusOid(params("oid")))
-      .map { koulutus =>
-        Ok(koulutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(koulutus)))
-      }
+    koulutusService.get(KoulutusOid(params("oid"))).map { koulutus =>
+      Ok(koulutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(koulutus)))
+    }
   }
 
-  registerPath( "/koulutus/",
+  registerPath(
+    "/koulutus/",
     """    put:
       |      summary: Tallenna uusi koulutus
       |      operationId: Tallenna uusi koulutus
@@ -80,19 +80,24 @@ class KoulutusServlet(koulutusService: KoulutusService)
       |                    type: string
       |                    description: Uuden koulutuksen yksilöivä oid
       |                    example: 1.2.246.562.13.00000000000000000009
-      |""".stripMargin)
+      |""".stripMargin
+  )
   put("/") {
-
-    implicit val authenticated: Authenticated = authenticate
-    koulutusService.create(parsedBody.extract[Koulutus]) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
+      koulutusService.create(parsedBody.extract[Koulutus]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
-  registerPath("/koulutus/",
+  registerPath(
+    "/koulutus/",
     """    post:
       |      summary: Muokkaa olemassa olevaa koulutusta
       |      operationId: Muokkaa koulutusta
@@ -112,16 +117,20 @@ class KoulutusServlet(koulutusService: KoulutusService)
       |      responses:
       |        '200':
       |          description: Ok
-      |""".stripMargin)
+      |""".stripMargin
+  )
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    koulutusService.update(parsedBody.extract[Koulutus], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      koulutusService.update(parsedBody.extract[Koulutus], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
-
 }

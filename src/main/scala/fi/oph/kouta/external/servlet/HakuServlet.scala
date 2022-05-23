@@ -81,13 +81,17 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |                    example: 1.2.246.562.29.00000000000000000009
       |""".stripMargin)
   put("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    hakuService.create(parsedBody.extract[Haku]) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      hakuService.create(parsedBody.extract[Haku]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
@@ -113,13 +117,17 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |          description: O
       |""".stripMargin)
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      hakuService.update(parsedBody.extract[Haku], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 

@@ -90,13 +90,17 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |                    example: 1.2.246.562.20.00000000000000000009
       |""".stripMargin)
   put("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    hakukohdeService.create(parsedBody.extract[Hakukohde]) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      hakukohdeService.create(parsedBody.extract[Hakukohde]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
@@ -122,13 +126,17 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |          description: O
       |""".stripMargin)
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    hakukohdeService.update(parsedBody.extract[Hakukohde], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      hakukohdeService.update(parsedBody.extract[Hakukohde], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 

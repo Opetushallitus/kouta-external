@@ -7,6 +7,7 @@ import fi.vm.sade.utils.config.{ApplicationSettings, ApplicationSettingsLoader, 
 import fi.vm.sade.utils.slf4j.Logging
 
 import scala.concurrent.duration.DurationInt
+import scala.util.Try
 
 case class KoutaDatabaseConfiguration(
     url: String,
@@ -24,7 +25,8 @@ case class SecurityConfiguration(
     casUrl: String,
     casServiceIdentifier: String,
     kayttooikeusUrl: String,
-    rootOrganisaatio: OrganisaatioOid
+    rootOrganisaatio: OrganisaatioOid,
+    externalApiModifyEnabled: Boolean
 )
 
 case class ElasticSearchConfiguration(
@@ -62,7 +64,8 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
     casUrl = config.getString("cas.url"),
     casServiceIdentifier = config.getString("kouta-external.cas.service"),
     kayttooikeusUrl = config.getString("kayttooikeus-service.userDetails.byUsername"),
-    rootOrganisaatio = OrganisaatioOid("1.2.246.562.10.00000000001")
+    rootOrganisaatio = OrganisaatioOid("1.2.246.562.10.00000000001"),
+    Try(config.getBoolean("kouta.external-api.modify.enabled")).getOrElse(false)
   )
 
   val elasticSearchConfiguration = ElasticSearchConfiguration(

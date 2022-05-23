@@ -83,13 +83,17 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
       |                    example: ea596a9c-5940-497e-b5b7-aded3a2352a7
       |""".stripMargin)
   put("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    sorakuvausService.create(parsedBody.extract[Sorakuvaus]) map {
-      case Right(id) =>
-        Ok("id" -> id)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      sorakuvausService.create(parsedBody.extract[Sorakuvaus]) map {
+        case Right(id) =>
+          Ok("id" -> id)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
@@ -115,14 +119,17 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
       |          description: O
       |""".stripMargin)
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    sorakuvausService.update(parsedBody.extract[Sorakuvaus], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      sorakuvausService.update(parsedBody.extract[Sorakuvaus], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
-
 }

@@ -81,14 +81,17 @@ class ToteutusServlet(toteutusService: ToteutusService)
       |                    example: 1.2.246.562.17.00000000000000000009
       |""".stripMargin)
   put("/") {
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    implicit val authenticated: Authenticated = authenticate
-
-    toteutusService.create(parsedBody.extract[Toteutus]) map {
-      case Right(oid) =>
-        Ok("oid" -> oid)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      toteutusService.create(parsedBody.extract[Toteutus]) map {
+        case Right(oid) =>
+          Ok("oid" -> oid)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
@@ -114,14 +117,17 @@ class ToteutusServlet(toteutusService: ToteutusService)
       |          description: Ok
       |""".stripMargin)
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    toteutusService.update(parsedBody.extract[Toteutus], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      toteutusService.update(parsedBody.extract[Toteutus], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
-
 }

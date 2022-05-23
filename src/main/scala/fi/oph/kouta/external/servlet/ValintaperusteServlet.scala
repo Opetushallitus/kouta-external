@@ -83,13 +83,17 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
       |                    example: ea596a9c-5940-497e-b5b7-aded3a2352a7
       |""".stripMargin)
   put("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    valintaperusteService.create(parsedBody.extract[Valintaperuste]) map {
-      case Right(id) =>
-        Ok("id" -> id)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      valintaperusteService.create(parsedBody.extract[Valintaperuste]) map {
+        case Right(id) =>
+          Ok("id" -> id)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
 
@@ -115,14 +119,17 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
       |          description: O
       |""".stripMargin)
   post("/") {
-    implicit val authenticated: Authenticated = authenticate
+    if (externalModifyEnabled) {
+      implicit val authenticated: Authenticated = authenticate
 
-    valintaperusteService.update(parsedBody.extract[Valintaperuste], getIfUnmodifiedSince) map {
-      case Right(response) =>
-        Ok(response)
-      case Left((status, message)) =>
-        ActionResult(status, message, Map.empty)
+      valintaperusteService.update(parsedBody.extract[Valintaperuste], getIfUnmodifiedSince) map {
+        case Right(response) =>
+          Ok(response)
+        case Left((status, message)) =>
+          ActionResult(status, message, Map.empty)
+      }
+    } else {
+      ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }
   }
-
 }

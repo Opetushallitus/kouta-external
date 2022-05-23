@@ -1,5 +1,7 @@
 package fi.oph.kouta.external.servlet
 
+import fi.oph.kouta.external.KoutaConfigurationFactory
+
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, ZoneId}
 import java.util.{ConcurrentModificationException, NoSuchElementException}
@@ -23,6 +25,9 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
   before() {
     contentType = formats("json")
   }
+
+  protected def externalModifyEnabled(): Boolean =
+    KoutaConfigurationFactory.configuration.securityConfiguration.externalApiModifyEnabled
 
   protected def createLastModifiedHeader[E <: Perustiedot[_, E]](entity: E): String = {
     // Oletetaan, että modified on Helsingin ajassa, kun sen mukana ei ole aikavyöhyketietoa

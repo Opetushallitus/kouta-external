@@ -41,3 +41,5 @@ kouta-backend.valintaperuste=https://{{host_virkailija}}/kouta-backend/external/
 hakukohderyhmapalvelu.service=https://{{host_virkailija}}/hakukohderyhmapalvelu
 hakukohderyhmapalvelu.hakukohderyhmat=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohde/$1/hakukohderyhmat
 hakukohderyhmapalvelu.hakukohteet=https://{{host_virkailija}}/hakukohderyhmapalvelu/api/hakukohderyhma/$1/hakukohteet
+
+kouta.external-api.modify.enabled={{kouta_external_api_modify_enabled}}

@@ -88,6 +88,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmatillinenMuuKoulutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusKoulutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintojaksoKoulutusMetadata'
     |          example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:
@@ -133,7 +134,8 @@ import java.util.UUID
     |          format: date-time
     |          description: Koulutuksen viimeisin muokkausaika. Järjestelmän generoima
     |          example: 2019-08-23T09:55
-    |""")
+    |"""
+)
 case class Koulutus(
     oid: Option[KoulutusOid],
     externalId: Option[String],

@@ -66,6 +66,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/VapaaSivistystyoOpistovuosiToteutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoMuuMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusToteutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:
@@ -172,7 +173,8 @@ import java.util.UUID
     |           format: date-time
     |           description: Toteutuksen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
-    |""")
+    |"""
+)
 case class Toteutus(
     oid: Option[ToteutusOid],
     externalId: Option[String],

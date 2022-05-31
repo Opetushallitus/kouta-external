@@ -3,7 +3,7 @@ package fi.oph.kouta.external
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.domain.{AlkamiskausiJaVuosi, Amm, EiSähköistä, Euro, Fi, Hakijapalvelu, Julkaistu, Kieli, Maksullinen, MuuOsoite, Sv, Tallennettu, TarkkaAlkamisajankohta, ValintakoeMetadata, Yo}
-import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, AmmatillinenKoulutusMetadata, AmmatillinenOsaamisala, AmmatillinenToteutusMetadata, AmmatillinenValintaperusteMetadata, Apuraha, Column, Haku, HakuMetadata, Hakukohde, HakukohdeMetadata, Keyword, KoulutuksenAlkamiskausi, Koulutus, Liite, LiitteenToimitusosoite, Lisatieto, Opetus, Osoite, Row, SisaltoTeksti, Sorakuvaus, SorakuvausMetadata, Taulukko, Toteutus, ValintaKoeMetadata, Valintakoe, Valintakoetilaisuus, ValintakokeenLisatilaisuudet, Valintaperuste, Valintatapa, Yhteyshenkilo}
+import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, AmmatillinenKoulutusMetadata, AmmatillinenOsaamisala, AmmatillinenToteutusMetadata, Apuraha, Column, GenericValintaperusteMetadata, Haku, HakuMetadata, Hakukohde, HakukohdeMetadata, Keyword, KoulutuksenAlkamiskausi, Koulutus, Liite, LiitteenToimitusosoite, Lisatieto, Opetus, Osoite, Row, SisaltoTeksti, Sorakuvaus, SorakuvausMetadata, Taulukko, Toteutus, ValintaKoeMetadata, Valintakoe, Valintakoetilaisuus, ValintakokeenLisatilaisuudet, Valintaperuste, Valintatapa, Yhteyshenkilo}
 
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime, LocalTime}
@@ -308,7 +308,8 @@ object TestData {
     modified = None
   )
 
-  val AmmValintaperusteMetadata: AmmatillinenValintaperusteMetadata = AmmatillinenValintaperusteMetadata(
+  val AmmValintaperusteMetadata = GenericValintaperusteMetadata(
+    tyyppi = Amm,
     valintatavat = Seq(Valintatapa1, Valintatapa2),
     valintakokeidenYleiskuvaus = Map(Fi -> "yleiskuvaus fi", Sv -> "yleiskuvaus sv"),
     kuvaus = Map(Fi -> "kuvaus", Sv -> "kuvaus sv"),

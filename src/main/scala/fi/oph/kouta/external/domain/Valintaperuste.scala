@@ -77,19 +77,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |        metadata:
     |          type: object
     |          oneOf:
-    |            - $ref: '#/components/schemas/YliopistoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/LukioValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/TelmaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenMuuValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/VapaaSivistystyoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AikuistenPerusopetusValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/MuuValintaperusteMetadata'
+    |            - $ref: '#/components/schemas/ValintaperusteMetadata'
     |          example:
     |            tyyppi: amm
     |            valintatavat:

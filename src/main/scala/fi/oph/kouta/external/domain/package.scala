@@ -1,12 +1,35 @@
 package fi.oph.kouta.external
 
-import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli}
+import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.time.LocalDateTime
 import java.util.UUID
 
 package object domain {
+
+  @SwaggerModel(
+  """
+    |    Koulutustyyppi:
+    |      type: string
+    |      enum:
+    |        - aikuisten-perusopetus
+    |        - amk
+    |        - amm
+    |        - amm-muu
+    |        - amm-ope-erityisope-ja-opo,
+    |        - amm-osaamisala
+    |        - amm-tutkinnon-osa
+    |        - kk-opintojakso
+    |        - lk
+    |        - muu
+    |        - telma
+    |        - tuva
+    |        - vapaa-sivistystyo-muu
+    |        - vapaa-sivistystyo-opistovuosi
+    |        - yo
+""")
+  abstract class KoulutustyyppiSwagger
 
   // Kielen swaggeri on tässä, koska Kieli-luokka on kouta-commonissa
   @SwaggerModel(

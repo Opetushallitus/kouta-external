@@ -7,6 +7,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
   """    ValintaperusteMetadata:
     |      type: object
     |      properties:
+    |        tyyppi:
+    |          type: string
+    |          description: Valintaperustekuvauksen metatiedon (koulutus)tyyppi
+    |          $ref: '#/components/schemas/Koulutustyyppi'
     |        valintatavat:
     |          type: array
     |          description: Lista valintaperustekuvauksen valintatavoista

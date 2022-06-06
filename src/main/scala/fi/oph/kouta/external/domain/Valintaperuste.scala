@@ -29,21 +29,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |        koulutustyyppi:
     |          type: string
     |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
-    |          enum:
-    |            - amm
-    |            - yo
-    |            - amk
-    |            - amm-ope-erityisope-ja-opo
-    |            - lk
-    |            - amm-tutkinnon-osa
-    |            - amm-osaamisala
-    |            - amm-muu
-    |            - tuva
-    |            - telma
-    |            - vapaa-sivistystyo-opistovuosi
-    |            - vapaa-sivistystyo-muu
-    |            - aikuisten-perusopetus
-    |            - muu
+    |          $ref: '#/components/schemas/Koulutustyyppi'
     |          example: amm
     |        hakutapaKoodiUri:
     |          type: string
@@ -76,8 +62,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
-    |          oneOf:
-    |            - $ref: '#/components/schemas/ValintaperusteMetadata'
+    |          $ref: '#/components/schemas/ValintaperusteMetadata'
     |          example:
     |            tyyppi: amm
     |            valintatavat:

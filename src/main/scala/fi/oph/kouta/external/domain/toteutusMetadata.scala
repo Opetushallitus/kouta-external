@@ -73,7 +73,7 @@ sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
     |              items:
     |                $ref: '#/components/schemas/Osaamisala'
     |              description: Lista ammatillisen koulutuksen osaamisalojen kuvauksia
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amm
@@ -236,7 +236,7 @@ case class AmmatillinenMuuToteutusMetadata(
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: yo
@@ -259,7 +259,7 @@ case class YliopistoToteutusMetadata(
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amk
@@ -342,7 +342,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              example: lk
@@ -394,7 +394,7 @@ case class LukioToteutusMetadata(
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: tuva
@@ -420,7 +420,7 @@ case class TuvaToteutusMetadata(
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: telma
@@ -445,7 +445,7 @@ case class TelmaToteutusMetadata(
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: vapaa-sivistystyo-opistovuosi
@@ -466,7 +466,7 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: vapaa-sivistystyo-muu
@@ -494,7 +494,7 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              example: aikuisten-perusopetus
@@ -522,7 +522,7 @@ case class AikuistenPerusopetusToteutusMetadata(
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              example: kk-opintojakso
@@ -530,7 +530,7 @@ case class AikuistenPerusopetusToteutusMetadata(
     |                - kk-opintojakso
     |""")
 case class KkOpintojaksoToteutusMetadata(
-    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
+    tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

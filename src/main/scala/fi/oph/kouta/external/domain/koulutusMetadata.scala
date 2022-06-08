@@ -31,7 +31,7 @@ sealed trait KoulutusMetadata {
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amm
@@ -49,7 +49,7 @@ case class AmmatillinenKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amm-tutkinnon-osa
@@ -75,7 +75,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amm-osaamisala
@@ -139,7 +139,7 @@ trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
     |        - $ref: '#/components/schemas/KorkeakouluMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: yo
@@ -161,7 +161,7 @@ case class YliopistoKoulutusMetadata(
     |        - $ref: '#/components/schemas/KorkeakouluMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amk
@@ -183,7 +183,7 @@ case class AmmattikorkeakouluKoulutusMetadata(
      |        - $ref: '#/components/schemas/KorkeakouluMetadata'
      |        - type: object
      |          properties:
-     |            koulutustyyppi:
+     |            tyyppi:
      |              type: string
      |              description: Koulutuksen metatiedon tyyppi
      |              example: amm-ope-erityisope-ja-opo
@@ -206,7 +206,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: lk
@@ -239,7 +239,7 @@ case class LukioKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: tuva
@@ -268,7 +268,7 @@ case class TuvaKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: telma
@@ -297,6 +297,12 @@ case class TelmaKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: amm-muu
+    |              enum:
+    |                - amm-muu
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -308,7 +314,7 @@ case class TelmaKoulutusMetadata(
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
-    |            opintojenLaajuusnumero:
+    |            opintojenLaajuusNumero:
     |              type: double
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 10
@@ -329,7 +335,7 @@ case class AmmatillinenMuuKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: vapaa-sivistystyo-opistovuosi
@@ -367,6 +373,12 @@ case class VapaaSivistystyoKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: aikuisten-perusopetus
+    |              enum:
+    |                - aikuisten-perusopetus
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -374,7 +386,7 @@ case class VapaaSivistystyoKoulutusMetadata(
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
-    |            opintojenLaajuusnumero:
+    |            opintojenLaajuusNumero:
     |              type: double
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 10
@@ -395,6 +407,12 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: kk-opintojakso
+    |              enum:
+    |                - kk-opintojakso
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"

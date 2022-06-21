@@ -73,7 +73,7 @@ sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
     |              items:
     |                $ref: '#/components/schemas/Osaamisala'
     |              description: Lista ammatillisen koulutuksen osaamisalojen kuvauksia
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amm
@@ -236,7 +236,7 @@ case class AmmatillinenMuuToteutusMetadata(
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: yo
@@ -254,13 +254,12 @@ case class YliopistoToteutusMetadata(
     ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends KorkeakoulutusToteutusMetadata
 
-@SwaggerModel(
-  """    AmmattikorkeaToteutusMetadata:
+@SwaggerModel("""    AmmattikorkeaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: amk
@@ -343,7 +342,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              example: lk
@@ -390,13 +389,12 @@ case class LukioToteutusMetadata(
     diplomit: Seq[LukiodiplomiTieto]
 ) extends ToteutusMetadata
 
-@SwaggerModel(
-  """    TuvaToteutusMetadata:
+@SwaggerModel("""    TuvaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: tuva
@@ -417,13 +415,12 @@ case class TuvaToteutusMetadata(
     jarjestetaanErityisopetuksena: Boolean
 ) extends ToteutusMetadata
 
-@SwaggerModel(
-  """    TelmaToteutusMetadata:
+@SwaggerModel("""    TelmaToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: telma
@@ -443,13 +440,12 @@ case class TelmaToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends ToteutusMetadata
 
-@SwaggerModel(
-  """    VapaaSivistystyoOpistovuosiToteutusMetadata:
+@SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: vapaa-sivistystyo-opistovuosi
@@ -465,13 +461,12 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
-@SwaggerModel(
-  """    VapaaSivistystyoMuuToteutusMetadata:
+@SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              example: vapaa-sivistystyo-muu
@@ -494,13 +489,12 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
-@SwaggerModel(
-  """    AikuistenPerusopetusToteutusMetadata:
+@SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
-    |            koulutustyyppi:
+    |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              example: aikuisten-perusopetus
@@ -509,6 +503,34 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     |""")
 case class AikuistenPerusopetusToteutusMetadata(
     tyyppi: Koulutustyyppi = AikuistenPerusopetus,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel("""    KkOpintojaksoToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: kk-opintojakso
+    |              enum:
+    |                - kk-opintojakso
+    |""")
+case class KkOpintojaksoToteutusMetadata(
+    tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],

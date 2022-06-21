@@ -29,21 +29,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |        koulutustyyppi:
     |          type: string
     |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
-    |          enum:
-    |            - amm
-    |            - yo
-    |            - amk
-    |            - amm-ope-erityisope-ja-opo
-    |            - lk
-    |            - amm-tutkinnon-osa
-    |            - amm-osaamisala
-    |            - amm-muu
-    |            - tuva
-    |            - telma
-    |            - vapaa-sivistystyo-opistovuosi
-    |            - vapaa-sivistystyo-muu
-    |            - aikuisten-perusopetus
-    |            - muu
+    |          $ref: '#/components/schemas/Koulutustyyppi'
     |          example: amm
     |        hakutapaKoodiUri:
     |          type: string
@@ -76,20 +62,7 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
-    |          oneOf:
-    |            - $ref: '#/components/schemas/YliopistoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/LukioValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmattikorkeakouluValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/TuvaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/TelmaValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenMuuValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/VapaaSivistystyoValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/AikuistenPerusopetusValintaperusteMetadata'
-    |            - $ref: '#/components/schemas/MuuValintaperusteMetadata'
+    |          $ref: '#/components/schemas/ValintaperusteMetadata'
     |          example:
     |            tyyppi: amm
     |            valintatavat:

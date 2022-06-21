@@ -85,7 +85,6 @@ trait ToteutusMetadataIndexed {
   val kuvaus: Kielistetty
   val opetus: Option[OpetusIndexed]
   val asiasanat: List[Keyword]
-  val ammattinimikkeet: List[Keyword]
   val yhteyshenkilot: Seq[Yhteyshenkilo]
 
   def toToteutusMetadata: ToteutusMetadata
@@ -481,6 +480,39 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      hakutermi = hakutermi,
+      hakulomaketyyppi = hakulomaketyyppi,
+      hakulomakeLinkki = hakulomakeLinkki,
+      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
+      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
+      hakuaika = hakuaika,
+      aloituspaikat = aloituspaikat
+    )
+  }
+}
+
+case class KkOpintojaksoToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = KkOpintojakso,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadataIndexed {
+  override def toToteutusMetadata: KkOpintojaksoToteutusMetadata = {
+    KkOpintojaksoToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = List.empty,
       yhteyshenkilot = yhteyshenkilot,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,

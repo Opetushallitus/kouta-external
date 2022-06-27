@@ -90,11 +90,6 @@ trait ToteutusMetadataIndexed {
   def toToteutusMetadata: ToteutusMetadata
 }
 
-trait KorkeakoulutusToteutusMetadata extends ToteutusMetadataIndexed {
-  val alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-  val ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-}
-
 case class AmmatillinenToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
@@ -238,9 +233,7 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) extends KorkeakoulutusToteutusMetadata {
+) extends ToteutusMetadataIndexed {
   def toToteutusMetadata: AmmattikorkeakouluToteutusMetadata = AmmattikorkeakouluToteutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
@@ -248,8 +241,6 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
     asiasanat = asiasanat,
     ammattinimikkeet = ammattinimikkeet,
     yhteyshenkilot = yhteyshenkilot,
-    alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
-    ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
   )
 }
 
@@ -260,9 +251,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) extends KorkeakoulutusToteutusMetadata {
+) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: AmmOpeErityisopeJaOpoToteutusMetadata = {
     AmmOpeErityisopeJaOpoToteutusMetadata(
       tyyppi = tyyppi,
@@ -271,8 +260,6 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
-      ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
     )
   }
 }
@@ -284,8 +271,6 @@ case class YliopistoToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
 ) extends ToteutusMetadataIndexed {
   def toToteutusMetadata: YliopistoToteutusMetadata =
     YliopistoToteutusMetadata(
@@ -295,8 +280,6 @@ case class YliopistoToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      alemmanKorkeakoulututkinnonOsaamisalat = alemmanKorkeakoulututkinnonOsaamisalat,
-      ylemmanKorkeakoulututkinnonOsaamisalat = ylemmanKorkeakoulututkinnonOsaamisalat
     )
 }
 

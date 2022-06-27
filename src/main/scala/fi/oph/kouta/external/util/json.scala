@@ -16,23 +16,6 @@ trait KoutaJsonFormats extends GenericKoutaJsonFormats with DefaultKoutaJsonForm
 
 sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
 
-  val VALID_KOULUTUSTYYPIT = List(
-    Yo,
-    Amm,
-    Amk,
-    AmmOpeErityisopeJaOpo,
-    Lk,
-    AmmTutkinnonOsa,
-    AmmOsaamisala,
-    AmmMuu,
-    Tuva,
-    Telma,
-    VapaaSivistystyoOpistovuosi,
-    VapaaSivistystyoMuu,
-    AikuistenPerusopetus,
-    KkOpintojakso
-  )
-
   def koutaJsonFormats: Formats = genericKoutaFormats ++ Seq(
     koulutusMetadataSerializer,
     koulutusMetadataIndexedSerializer,
@@ -178,7 +161,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       Try(s \ "tyyppi").toOption.collect { case JString(tyyppi) =>
         Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
-        case kt if VALID_KOULUTUSTYYPIT contains kt => s.extract[GenericValintaperusteMetadata]
+        case kt if Koulutustyyppi.values contains kt => s.extract[GenericValintaperusteMetadata]
         case kt                                     => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: ValintaperusteMetadata =>
@@ -194,7 +177,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       Try(s \ "tyyppi").toOption.collect { case JString(tyyppi) =>
         Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
-        case kt if VALID_KOULUTUSTYYPIT contains kt =>
+        case kt if Koulutustyyppi.values contains kt =>
           s.extract[GenericValintaperusteMetadataIndexed]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }

@@ -7,7 +7,6 @@ import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
-import fi.oph.kouta.repository.HakukohdeDAO
 
 import java.time.Instant
 import java.util.UUID

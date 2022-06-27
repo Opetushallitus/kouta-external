@@ -249,7 +249,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
 }
 
 case class AikuistenPerusopetusKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
     linkkiEPerusteisiin: Kielistetty,
@@ -268,7 +268,7 @@ case class AikuistenPerusopetusKoulutusMetadataIndexed(
 }
 
 case class KkOpintojaksoKoulutusMetadataIndexed(
-    tyyppi: Koulutustyyppi,
+    tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
     linkkiEPerusteisiin: Kielistetty,
@@ -284,5 +284,22 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumero = opintojenLaajuusNumero
+    )
+}
+
+case class ErikoislaakariKoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = Erikoislaakari,
+    kuvaus: Kielistetty,
+    kuvauksenNimi: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    tutkintonimike: Seq[KoodiUri] = Seq.empty
+) extends KoulutusMetadataIndexed {
+  override def toKoulutusMetadata: ErikoislaakariKoulutusMetadata =
+    ErikoislaakariKoulutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      kuvauksenNimi = kuvauksenNimi,
+      lisatiedot = lisatiedot.map(_.toLisatieto),
+      tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri)
     )
 }

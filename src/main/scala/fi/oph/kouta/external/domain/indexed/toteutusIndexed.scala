@@ -524,3 +524,23 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     )
   }
 }
+
+case class ErikoislaakariToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
+) extends ToteutusMetadataIndexed {
+  override def toToteutusMetadata: ErikoislaakariToteutusMetadata = {
+    ErikoislaakariToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot
+    )
+  }
+}

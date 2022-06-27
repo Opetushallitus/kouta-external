@@ -67,6 +67,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/VapaaSivistystyoMuuMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusToteutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
+    |            - $ref: '#/components/schemas/ErikoislaakariToteutusMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:

@@ -544,3 +544,24 @@ case class KkOpintojaksoToteutusMetadata(
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel("""    ErikoislaakariToteutusMetadata:
+                |      allOf:
+                |        - $ref: '#/components/schemas/ToteutusMetadata'
+                |        - type: object
+                |          properties:
+                |            tyyppi:
+                |              type: string
+                |              description: Koulutuksen metatiedon tyyppi
+                |              example: erikoislaakari
+                |              enum:
+                |                - erikoislaakari
+                |""")
+case class ErikoislaakariToteutusMetadata(
+    tyyppi: Koulutustyyppi = Erikoislaakari,
+    kuvaus: Kielistetty = Map(),
+    opetus: Option[Opetus] = None,
+    asiasanat: List[Keyword] = List(),
+    ammattinimikkeet: List[Keyword] = List(),
+    yhteyshenkilot: Seq[Yhteyshenkilo] = Seq()
+) extends ToteutusMetadata

@@ -59,6 +59,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoKoulutusMetadata]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusKoulutusMetadata]
         case KkOpintojakso               => s.extract[KkOpintojaksoKoulutusMetadata]
+        case Erikoislaakari              => s.extract[ErikoislaakariKoulutusMetadata]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } { case j: KoulutusMetadata =>
@@ -88,6 +89,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoKoulutusMetadataIndexed]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusKoulutusMetadataIndexed]
         case KkOpintojakso               => s.extract[KkOpintojaksoKoulutusMetadataIndexed]
+        case Erikoislaakari              => s.extract[ErikoislaakariKoulutusMetadataIndexed]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: KoulutusMetadataIndexed =>
@@ -117,6 +119,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoMuuToteutusMetadata]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusToteutusMetadata]
         case KkOpintojakso               => s.extract[KkOpintojaksoToteutusMetadata]
+        case Erikoislaakari              => s.extract[ErikoislaakariToteutusMetadata]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } { case j: ToteutusMetadata =>
@@ -146,6 +149,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoMuuToteutusMetadataIndexed]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusToteutusMetadataIndexed]
         case KkOpintojakso               => s.extract[KkOpintojaksoToteutusMetadataIndexed]
+        case Erikoislaakari              => s.extract[ErikoislaakariToteutusMetadataIndexed]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: ToteutusMetadataIndexed =>

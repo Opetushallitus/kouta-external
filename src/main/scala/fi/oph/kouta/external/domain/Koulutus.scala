@@ -74,6 +74,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/VapaaSivistystyoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusKoulutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintojaksoKoulutusMetadata'
+    |            - $ref: '#/components/schemas/ErikoislaakariKoulutusMetadata'
     |          example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:

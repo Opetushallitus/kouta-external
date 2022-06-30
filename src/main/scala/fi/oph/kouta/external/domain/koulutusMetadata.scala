@@ -455,6 +455,13 @@ case class KkOpintojaksoKoulutusMetadata(
     |              type: object
     |              description: Koulutuksen kuvauksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |              $ref: '#/components/schemas/Nimi'
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            tutkintonimikeKoodiUrit:
     |              type: array
     |              description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2)
@@ -470,5 +477,6 @@ case class ErikoislaakariKoulutusMetadata(
     kuvauksenNimi: Kielistetty,
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
     tutkintonimikeKoodiUrit: Seq[String] = Seq()
 ) extends KoulutusMetadata

@@ -7,6 +7,7 @@ import fi.oph.kouta.external.{KoutaConfigurationFactory, KoutaDatabaseConfigurat
 import fi.vm.sade.utils.slf4j.Logging
 import org.apache.commons.lang3.builder.ToStringBuilder
 import org.flywaydb.core.Flyway
+import org.flywaydb.core.api.configuration.Configuration
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.TransactionIsolation
@@ -69,9 +70,7 @@ object KoutaDatabase extends Logging {
   }
 
   private def migrate(): Unit = {
-    val flyway = new Flyway()
-    flyway.setDataSource(settings.url, settings.username, settings.password)
-    flyway.setLocations("flyway/migration") // Vältetään defaulttia, koska se törmää testeissä kouta-backendin migraatioihin
-    flyway.migrate()
+    val flyway = Flyway.configure.dataSource(settings.url, settings.username, settings.password).load
+    flyway.migrate
   }
 }

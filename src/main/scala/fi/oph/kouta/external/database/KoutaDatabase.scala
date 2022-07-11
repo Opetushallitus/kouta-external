@@ -70,7 +70,7 @@ object KoutaDatabase extends Logging {
   }
 
   private def migrate(): Unit = {
-    val flyway = Flyway.configure.dataSource(settings.url, settings.username, settings.password).load
+    val flyway = Flyway.configure.locations("flyway/migration").dataSource(settings.url, settings.username, settings.password).load
     flyway.migrate
   }
 }

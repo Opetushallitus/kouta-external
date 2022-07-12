@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.{Amm, Koulutustyyppi, Tuva}
+import fi.oph.kouta.domain.{Amm, Koulutustyyppi, Erikoislaakari}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -437,4 +437,46 @@ case class KkOpintojaksoKoulutusMetadata(
     opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
     opintojenLaajuusNumero: Option[Double] = None,
     koulutusalaKoodiUrit: Seq[String] = Seq()
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    ErikoislaakariKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: erikoislaakari
+    |              enum:
+    |                - erikoislaakari
+    |            kuvauksenNimi:
+    |              type: object
+    |              description: Koulutuksen kuvauksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Nimi'
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            tutkintonimikeKoodiUrit:
+    |              type: array
+    |              description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2)
+    |              items:
+    |                type: string
+    |              example:
+    |                - tutkintonimikekk_110#2
+    |                - tutkintonimikekk_111#2
+    |"""
+)
+case class ErikoislaakariKoulutusMetadata(
+    tyyppi: Koulutustyyppi = Erikoislaakari,
+    kuvauksenNimi: Kielistetty,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
+    tutkintonimikeKoodiUrit: Seq[String] = Seq()
 ) extends KoulutusMetadata

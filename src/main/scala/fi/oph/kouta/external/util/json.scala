@@ -16,23 +16,6 @@ trait KoutaJsonFormats extends GenericKoutaJsonFormats with DefaultKoutaJsonForm
 
 sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
 
-  val VALID_KOULUTUSTYYPIT = List(
-    Yo,
-    Amm,
-    Amk,
-    AmmOpeErityisopeJaOpo,
-    Lk,
-    AmmTutkinnonOsa,
-    AmmOsaamisala,
-    AmmMuu,
-    Tuva,
-    Telma,
-    VapaaSivistystyoOpistovuosi,
-    VapaaSivistystyoMuu,
-    AikuistenPerusopetus,
-    KkOpintojakso
-  )
-
   def koutaJsonFormats: Formats = genericKoutaFormats ++ Seq(
     koulutusMetadataSerializer,
     koulutusMetadataIndexedSerializer,
@@ -76,6 +59,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoKoulutusMetadata]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusKoulutusMetadata]
         case KkOpintojakso               => s.extract[KkOpintojaksoKoulutusMetadata]
+        case Erikoislaakari              => s.extract[ErikoislaakariKoulutusMetadata]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } { case j: KoulutusMetadata =>
@@ -105,6 +89,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoKoulutusMetadataIndexed]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusKoulutusMetadataIndexed]
         case KkOpintojakso               => s.extract[KkOpintojaksoKoulutusMetadataIndexed]
+        case Erikoislaakari              => s.extract[ErikoislaakariKoulutusMetadataIndexed]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: KoulutusMetadataIndexed =>
@@ -134,6 +119,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoMuuToteutusMetadata]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusToteutusMetadata]
         case KkOpintojakso               => s.extract[KkOpintojaksoToteutusMetadata]
+        case Erikoislaakari              => s.extract[ErikoislaakariToteutusMetadata]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
   } { case j: ToteutusMetadata =>
@@ -163,6 +149,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
         case VapaaSivistystyoMuu         => s.extract[VapaaSivistystyoMuuToteutusMetadataIndexed]
         case AikuistenPerusopetus        => s.extract[AikuistenPerusopetusToteutusMetadataIndexed]
         case KkOpintojakso               => s.extract[KkOpintojaksoToteutusMetadataIndexed]
+        case Erikoislaakari              => s.extract[ErikoislaakariToteutusMetadataIndexed]
         case kt                          => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: ToteutusMetadataIndexed =>
@@ -178,7 +165,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       Try(s \ "tyyppi").toOption.collect { case JString(tyyppi) =>
         Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
-        case kt if VALID_KOULUTUSTYYPIT contains kt => s.extract[GenericValintaperusteMetadata]
+        case kt if Koulutustyyppi.values contains kt => s.extract[GenericValintaperusteMetadata]
         case kt                                     => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }
     } { case j: ValintaperusteMetadata =>
@@ -194,7 +181,7 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
       Try(s \ "tyyppi").toOption.collect { case JString(tyyppi) =>
         Koulutustyyppi.withName(tyyppi)
       }.getOrElse(Amm) match {
-        case kt if VALID_KOULUTUSTYYPIT contains kt =>
+        case kt if Koulutustyyppi.values contains kt =>
           s.extract[GenericValintaperusteMetadataIndexed]
         case kt => throw new UnsupportedOperationException(s"Unsupported koulutustyyppi $kt")
       }

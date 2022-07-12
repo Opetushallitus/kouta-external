@@ -41,28 +41,6 @@ sealed trait ToteutusMetadata {
   val yhteyshenkilot: Seq[Yhteyshenkilo]
 }
 
-@SwaggerModel(
-  """    KorkeakouluToteutusMetadata:
-    |      allOf:
-    |        - $ref: '#/components/schemas/ToteutusMetadata'
-    |      properties:
-    |        alemmanKorkeakoulututkinnonOsaamisalat:
-    |          type: array
-    |          description: Lista alemman korkeakoulututkinnon erikoistumisalojen, opintosuuntien, pääaineiden tms. kuvauksista.
-    |          items:
-    |            $ref: '#/components/schemas/KorkeakouluOsaamisala'
-    |        ylemmanKorkeakoulututkinnonOsaamisalat:
-    |          type: array
-    |          items:
-    |            $ref: '#/components/schemas/KorkeakouluOsaamisala'
-    |          description: Lista ylemmän korkeakoulututkinnon erikoistumisalojen, opintosuuntien, pääaineiden tms. kuvauksista.
-    |"""
-)
-sealed trait KorkeakoulutusToteutusMetadata extends ToteutusMetadata {
-  val alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-  val ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-}
-
 @SwaggerModel("""    AmmatillinenToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
@@ -233,7 +211,7 @@ case class AmmatillinenMuuToteutusMetadata(
 
 @SwaggerModel("""    YliopistoToteutusMetadata:
     |      allOf:
-    |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
     |            tyyppi:
@@ -250,13 +228,11 @@ case class YliopistoToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) extends KorkeakoulutusToteutusMetadata
+) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaToteutusMetadata:
     |      allOf:
-    |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
     |            tyyppi:
@@ -273,13 +249,11 @@ case class AmmattikorkeakouluToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) extends KorkeakoulutusToteutusMetadata
+) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoToteutusMetadata:
     |      allOf:
-    |        - $ref: '#/components/schemas/KorkeakouluToteutusMetadata'
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
     |            tyyppi:
@@ -296,9 +270,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    alemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala],
-    ylemmanKorkeakoulututkinnonOsaamisalat: Seq[KorkeakouluOsaamisala]
-) extends KorkeakoulutusToteutusMetadata
+) extends ToteutusMetadata
 
 @SwaggerModel(
   """    LukiolinjaTieto:
@@ -544,3 +516,24 @@ case class KkOpintojaksoToteutusMetadata(
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int]
 ) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel("""    ErikoislaakariToteutusMetadata:
+                |      allOf:
+                |        - $ref: '#/components/schemas/ToteutusMetadata'
+                |        - type: object
+                |          properties:
+                |            tyyppi:
+                |              type: string
+                |              description: Koulutuksen metatiedon tyyppi
+                |              example: erikoislaakari
+                |              enum:
+                |                - erikoislaakari
+                |""")
+case class ErikoislaakariToteutusMetadata(
+    tyyppi: Koulutustyyppi = Erikoislaakari,
+    kuvaus: Kielistetty = Map(),
+    opetus: Option[Opetus] = None,
+    asiasanat: List[Keyword] = List(),
+    ammattinimikkeet: List[Keyword] = List(),
+    yhteyshenkilot: Seq[Yhteyshenkilo] = Seq()
+) extends ToteutusMetadata

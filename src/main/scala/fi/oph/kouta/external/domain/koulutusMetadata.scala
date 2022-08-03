@@ -108,11 +108,6 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |            example:
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
-    |        kuvauksenNimi:
-    |          type: object
-    |          description: Koulutuksen kuvaukseni nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
     |        tutkintonimikeKoodiUrit:
     |          type: array
     |          description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2)
@@ -128,7 +123,6 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |"""
 )
 trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
-  val kuvauksenNimi: Kielistetty
   val tutkintonimikeKoodiUrit: Seq[String]
   val opintojenLaajuusKoodiUri: Option[String]
   val koulutusalaKoodiUrit: Seq[String]
@@ -152,8 +146,7 @@ case class YliopistoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
-    kuvauksenNimi: Kielistetty
+    opintojenLaajuusKoodiUri: Option[String]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaKoulutusMetadata:
@@ -174,8 +167,7 @@ case class AmmattikorkeakouluKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
-    kuvauksenNimi: Kielistetty
+    opintojenLaajuusKoodiUri: Option[String]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoKoulutusMetadata:
@@ -196,8 +188,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
-    kuvauksenNimi: Kielistetty
+    opintojenLaajuusKoodiUri: Option[String]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel(
@@ -451,10 +442,6 @@ case class KkOpintojaksoKoulutusMetadata(
     |              example: erikoislaakari
     |              enum:
     |                - erikoislaakari
-    |            kuvauksenNimi:
-    |              type: object
-    |              description: Koulutuksen kuvauksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |              $ref: '#/components/schemas/Nimi'
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -474,7 +461,6 @@ case class KkOpintojaksoKoulutusMetadata(
 )
 case class ErikoislaakariKoulutusMetadata(
     tyyppi: Koulutustyyppi = Erikoislaakari,
-    kuvauksenNimi: Kielistetty,
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String] = Seq(),

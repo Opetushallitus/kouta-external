@@ -189,10 +189,7 @@ case class Toteutus(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
-    modified: Option[Modified],
-    // Kouta-backendissä on Toteutus case classissa koulutuksetKoodiUri ja testit ei mene läpi ilman tätä.
-    // FIXME: Tämä pitäisi korjata kouta-backendin päässä siten, ettei tämän tarve propagoidu tänne.
-    koulutuksetKoodiUri: Seq[String] = Seq.empty
+    modified: Option[Modified]
 ) extends PerustiedotWithOid[ToteutusOid, Toteutus] {
   override def withMuokkaaja(muokkaaja: UserOid): Toteutus = copy(muokkaaja = muokkaaja)
 }

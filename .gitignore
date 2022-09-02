@@ -71,5 +71,3 @@ jrebel.lic
 tools/*.json
 embedded-jetty-vars.yml
 kouta-temp-db/
-
-**/dev-vars.yml

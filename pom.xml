@@ -19,8 +19,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <kouta-common.version>2.13.0-SNAPSHOT</kouta-common.version>
-        <kouta-backend.version>6.32.0-SNAPSHOT</kouta-backend.version>
+        <kouta-common.version>2.14.0-SNAPSHOT</kouta-common.version>
+        <kouta-backend.version>6.33.0-SNAPSHOT</kouta-backend.version>
 
         <!-- Utility properties -->
         <scala-utils.version>1.2.3-SNAPSHOT</scala-utils.version>
@@ -287,10 +287,32 @@
             <version>${mockserver-netty.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.swagger.parser.v3</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <scope>test</scope>
+            <version>2.0.33</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.java-json-tools</groupId>
+                <artifactId>json-schema-validator</artifactId>
+                <version>2.2.14</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.java-json-tools</groupId>
+                <artifactId>jackson-coreutils</artifactId>
+                <version>2.0</version>
+            </dependency>
             <dependency>
                 <groupId>fi.vm.sade</groupId>
                 <artifactId>scala-utils_2.12</artifactId>
@@ -694,4 +716,3 @@
         </snapshotRepository>
     </distributionManagement>
 </project>
-

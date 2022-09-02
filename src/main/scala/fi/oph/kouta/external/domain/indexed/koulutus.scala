@@ -296,3 +296,24 @@ case class ErikoislaakariKoulutusMetadataIndexed(
       tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri)
     )
 }
+
+case class KkOpintokokonaisuusKoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed],
+    koulutusala: Seq[KoodiUri],
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double],
+    opintojenLaajuusyksikko: Option[KoodiUri]
+) extends KoulutusMetadataIndexed {
+  override def toKoulutusMetadata: KkOpintokokonaisuusKoulutusMetadata =
+    KkOpintokokonaisuusKoulutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      lisatiedot = lisatiedot.map(_.toLisatieto),
+      koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
+      opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
+      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri)
+    )
+}

@@ -1,3 +1,5 @@
+[![Kouta-external](https://github.com/Opetushallitus/kouta-external/actions/workflows/build.yml/badge.svg)](https://github.com/Opetushallitus/kouta-external/actions/workflows/build.yml)
+
 # kouta-external
 
 ## 1. Palvelun tehtävä
@@ -22,7 +24,6 @@ Asenna haluamallasi tavalla koneellesi
 
 Lisäksi tarvitset Java SDK:n ja Scala SDK:n (Unix pohjaisissa käyttöjärjestelmissä auttaa esim. [SDKMAN!](https://sdkman.io/)). Katso [.travis.yml](.travis.yml) mitä versioita sovellus käyttää.
 Kirjoitushetkellä käytössä openJDK11 ja scala 2.12.10.   
-(TODO huom. travis ymlissä 2.12.2 mutta pom.xml:ssä 2.12.10, pitäisi nostaa traviksen versiota!).
 
 PostgreSQL kontti-image buildataan (täytyy tehdä vain kerran) komennnolla:
 ``` shell
@@ -100,10 +101,6 @@ Asennus hoituu samoilla työkaluilla kuin muidenkin OPH:n palvelujen.
 
 Lokit löytyvät AWS:n CloudWatchista. Log groupin nimemssä on etuliitteenä ympäristön nimi,
 esim. untuva-app-kouta-external
-
-### 4.4 CI
-
-https://travis-ci.com/github/Opetushallitus/kouta-external
 
 ## 5. Koodin tyyli
 

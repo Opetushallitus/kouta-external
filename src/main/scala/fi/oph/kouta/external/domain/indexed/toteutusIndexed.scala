@@ -232,7 +232,7 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadataIndexed {
   def toToteutusMetadata: AmmattikorkeakouluToteutusMetadata = AmmattikorkeakouluToteutusMetadata(
     tyyppi = tyyppi,
@@ -240,7 +240,7 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
     opetus = opetus.map(_.toOpetus),
     asiasanat = asiasanat,
     ammattinimikkeet = ammattinimikkeet,
-    yhteyshenkilot = yhteyshenkilot,
+    yhteyshenkilot = yhteyshenkilot
   )
 }
 
@@ -250,7 +250,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: AmmOpeErityisopeJaOpoToteutusMetadata = {
     AmmOpeErityisopeJaOpoToteutusMetadata(
@@ -259,7 +259,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
-      yhteyshenkilot = yhteyshenkilot,
+      yhteyshenkilot = yhteyshenkilot
     )
   }
 }
@@ -270,7 +270,7 @@ case class YliopistoToteutusMetadataIndexed(
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadataIndexed {
   def toToteutusMetadata: YliopistoToteutusMetadata =
     YliopistoToteutusMetadata(
@@ -279,7 +279,7 @@ case class YliopistoToteutusMetadataIndexed(
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
-      yhteyshenkilot = yhteyshenkilot,
+      yhteyshenkilot = yhteyshenkilot
     )
 }
 
@@ -524,6 +524,44 @@ case class ErikoislaakariToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot
+    )
+  }
+}
+
+case class KkOpintokokonaisuusToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = KkOpintokokonaisuus,
+    kuvaus: Kielistetty,
+    opintojenLaajuusyksikko: Option[KoodiUri],
+    opintojenLaajuusNumero: Option[Double],
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends ToteutusMetadataIndexed {
+  override def toToteutusMetadata: KkOpintokokonaisuusToteutusMetadata = {
+    KkOpintokokonaisuusToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      hakutermi = hakutermi,
+      hakulomaketyyppi = hakulomaketyyppi,
+      hakulomakeLinkki = hakulomakeLinkki,
+      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
+      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
+      hakuaika = hakuaika,
+      aloituspaikat = aloituspaikat,
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+      opintojenLaajuusNumero = opintojenLaajuusNumero
     )
   }
 }

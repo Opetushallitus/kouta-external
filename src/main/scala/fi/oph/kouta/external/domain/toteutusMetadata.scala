@@ -227,7 +227,7 @@ case class YliopistoToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaToteutusMetadata:
@@ -248,7 +248,7 @@ case class AmmattikorkeakouluToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoToteutusMetadata:
@@ -269,7 +269,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo],
+    yhteyshenkilot: Seq[Yhteyshenkilo]
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -537,3 +537,43 @@ case class ErikoislaakariToteutusMetadata(
     ammattinimikkeet: List[Keyword] = List(),
     yhteyshenkilot: Seq[Yhteyshenkilo] = Seq()
 ) extends ToteutusMetadata
+
+@SwaggerModel(
+  """    KkOpintokokonaisuusToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: kk-opintokokonaisuus
+    |              enum:
+    |                - kk-opintokokonaisuus
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusNumero:
+    |              type: integer
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 10
+    |"""
+)
+case class KkOpintokokonaisuusToteutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double],
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata

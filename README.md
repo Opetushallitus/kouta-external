@@ -31,9 +31,12 @@ cd postgresql/docker
 docker build --tag koutaexternal-postgres .
 ```
 
-Asetuksia voi muuttaa muokkaamalla '/src/test/resources/dev-vars.yml'-tiedostoa, tai
+Asetuksia voi muuttaa muokkaamalla `src/test/resources/dev-vars.yml`-tiedostoa, tai
 ainakin luulen näin, koska kouta-backendissa on vastaava rakenne. Kunhan joku selvittää
 konfig-tiedoston toiminnan, toivottavasti päivittää myös tämän osion.
+
+`src/test/resources/dev-vars.yml` ei ole versionhallinnassa. Saat luotua sen itsellesi seuraavalla komennolla:
+`cp src/test/resources/dev-vars.yml.template src/test/resources/dev-vars.yml`
 
 ### 3.2. Testien ajaminen
 

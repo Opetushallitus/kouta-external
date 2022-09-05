@@ -19,8 +19,8 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
-        <kouta-common.version>2.14.5-SNAPSHOT</kouta-common.version>
-        <kouta-backend.version>6.33.5-SNAPSHOT</kouta-backend.version>
+        <kouta-common.version>2.17.0-SNAPSHOT</kouta-common.version>
+        <kouta-backend.version>7.1.0-SNAPSHOT</kouta-backend.version>
 
         <!-- Utility properties -->
         <scala-utils.version>1.2.3-SNAPSHOT</scala-utils.version>
@@ -40,7 +40,7 @@
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 
         <!-- Elasticsearch properties -->
-        <elastic4sVersion>7.10.2</elastic4sVersion>
+        <elastic4sVersion>7.17.2</elastic4sVersion>
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>
@@ -103,6 +103,18 @@
                 <exclusion>
                     <groupId>fi.oph.kouta</groupId>
                     <artifactId>kouta-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sksamuel.elastic4s</groupId>
+                    <artifactId>elastic4s-core_2.12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sksamuel.elastic4s</groupId>
+                    <artifactId>elastic4s-client-esjava_2.12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.sksamuel.elastic4s</groupId>
+                    <artifactId>elastic4s-json-json4s_2.12</artifactId>
                 </exclusion>
             </exclusions>
             <scope>test</scope>

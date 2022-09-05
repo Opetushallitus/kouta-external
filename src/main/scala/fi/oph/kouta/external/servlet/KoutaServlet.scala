@@ -12,6 +12,7 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.service.{OrganizationAuthorizationFailedException, RoleAuthorizationFailedException}
 import fi.oph.kouta.util.TimeUtils.renderHttpDate
 import fi.vm.sade.utils.slf4j.Logging
+import org.json4s.MappingException
 import org.json4s.jackson.Serialization.write
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
@@ -65,6 +66,9 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
   }
 
   error {
+    case e: MappingException =>
+      logger.warn("JSON mapping failed", e)
+      BadRequest(e.getMessage)
     case e: AuthenticationFailedException =>
       logger.warn(s"authentication failed: ${e.getMessage}")
       Unauthorized("error" -> "Unauthorized")

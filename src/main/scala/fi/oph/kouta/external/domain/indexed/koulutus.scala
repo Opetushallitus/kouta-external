@@ -176,6 +176,24 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
   )
 }
 
+case class OpePedagOpinnotKoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = OpePedagOpinnot,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed],
+    koulutusala: Seq[KoodiUri],
+    tutkintonimike: Seq[KoodiUri],
+    opintojenLaajuus: Option[KoodiUri]
+) extends KorkeakoulutusKoulutusMetadataIndexed {
+  override def toKoulutusMetadata: OpePedagOpinnotKoulutusMetadata = OpePedagOpinnotKoulutusMetadata(
+    tyyppi = tyyppi,
+    kuvaus = kuvaus,
+    lisatiedot = lisatiedot.map(_.toLisatieto),
+    koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
+    tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
+    opintojenLaajuusKoodiUri = opintojenLaajuus.map(_.koodiUri)
+  )
+}
+
 case class LukioKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty = Map.empty,

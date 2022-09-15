@@ -34,7 +34,7 @@ class SorakuvausSpec
   ): Unit =
     addCreateMock(
       entityName,
-      KoutaBackendConverters.convertSorakuvaus(sorakuvaus(organisaatioOid)),
+      sorakuvaus(organisaatioOid),
       "kouta-backend.sorakuvaus",
       responseString,
       session,
@@ -50,7 +50,7 @@ class SorakuvausSpec
   ): Unit =
     addUpdateMock(
       entityName,
-      KoutaBackendConverters.convertSorakuvaus(sorakuvaus(oidOrId)),
+      sorakuvaus(oidOrId),
       "kouta-backend.sorakuvaus",
       ifUnmodifiedSince,
       session,

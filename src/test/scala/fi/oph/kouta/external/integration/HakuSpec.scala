@@ -34,7 +34,7 @@ class HakuSpec
   ): Unit =
     addCreateMock(
       entityName,
-      KoutaBackendConverters.convertHaku(haku(organisaatioOid)),
+      haku(organisaatioOid),
       "kouta-backend.haku",
       responseString,
       session,
@@ -50,7 +50,7 @@ class HakuSpec
   ): Unit =
     addUpdateMock(
       entityName,
-      KoutaBackendConverters.convertHaku(haku(oidOrId)),
+      haku(oidOrId),
       "kouta-backend.haku",
       ifUnmodifiedSince,
       session,

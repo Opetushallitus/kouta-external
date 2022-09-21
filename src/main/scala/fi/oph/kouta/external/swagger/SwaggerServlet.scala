@@ -16,12 +16,13 @@ class SwaggerServlet extends ScalatraServlet {
   protected lazy val renderOpenapi3Yaml: String = {
     val header =
       """
-        |openapi: 3.0.0
+        |openapi: 3.0.3
         |info:
         |  title: kouta-external
+        |  version: 0.2-SNAPSHOT
         |  description: >
         |    <p><strong>Uuden koulutustarjonnan Opintopolun ulkopuolisille palveluille tarkoitetut rajapinnat.</strong></p>
-            <p>Ohjeita rajapintojen kutsujalle:
+        |    <p>Ohjeita rajapintojen kutsujalle:
         |    <ul>
         |    <li><a href="https://wiki.eduuni.fi/x/L95cCw" target="_blank">Autentikaatio</a></li>
         |    <li><a href="https://wiki.eduuni.fi/x/0MeKCg" target="_blank">Kutsujan tunniste (caller-id)</a></li>

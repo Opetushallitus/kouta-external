@@ -20,11 +20,11 @@ import java.util.UUID
     |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        toteutusOid:
     |          type: string
-    |          description: Hakukohteeseen liitetyn toteutuksen yksilöivä tunniste.
+    |          description: Hakukohteeseen liitetyn toteutuksen oid.
     |          example: "1.2.246.562.17.00000000000000000009"
     |        hakukohderyhmat:
     |          type: array
-    |          description: Hakukohderyhmien tunnisteet
+    |          description: Hakukohderyhmien, joihin hakukohde kuuluu, oidit.
     |          items:
     |            type: string
     |          example:
@@ -32,7 +32,7 @@ import java.util.UUID
     |            - "1.2.246.562.28.00000000000000000002"
     |        hakuOid:
     |          type: string
-    |          description: Hakukohteeseen liitetyn haun yksilöivä tunniste.
+    |          description: Hakukohteeseen liitetyn haun oid.
     |          example: "1.2.246.562.29.00000000000000000009"
     |        tila:
     |          type: string
@@ -41,7 +41,8 @@ import java.util.UUID
     |            - julkaistu
     |            - arkistoitu
     |            - tallennettu
-    |          description: Haun julkaisutila. Jos hakukohde on julkaistu, se näkyy oppijalle Opintopolussa.
+    |            - poistettu
+    |          description: "Hakukohteen julkaisutila. Uudet hakukohteet luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun hakukohde on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut hakukohteet voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut hakukohteet voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
     |        nimi:
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -52,8 +53,7 @@ import java.util.UUID
     |          example: 1.2.246.562.10.00101010101
     |        hakulomaketyyppi:
     |          type: string
-    |          description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö Atarun (hakemuspalvelun) hakulomaketta, muuta hakulomaketta
-    |            (jolloin voidaan lisätä hakulomakkeeseen linkki) tai onko niin, ettei sähkököistä hakulomaketta ole lainkaan, jolloin sille olisi hyvä lisätä kuvaus.
+    |          description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö hakemuspalvelun (ataru) hakulomaketta, muuta hakulomaketta, tai että ei ole sähköistä hakua ollenkaan. Hakemuspalvelun kohdalla seuraavassa kentässä määritellään hakemuspalvelun lomake, mihin haku kuuluu. Muun kohdalla ilmoitetaan hakulomakeLinkki sekä tieto kaytetaanHaunHakulomaketta. Jos käytössä ei ole sähköistä hakua, ilmoitetaan hakulomakeKuvaus.
     |          example: "ataru"
     |          enum:
     |            - ataru
@@ -61,19 +61,19 @@ import java.util.UUID
     |            - muu
     |        hakulomakeAtaruId:
     |          type: string
-    |          description: Hakulomakkeen yksilöivä tunniste, jos käytössä on Atarun (hakemuspalvelun) hakulomake
+    |          description: Hakulomakkeen yksilöivä tunniste, jos käytössä on hakemuspalvelun (ataru) hakulomake.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        hakulomakeKuvaus:
     |          type: object
-    |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa. Käytössä vain jos valittu ei sähköistä hakua.
     |          $ref: '#/components/schemas/Kuvaus'
     |        hakulomakeLinkki:
     |          type: object
-    |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa. Käytössä vain muulla kuin Opintopolun hakulomakkeella.
     |          $ref: '#/components/schemas/Linkki'
     |        kaytetaanHaunHakulomaketta:
     |          type: boolean
-    |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake?
+    |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake? Käytössä vain muulla kuin Opintopolun hakulomakkeella.
     |        pohjakoulutusvaatimusKoodiUrit:
     |          type: array
     |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/pohjakoulutusvaatimuskouta/1)
@@ -84,14 +84,14 @@ import java.util.UUID
     |            - pohjakoulutusvaatimuskouta_109#1
     |        muuPohjakoulutusvaatimus:
     |          type: object
-    |          description: Hakukohteen muiden pohjakoulutusvaatimusten kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          description: Hakukohteen muiden pohjakoulutusvaatimusten vapaa kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
     |        toinenAsteOnkoKaksoistutkinto:
     |          type: boolean
-    |          description: Onko hakukohteen toisen asteen koulutuksessa mahdollista suorittaa kaksoistutkinto?
+    |          description: "Onko hakukohteen toisen asteen koulutuksessa mahdollista suorittaa kaksoistutkinto. Käytössä vain koulutustyypeillä: amm ja lukio"
     |        kaytetaanHaunAikataulua:
     |          type: boolean
-    |          description: Käytetäänkö haun hakuaikoja vai onko hakukohteelle määritelty omat hakuajat?
+    |          description: Käytetäänkö haun hakuaikoja vai onko hakukohteelle määritelty omat hakuajat? Jos false, hakukohteelle voidaan määritellä oma, erillinen hakuaika kentässä hakuajat
     |        valintaperusteId:
     |          type: string
     |          description: Hakukohteeseen liittyvän valintaperustekuvauksen yksilöivä tunniste
@@ -109,7 +109,7 @@ import java.util.UUID
     |          example: 2019-08-23T09:55
     |        liitteidenToimitustapa:
     |          type: string
-    |          description: Jos liitteillä on sama toimitustapa, se ilmoitetaan tässä
+    |          description: Jos liitteillä on sama toimitustapa, se ilmoitetaan tässä. 
     |          example: "hakijapalvelu"
     |          enum:
     |            - hakijapalvelu

@@ -10,12 +10,10 @@ import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
 import org.json4s.jackson.Serialization.{read, write}
-import org.json4s.{Extraction, JBool, JObject}
+import org.json4s.{JBool, JObject}
 import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
-
-import scala.reflect.Manifest
 
 trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseSpec with ElasticDumpFixture {
 

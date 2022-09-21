@@ -25,15 +25,16 @@ import java.util.UUID
     |            - julkaistu
     |            - arkistoitu
     |            - tallennettu
-    |          description: Haun julkaisutila. Jos haku on julkaistu, se näkyy oppijalle Opintopolussa.
+    |            - poistettu
+    |          description: "Haun julkaisutila. Uudet haut luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun haku on julkaistu, se näkyy oppijalle Opintopolussa ja on käytettävissä hakemus- ja valintapalveluissa. Tallennetut haut voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut haut voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
     |        nimi:
     |          type: object
-    |          description: Haun Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          description: "Haun Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa."
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
     |        hakutapaKoodiUri:
     |          type: string
-    |          description: Haun hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/hakutapa/11)
+    |          description: Haun hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/hakutapa/1)
     |          example: hakutapa_03#1
     |        hakukohteenLiittamisenTakaraja:
     |          type: string
@@ -50,7 +51,7 @@ import java.util.UUID
     |        ajastettuJulkaisu:
     |          type: string
     |          format: date-time
-    |          description: Ajanhetki, jolloin haku ja siihen liittyvät hakukohteet ja koulutukset julkaistaan
+    |          description: EI KÄYTÖSSÄ. Ajanhetki, jolloin haku ja siihen liittyvät hakukohteet ja koulutukset julkaistaan
     |            automaattisesti Opintopolussa, jos ne eivät vielä ole julkisia
     |          example: 2019-08-23T09:55
     |        kohdejoukkoKoodiUri:
@@ -63,9 +64,7 @@ import java.util.UUID
     |          example: haunkohdejoukontarkenne_1#1
     |        hakulomaketyyppi:
     |          type: string
-    |          description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö Atarun (hakemuspalvelun) hakulomaketta, muuta hakulomaketta
-    |            (jolloin voidaan lisätä hakulomakkeeseen linkki) tai onko niin, ettei sähkököistä hakulomaketta ole lainkaan, jolloin sille olisi hyvä lisätä kuvaus.
-    |            Hakukohteella voi olla eri hakulomake kuin haulla.
+    |          description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö hakemuspalvelun (ataru) hakulomaketta, muuta hakulomaketta, tai että ei ole sähköistä hakua ollenkaan. Hakemuspalvelun kohdalla seuraavassa kentässä määritellään hakemuspalvelun lomake, mihin haku kuuluu. Muun kohdalla ilmoitetaan hakulomakeLinkki. Jos ei ole sähköistä hakua ilmoitetaan hakulomakeKuvaus.
     |          example: "ataru"
     |          enum:
     |            - ataru
@@ -73,21 +72,21 @@ import java.util.UUID
     |            - muu
     |        hakulomakeAtaruId:
     |          type: string
-    |          description: Hakulomakkeen yksilöivä tunniste, jos käytössä on Atarun (hakemuspalvelun) hakulomake. Hakukohteella voi olla eri hakulomake kuin haulla.
+    |          description: Hakulomakkeen yksilöivä tunniste, jos käytössä on hakemuspalvelun (ataru) hakulomake. 
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        hakulomakeKuvaus:
     |          type: object
-    |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa. Hakukohteella voi olla eri hakulomake kuin haulla.
+    |          description: Hakulomakkeen kuvausteksti eri kielillä. Kielet on määritetty haun kielivalinnassa. Käytössä vain kun on valittu ei sähköistä hakua.
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
     |        hakulomakeLinkki:
     |          type: object
-    |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa. Hakukohteella voi olla eri hakulomake kuin haulla.
+    |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa. Käytössä vain muilla kuin Opintopolun hakulomakkeilla.
     |          allOf:
     |            - $ref: '#/components/schemas/Linkki'
     |        hakuajat:
     |          type: array
-    |          description: Haun hakuajat. Hakukohteella voi olla omat hakuajat.
+    |          description: Haun hakuajat. 
     |          items:
     |            $ref: '#/components/schemas/Ajanjakso'
     |        metadata:

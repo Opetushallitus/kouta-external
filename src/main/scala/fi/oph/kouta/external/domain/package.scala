@@ -9,6 +9,15 @@ import java.util.UUID
 package object domain {
 
   @SwaggerModel(
+    """    Hakutermi:
+      |      type: string
+      |      enum:
+      |        - hakeutuminen
+      |        - ilmoittautuminen
+      |""")
+  abstract class HakutermiSwagger
+
+  @SwaggerModel(
   """
     |    Koulutustyyppi:
     |      type: string
@@ -309,7 +318,7 @@ package object domain {
       |      properties:
       |        kieli:
       |          type: string
-      |          desciption: Ammattinimikkeen kieli
+      |          description: Ammattinimikkeen kieli
       |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:
@@ -321,7 +330,7 @@ package object domain {
       |      properties:
       |        kieli:
       |          type: string
-      |          desciption: Asiasanan kieli
+      |          description: Asiasanan kieli
       |          $ref: '#/components/schemas/Kieli'
       |          example: fi
       |        arvo:

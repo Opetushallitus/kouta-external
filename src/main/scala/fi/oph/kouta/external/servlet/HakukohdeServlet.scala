@@ -25,7 +25,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     "/hakukohde/{oid}",
     """    get:
       |      summary: Hae hakukohteen tiedot
-      |      operationId: Hae hakukohde
+      |      operationId: getHakukohde
       |      description: Hakee hakukohteen kaikki tiedot
       |      tags:
       |        - Hakukohde
@@ -64,7 +64,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   registerPath( "/hakukohde/",
     """    put:
       |      summary: Tallenna uusi hakukohde
-      |      operationId: Tallenna uusi haku
+      |      operationId: createHakukohde
       |      description: Tallenna uuden hakukohteen tiedot.
       |        Rajapinta palauttaa hakukohteelle generoidun yksilöivän hakukohde-oidin
       |      tags:
@@ -107,7 +107,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   registerPath("/hakukohde/",
     """    post:
       |      summary: Muokkaa olemassa olevaa hakukohdetta
-      |      operationId: Muokkaa hakukohdetta
+      |      operationId: editHakukohde
       |      description: Muokkaa olemassa olevaa hakukohdetta. Rajapinnalle annetaan hakukohteen kaikki tiedot,
       |        ja muuttuneet tiedot tallennetaan kantaan.
       |      tags:
@@ -145,7 +145,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     "/hakukohde/search",
     """    get:
       |      summary: Etsi hakukohteita
-      |      operationId: Etsi hakukohteita
+      |      operationId: searchHakukohteet
       |      description: Etsii hakukohteista annetuilla ehdoilla
       |      tags:
       |        - Hakukohde

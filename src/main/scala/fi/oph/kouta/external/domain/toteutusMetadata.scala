@@ -262,6 +262,10 @@ case class AmmattikorkeakouluToteutusMetadata(
     |              example: amm-ope-erityisope-ja-opo
     |              enum:
     |                - amm-ope-erityisope-ja-opo
+    |            aloituspaikat:
+    |              type: integer
+    |              description: Toteutuksen aloituspaikkojen lukumäärä
+    |              example: 100
     |""")
 case class AmmOpeErityisopeJaOpoToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
@@ -269,7 +273,34 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    aloituspaikat: Option[Int]
+) extends ToteutusMetadata
+
+@SwaggerModel("""    OpePedagOpinnotToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/ToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: ope-pedag-opinnot
+    |              enum:
+    |                - ope-pedag-opinnot
+    |            aloituspaikat:
+    |              type: integer
+    |              description: Toteutuksen aloituspaikkojen lukumäärä
+    |              example: 100
+    |""")
+case class OpePedagOpinnotToteutusMetadata(
+    tyyppi: Koulutustyyppi = OpePedagOpinnot,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    aloituspaikat: Option[Int]
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -372,6 +403,10 @@ case class LukioToteutusMetadata(
     |              example: tuva
     |              enum:
     |                - tuva
+    |            aloituspaikat:
+    |              type: integer
+    |              description: Toteutuksen aloituspaikkojen lukumäärä
+    |              example: 100
     |            jarjestetaanErityisopetuksena:
     |              type: boolean
     |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
@@ -398,9 +433,10 @@ case class TuvaToteutusMetadata(
     |              example: telma
     |              enum:
     |                - telma
-    |            jarjestetaanErityisopetuksena:
-    |              type: boolean
-    |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
+    |            aloituspaikat:
+    |              type: integer
+    |              description: Toteutuksen aloituspaikkojen lukumäärä
+    |              example: 100
     |""")
 case class TelmaToteutusMetadata(
     tyyppi: Koulutustyyppi = Telma,

@@ -57,6 +57,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmatillinenToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoToteutusMetadata'
+    |            - $ref: '#/components/schemas/OpePedagOpinnotToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenMuuToteutusMetadata'

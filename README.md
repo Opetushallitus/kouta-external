@@ -32,6 +32,9 @@ cd postgresql/docker
 docker build --tag koutaexternal-postgres .
 ```
 
+Kopioi testikonfiguraatio lokaalia kehitystä varten '/src/test/resources/test-vars.yml' -> '/src/test/resources/dev-vars.yml'.
+Dev-vars.yml on ignoroitu Gitissä ettei salasanat valu repoon.
+
 Asetuksia voi muuttaa muokkaamalla '/src/test/resources/dev-vars.yml'-tiedostoa, tai
 ainakin luulen näin, koska kouta-backendissa on vastaava rakenne. Kunhan joku selvittää
 konfig-tiedoston toiminnan, toivottavasti päivittää myös tämän osion.

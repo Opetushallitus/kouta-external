@@ -2,17 +2,30 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.external.elasticsearch.ElasticsearchHealth
 import fi.vm.sade.utils.slf4j.Logging
+import org.apache.commons.io.FileUtils
+
+import java.io.File
 
 object EmbeddedJettyLauncher extends Logging with KoutaConfigurationConstants {
 
   val DefaultPort = "8097"
+  lazy val TestTemplateFilePath: String = {
+    val isDevMode = Option(System.getProperty("kouta-external.embedded")).exists("true".equalsIgnoreCase)
+    if(isDevMode) {
+      logger.info(s"Using local dev TestTemplateFilePath ${"src/test/resources/dev-vars.yml"}")
+      "src/test/resources/dev-vars.yml"
+    } else {
+      logger.info(s"Using TestTemplateFilePath ${"src/test/resources/test-vars.yml"}")
+      "src/test/resources/test-vars.yml"
+    }
+  }
 
-  val TestTemplateFilePath = "src/test/resources/dev-vars.yml"
-
-  def main(args: Array[String]) {
-    System.getProperty("kouta-external.embedded", "true") match {
+  def main(args: Array[String]): Unit = {
+    System.getProperty("kouta-external.embedded") match {
       case x if "false".equalsIgnoreCase(x) => TestSetups.setupWithoutEmbeddedPostgres()
-      case _ => TestSetups.setupWithEmbeddedPostgres()
+      case _ =>
+        System.setProperty("kouta-external.embedded", "true")
+        TestSetups.setupWithEmbeddedPostgres()
     }
 
     val port = System.getProperty("kouta-external.port", DefaultPort).toInt
@@ -83,7 +96,7 @@ object TestSetups extends Logging with KoutaConfigurationConstants {
 
 object Templates {
 
-  val DefaultTemplateFilePath = "src/test/resources/dev-vars.yml"
+  val DefaultTemplateFilePath: String = EmbeddedJettyLauncher.TestTemplateFilePath
   val TestTemplateFilePath = "src/test/resources/embedded-jetty-vars.yml"
 
   import java.io.{File, PrintWriter}

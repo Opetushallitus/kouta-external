@@ -22,7 +22,7 @@ private object TempElastic {
   }
 
   def create(): ElasticsearchContainer = {
-    val dockerImager = DockerImageName.parse("190073735177.dkr.ecr.eu-west-1.amazonaws.com/utility/elasticsearch-kouta:7.16.3").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch")
+    val dockerImager = DockerImageName.parse("190073735177.dkr.ecr.eu-west-1.amazonaws.com/utility/elasticsearch-kouta:7.17.3").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch")
     val embeddedElastic = new ElasticsearchContainer(dockerImager)
 
     embeddedElastic.start()

@@ -141,13 +141,13 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |        - Haku
       |      requestBody:
       |          description: Palautettavien hakujen oidit JSON-arrayna
-      |          example: ["1.2.246.562.29.00000000000000000009","1.2.246.562.29.00000000000000000186"]
       |          content:
       |             application/json:
       |               schema:
       |                 type: array
       |                 items:
       |                   type: string
+      |               example: ["1.2.246.562.29.00000000000000000009","1.2.246.562.29.00000000000000000186"]
       |      responses:
       |        '200':
       |          description: Ok

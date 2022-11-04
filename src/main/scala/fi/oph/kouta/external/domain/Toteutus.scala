@@ -28,7 +28,8 @@ import java.util.UUID
     |            - julkaistu
     |            - arkistoitu
     |            - tallennettu
-    |          description: Toteutuksen julkaisutila. Jos toteutus on julkaistu, se näkyy oppijalle Opintopolussa.
+    |            - poistettu
+    |          description: "Toteutuksen julkaisutila. Uudet toteutukset luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun toteutus on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut toteutukset voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut toteutukset voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
     |        tarjoajat:
     |          type: array
     |          description: Toteutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit
@@ -65,7 +66,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/TuvaToteutusMetadata'
     |            - $ref: '#/components/schemas/TelmaToteutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoOpistovuosiToteutusMetadata'
-    |            - $ref: '#/components/schemas/VapaaSivistystyoMuuMetadata'
+    |            - $ref: '#/components/schemas/VapaaSivistystyoMuuToteutusMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusToteutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
     |            - $ref: '#/components/schemas/ErikoislaakariToteutusMetadata'

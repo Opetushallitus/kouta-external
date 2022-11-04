@@ -17,13 +17,13 @@ import java.util.UUID
     |          example: "1.2.246.562.13.00000000000000000009"
     |        externalId:
     |          type: string
-    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
+    |          description: Ulkoinen tunniste, jota voidaan käyttää kouta-entiteettien yhdistämiseen oppilaitosten omien tietojärjestelmien kanssa
     |        johtaaTutkintoon:
     |          type: boolean
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen), 'yo' (yliopisto), 'lk' (lukio), 'amk' (ammattikorkea), 'amm-ope-erityisope-ja-opo' (Ammatillinen opettaja-, erityisopettaja ja opinto-ohjaajakoulutus), 'ope-pedag-opinnot' (Opettajien pedagogiset opinnot), 'amm-tutkinnon-osa', 'amm-osaamisala', 'amm-muu', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'telma' (työhön ja itsenäiseen elämään valmentava koulutus), 'vapaa-sivistystyö-opistovuosi', 'vapaa-sivistystyo-muu', 'aikuisten-perusopetus', 'muu'"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen tutkinto, ml. perustutkinnot, ammatti- ja erikoisammattitutkinnot), 'yo' (yliopistotutkinto), 'lk' (lukio), 'amk' (ammattikorkeakoulututkinto), 'amm-ope-erityisope-ja-opo' (Ammatillinen opettaja-, erityisopettaja ja opinto-ohjaajakoulutus), 'ope-pedag-opinnot' (Opettajien pedagogiset opinnot), 'amm-tutkinnon-osa' (ammatillinen tutkinnon osa), 'amm-osaamisala (ammatillinen osaamisala)', 'amm-muu (muu ammatillinen koulutus)', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'telma' (työhön ja itsenäiseen elämään valmentava koulutus), 'vapaa-sivistystyö-opistovuosi (opistovuosi oppivelvollisille)', 'vapaa-sivistystyo-muu' (muut vapaan sivistystyön koulutukset), 'aikuisten-perusopetus' (aikuisten perusopetus), 'muu' (muut koulutukset)"
     |          $ref: '#/components/schemas/Koulutustyyppi'
     |        koulutuksetKoodiUri:
     |          type: array
@@ -40,7 +40,8 @@ import java.util.UUID
     |            - julkaistu
     |            - arkistoitu
     |            - tallennettu
-    |          description: Koulutuksen julkaisutila. Jos koulutus on julkaistu, se näkyy oppijalle Opintopolussa.
+    |            - poistettu
+    |          description: "Koulutuksen julkaisutila. Uudet koulutukset luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun koulutus on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut koulutukset voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut koulutukset voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
     |        tarjoajat:
     |          type: array
     |          description: Koulutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit
@@ -92,7 +93,7 @@ import java.util.UUID
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
     |        julkinen:
     |          type: boolean
-    |          description: Voivatko muut oppilaitokset käyttää koulutusta
+    |          description: Parametri, jolla voidaan määritellä, voivatko muut oppilaitokset luoda toteutuksia tälle kyseiselle koulutukselle. Julkisia koulutuksia ovat mm. ammatilliset tutkinnot, korkeakoulujen yhteisesti sovitut koulutukset sekä jotkin muut koulutukset (tuva, telma, opistovuosi, lukio). Älä valitse tätä, jos koulutus ei ole tarkoitettu yhteiskäyttöön ja siitä ei ole sovittu OPH:n kanssa. Julkiset koulutukset näkyvät kaikilla muilla oppilaitoksilla koulutustarjonnan ylläpidon käyttöliittymässä.
     |        muokkaaja:
     |          type: string
     |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid
@@ -103,7 +104,7 @@ import java.util.UUID
     |           example: 1.2.246.562.10.00101010101
     |        kielivalinta:
     |          type: array
-    |          description: Kielet, joille koulutuksen nimi, kuvailutiedot ja muut tekstit on käännetty
+    |          description: Kielet, joilla koulutuksen tiedot esitetään Opintopolussa. Jos tiettyä kieliversiota ei ole valittu, näytetään kieliversiot järjestyksessä fi->sv->en, en->fi->sv, sv->fi->en.
     |          items:
     |            $ref: '#/components/schemas/Kieli'
     |          example:
@@ -115,7 +116,7 @@ import java.util.UUID
     |          example: https://konfo-files.opintopolku.fi/koulutus-teema/1.2.246.562.13.00000000000000000009/f4ecc80a-f664-40ef-98e6-eaf8dfa57f6e.png
     |        ePerusteId:
     |          type: number
-    |          description: Koulutuksen käyttämän ePerusteen id.
+    |          description: Koulutuksen käyttämän ePerusteen id. Huomaa, että tietyissä tapauksissa ePerusteId riippuu käytetystä koulutuksetKoodiUrista (ammatilliset tutkinnot, ammatilliset tutkinnon osat, ammatilliset osaamisalat)
     |          example: 4804100
     |        modified:
     |          type: string

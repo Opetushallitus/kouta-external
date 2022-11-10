@@ -11,6 +11,7 @@ import scala.util.Try
 
 case class KoutaDatabaseConfiguration(
     url: String,
+    port: Int,
     username: String,
     password: String,
     numThreads: Option[Int],
@@ -50,6 +51,7 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
   val databaseConfiguration: KoutaDatabaseConfiguration =
     KoutaDatabaseConfiguration(
       url = config.getString("kouta-external.db.url"),
+      port = config.getInt("kouta-external.db.port"),
       username = config.getString("kouta-external.db.user"),
       password = config.getString("kouta-external.db.password"),
       numThreads = Option(config.getInt("kouta-external.db.numThreads")),

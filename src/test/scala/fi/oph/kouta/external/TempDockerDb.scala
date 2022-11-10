@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.vm.sade.utils.slf4j.Logging
 import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
 
@@ -8,7 +9,7 @@ object TempDockerDb extends Logging {
   import TempDbUtils.tryTimes
   import CommandLine._
 
-  val port: Int     = new PortFromSystemPropertyOrFindFree("kouta-external.db.port").chosenPort
+  val port: Int     = KoutaConfigurationFactory.configuration.databaseConfiguration.port
   val dbName        = "koutaexternal"
   val containerName = "koutaexternal-database"
 

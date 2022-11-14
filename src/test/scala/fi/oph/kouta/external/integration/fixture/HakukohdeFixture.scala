@@ -7,11 +7,12 @@ import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
+import fi.vm.sade.utils.slf4j.Logging
 
 import java.time.Instant
 import java.util.UUID
 
-trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec {
+trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with Logging {
   val HakukohdePath = "/hakukohde"
   val HakukohdeSearchPath = "/hakukohde/search"
 

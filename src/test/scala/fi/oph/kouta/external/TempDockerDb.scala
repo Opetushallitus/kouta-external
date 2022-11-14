@@ -1,8 +1,6 @@
 package fi.oph.kouta.external
 
-import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.vm.sade.utils.slf4j.Logging
-import fi.vm.sade.utils.tcp.PortFromSystemPropertyOrFindFree
 
 object TempDockerDb extends Logging {
 

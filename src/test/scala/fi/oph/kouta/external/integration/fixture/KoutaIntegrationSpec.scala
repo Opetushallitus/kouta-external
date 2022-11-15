@@ -3,7 +3,7 @@ package fi.oph.kouta.external.integration.fixture
 import java.time.Instant
 import java.util.UUID
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.TestSetups.{setupWithEmbeddedPostgres, setupWithTemplate}
+import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
@@ -16,6 +16,8 @@ import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
 
 trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseSpec with ElasticDumpFixture {
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  TestSetups.setupPostgres()
 
   val serviceIdentifier  = KoutaIntegrationSpec.serviceIdentifier
   val rootOrganisaatio   = KoutaIntegrationSpec.rootOrganisaatio
@@ -32,15 +34,8 @@ trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseS
   def responseStringWithId(id: String): String =
     s"""{"id": "$id"}"""
 
-
-  override def beforeAll(): Unit = {
+      override def beforeAll(): Unit = {
     super.beforeAll()
-
-    Option(System.getProperty("kouta-external.test-postgres-port")) match {
-      case Some(port) => setupWithTemplate(port.toInt)
-      case None       => setupWithEmbeddedPostgres()
-    }
-
     addDefaultSession()
     initIndices()
   }
@@ -188,7 +183,8 @@ sealed trait HttpSpec extends KoutaJsonFormats { this: ScalatraFlatSpec =>
 }
 
 sealed trait DatabaseSpec {
-
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  TestSetups.setupPostgres()
   import fi.oph.kouta.external.database.KoutaDatabase
 
   private lazy val db = KoutaDatabase

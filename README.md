@@ -22,7 +22,7 @@ Asenna haluamallasi tavalla koneellesi
 3. [Maven](https://maven.apache.org/) Jos haluat ajaa komentoriviltä Mavenia,
    mutta idean Mavenilla pärjää kyllä hyvin, joten tämä ei ole pakollinen
 
-Lisäksi tarvitset Java SDK:n ja Scala SDK:n (Unix pohjaisissa käyttöjärjestelmissä auttaa esim. [SDKMAN!](https://sdkman.io/)). Katso [.travis.yml](.travis.yml) mitä versioita sovellus käyttää.
+Lisäksi tarvitset Java SDK:n ja Scala SDK:n (Unix pohjaisissa käyttöjärjestelmissä auttaa esim. [SDKMAN!](https://sdkman.io/)).
 Kirjoitushetkellä käytössä openJDK11 ja scala 2.12.10.   
 
 PostgreSQL kontti-image buildataan (täytyy tehdä vain kerran) komennnolla:
@@ -32,12 +32,9 @@ cd postgresql/docker
 docker build --tag koutaexternal-postgres .
 ```
 
-Kopioi testikonfiguraatio lokaalia kehitystä varten '/src/test/resources/test-vars.yml' -> '/src/test/resources/dev-vars.yml'.
-Dev-vars.yml on ignoroitu Gitissä ettei salasanat valu repoon.
+Kopioi lokaalia kehitystä varten konfiguraatiotiedosto '/src/test/resources/dev-vars.template.yml' -> '/src/test/resources/dev-vars.yml'. Dev-vars.yml on ignoroitu Gitissä ettei salasanat valu repoon.
 
-Asetuksia voi muuttaa muokkaamalla '/src/test/resources/dev-vars.yml'-tiedostoa, tai
-ainakin luulen näin, koska kouta-backendissa on vastaava rakenne. Kunhan joku selvittää
-konfig-tiedoston toiminnan, toivottavasti päivittää myös tämän osion.
+Lokaalin ajon asetuksia voi muuttaa muokkaamalla '/src/test/resources/dev-vars.yml'-tiedostoa. 
 
 ### 3.2. Testien ajaminen
 
@@ -63,13 +60,13 @@ Migraatiot ajetaan automaattisesti testien alussa tai kun kouta-external käynni
 
 Ennen lokaalia ajoa täytyy olla elasticsearch pyörimässä. Kontin saa pystyyn ajamalla
 ```shell
-docker run --rm --name koutaexternal-elastic --env "discovery.type=single-node" -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 docker.elastic.co/elasticsearch/elasticsearch:6.8.13
+docker run --rm --name koutaexternal-elastic --env "discovery.type=single-node" -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 docker.elastic.co/elasticsearch/elasticsearch:7.17.3
 ```
 
 tämän jälkeen käynnistä Ideassa embeddedJettyLauncher.scala (right-click -> Run). Tämä käynnistää samalla
 postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
-### 3.5. Käyttöliittymä
+### 3.5. Swagger
 
 Swagger löytyy osoitteesta [http://localhost:8097/kouta-external/swagger/](http://localhost:8097/kouta-external/swagger/)
 

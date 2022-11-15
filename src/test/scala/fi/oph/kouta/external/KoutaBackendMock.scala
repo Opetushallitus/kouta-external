@@ -4,7 +4,7 @@ import java.time.Instant
 import java.util.UUID
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.mocks.ServiceMocks
+import fi.oph.kouta.mocks.{ServiceMocks}
 import fi.oph.kouta.security.CasSession
 import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
@@ -16,17 +16,16 @@ import org.scalatra.test.scalatest.ScalatraFlatSpec
    in test/resources/log4j.properties */
 
 trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJsonFormats {
-  var koutaBackendProperties: Option[OphProperties] = None
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties)
+  val koutaBackendProperties: Option[OphProperties] = urlProperties
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    super.startServiceMocking()
-    urlProperties = Some(
-      KoutaConfigurationFactory.configuration.urlProperties
-        .addOverride("host.virkailija", s"localhost:$mockPort")
-        .addOverride("host.kouta-backend", s"http://localhost:$mockPort")
-    )
-    koutaBackendProperties = urlProperties
+    if (mockServer.isEmpty) {
+      val virkailijaHostPort = urlProperties.get.getProperty("host.virkailija").split(":").last.toInt
+      startServiceMocking(virkailijaHostPort)
+    }
   }
 
   override def afterAll(): Unit = {

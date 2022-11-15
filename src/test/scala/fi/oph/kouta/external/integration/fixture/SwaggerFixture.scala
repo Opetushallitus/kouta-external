@@ -1,8 +1,7 @@
 package fi.oph.kouta.external.integration.fixture
 
-import fi.oph.kouta.external.TestSetups.setupWithEmbeddedPostgres
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.{KoutaConfigurationFactory, MockHakukohderyhmaClient, MockKoutaClient, MockSecurityContext, TempElasticClient}
+import fi.oph.kouta.external.{KoutaConfigurationFactory, MockHakukohderyhmaClient, MockKoutaClient, MockSecurityContext, TempElasticClient, TestSetups}
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient, KoulutusClient, ToteutusClient, ValintaperusteClient}
 import fi.oph.kouta.external.security.{CasSessionService, SecurityContext}
 import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, KoulutusService, OrganisaatioServiceImpl, ToteutusService, ValintaperusteService}
@@ -15,6 +14,8 @@ import fi.oph.kouta.security.{CasSession, ServiceTicket}
 import java.util.UUID
 
 trait SwaggerFixture extends ScalatraFlatSpec {
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  TestSetups.setupPostgres()
   val KoulutusPath       = "/koulutus"
   val ToteutusPath       = "/toteutus"
   val HakukohdePath      = "/hakukohde"
@@ -36,7 +37,6 @@ trait SwaggerFixture extends ScalatraFlatSpec {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    setupWithEmbeddedPostgres()
     SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
     urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties)
     val mockKoutaClient      = new MockKoutaClient(urlProperties.get)

@@ -146,7 +146,8 @@ case class YliopistoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String]
+    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaKoulutusMetadata:
@@ -167,7 +168,8 @@ case class AmmattikorkeakouluKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String]
+    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoKoulutusMetadata:
@@ -188,7 +190,8 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String]
+    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    OpePedagOpinnotKoulutusMetadata:
@@ -209,7 +212,8 @@ case class OpePedagOpinnotKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String]
+    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel(
@@ -242,6 +246,7 @@ case class LukioKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusNumero: Option[Double],
     koulutusalaKoodiUrit: Seq[String]
 ) extends KoulutusMetadata
 
@@ -271,7 +276,8 @@ case class TuvaKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[String] = None
+    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -300,7 +306,8 @@ case class TelmaKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[String] = None
+    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -376,7 +383,8 @@ case class VapaaSivistystyoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
     koulutusalaKoodiUrit: Seq[String] = Seq(),
-    opintojenLaajuusKoodiUri: Option[String] = None
+    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
 @SwaggerModel(

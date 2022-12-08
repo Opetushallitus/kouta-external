@@ -511,7 +511,10 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    isAvoinKorkeakoulutus: Option[Boolean],
+    tunniste: Option[String] = None,
+    opinnonTyyppi: Option[KoodiUri] = None
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: KkOpintojaksoToteutusMetadata = {
     KkOpintojaksoToteutusMetadata(
@@ -527,7 +530,10 @@ case class KkOpintojaksoToteutusMetadataIndexed(
       lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
-      aloituspaikat = aloituspaikat
+      aloituspaikat = aloituspaikat,
+      isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
+      tunniste = tunniste,
+      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
     )
   }
 }
@@ -567,7 +573,10 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    isAvoinKorkeakoulutus: Option[Boolean],
+    tunniste: Option[String] = None,
+    opinnonTyyppi: Option[KoodiUri] = None
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: KkOpintokokonaisuusToteutusMetadata = {
     KkOpintokokonaisuusToteutusMetadata(
@@ -585,7 +594,10 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
-      opintojenLaajuusNumero = opintojenLaajuusNumero
+      opintojenLaajuusNumero = opintojenLaajuusNumero,
+      isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
+      tunniste = tunniste,
+      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
     )
   }
 }

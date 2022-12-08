@@ -550,7 +550,10 @@ case class KkOpintojaksoToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    isAvoinKorkeakoulutus: Option[Boolean],
+    tunniste: Option[String] = None,
+    opinnonTyyppiKoodiUri: Option[String] = None
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    ErikoislaakariToteutusMetadata:
@@ -611,5 +614,8 @@ case class KkOpintokokonaisuusToteutusMetadata(
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    isAvoinKorkeakoulutus: Option[Boolean],
+    tunniste: Option[String] = None,
+    opinnonTyyppiKoodiUri: Option[String] = None
 ) extends TutkintoonJohtamatonToteutusMetadata

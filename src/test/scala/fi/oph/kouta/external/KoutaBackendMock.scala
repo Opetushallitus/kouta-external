@@ -1,15 +1,14 @@
 package fi.oph.kouta.external
 
-import java.time.Instant
-import java.util.UUID
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.mocks.{ServiceMockBase, ServiceMocks, SpecWithMocks}
+import fi.oph.kouta.mocks.{ServiceMockBase, SpecWithMocks}
 import fi.oph.kouta.security.CasSession
 import fi.oph.kouta.util.TimeUtils
-import fi.vm.sade.properties.OphProperties
 import org.mockserver.matchers.MatchType
-import org.scalatra.test.scalatest.ScalatraFlatSpec
+
+import java.time.Instant
+import java.util.UUID
 
 /* If you need to debug mocks,
    change log4j.logger.org.mockserver=INFO

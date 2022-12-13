@@ -1,10 +1,9 @@
 package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid, RootOrganisaatioOid}
-import fi.oph.kouta.external.database.SessionDAO
+import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.MockSecurityContext
-import fi.oph.kouta.mocks.{OrganisaatioServiceMock, ServiceMocks}
+import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
@@ -13,25 +12,6 @@ import scala.collection.mutable
 
 case class TestUser(oid: String, username: String, sessionId: UUID) {
   val ticket = MockSecurityContext.ticketFor(KoutaIntegrationSpec.serviceIdentifier, username)
-}
-
-@deprecated(
-  "Korvaa kouta-commonin OrganisaatioServiceMock:lla, kun testit on refaktoroitu käyttämään ServiceMockeria.",
-  "kouta-external"
-)
-trait OrganisaatioServiceMockOld extends ServiceMocks {
-
-  val NotFoundOrganisaatioResponse = s"""{ "numHits": 0, "organisaatiot": []}"""
-  lazy val DefaultResponse         = responseFromResource("organisaatio")
-
-  def mockOrganisaatioResponse(response: String = DefaultResponse): Unit = {
-    println(getMockPath("organisaatio-service.organisaatio.oid.jalkelaiset", Some(RootOrganisaatioOid.s)))
-    mockGet(
-      getMockPath("organisaatio-service.organisaatio.oid.jalkelaiset", Some(RootOrganisaatioOid.s)),
-      Map.empty,
-      response
-    )
-  }
 }
 
 trait AccessControlSpec extends ScalatraFlatSpec {

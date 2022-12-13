@@ -6,6 +6,7 @@ import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
 import org.json4s.jackson.JsonMethods.parse
@@ -15,8 +16,17 @@ import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
 
-trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseSpec with ElasticDumpFixture {
+trait KoutaIntegrationSpec extends ScalatraFlatSpec
+  with SpecWithMocks
+  with UrlProperties
+  with HttpSpec
+  with OrganisaatioServiceMock
+  with DatabaseSpec
+  with ElasticDumpFixture {
+
+  System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  setUrlProperties(KoutaConfigurationFactory.configuration.urlProperties)
   TestSetups.setupPostgres()
 
   val serviceIdentifier  = KoutaIntegrationSpec.serviceIdentifier
@@ -34,10 +44,11 @@ trait KoutaIntegrationSpec extends ScalatraFlatSpec with HttpSpec with DatabaseS
   def responseStringWithId(id: String): String =
     s"""{"id": "$id"}"""
 
-      override def beforeAll(): Unit = {
+  override def beforeAll(): Unit = {
     super.beforeAll()
     addDefaultSession()
     initIndices()
+    mockOrganisaatioResponse()
   }
 
   override def afterAll(): Unit = {

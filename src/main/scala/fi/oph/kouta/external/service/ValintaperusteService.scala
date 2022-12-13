@@ -7,7 +7,7 @@ import fi.oph.kouta.external.kouta
 import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaResponse, KoutaValintaperusteRequest, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.RoleEntityAuthorizationService
+import fi.oph.kouta.service.{AuthorizationRuleForReadJulkinen, AuthorizationRules, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
@@ -34,7 +34,7 @@ class ValintaperusteService(
         AuthorizationRules(
           roleEntity.readRoles.filterNot(_ == Indexer),
           allowAccessToParentOrganizations = true,
-          Seq(AuthorizationRuleForJulkinen)
+          Some(AuthorizationRuleForReadJulkinen)
         )
       )
     }

@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.{Amm, Koulutustyyppi, Erikoislaakari}
+import fi.oph.kouta.domain.{Amm, Erikoislaakari, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -116,15 +116,20 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |          example:
     |            - tutkintonimikekk_110#2
     |            - tutkintonimikekk_111#2
-    |        opintojenLaajuusKoodiUri:
+    |        opintojenLaajuusyksikkoKoodiUri:
     |          type: string
-    |          description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |          example: opintojenlaajuus_40#1
+    |          description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |          example: opintojenlaajuusyksikko_2#1
+    |        opintojenLaajuusNumero:
+    |          type: double
+    |          description: Opintojen laajuus tai kesto numeroarvona
+|                example: 10
     |"""
 )
 trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
   val tutkintonimikeKoodiUrit: Seq[String]
-  val opintojenLaajuusKoodiUri: Option[String]
+  val opintojenLaajuusyksikkoKoodiUri: Option[String]
+  val opintojenLaajuusNumero: Option[Double]
   val koulutusalaKoodiUrit: Seq[String]
 }
 
@@ -146,7 +151,7 @@ case class YliopistoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
@@ -168,7 +173,7 @@ case class AmmattikorkeakouluKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
@@ -190,7 +195,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
@@ -212,7 +217,7 @@ case class OpePedagOpinnotKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     koulutusalaKoodiUrit: Seq[String],
     tutkintonimikeKoodiUrit: Seq[String],
-    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumero: Option[Double]
 ) extends KorkeakoulutusKoulutusMetadata
 
@@ -228,10 +233,14 @@ case class OpePedagOpinnotKoulutusMetadata(
     |              example: lk
     |              enum:
     |                - lk
-    |            opintojenLaajuusKoodiUri:
+    |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |              example: opintojenlaajuus_40#1
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 150
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -245,7 +254,7 @@ case class LukioKoulutusMetadata(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
-    opintojenLaajuusKoodiUri: Option[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumero: Option[Double],
     koulutusalaKoodiUrit: Seq[String]
 ) extends KoulutusMetadata
@@ -265,10 +274,14 @@ case class LukioKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
-    |            opintojenLaajuusKoodiUri:
+    |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |              example: opintojenlaajuus_38#1
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_8#1
+    |            opintojenLaajuusNumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 150
     |"""
 )
 case class TuvaKoulutusMetadata(
@@ -276,7 +289,7 @@ case class TuvaKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
     opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
@@ -295,10 +308,14 @@ case class TuvaKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
-    |            opintojenLaajuusKoodiUri:
+    |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |              example: opintojenlaajuus_38#1
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusNumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 150
     |"""
 )
 case class TelmaKoulutusMetadata(
@@ -306,7 +323,7 @@ case class TelmaKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
-    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
     opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
@@ -371,10 +388,14 @@ case class AmmatillinenMuuKoulutusMetadata(
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
-    |            opintojenLaajuusKoodiUri:
+    |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Tutkinnon laajuus. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuus/1)"
-    |              example: opintojenlaajuus_v53#1
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusNumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 10
     |"""
 )
 case class VapaaSivistystyoKoulutusMetadata(
@@ -383,7 +404,7 @@ case class VapaaSivistystyoKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty,
     koulutusalaKoodiUrit: Seq[String] = Seq(),
-    opintojenLaajuusKoodiUri: Option[String] = None,
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
     opintojenLaajuusNumero: Option[Double]
 ) extends KoulutusMetadata
 
@@ -436,11 +457,15 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
-    |              example: opintojenlaajuusyksikko_6#1
-    |            opintojenLaajuusNumero:
-    |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumeroMin:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
     |              example: 10
+    |            opintojenLaajuusNumeroMax:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
+    |              example: 20
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -455,7 +480,8 @@ case class KkOpintojaksoKoulutusMetadata(
     kuvaus: Kielistetty,
     lisatiedot: Seq[Lisatieto],
     opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
-    opintojenLaajuusNumero: Option[Double] = None,
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double],
     koulutusalaKoodiUrit: Seq[String] = Seq(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
@@ -543,4 +569,54 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     isAvoinKorkeakoulutus: Option[Boolean] = None,
     tunniste: Option[String] = None,
     opinnonTyyppiKoodiUri: Option[String] = None
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    ErikoistumiskoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: erikoistumiskoulutus
+    |              enum:
+    |                - erikoistumiskoulutus
+    |            erikoistumiskoulutusKoodiUri:
+    |              type: string
+    |              description: Erikoistumiskoulutuksen koodiURI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/erikoistumiskoulutukset/2)
+    |              example:
+    |                - erikoistumiskoulutukset_001#2
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              example:
+    |                - opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumeroMin:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
+    |              example: 10
+    |            opintojenLaajuusNumeroMax:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
+    |              example: 20
+    |"""
+)
+case class ErikoistumiskoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    erikoistumiskoulutusKoodiUri: Option[String] = None,
+    koulutusalaKoodiUrit: Seq[String],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double]
 ) extends KoulutusMetadata

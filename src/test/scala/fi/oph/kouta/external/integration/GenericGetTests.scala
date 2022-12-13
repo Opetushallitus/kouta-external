@@ -6,8 +6,7 @@ import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegr
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.TestOids._
 
-trait GenericGetTests[E, ID] {
-  this: KoutaIntegrationSpec with AccessControlSpec =>
+trait GenericGetTests[E, ID] extends KoutaIntegrationSpec with AccessControlSpec {
 
   def entityPath: String
   def entityName: String

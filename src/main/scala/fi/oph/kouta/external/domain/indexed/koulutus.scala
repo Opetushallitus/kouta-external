@@ -138,7 +138,7 @@ case class YliopistoKoulutusMetadataIndexed(
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero
   )
 }
@@ -158,7 +158,7 @@ case class AmmattikorkeakouluKoulutusMetadataIndexed(
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero
   )
 }
@@ -178,7 +178,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero
   )
 }
@@ -198,7 +198,7 @@ case class OpePedagOpinnotKoulutusMetadataIndexed(
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero
   )
 }
@@ -215,7 +215,7 @@ case class LukioKoulutusMetadataIndexed(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
     lisatiedot = lisatiedot.map(_.toLisatieto),
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero,
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri)
   )
@@ -234,7 +234,7 @@ case class TuvaKoulutusMetadataIndexed(
     kuvaus = kuvaus,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     linkkiEPerusteisiin = linkkiEPerusteisiin,
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero,
   )
 }
@@ -252,7 +252,7 @@ case class TelmaKoulutusMetadataIndexed(
     kuvaus = kuvaus,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     linkkiEPerusteisiin = linkkiEPerusteisiin,
-    opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+    opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero,
   )
 }
@@ -271,7 +271,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
       kuvaus = kuvaus,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin,
-      opintojenLaajuusKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumero = opintojenLaajuusNumero
     )
 }
@@ -302,7 +302,8 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
     linkkiEPerusteisiin: Kielistetty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
-    opintojenLaajuusNumero: Option[Double] = None
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double]
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: KkOpintojaksoKoulutusMetadata =
     KkOpintojaksoKoulutusMetadata(
@@ -311,7 +312,8 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
-      opintojenLaajuusNumero = opintojenLaajuusNumero
+      opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
+      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax
     )
 }
 
@@ -350,5 +352,28 @@ case class KkOpintokokonaisuusKoulutusMetadataIndexed(
       opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
       opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri)
+    )
+}
+
+case class ErikoistumiskoulutusMetadataIndexed(
+    tyyppi: Koulutustyyppi = Erikoistumiskoulutus,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[LisatietoIndexed],
+    erikoistumiskoulutus: Option[KoodiUri],
+    koulutusala: Seq[KoodiUri] = Seq.empty,
+    opintojenLaajuusyksikko: Option[KoodiUri],
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double]
+) extends KoulutusMetadataIndexed {
+  override def toKoulutusMetadata: ErikoistumiskoulutusMetadata =
+    ErikoistumiskoulutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      lisatiedot = lisatiedot.map(_.toLisatieto),
+      erikoistumiskoulutusKoodiUri = erikoistumiskoulutus.map(_.koodiUri),
+      koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+      opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
+      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax
     )
 }

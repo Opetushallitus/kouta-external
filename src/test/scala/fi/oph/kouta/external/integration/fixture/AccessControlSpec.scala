@@ -3,8 +3,8 @@ package fi.oph.kouta.external.integration.fixture
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid, RootOrganisaatioOid}
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.{MockSecurityContext}
-import fi.oph.kouta.mocks.ServiceMocks
+import fi.oph.kouta.external.MockSecurityContext
+import fi.oph.kouta.mocks.{OrganisaatioServiceMock, ServiceMocks}
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
@@ -34,7 +34,7 @@ trait OrganisaatioServiceMockOld extends ServiceMocks {
   }
 }
 
-trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMockOld {
+trait AccessControlSpec extends ScalatraFlatSpec {
   this: HttpSpec =>
 
   protected val roleEntities: Seq[RoleEntity] = Seq.empty
@@ -42,16 +42,6 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMockOld
   override def beforeAll(): Unit = {
     super.beforeAll()
     addTestSessions()
-    if (mockServer.isEmpty) {
-      val virkailijaHostPort = urlProperties.get.getProperty("host.virkailija").split(":").last.toInt
-      startServiceMocking(virkailijaHostPort)
-    }
-    println(mockOrganisaatioResponse())
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    stopServiceMocking()
   }
 
   val LonelyOid               = OrganisaatioOid("1.2.246.562.10.99999999999")

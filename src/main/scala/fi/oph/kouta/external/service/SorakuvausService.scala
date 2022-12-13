@@ -8,7 +8,7 @@ import fi.oph.kouta.external.elasticsearch.SorakuvausClient
 import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, KoutaSorakuvausRequest, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.{OrganisaatioService, RoleEntityAuthorizationService}
+import fi.oph.kouta.service.{AuthorizationRuleByKoulutustyyppi, AuthorizationRules, OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 
@@ -36,7 +36,7 @@ class SorakuvausService(
           AuthorizationRules(
             requiredRoles = roleEntity.readRoles.filterNot(_ == Indexer),
             allowAccessToParentOrganizations = true,
-            Seq(authorizationRuleByKoulutustyyppi)
+            Some(AuthorizationRuleByKoulutustyyppi)
           )
         )
       )

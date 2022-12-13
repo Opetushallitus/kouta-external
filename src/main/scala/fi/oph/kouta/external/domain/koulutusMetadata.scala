@@ -123,7 +123,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |        opintojenLaajuusNumero:
     |          type: double
     |          description: Opintojen laajuus tai kesto numeroarvona
-|                example: 10
+    |          example: 10
     |"""
 )
 trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {

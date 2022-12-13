@@ -17,11 +17,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Valintatapakuvauksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa.
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
-    |        kuvaus:
-    |          type: object
-    |          description: Valintatavan kuvausteksti eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
     |        sisalto:
     |          type: array
     |          description: Valintatavan sisältö. Voi sisältää sekä teksti- että taulukkoelementtejä.
@@ -50,7 +45,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 case class Valintatapa(
     nimi: Kielistetty,
     valintatapaKoodiUri: Option[String],
-    kuvaus: Kielistetty,
     sisalto: Seq[Sisalto],
     kaytaMuuntotaulukkoa: Boolean,
     kynnysehto: Kielistetty,

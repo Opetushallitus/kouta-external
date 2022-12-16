@@ -1,10 +1,9 @@
 package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid, RootOrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid}
+import fi.oph.kouta.external.MockSecurityContext
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.{MockSecurityContext}
-import fi.oph.kouta.mocks.ServiceMocks
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
@@ -15,26 +14,7 @@ case class TestUser(oid: String, username: String, sessionId: UUID) {
   val ticket = MockSecurityContext.ticketFor(KoutaIntegrationSpec.serviceIdentifier, username)
 }
 
-@deprecated(
-  "Korvaa kouta-commonin OrganisaatioServiceMock:lla, kun testit on refaktoroitu käyttämään ServiceMockeria.",
-  "kouta-external"
-)
-trait OrganisaatioServiceMockOld extends ServiceMocks {
-
-  val NotFoundOrganisaatioResponse = s"""{ "numHits": 0, "organisaatiot": []}"""
-  lazy val DefaultResponse         = responseFromResource("organisaatio")
-
-  def mockOrganisaatioResponse(response: String = DefaultResponse): Unit = {
-    println(getMockPath("organisaatio-service.organisaatio.oid.jalkelaiset", Some(RootOrganisaatioOid.s)))
-    mockGet(
-      getMockPath("organisaatio-service.organisaatio.oid.jalkelaiset", Some(RootOrganisaatioOid.s)),
-      Map.empty,
-      response
-    )
-  }
-}
-
-trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMockOld {
+trait AccessControlSpec extends ScalatraFlatSpec {
   this: HttpSpec =>
 
   protected val roleEntities: Seq[RoleEntity] = Seq.empty
@@ -42,16 +22,6 @@ trait AccessControlSpec extends ScalatraFlatSpec with OrganisaatioServiceMockOld
   override def beforeAll(): Unit = {
     super.beforeAll()
     addTestSessions()
-    if (mockServer.isEmpty) {
-      val virkailijaHostPort = urlProperties.get.getProperty("host.virkailija").split(":").last.toInt
-      startServiceMocking(virkailijaHostPort)
-    }
-    println(mockOrganisaatioResponse())
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    stopServiceMocking()
   }
 
   val LonelyOid               = OrganisaatioOid("1.2.246.562.10.99999999999")

@@ -4,8 +4,8 @@ host_postgresql_koutaexternal_port: 5435
 postgres_app_user: oph
 host_postgresql_koutaexternal_app_password: oph
 
-cas_url: http://localhost:8097/cas
-kouta_external_cas_service: http://localhost:8097/kouta-external/auth/login
+cas_url: http://localhost:8099/cas
+kouta_external_cas_service: http://localhost:8099/kouta-external/auth/login
 kouta_external_cas_username: DUMMY
 kouta_external_cas_password: DUMMY
 
@@ -14,7 +14,7 @@ kouta_external_elasticsearch_auth_enabled: false
 kouta_external_elasticsearch_username: DUMMY
 kouta_external_elasticsearch_password: DUMMY
 
-host_virkailija: localhost:8097
-host_alb_virkailija: localhost:8097
+host_virkailija: localhost:8099
+host_alb_virkailija: localhost:8099
 
 kouta_external_api_modify_enabled: true

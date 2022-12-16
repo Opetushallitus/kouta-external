@@ -12,7 +12,6 @@ import java.util.UUID
 
 class KoulutusSpec
     extends KoulutusFixture
-    with AccessControlSpec
     with GenericGetTests[Koulutus, KoulutusOid]
     with GenericCreateTests[Koulutus]
     with GenericUpdateTests[Koulutus]

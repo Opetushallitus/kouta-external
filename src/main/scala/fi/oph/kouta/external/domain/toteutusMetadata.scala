@@ -30,6 +30,15 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Lista toteutukseen liittyvistä ammattinimikkeistä, joiden avulla opiskelija voi hakea koulutusta Opintopolusta
     |          items:
     |            $ref: '#/components/schemas/Ammattinimike'
+    |        hasJotpaRahoitus:
+    |          type: boolean
+    |          description: Onko toteutus JOTPA-rahoitettua?
+    |        isTyovoimakoulutus:
+    |          type: boolean
+    |          description: Onko toteutus työvoimakoulutusta?
+    |        isTaydennyskoulutus:
+    |          type: boolean
+    |          description: Onko toteutus täydennyskoulutusta?
     |"""
 )
 sealed trait ToteutusMetadata {
@@ -39,6 +48,9 @@ sealed trait ToteutusMetadata {
   val asiasanat: List[Keyword]
   val ammattinimikkeet: List[Keyword]
   val yhteyshenkilot: Seq[Yhteyshenkilo]
+  val hasJotpaRahoitus: Option[Boolean]
+  val isTaydennyskoulutus: Boolean
+  val isTyovoimakoulutus: Boolean
 }
 
 @SwaggerModel("""    AmmatillinenToteutusMetadata:
@@ -69,7 +81,10 @@ case class AmmatillinenToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    ammatillinenPerustutkintoErityisopetuksena: Boolean
+    ammatillinenPerustutkintoErityisopetuksena: Boolean,
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -148,7 +163,10 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(
@@ -178,7 +196,10 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
@@ -206,7 +227,11 @@ case class AmmatillinenMuuToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
+
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    YliopistoToteutusMetadata:
@@ -227,7 +252,10 @@ case class YliopistoToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaToteutusMetadata:
@@ -248,7 +276,10 @@ case class AmmattikorkeakouluToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoToteutusMetadata:
@@ -274,7 +305,10 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    OpePedagOpinnotToteutusMetadata:
@@ -300,7 +334,10 @@ case class OpePedagOpinnotToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -389,7 +426,10 @@ case class LukioToteutusMetadata(
     yleislinja: Boolean,
     painotukset: Seq[LukiolinjaTieto],
     erityisetKoulutustehtavat: Seq[LukiolinjaTieto],
-    diplomit: Seq[LukiodiplomiTieto]
+    diplomit: Seq[LukiodiplomiTieto],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TuvaToteutusMetadata:
@@ -419,7 +459,10 @@ case class TuvaToteutusMetadata(
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
     aloituspaikat: Option[Int],
-    jarjestetaanErityisopetuksena: Boolean
+    jarjestetaanErityisopetuksena: Boolean,
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TelmaToteutusMetadata:
@@ -445,7 +488,10 @@ case class TelmaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:
@@ -466,7 +512,10 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
-    yhteyshenkilot: Seq[Yhteyshenkilo]
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
@@ -494,7 +543,10 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
@@ -522,7 +574,10 @@ case class AikuistenPerusopetusToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    KkOpintojaksoToteutusMetadata:
@@ -553,7 +608,10 @@ case class KkOpintojaksoToteutusMetadata(
     aloituspaikat: Option[Int],
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    ErikoislaakariToteutusMetadata:
@@ -574,7 +632,10 @@ case class ErikoislaakariToteutusMetadata(
     opetus: Option[Opetus] = None,
     asiasanat: List[Keyword] = List(),
     ammattinimikkeet: List[Keyword] = List(),
-    yhteyshenkilot: Seq[Yhteyshenkilo] = Seq()
+    yhteyshenkilot: Seq[Yhteyshenkilo] = Seq(),
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends ToteutusMetadata
 
 @SwaggerModel(
@@ -617,7 +678,10 @@ case class KkOpintokokonaisuusToteutusMetadata(
     aloituspaikat: Option[Int],
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(
@@ -647,5 +711,8 @@ case class ErikoistumiskoulutusToteutusMetadata(
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata

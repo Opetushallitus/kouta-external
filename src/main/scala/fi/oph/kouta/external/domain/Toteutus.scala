@@ -193,7 +193,8 @@ case class Toteutus(
     kielivalinta: Seq[Kieli],
     teemakuva: Option[String],
     modified: Option[Modified],
-    koulutuksetKoodiUri: Seq[String] = Seq.empty
+    koulutuksetKoodiUri: Seq[String] = Seq.empty,
+
 ) extends PerustiedotWithOid[ToteutusOid, Toteutus] {
   override def withMuokkaaja(muokkaaja: UserOid): Toteutus = copy(muokkaaja = muokkaaja)
 }

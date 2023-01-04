@@ -9,7 +9,7 @@ import fi.oph.kouta.external.domain.Perustiedot
 import fi.oph.kouta.external.elasticsearch.ElasticSearchException
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.service.{OrganizationAuthorizationFailedException, RoleAuthorizationFailedException}
+import fi.oph.kouta.service.{KoulutustyyppiAuthorizationFailedException, OrganizationAuthorizationFailedException, RoleAuthorizationFailedException}
 import fi.oph.kouta.util.TimeUtils.renderHttpDate
 import fi.vm.sade.utils.slf4j.Logging
 import org.json4s.MappingException
@@ -76,6 +76,9 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
       logger.warn("authorization failed", e.getMessage)
       Forbidden("error" -> "Forbidden")
     case e: OrganizationAuthorizationFailedException =>
+      logger.warn(s"authorization failed: ${e.getMessage}", e.getCause)
+      Forbidden("error" -> s"Forbidden ${e.getMessage}")
+    case e: KoulutustyyppiAuthorizationFailedException =>
       logger.warn(s"authorization failed: ${e.getMessage}", e.getCause)
       Forbidden("error" -> s"Forbidden ${e.getMessage}")
     case e: IllegalStateException => badRequest(e)

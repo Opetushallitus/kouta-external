@@ -8,10 +8,12 @@ import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
 import fi.oph.kouta.external.TestData.AmmKoulutus
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
+import fi.oph.kouta.mocks.SpecWithMocks
 
 import java.time.Instant
 
-trait KoulutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
+trait KoulutusFixture extends AccessControlSpec {
+  this: KoutaIntegrationSpec =>
   val KoulutusPath = "/koulutus"
 
   val koulutus = AmmKoulutus

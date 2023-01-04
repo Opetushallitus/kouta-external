@@ -6,7 +6,7 @@ import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
 import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
+import fi.oph.kouta.service.{AuthorizationRules, OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.vm.sade.utils.slf4j.Logging
 

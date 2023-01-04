@@ -1,38 +1,20 @@
 package fi.oph.kouta.external
 
-import java.time.Instant
-import java.util.UUID
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.mocks.{ServiceMocks}
+import fi.oph.kouta.mocks.{ServiceMockBase, SpecWithMocks}
 import fi.oph.kouta.security.CasSession
 import fi.oph.kouta.util.TimeUtils
-import fi.vm.sade.properties.OphProperties
 import org.mockserver.matchers.MatchType
-import org.scalatra.test.scalatest.ScalatraFlatSpec
+
+import java.time.Instant
+import java.util.UUID
 
 /* If you need to debug mocks,
    change log4j.logger.org.mockserver=INFO
    in test/resources/log4j.properties */
 
-trait KoutaBackendMock extends ScalatraFlatSpec with ServiceMocks with KoutaJsonFormats {
-  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
-  urlProperties = Some(KoutaConfigurationFactory.configuration.urlProperties)
-  val koutaBackendProperties: Option[OphProperties] = urlProperties
-
-  override def beforeAll(): Unit = {
-    super.beforeAll()
-    if (mockServer.isEmpty) {
-      val virkailijaHostPort = urlProperties.get.getProperty("host.virkailija").split(":").last.toInt
-      startServiceMocking(virkailijaHostPort)
-    }
-  }
-
-  override def afterAll(): Unit = {
-    super.afterAll()
-    stopServiceMocking()
-  }
-
+trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJsonFormats {
   def authenticated(sessionId: UUID, session: CasSession) = Map("id" -> sessionId.toString, "session" -> session)
 
   protected def addCreateMock(

@@ -71,6 +71,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
     |            - $ref: '#/components/schemas/ErikoislaakariToteutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintokokonaisuusToteutusMetadata'
+    |            - $ref: '#/components/schemas/ErikoistumiskoulutusToteutusMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:

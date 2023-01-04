@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.domain
 
-import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid, UserOid}
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, UserOid}
 import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, Modified, Tallennettu}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
@@ -54,6 +54,15 @@ import java.util.UUID
     |          description: EI KÄYTÖSSÄ. Ajanhetki, jolloin haku ja siihen liittyvät hakukohteet ja koulutukset julkaistaan
     |            automaattisesti Opintopolussa, jos ne eivät vielä ole julkisia
     |          example: 2019-08-23T09:55
+    |        alkamiskausiKoodiUri:
+    |          type: string
+    |          description: Haun koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla.
+    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+    |          example: kausi_k#1
+    |        alkamisvuosi:
+    |          type: string
+    |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla.
+    |          example: 2020
     |        kohdejoukkoKoodiUri:
     |          type: string
     |          description: Haun kohdejoukko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukko/1)
@@ -84,11 +93,24 @@ import java.util.UUID
     |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa. Käytössä vain muilla kuin Opintopolun hakulomakkeilla.
     |          allOf:
     |            - $ref: '#/components/schemas/Linkki'
+    |        hakuvuosi:
+    |          type: string
+    |          description: Haun hakuajoista päätelty hakuvuosi
+    |          example: 2022
+    |        hakukausi:
+    |          type: string
+    |          description: Haun hakuajoista päätelty hakukausi
+    |          example: kausi_s#1
     |        hakuajat:
     |          type: array
     |          description: Haun hakuajat. 
     |          items:
     |            $ref: '#/components/schemas/Ajanjakso'
+    |        valintakokeet:
+    |          type: array
+    |          description: Hakuun liittyvät valintakokeet
+    |          items:
+    |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
     |          $ref: '#/components/schemas/HakuMetadata'
@@ -113,9 +135,11 @@ import java.util.UUID
     |           format: date-time
     |           description: Haun viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55
-    |""")
+    |"""
+)
 case class Haku(
     oid: Option[HakuOid] = None,
+    hakukohdeOids: Option[List[HakukohdeOid]] = None,
     externalId: Option[String] = None,
     tila: Julkaisutila = Tallennettu,
     nimi: Kielistetty = Map(),
@@ -123,15 +147,20 @@ case class Haku(
     hakukohteenLiittamisenTakaraja: Option[LocalDateTime] = None,
     hakukohteenMuokkaamisenTakaraja: Option[LocalDateTime] = None,
     ajastettuJulkaisu: Option[LocalDateTime] = None,
+    alkamiskausiKoodiUri: Option[String] = None,
+    alkamisvuosi: Option[String] = None,
     kohdejoukkoKoodiUri: Option[String] = None,
     kohdejoukonTarkenneKoodiUri: Option[String] = None,
     hakulomaketyyppi: Option[Hakulomaketyyppi] = None,
     hakulomakeAtaruId: Option[UUID] = None,
     hakulomakeKuvaus: Kielistetty = Map(),
     hakulomakeLinkki: Kielistetty = Map(),
+    hakuvuosi: Option[Int] = None,
+    hakukausi: Option[String] = None,
     metadata: Option[HakuMetadata] = None,
     organisaatioOid: OrganisaatioOid,
     hakuajat: List[Ajanjakso] = List(),
+    valintakokeet: Option[List[Valintakoe]] = None,
     muokkaaja: UserOid,
     kielivalinta: Seq[Kieli] = Seq(),
     modified: Option[Modified]

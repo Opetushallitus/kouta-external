@@ -1,8 +1,6 @@
 package fi.oph.kouta.external.client
 
-import fi.oph.kouta.client.HttpClient
 import fi.oph.kouta.external.KoutaConfigurationFactory
-import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.security.Authority
 import fi.vm.sade.utils.slf4j.Logging
@@ -27,7 +25,9 @@ trait KayttooikeusClient extends HttpClient with CallerId with Logging {
             s"User not found with username: $username, got response $status $response"
           )
         case _ =>
-          throw new RuntimeException(s"Failed to get username $username details using URL $url, got response $status $response")
+          throw new RuntimeException(
+            s"Failed to get username $username details using URL $url, got response $status $response"
+          )
       }
 
     get(url, errorHandler, followRedirects = true) { response =>

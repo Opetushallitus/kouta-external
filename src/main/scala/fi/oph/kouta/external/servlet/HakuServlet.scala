@@ -1,15 +1,15 @@
 package fi.oph.kouta.external.servlet
 
-import fi.oph.kouta.domain.oid.HakuOid
+import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.service.HakuService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{ActionResult, BadRequest, FutureSupport, Ok}
+import org.scalatra.{ActionResult, AsyncResult, BadRequest, FutureSupport, Ok}
 
-import java.time.LocalDate
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration.{Duration, DurationInt}
 import scala.util.Try
 
 object HakuServlet extends HakuServlet(HakuService)
@@ -46,13 +46,13 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   get("/:oid") {
     implicit val authenticated: Authenticated = authenticate
 
-    hakuService.get(HakuOid(params("oid")))
-      .map { case (haku, modified) =>
-        Ok(haku, headers = createLastModifiedHeader(modified))
-      }
+    hakuService.get(HakuOid(params("oid"))).map { case (haku, modified) =>
+      Ok(haku, headers = createLastModifiedHeader(modified))
+    }
   }
 
-  registerPath( "/haku/",
+  registerPath(
+    "/haku/",
     """    put:
       |      summary: Tallenna uusi haku
       |      operationId: Tallenna uusi haku
@@ -79,7 +79,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |                    type: string
       |                    description: Uuden haun yksilöivä oid
       |                    example: 1.2.246.562.29.00000000000000000009
-      |""".stripMargin)
+      |""".stripMargin
+  )
   put("/") {
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
@@ -95,7 +96,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     }
   }
 
-  registerPath("/haku/",
+  registerPath(
+    "/haku/",
     """    post:
       |      summary: Muokkaa olemassa olevaa hakua
       |      operationId: Muokkaa hakua
@@ -115,7 +117,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |      responses:
       |        '200':
       |          description: O
-      |""".stripMargin)
+      |""".stripMargin
+  )
   post("/") {
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
@@ -173,4 +176,77 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     }
   }
 
+  registerPath(
+    "/haku/search",
+    """    get:
+      |      summary: Etsi hakuja
+      |      operationId: Etsi hakuja
+      |      description: Etsii hauista annetuilla ehdoilla
+      |      tags:
+      |        - Haku
+      |      parameters:
+      |        - in: query
+      |          name: ataruId
+      |          schema:
+      |            type: string
+      |          required: false
+      |          description: Ataru-lomakkeen id
+      |          example: 66b7b709-1ed0-49cc-bbef-e5b0420a81c9
+      |        - in: query
+      |          name: tarjoaja
+      |          schema:
+      |            type: array
+      |            items:
+      |              type: string
+      |          required: false
+      |          description: Organisaatio joka on haun hakukohteen tarjoaja
+      |          example: 1.2.246.562.10.00000000001,1.2.246.562.10.00000000002
+      |        - in: query
+      |          name: includeHakukohdeOids
+      |          schema:
+      |            type: boolean
+      |          required: false
+      |          default: false
+      |          description: hakukohteen oidit paluuarvoon
+      |          example: true
+      |        - in: query
+      |          name: vuosi
+      |          schema:
+      |            type: integer
+      |          required: false
+      |          description: viimeiseksi alkaneen hakuajan vuosi tai koulutuksen alkamisvuosi
+      |          example: 2022
+      |      responses:
+      |        '200':
+      |          description: Ok
+      |          content:
+      |            application/json:
+      |              schema:
+      |                type: array
+      |                items:
+      |                  $ref: '#/components/schemas/Haku'
+      |""".stripMargin
+  )
+  get("/search") {
+    implicit val authenticated: Authenticated = authenticate
+
+    val ataruId  = params.get("ataruId")
+    val tarjoaja = params.get("tarjoaja").map(_.split(",").map(OrganisaatioOid).toSet)
+    val vuosi    = params.getAs[Int]("vuosi")
+    val includeHakukohdeOids = params.get("includeHakukohdeOids").exists {
+      case "true"  => true
+      case "false" => false
+    }
+
+    logger.debug(s"Request: /haku/search | ataruId: ${ataruId} | tarjoaja: ${tarjoaja}")
+
+    new AsyncResult() {
+      override implicit def timeout: Duration = 5.minutes
+
+      override val is: Future[ActionResult] = tarjoaja match {
+        case tarjoaja => hakuService.search(ataruId, tarjoaja, vuosi, includeHakukohdeOids).map(Ok(_))
+      }
+    }
+
+  }
 }

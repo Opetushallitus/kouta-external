@@ -206,7 +206,6 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |          schema:
       |            type: boolean
       |          required: false
-      |          default: false
       |          description: hakukohteen oidit paluuarvoon
       |          example: true
       |        - in: query

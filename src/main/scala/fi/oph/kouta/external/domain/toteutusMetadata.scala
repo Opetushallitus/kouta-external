@@ -716,3 +716,58 @@ case class ErikoistumiskoulutusToteutusMetadata(
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
+
+@SwaggerModel(
+  """    TaiteenPerusopetusToteutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Toteutuksen metatiedon tyyppi
+    |              example: taiteen-perusopetus
+    |              enum:
+    |                - taiteen-perusopetus
+    |            taiteenalaKoodiUrit:
+    |              type: array
+    |              description: Lista taiteenaloja. Viittaa [koodistoon](https://virkailija.opintopolku.fi/koodisto-app/koodisto/view/taiteenperusopetustaiteenala/1)
+    |              items:
+    |                type: string
+    |              example:
+    |                - taiteenperusopetustaiteenala_kuvataide#1
+    |                - taiteenperusopetustaiteenala_arkkitehtuuri#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              example:
+    |                - opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumeroMin:
+    |              type: integer
+    |              description: Opintojen laajuuden vähimmäismäärä numeroarvona
+    |              example: 10
+    |            opintojenLaajuusNumeroMax:
+    |              type: integer
+    |              description: Opintojen laajuuden enimmäismäärä numeroarvona
+    |              example: 20
+    |"""
+)
+case class TaiteenPerusopetusToteutusMetadata(
+    tyyppi: Koulutustyyppi = TaiteenPerusopetus,
+    kuvaus: Kielistetty,
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double],
+    taiteenalaKoodiUrit: Seq[String],
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int]
+) extends TutkintoonJohtamatonToteutusMetadata

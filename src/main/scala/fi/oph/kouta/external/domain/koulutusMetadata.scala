@@ -620,3 +620,28 @@ case class ErikoistumiskoulutusMetadata(
     opintojenLaajuusNumeroMin: Option[Double],
     opintojenLaajuusNumeroMax: Option[Double]
 ) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    TaiteenPerusopetusKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: taiteen-perusopetus
+    |              enum:
+    |                - taiteen-perusopetus
+    |            linkkiEPerusteisiin:
+    |              type: string
+    |              description: Linkki koulutuksen eperusteisiin
+    |              example: https://eperusteet.opintopolku.fi/#/fi/kooste/taiteenperusopetus
+    |"""
+)
+case class TaiteenPerusopetusKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    lisatiedot: Seq[Lisatieto],
+    linkkiEPerusteisiin: Kielistetty
+) extends KoulutusMetadata

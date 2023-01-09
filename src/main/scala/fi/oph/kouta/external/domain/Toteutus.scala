@@ -72,6 +72,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/ErikoislaakariToteutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintokokonaisuusToteutusMetadata'
     |            - $ref: '#/components/schemas/ErikoistumiskoulutusToteutusMetadata'
+    |            - $ref: '#/components/schemas/TaiteenPerusopetusToteutusMetadata'
     |          example:
     |            tyyppi: amm
     |            kuvaus:

@@ -236,7 +236,7 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     implicit val authenticated: Authenticated = authenticate
 
     val ataruId  = params.get("ataruId")
-    val tarjoaja = params.get("tarjoaja").map(_.split(",").map(OrganisaatioOid).toSet)
+    val tarjoaja = multiParams.get("tarjoaja").map(_.filter(_.nonEmpty).map(OrganisaatioOid).toSet)
     val vuosi    = params.getAs[Int]("vuosi")
     val includeHakukohdeOids = params.get("includeHakukohdeOids").exists {
       case "true"  => true
@@ -249,8 +249,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = tarjoaja match {
-        case Some(oids) => hakuService.search(ataruId, oids, vuosi, includeHakukohdeOids).map(Ok(_))
-        case None       => Future.successful(BadRequest(s"Missing tarjoaja"))
+        case Some(oids) if oids.nonEmpty => hakuService.search(ataruId, oids, vuosi, includeHakukohdeOids).map(Ok(_))
+        case _                           => Future.successful(BadRequest(s"Missing tarjoaja"))
       }
     }
 

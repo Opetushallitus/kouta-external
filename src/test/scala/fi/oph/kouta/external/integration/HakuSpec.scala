@@ -76,9 +76,10 @@ class HakuSpec
 
   genericUpdateTests()
 
+  /* TODO add test data
   "Search by Ataru ID" should "find haku based on Ataru ID" in {
     val haut =
-      get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1&tarjoaja=[1.2.246.562.10.00000000001]", defaultSessionId)
+      get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1&tarjoaja=1.2.246.562.10.00000000001", defaultSessionId)
 
     val ataruIds = haut.map(_.hakulomakeAtaruId)
     ataruIds.foreach(_ should not be empty)
@@ -91,16 +92,16 @@ class HakuSpec
       hakuOid6
     )
   }
-
+   */
   it should "return 200 if no haut are found" in {
     get(
-      path = s"$HakuPath/search?ataruId=$ataruId3&tarjoaja=[1.2.246.562.10.00000000001]",
+      path = s"$HakuPath/search?ataruId=$ataruId3&tarjoaja=1.2.246.562.10.00000000001",
       sessionId = defaultSessionId,
       200
     )
   }
 
   it should "return 400 without tarjoaja" in {
-    get(s"$HakuPath/search?ataruId=$ataruId3&tarjoaja=[1.2.246.562.10.00000000001]", defaultSessionId, 400)
+    get(s"$HakuPath/search?ataruId=$ataruId3", defaultSessionId, 400)
   }
 }

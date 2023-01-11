@@ -80,6 +80,8 @@ Suositeltava kehitysympäristö on [IntelliJ IDEA](https://www.jetbrains.com/ide
 Katso kouta-indeksoijan readme:stä kuinka saat lokaaliin elasticsearchiin indeksoitua dataa.
 Tämän jälkeen käynnistä kouta-external tätä lokaalia elasticsearchia vasten.
 
+Kouta-indeksoijan avulla saat päivitettyä tarvittaessa myös testien käyttämän mock-data-dumpin.
+
 ## 4. Ympäristöt
 
 ### 4.1. Testiympäristöt

@@ -1,12 +1,10 @@
 package fi.oph.kouta.external.integration
 
-import fi.oph.kouta.TestOids.{ChildOid, EvilChildOid, ParentOid}
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, HakuFixture}
 import fi.oph.kouta.security.{CasSession, Role}
-import org.scalatra.test.Client
 
 import java.time.Instant
 import java.util.UUID
@@ -76,7 +74,6 @@ class HakuSpec
 
   genericUpdateTests()
 
-  /* TODO add test data
   "Search by Ataru ID" should "find haku based on Ataru ID" in {
     val haut =
       get[Seq[Haku]](s"$HakuPath/search?ataruId=$ataruId1&tarjoaja=1.2.246.562.10.00000000001", defaultSessionId)
@@ -85,14 +82,16 @@ class HakuSpec
     ataruIds.foreach(_ should not be empty)
     ataruIds.map(_.get).foreach(_ shouldEqual ataruId1)
 
-    haut.map(_.oid) should contain theSameElementsAs Seq(
+    println(s"haut: ${haut.map(_.oid)}")
+
+    haut.map(_.oid.get) should contain theSameElementsAs Seq(
       existingId,
       hakuOid2,
       hakuOid5,
       hakuOid6
     )
   }
-   */
+
   it should "return 200 if no haut are found" in {
     get(
       path = s"$HakuPath/search?ataruId=$ataruId3&tarjoaja=1.2.246.562.10.00000000001",

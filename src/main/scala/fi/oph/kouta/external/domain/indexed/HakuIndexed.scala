@@ -40,7 +40,7 @@ case class HakuIndexed(
     modified: Option[Modified]
 ) extends WithTila
     with Logging {
-  def toHaku(includeHakukohdeOids: Boolean = false): Haku = {
+  def toHaku(): Haku = {
     def getHakukausiUri(ajanjakso: Ajanjakso): String = {
       ajanjakso.paattyy.map(_.getMonthValue).getOrElse {
         ajanjakso.alkaa.getMonthValue
@@ -54,7 +54,7 @@ case class HakuIndexed(
     try {
       Haku(
         oid = oid,
-        hakukohdeOids = if (includeHakukohdeOids) Some(hakukohteet.map(_.oid)) else None,
+        hakukohdeOids = Some(hakukohteet.map(_.oid)),
         tila = tila,
         nimi = nimi,
         hakutapaKoodiUri = hakutapa.map(_.koodiUri),

@@ -57,7 +57,7 @@ class HakuService(
 
   def search(
       ataruId: Option[String],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
+      tarjoajaOids: Set[OrganisaatioOid],
       vuosi: Option[Int] = None,
       includeHakukohdeOids: Boolean = false
   )(implicit

@@ -202,13 +202,6 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |          description: Organisaatio joka on haun hakukohteen tarjoaja
       |          example: 1.2.246.562.10.00000000001,1.2.246.562.10.00000000002
       |        - in: query
-      |          name: includeHakukohdeOids
-      |          schema:
-      |            type: boolean
-      |          required: false
-      |          description: hakukohteen oidit paluuarvoon
-      |          example: true
-      |        - in: query
       |          name: vuosi
       |          schema:
       |            type: integer
@@ -238,10 +231,6 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
     val ataruId  = params.get("ataruId")
     val tarjoaja = multiParams.get("tarjoaja").map(_.filter(_.nonEmpty).map(OrganisaatioOid).toSet)
     val vuosi    = params.getAs[Int]("vuosi")
-    val includeHakukohdeOids = params.get("includeHakukohdeOids").exists {
-      case "true"  => true
-      case "false" => false
-    }
 
     logger.debug(s"Request: /haku/search | ataruId: ${ataruId} | tarjoaja: ${tarjoaja}")
 
@@ -249,7 +238,7 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = tarjoaja match {
-        case Some(oids) if oids.nonEmpty => hakuService.search(ataruId, oids, vuosi, includeHakukohdeOids).map(Ok(_))
+        case Some(oids) if oids.nonEmpty => hakuService.search(ataruId, oids, vuosi).map(Ok(_))
         case _                           => Future.successful(BadRequest(s"Missing tarjoaja"))
       }
     }

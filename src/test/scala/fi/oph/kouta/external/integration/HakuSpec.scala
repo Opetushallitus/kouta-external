@@ -82,8 +82,6 @@ class HakuSpec
     ataruIds.foreach(_ should not be empty)
     ataruIds.map(_.get).foreach(_ shouldEqual ataruId1)
 
-    println(s"haut: ${haut.map(_.oid)}")
-
     haut.map(_.oid.get) should contain theSameElementsAs Seq(
       existingId,
       hakuOid2,

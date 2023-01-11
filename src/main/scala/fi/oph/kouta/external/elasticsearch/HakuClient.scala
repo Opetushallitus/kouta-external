@@ -45,8 +45,7 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
   def search(
       ataruId: Option[String],
       tarjoajaOids: Option[Set[OrganisaatioOid]],
-      vuosi: Option[Int],
-      includeHakukohdeOids: Boolean
+      vuosi: Option[Int]
   ): Future[Seq[Haku]] = {
     val ataruIdQuery      = ataruId.map(termsQuery("hakulomakeAtaruId.keyword", _))
     val alkamisvuosiQuery = vuosi.map(termsQuery("metadata.koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi", _))
@@ -63,7 +62,7 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
     )
     val query = ataruIdQuery ++ tarjoajaQuery ++ alkamisvuosiQuery ++ hakuvuosiQuery
     searchItems[HakuIndexed](if (query.isEmpty) None else Some(must(query)))
-      .map(_.filter(byTarjoajaAndTila(tarjoajaOids, _)).map(_.toHaku(includeHakukohdeOids)))
+      .map(_.filter(byTarjoajaAndTila(tarjoajaOids, _)).map(_.toHaku()))
   }
 }
 

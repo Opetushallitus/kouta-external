@@ -1,11 +1,13 @@
 package fi.oph.kouta.external.domain
 
 import java.util.UUID
-
 import fi.oph.kouta.domain.oid._
 import fi.oph.kouta.domain.{Julkaisutila, Kieli, Modified}
 import fi.oph.kouta.security.AuthorizableEntity
 
+trait WithTila {
+  val tila: Julkaisutila
+}
 sealed trait Perustiedot[ID, T] extends AuthorizableEntity[T] {
   val tila: Julkaisutila
   val nimi: Kielistetty

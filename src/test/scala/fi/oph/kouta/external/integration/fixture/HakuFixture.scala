@@ -18,7 +18,11 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val hakuService = new HakuService(
+      new HakuClient(TempElasticClient.client),
+      new MockKoutaClient(urlProperties.get),
+      organisaatioService
+    )
     addServlet(new HakuServlet(hakuService), HakuPath)
   }
 
@@ -56,7 +60,8 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
 
   def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
     ifUnmodifiedSince match {
-      case Some(ifUnmodifiedSinceVal) => update(HakuPath, haku(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case Some(ifUnmodifiedSinceVal) =>
+        update(HakuPath, haku(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
       case _ => update(HakuPath, haku(oid), defaultSessionId, expectedStatus, expectedBody)
     }
 

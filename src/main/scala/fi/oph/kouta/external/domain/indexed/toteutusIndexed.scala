@@ -763,8 +763,10 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
-) extends TutkintoonJohtamatonToteutusMetadataIndexed {
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: TaiteenPerusopetusToteutusMetadata =
     TaiteenPerusopetusToteutusMetadata(
       tyyppi = tyyppi,
@@ -783,6 +785,9 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
       lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
-      aloituspaikat = aloituspaikat
+      aloituspaikat = aloituspaikat,
+      hasJotpaRahoitus = hasJotpaRahoitus,
+      isTaydennyskoulutus = isTaydennyskoulutus,
+      isTyovoimakoulutus = isTyovoimakoulutus
     )
 }

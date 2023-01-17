@@ -769,5 +769,8 @@ case class TaiteenPerusopetusToteutusMetadata(
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
-    aloituspaikat: Option[Int]
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata

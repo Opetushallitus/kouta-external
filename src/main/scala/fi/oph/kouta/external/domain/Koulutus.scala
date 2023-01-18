@@ -23,7 +23,7 @@ import java.util.UUID
     |          description: Onko koulutus tutkintoon johtavaa
     |        koulutustyyppi:
     |          type: string
-    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen tutkinto, ml. perustutkinnot, ammatti- ja erikoisammattitutkinnot), 'yo' (yliopistotutkinto), 'lk' (lukio), 'amk' (ammattikorkeakoulututkinto), 'amm-ope-erityisope-ja-opo' (Ammatillinen opettaja-, erityisopettaja ja opinto-ohjaajakoulutus), 'ope-pedag-opinnot' (Opettajien pedagogiset opinnot), 'amm-tutkinnon-osa' (ammatillinen tutkinnon osa), 'amm-osaamisala (ammatillinen osaamisala)', 'amm-muu (muu ammatillinen koulutus)', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'telma' (työhön ja itsenäiseen elämään valmentava koulutus), 'vapaa-sivistystyö-opistovuosi (opistovuosi oppivelvollisille)', 'vapaa-sivistystyo-muu' (muut vapaan sivistystyön koulutukset), 'aikuisten-perusopetus' (aikuisten perusopetus), 'kk-opintojakso', 'kk-opintokokonaisuus', 'erikoislaakari', 'erikoistumiskoulutus', 'muu' (muut koulutukset)"
+    |          description: "Koulutuksen tyyppi. Sallitut arvot: 'amm' (ammatillinen tutkinto, ml. perustutkinnot, ammatti- ja erikoisammattitutkinnot), 'yo' (yliopistotutkinto), 'lk' (lukio), 'amk' (ammattikorkeakoulututkinto), 'amm-ope-erityisope-ja-opo' (Ammatillinen opettaja-, erityisopettaja ja opinto-ohjaajakoulutus), 'ope-pedag-opinnot' (Opettajien pedagogiset opinnot), 'amm-tutkinnon-osa' (ammatillinen tutkinnon osa), 'amm-osaamisala (ammatillinen osaamisala)', 'amm-muu (muu ammatillinen koulutus)', 'tuva' (tutkintokoulutukseen valmentava koulutus), 'telma' (työhön ja itsenäiseen elämään valmentava koulutus), 'vapaa-sivistystyö-opistovuosi (opistovuosi oppivelvollisille)', 'vapaa-sivistystyo-muu' (muut vapaan sivistystyön koulutukset), 'aikuisten-perusopetus' (aikuisten perusopetus), 'kk-opintojakso', 'kk-opintokokonaisuus', 'erikoislaakari', 'erikoistumiskoulutus', 'taiteen-perusopetus', 'muu' (muut koulutukset)"
     |          $ref: '#/components/schemas/Koulutustyyppi'
     |        koulutuksetKoodiUri:
     |          type: array
@@ -79,6 +79,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/ErikoislaakariKoulutusMetadata'
     |            - $ref: '#/components/schemas/KkOpintokokonaisuusKoulutusMetadata'
     |            - $ref: '#/components/schemas/ErikoistumiskoulutusMetadata'
+    |            - $ref: '#/components/schemas/TaiteenPerusopetusKoulutusMetadata'
     |          example:
     |            koulutustyyppi: amm
     |            koulutusalaKoodiUrit:

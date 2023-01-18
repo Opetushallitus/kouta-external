@@ -746,3 +746,48 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
   }
 }
 
+case class TaiteenPerusopetusToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opintojenLaajuusyksikko: Option[KoodiUri],
+    opintojenLaajuusNumeroMin: Option[Double],
+    opintojenLaajuusNumeroMax: Option[Double],
+    taiteenala: Seq[KoodiUri],
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int],
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false) extends TutkintoonJohtamatonToteutusMetadataIndexed {
+  override def toToteutusMetadata: TaiteenPerusopetusToteutusMetadata =
+    TaiteenPerusopetusToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+      opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
+      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
+      taiteenalaKoodiUrit = taiteenala.map(_.koodiUri),
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      hakutermi = hakutermi,
+      hakulomaketyyppi = hakulomaketyyppi,
+      hakulomakeLinkki = hakulomakeLinkki,
+      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
+      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
+      hakuaika = hakuaika,
+      aloituspaikat = aloituspaikat,
+      hasJotpaRahoitus = hasJotpaRahoitus,
+      isTaydennyskoulutus = isTaydennyskoulutus,
+      isTyovoimakoulutus = isTyovoimakoulutus
+    )
+}

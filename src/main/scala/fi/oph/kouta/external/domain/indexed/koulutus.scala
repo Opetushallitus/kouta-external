@@ -299,7 +299,6 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
-    linkkiEPerusteisiin: Kielistetty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumeroMin: Option[Double],

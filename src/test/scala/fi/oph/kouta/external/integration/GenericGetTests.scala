@@ -50,7 +50,7 @@ trait GenericGetTests[E, ID] extends KoutaIntegrationSpec with AccessControlSpec
     }
 
     it should s"deny a user without access to the $entityName organization" in {
-      get(existingId, crudSessionIds(LonelyOid), 403)
+      get(existingId, crudSessionIds(UnknownOid), 403)
     }
 
     it should s"allow a user of an ancestor organization to read the $entityName" in {

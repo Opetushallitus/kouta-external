@@ -1,0 +1,1 @@
+{"lokalisointi-09-02-2023-at-07.42.07.414":{"mappings":{"dynamic_templates":[{"all":{"match":"*","match_mapping_type":"string","mapping":{"norms":false,"type":"keyword"}}}]}}}

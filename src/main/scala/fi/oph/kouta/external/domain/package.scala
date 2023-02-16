@@ -155,7 +155,11 @@ package object domain {
       |          $ref: '#/components/schemas/Teksti'
       |        wwwSivu:
       |          type: object
-      |          description: Yhteyshenkilön www-sivu eri kielillä. Kielet on määritetty kielivalinnassa.
+      |          description: Yhteyshenkilön www-sivun linkki eri kielillä. Kielet on määritetty kielivalinnassa.
+      |          $ref: '#/components/schemas/Teksti'
+      |        wwwSivuTeksti:
+      |          type: object
+      |          description: Yhteyshenkilön www-sivun linkin kanssa näytettävä teksti eri kielillä. Kielet on määritetty kielivalinnassa.
       |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Yhteyshenkilo(
@@ -163,7 +167,8 @@ package object domain {
       titteli: Kielistetty,
       sahkoposti: Kielistetty,
       puhelinnumero: Kielistetty,
-      wwwSivu: Kielistetty
+      wwwSivu: Kielistetty,
+      wwwSivuTeksti: Option[Kielistetty]
   )
 
   @SwaggerModel(

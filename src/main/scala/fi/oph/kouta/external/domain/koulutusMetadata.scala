@@ -645,3 +645,47 @@ case class TaiteenPerusopetusKoulutusMetadata(
     lisatiedot: Seq[Lisatieto],
     linkkiEPerusteisiin: Kielistetty
 ) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    MuuKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: erikoistumiskoulutus
+    |              enum:
+    |                - erikoistumiskoulutus
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              example:
+    |                - opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumeroMin:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
+    |              example: 10
+    |            opintojenLaajuusNumeroMax:
+    |              type: integer
+    |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
+    |              example: 20
+    |"""
+)
+case class MuuKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty = Map(),
+    lisatiedot: Seq[Lisatieto] = Seq(),
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
+    opintojenLaajuusNumeroMin: Option[Double] = None,
+    opintojenLaajuusNumeroMax: Option[Double] = None,
+) extends KoulutusMetadata

@@ -1,25 +1,46 @@
 package fi.oph.kouta.external.servlet
 
+import fi.oph.kouta.domain.Julkaisutila
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
+import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.service.HakukohdeService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.service.RoleAuthorizationFailedException
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{ActionResult, AsyncResult, BadRequest, FutureSupport, Ok}
+import org.scalatra._
 
-import scala.concurrent.{ExecutionContext, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, DurationInt}
+import scala.concurrent.{ExecutionContext, Future}
 
 object HakukohdeServlet extends HakukohdeServlet(HakukohdeService)
 
+case class HakukohdeSearchParams(
+    haku: Option[HakuOid] = None,
+    tarjoaja: Option[Set[OrganisaatioOid]] = None,
+    q: Option[String] = None,
+    all: Boolean = false,
+    withHakukohderyhmat: Boolean = false,
+    johtaaTutkintoon: Option[Boolean] = None,
+    tila: Option[Set[Julkaisutila]] = None,
+    hakutapa:  Option[KoodiUri] = None,
+    opetuskielet: Option[Set[KoodiUri]] = None,
+    alkamiskausi: Option[KoodiUri] = None,
+    alkamisvuosi: Option[Number] = None
+)
+
 class HakukohdeServlet(hakukohdeService: HakukohdeService)
-  extends KoutaServlet
+    extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
   override def executor: ExecutionContext = global
+
+  private def parseOptionalBoolParam(params: Params, paramName: String): Option[Boolean] = params.get(paramName).map {
+    case "true" => true
+    case "false" => false
+  }
 
   registerPath(
     "/hakukohde/{oid}",
@@ -48,20 +69,22 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   )
   get("/:oid") {
     implicit val authenticated: Authenticated = authenticate
-    val hakukohdeOid = HakukohdeOid(params("oid"))
-    hakukohdeService.get(hakukohdeOid)
-      .map { hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
-      }.recoverWith {
-      case _: RoleAuthorizationFailedException =>
+    val hakukohdeOid                          = HakukohdeOid(params("oid"))
+    hakukohdeService
+      .get(hakukohdeOid)
+      .map { hakukohde: Hakukohde =>
+        Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+      }
+      .recoverWith { case _: RoleAuthorizationFailedException =>
         logger.info(s"Authorization failed hakukohde $hakukohdeOid, retrying with hakukohderyhmä rights.")
-        hakukohdeService.getHakukohdeAuthorizeByHakukohderyhma(hakukohdeOid)
-          .map {
-            hakukohde: Hakukohde => Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
-          }
-    }
+        hakukohdeService.getHakukohdeAuthorizeByHakukohderyhma(hakukohdeOid).map { hakukohde: Hakukohde =>
+          Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+        }
+      }
   }
 
-  registerPath( "/hakukohde/",
+  registerPath(
+    "/hakukohde/",
     """    put:
       |      summary: Tallenna uusi hakukohde
       |      operationId: createHakukohde
@@ -88,7 +111,8 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |                    type: string
       |                    description: Uuden hakukohteen yksilöivä oid
       |                    example: 1.2.246.562.20.00000000000000000009
-      |""".stripMargin)
+      |""".stripMargin
+  )
   put("/") {
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
@@ -104,7 +128,8 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     }
   }
 
-  registerPath("/hakukohde/",
+  registerPath(
+    "/hakukohde/",
     """    post:
       |      summary: Muokkaa olemassa olevaa hakukohdetta
       |      operationId: editHakukohde
@@ -124,7 +149,8 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |      responses:
       |        '200':
       |          description: O
-      |""".stripMargin)
+      |""".stripMargin
+  )
   post("/") {
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
@@ -140,7 +166,6 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     }
   }
 
-
   registerPath(
     "/hakukohde/search",
     """    get:
@@ -150,6 +175,13 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |      tags:
       |        - Hakukohde
       |      parameters:
+      |        - in: query
+      |          name: johtaaTutkintoon
+      |          schema:
+      |            type: boolean
+      |          required: false
+      |          description: Onko hakukohde liitetty tutkintoon johtavaan koulutukseen?
+      |          example: false
       |        - in: query
       |          name: haku
       |          schema:
@@ -188,6 +220,14 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       |          required: false
       |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
       |          example: false
+      |        - in: query
+      |          name: tila
+      |          schema:
+      |            type: array
+      |            items:
+      |              type: string
+      |          required: false
+      |          description: Suodata annetuilla tiloilla (julkaistu/tallennettu/arkistoitu)
       |      responses:
       |        '200':
       |          description: Ok
@@ -202,31 +242,40 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   get("/search") {
     implicit val authenticated: Authenticated = authenticate
 
-    val hakuOid = params.get("haku").map(HakuOid)
-    val tarjoaja = params.get("tarjoaja").map(s => s.split(",").map(OrganisaatioOid).toSet)
-    val q = params.get("q")
-    val all = params.get("all").exists {
-      case "true" => true
-      case "false" => false
-    }
-    val withHakukohderyhmat = params.get("withHakukohderyhmat").exists {
-      case "true" => true
-      case "false" => false
-    }
+    val hakuOid  = params.get("haku").map(HakuOid)
+    val tarjoaja = multiParams.get("tarjoaja").map(_.map(OrganisaatioOid).toSet)
+    val q        = params.get("q")
+
+    val all = parseOptionalBoolParam(params, "all").getOrElse(false)
+    val withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false)
+    val johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon")
+
+    val tila = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet)
+
+    val searchParams = HakukohdeSearchParams(
+      tila = tila,
+      johtaaTutkintoon = johtaaTutkintoon,
+      withHakukohderyhmat = withHakukohderyhmat,
+      all = all,
+      tarjoaja = tarjoaja,
+      q = q,
+    )
 
     new AsyncResult() {
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = (hakuOid, tarjoaja) match {
-        case (None, None) =>  Future.successful(BadRequest("Query parameter is required"))
-        case (Some(oid), _) if !oid.isValid =>  Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
+        case (None, None)                   => Future.successful(BadRequest("Query parameter is required"))
+        case (Some(oid), _) if !oid.isValid => Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
         case (_, Some(oids)) if oids.exists(!_.isValid) =>
           Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))
-        case (hakuOid, tarjoajaOids) => hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_))
-          .recoverWith {
+        case (hakuOid, tarjoajaOids) =>
+          hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_)).recoverWith {
             case _: RoleAuthorizationFailedException =>
               logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
-              hakukohdeService.searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_))
+              hakukohdeService
+                .searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
+                .map(Ok(_))
           }
       }
     }

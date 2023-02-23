@@ -2,12 +2,14 @@ package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.domain.Julkaisutila
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
+import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.domain.Hakukohde
-import fi.oph.kouta.external.domain.indexed.KoodiUri
-import fi.oph.kouta.external.service.HakukohdeService
+import fi.oph.kouta.external.service.{HakukohdeSearchParams, HakukohdeService}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.external.util.KoodistoUtil.markdownKoodistoLink
 import fi.oph.kouta.service.RoleAuthorizationFailedException
 import fi.oph.kouta.servlet.Authenticated
+import fi.vm.sade.properties.OphProperties
 import org.scalatra._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,29 +18,17 @@ import scala.concurrent.{ExecutionContext, Future}
 
 object HakukohdeServlet extends HakukohdeServlet(HakukohdeService)
 
-case class HakukohdeSearchParams(
-    hakuOid: Option[HakuOid] = None,
-    tarjoajaOids: Option[Set[OrganisaatioOid]] = None,
-    q: Option[String] = None,
-    all: Boolean = false,
-    withHakukohderyhmat: Boolean = false,
-    johtaaTutkintoon: Option[Boolean] = None,
-    tilat: Option[Set[Julkaisutila]] = None,
-    hakutapa:  Option[KoodiUri] = None,
-    opetuskielet: Option[Set[KoodiUri]] = None,
-    alkamiskausi: Option[KoodiUri] = None,
-    alkamisvuosi: Option[Number] = None
-)
-
 class HakukohdeServlet(hakukohdeService: HakukohdeService)
     extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 
+  def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
+
   override def executor: ExecutionContext = global
 
   private def parseOptionalBoolParam(params: Params, paramName: String): Option[Boolean] = params.get(paramName).map {
-    case "true" => true
+    case "true"  => true
     case "false" => false
   }
 
@@ -168,105 +158,153 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
 
   registerPath(
     "/hakukohde/search",
-    """    get:
-      |      summary: Etsi hakukohteita
-      |      operationId: searchHakukohteet
-      |      description: Etsii hakukohteista annetuilla ehdoilla
-      |      tags:
-      |        - Hakukohde
-      |      parameters:
-      |        - in: query
-      |          name: johtaaTutkintoon
-      |          schema:
-      |            type: boolean
-      |          required: false
-      |          description: Onko hakukohde liitetty tutkintoon johtavaan koulutukseen?
-      |          example: false
-      |        - in: query
-      |          name: haku
-      |          schema:
-      |            type: string
-      |          required: false
-      |          description: Haun-oid
-      |          example: 1.2.246.562.29.00000000000000000009
-      |        - in: query
-      |          name: tarjoaja
-      |          schema:
-      |            type: array
-      |            items:
-      |              type: string
-      |          required: false
-      |          description: Organisaatio joka on hakukohteen tarjoaja
-      |          example: 1.2.246.562.10.00000000001,1.2.246.562.10.00000000002
-      |        - in: query
-      |          name: q
-      |          schema:
-      |            type: string
-      |          required: false
-      |          description: Tekstihaku hakukohteen ja sen järjestyspaikan nimeen
-      |          example: Autoalan perustutkinto
-      |        - in: query
-      |          name: all
-      |          schema:
-      |            type: boolean
-      |          required: false
-      |          description: Haetaanko myös muiden, kuin annettujen tarjoajien hakukohteet
-      |          example: true
-      |        - in: query
-      |          name: withHakukohderyhmat
-      |          schema:
-      |            type: boolean
-      |            default: false
-      |          required: false
-      |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
-      |          example: false
-      |        - in: query
-      |          name: tila
-      |          schema:
-      |            type: array
-      |            items:
-      |              type: string
-      |          required: false
-      |          description: Suodata annetuilla tiloilla (julkaistu/tallennettu/arkistoitu)
-      |      responses:
-      |        '200':
-      |          description: Ok
-      |          content:
-      |            application/json:
-      |              schema:
-      |                type: array
-      |                items:
-      |                  $ref: '#/components/schemas/Hakukohde'
-      |""".stripMargin
+    s"""    get:
+       |      summary: Etsi hakukohteita
+       |      operationId: searchHakukohteet
+       |      description: Etsii hakukohteista annetuilla ehdoilla
+       |      tags:
+       |        - Hakukohde
+       |      parameters:
+       |        - in: query
+       |          name: johtaaTutkintoon
+       |          schema:
+       |            type: boolean
+       |          required: false
+       |          description: Onko hakukohde liitetty tutkintoon johtavaan koulutukseen?
+       |          example: false
+       |        - in: query
+       |          name: haku
+       |          schema:
+       |            type: string
+       |          required: false
+       |          description: Haun-oid
+       |          example: 1.2.246.562.29.00000000000000000009
+       |        - in: query
+       |          name: tarjoaja
+       |          schema:
+       |            type: array
+       |            items:
+       |              type: string
+       |          required: false
+       |          description: Organisaatio joka on hakukohteen tarjoaja
+       |        - in: query
+       |          name: q
+       |          schema:
+       |            type: string
+       |          required: false
+       |          description: Tekstihaku hakukohteen ja sen järjestyspaikan nimeen
+       |          example: Autoalan perustutkinto
+       |        - in: query
+       |          name: all
+       |          schema:
+       |            type: boolean
+       |          required: false
+       |          description: Haetaanko myös muiden, kuin annettujen tarjoajien hakukohteet
+       |          example: true
+       |        - in: query
+       |          name: withHakukohderyhmat
+       |          schema:
+       |            type: boolean
+       |            default: false
+       |          required: false
+       |          description: Haetaanko hakukohderyhmien tunnisteet hakukohteelle
+       |          example: false
+       |        - in: query
+       |          name: tila
+       |          schema:
+       |            type: array
+       |            items:
+       |              type: string
+       |              enum:
+       |                - julkaistu
+       |                - tallennettu
+       |                - arkistoitu
+       |          required: false
+       |          description: Suodata annetuilla tiloilla (julkaistu/tallennettu/arkistoitu)
+       |        - in: query
+       |          name: hakutapa
+       |          schema:
+       |            type: string
+       |          required: false
+       |          example: hakutapa_03#1
+       |          description: Hakukohteen hakutapa. Viittaa koodistoon ${markdownKoodistoLink("hakutapa")}
+       |        - in: query
+       |          name: opetuskieli
+       |          schema:
+       |            type: array
+       |            items:
+       |              type: string
+       |          required: false
+       |          description: Hakukohteen opetuskielet. Viittaa koodistoon ${markdownKoodistoLink(
+      "oppilaitoksenopetuskieli"
+    )}
+       |        - in: query
+       |          name: alkamiskausi
+       |          schema:
+       |            type: string
+       |          required: false
+       |          example: kausi_s#1
+       |          description: Koulutuksen alkamiskausi. Viittaa koodistoon ${markdownKoodistoLink("kausi")}
+       |        - in: query
+       |          name: alkamisvuosi
+       |          schema:
+       |            type: number
+       |          required: false
+       |          example: 2020
+       |          description: Koulutuksen alkamisvuosi.
+       |        - in: query
+       |          name: koulutusaste
+       |          schema:
+       |            type: array
+       |            items:
+       |              type: string
+       |          required: false
+       |          example: ["kansallinenkoulutusluokitus2016koulutusastetaso1_5#1"]
+       |          description: 'Koulutuksen koulutusaste. Viittaa koodistoihin ${markdownKoodistoLink(
+      "kansallinenkoulutusluokitus2016koulutusastetaso1"
+    )} ja ${markdownKoodistoLink("kansallinenkoulutusluokitus2016koulutusastetaso2")}'
+       |      responses:
+       |        '200':
+       |          description: Ok
+       |          content:
+       |            application/json:
+       |              schema:
+       |                type: array
+       |                items:
+       |                  $$ref: '#/components/schemas/Hakukohde'
+       |""".stripMargin
   )
   get("/search") {
     implicit val authenticated: Authenticated = authenticate
 
     val searchParams = HakukohdeSearchParams(
-      tilat = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet),
       hakuOid = params.get("haku").map(HakuOid),
-      johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon"),
-      withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false),
-      all = parseOptionalBoolParam(params, "all").getOrElse(false),
       tarjoajaOids = multiParams.get("tarjoaja").map(_.map(OrganisaatioOid).toSet),
       q = params.get("q"),
+      all = parseOptionalBoolParam(params, "all").getOrElse(false),
+      withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false),
+      johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon"),
+      tila = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet),
+      hakutapa = multiParams.get("hakutapa").map(_.toSet),
+      opetuskieli = multiParams.get("opetuskieli").map(_.toSet),
+      alkamiskausi = params.get("alkamiskausi"),
+      alkamisvuosi = params.get("alkamisvuosi"),
+      koulutusaste = multiParams.get("koulutusaste").map(_.toSet),
     )
 
     new AsyncResult() {
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = (searchParams.hakuOid, searchParams.tarjoajaOids) match {
-        case (None, None)                   => Future.successful(BadRequest("Query parameter is required"))
         case (Some(oid), _) if !oid.isValid => Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
         case (_, Some(oids)) if oids.exists(!_.isValid) =>
           Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))
         case (_, _) =>
-          hakukohdeService.search(searchParams).map(Ok(_)).recoverWith {
-            case _: RoleAuthorizationFailedException =>
-              logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
-              hakukohdeService
-                .searchAuthorizeByHakukohderyhma(searchParams)
-                .map(Ok(_))
+          hakukohdeService.search(searchParams).map(Ok(_)).recoverWith { case _: RoleAuthorizationFailedException =>
+            logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
+            hakukohdeService
+              .searchAuthorizeByHakukohderyhma(searchParams)
+              .map(Ok(_))
           }
       }
     }

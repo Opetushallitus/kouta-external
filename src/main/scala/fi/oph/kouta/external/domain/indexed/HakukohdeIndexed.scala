@@ -39,7 +39,9 @@ case class HakukohdeIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-    toteutus: Option[Tarjoajat]
+    toteutus: Option[Tarjoajat],
+    opetuskieliKoodiUrit: Seq[String],
+    koulutusasteKoodiUrit: Seq[String]
 ) {
   def toHakukohde(hakukohderyhmat: Option[Seq[HakukohderyhmaOid]]): Hakukohde = Hakukohde(
     oid = oid,
@@ -73,7 +75,9 @@ case class HakukohdeIndexed(
     metadata = metadata.map(_.toHakukohdeMetadata),
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
-    modified = modified
+    modified = modified,
+    opetuskieliKoodiUrit = opetuskieliKoodiUrit,
+    koulutusasteKoodiUrit = koulutusasteKoodiUrit
   )
 
   def tarjoajat: Seq[OrganisaatioOid] =

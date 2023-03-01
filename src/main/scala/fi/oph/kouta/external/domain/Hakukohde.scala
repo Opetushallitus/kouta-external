@@ -192,6 +192,8 @@ case class Hakukohde(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
+    opetuskieliKoodiUrit: Seq[String],
+    koulutusasteKoodiUrit: Seq[String]
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde]  {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
   def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))

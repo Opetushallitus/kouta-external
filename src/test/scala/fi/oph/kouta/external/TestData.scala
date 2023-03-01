@@ -368,7 +368,9 @@ object TestData {
     muokkaaja = TestUserOid,
     organisaatioOid = ChildOid,
     kielivalinta = Seq(Fi, Sv),
-    modified = None
+    modified = None,
+    opetuskieliKoodiUrit = Seq("oppilaitoksenopetuskieli_1#1"),
+    koulutusasteKoodiUrit = Seq("kansallinenkoulutusluokitus2016koulutusastetaso1_01#1")
   )
 
   val AmmKoulutus = Koulutus(

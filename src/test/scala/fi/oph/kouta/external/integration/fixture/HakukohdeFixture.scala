@@ -106,29 +106,6 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with 
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(HakukohdePath, hakukohde(organisaatioOid), sessionId, parseOid)
 
-  def search(
-      hakuOid: Option[HakuOid],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
-      q: Option[String],
-      all: Boolean,
-      sessionId: UUID
-  ): Seq[Hakukohde] = {
-    val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
-    get[Seq[Hakukohde]](searchPath, sessionId)
-  }
-
-  def search(
-      hakuOid: Option[HakuOid],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
-      q: Option[String],
-      all: Boolean,
-      sessionId: UUID,
-      errorStatus: Int
-  ): Unit = {
-    val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
-    get(searchPath, sessionId, errorStatus)
-  }
-
   def search(searchParams: HakukohdeSearchParams, sessionId: UUID) = {
     val searchPath: String = parseSearchPath(searchParams)
     get[Seq[Hakukohde]](searchPath, sessionId)

@@ -226,7 +226,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |          schema:
        |            type: string
        |          required: false
-       |          example: hakutapa_03#1
+       |          example: hakutapa_03
        |          description: Hakukohteen hakutapa. Viittaa koodistoon ${markdownKoodistoLink("hakutapa")}
        |        - in: query
        |          name: opetuskieli
@@ -235,6 +235,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |            items:
        |              type: string
        |          required: false
+       |          example: ["oppilaitoksenopetuskieli_1"]
        |          description: Hakukohteen opetuskielet. Viittaa koodistoon ${markdownKoodistoLink(
       "oppilaitoksenopetuskieli"
     )}
@@ -243,7 +244,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |          schema:
        |            type: string
        |          required: false
-       |          example: kausi_s#1
+       |          example: kausi_s
        |          description: Koulutuksen alkamiskausi. Viittaa koodistoon ${markdownKoodistoLink("kausi")}
        |        - in: query
        |          name: alkamisvuosi
@@ -259,7 +260,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |            items:
        |              type: string
        |          required: false
-       |          example: ["kansallinenkoulutusluokitus2016koulutusastetaso1_5#1"]
+       |          example: ["kansallinenkoulutusluokitus2016koulutusastetaso1_5"]
        |          description: 'Koulutuksen koulutusaste. Viittaa koodistoihin ${markdownKoodistoLink(
       "kansallinenkoulutusluokitus2016koulutusastetaso1"
     )} ja ${markdownKoodistoLink("kansallinenkoulutusluokitus2016koulutusastetaso2")}'

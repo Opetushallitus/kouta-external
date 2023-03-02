@@ -14,7 +14,7 @@ import java.util.UUID
     |        oid:
     |          type: string
     |          description: Haun yksilöivä tunniste. Järjestelmän generoima.
-    |          example: "1.2.246.562.29.00000000000000000009"
+    |          example: 1.2.246.562.29.00000000000000000009
     |        externalId:
     |          type: string
     |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
@@ -34,7 +34,7 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/Nimi'
     |        hakutapaKoodiUri:
     |          type: string
-    |          description: Haun hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/hakutapa/1)
+    |          description: Haun hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/hakutapa/1)
     |          example: hakutapa_03#1
     |        hakukohteenLiittamisenTakaraja:
     |          type: string
@@ -57,7 +57,7 @@ import java.util.UUID
     |        alkamiskausiKoodiUri:
     |          type: string
     |          description: Haun koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla.
-    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kausi/1)
     |          example: kausi_k#1
     |        alkamisvuosi:
     |          type: string
@@ -65,11 +65,11 @@ import java.util.UUID
     |          example: 2020
     |        kohdejoukkoKoodiUri:
     |          type: string
-    |          description: Haun kohdejoukko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukko/1)
+    |          description: Haun kohdejoukko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/haunkohdejoukko/1)
     |          example: haunkohdejoukko_17#1
     |        kohdejoukonTarkenneKoodiUri:
     |          type: string
-    |          description: Haun kohdejoukon tarkenne. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukontarkenne/1)
+    |          description: Haun kohdejoukon tarkenne. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/haunkohdejoukontarkenne/1)
     |          example: haunkohdejoukontarkenne_1#1
     |        hakulomaketyyppi:
     |          type: string

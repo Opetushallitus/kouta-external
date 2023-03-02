@@ -150,7 +150,9 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |                 type: array
       |                 items:
       |                   type: string
-      |               example: ["1.2.246.562.29.00000000000000000009","1.2.246.562.29.00000000000000000186"]
+      |               example: 
+      |                 - 1.2.246.562.29.00000000000000000009
+      |                 - 1.2.246.562.29.00000000000000000186
       |      responses:
       |        '200':
       |          description: Ok
@@ -200,7 +202,9 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
       |              type: string
       |          required: true
       |          description: Organisaatio joka on haun hakukohteen tarjoaja
-      |          example: 1.2.246.562.10.00000000001,1.2.246.562.10.00000000002
+      |          example:
+      |            - 1.2.246.562.10.00000000001
+      |            - 1.2.246.562.10.00000000002
       |        - in: query
       |          name: vuosi
       |          schema:

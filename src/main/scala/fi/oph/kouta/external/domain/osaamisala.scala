@@ -8,7 +8,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |      properties:
     |        koodiUri:
     |          type: string
-    |          description: Osaamisalan koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/osaamisala/1)
+    |          description: Osaamisalan koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamisala/1)
     |          example: osaamisala_0001#1
     |        linkki:
     |          type: object

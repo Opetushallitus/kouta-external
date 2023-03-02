@@ -9,7 +9,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |      properties:
     |        opetuskieliKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetuskielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/oppilaitoksenopetuskieli/1)
+    |          description: Lista koulutuksen toteutuksen opetuskielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/oppilaitoksenopetuskieli/1)
     |          items:
     |            type: string
     |            example:
@@ -21,7 +21,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Kuvaus'
     |        opetusaikaKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetusajoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opetusaikakk/1)
+    |          description: Lista koulutuksen toteutuksen opetusajoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetusaikakk/1)
     |          items:
     |            type: string
     |            example:
@@ -33,7 +33,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Kuvaus'
     |        opetustapaKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetustavoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opetuspaikkakk/1)
+    |          description: Lista koulutuksen toteutuksen opetustavoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetuspaikkakk/1)
     |          items:
     |            type: string
     |            example:

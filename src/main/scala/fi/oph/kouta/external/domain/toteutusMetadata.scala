@@ -362,7 +362,7 @@ case class LukiolinjaTieto(koodiUri: String, kuvaus: Kielistetty)
     |      properties:
     |        koodiUri:
     |          type: string
-    |          description: Lukiodiplomin koodiUri. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/moduulikoodistolops2021/1).
+    |          description: Lukiodiplomin koodiUri. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/moduulikoodistolops2021/1).
     |        linkki:
     |          type: object
     |          description: Lukiodiplomin kielistetyt lisätietolinkit. Kielet on määritetty toteutuksen kielivalinnassa.
@@ -396,13 +396,13 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |              description: Onko lukio-toteutuksella yleislinja?
     |            painotukset:
     |              type: array
-    |              description: Lukio-toteutuksen painotukset. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/lukiopainotukset/1).
+    |              description: Lukio-toteutuksen painotukset. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/lukiopainotukset/1).
     |              items:
     |                type: object
     |                $ref: '#/components/schemas/LukiolinjaTieto'
     |            erityisetKoulutustehtavat:
     |              type: array
-    |              description: Lukio-toteutuksen erityiset koulutustehtävät. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/lukiolinjaterityinenkoulutustehtava/1).
+    |              description: Lukio-toteutuksen erityiset koulutustehtävät. Taulukon alkioiden koodiUri-kentät viittaavat [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/lukiolinjaterityinenkoulutustehtava/1).
     |              items:
     |                type: object
     |                $ref: '#/components/schemas/LukiolinjaTieto'
@@ -651,7 +651,7 @@ case class ErikoislaakariToteutusMetadata(
     |                - kk-opintokokonaisuus
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              description: Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: integer
@@ -730,7 +730,7 @@ case class ErikoistumiskoulutusToteutusMetadata(
     |                - taiteen-perusopetus
     |            taiteenalaKoodiUrit:
     |              type: array
-    |              description: Lista taiteenaloja. Viittaa [koodistoon](https://virkailija.opintopolku.fi/koodisto-app/koodisto/view/taiteenperusopetustaiteenala/1)
+    |              description: Lista taiteenaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/taiteenperusopetustaiteenala/1)
     |              items:
     |                type: string
     |              example:
@@ -738,7 +738,7 @@ case class ErikoistumiskoulutusToteutusMetadata(
     |                - taiteenperusopetustaiteenala_arkkitehtuuri#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
@@ -788,7 +788,7 @@ case class TaiteenPerusopetusToteutusMetadata(
   |                - muu
   |            opintojenLaajuusyksikkoKoodiUri:
   |              type: string
-  |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+  |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
   |              example:
   |                - opintojenlaajuusyksikko_2#1
   |            opintojenLaajuusNumeroMin:

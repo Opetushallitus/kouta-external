@@ -57,13 +57,21 @@ sealed trait KoulutusMetadataIndexed {
 case class AmmatillinenKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty = Map.empty,
-    lisatiedot: Seq[LisatietoIndexed] = Seq.empty
+    lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
+    tutkintonimike: Seq[KoodiUri] = Seq.empty,
+    opintojenLaajuusyksikko: Option[KoodiUri] = None,
+    opintojenLaajuusNumero: Option[Double] = None,
+    koulutusala: Seq[KoodiUri] = Seq.empty
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: AmmatillinenKoulutusMetadata =
     AmmatillinenKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
-      lisatiedot = lisatiedot.map(_.toLisatieto)
+      lisatiedot = lisatiedot.map(_.toLisatieto),
+      tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
+      opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
+      opintojenLaajuusNumero = opintojenLaajuusNumero,
+      koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     )
 }
 

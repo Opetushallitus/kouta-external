@@ -27,50 +27,50 @@ sealed trait KoulutusMetadata {
 }
 
 @SwaggerModel(
-"""    AmmatillinenKoulutusMetadata:
-  |      allOf:
-  |        - $ref: '#/components/schemas/KoulutusMetadata'
-  |        - type: object
-  |          properties:
-  |            tyyppi:
-  |              type: string
-  |              description: Koulutuksen metatiedon tyyppi
-  |              example: amm
-  |              enum:
-  |                - amm
-  |            koulutusalaKoodiUrit:
-  |              type: array
-  |              description: |
-  |                Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso2/1).
-  |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
-  |              items:
-  |                type: string
-  |              example:
-  |                - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
-  |                - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
-  |            tutkintonimikeKoodiUrit:
-  |              type: array
-  |              description: |
-  |                Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2).
-  |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
-  |              items:
-  |                type: string
-  |              example:
-  |                - tutkintonimikekk_110#2
-  |                - tutkintonimikekk_111#2
-  |            opintojenLaajuusyksikkoKoodiUri:
-  |              type: string
-  |              description: |
-  |                Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1).
-  |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
-  |              example: opintojenlaajuusyksikko_2#1
-  |            opintojenLaajuusNumero:
-  |              type: integer
-  |              description: |
-  |                Opintojen laajuus tai kesto numeroarvona.
-  |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
-  |              example: 10
-  |""")
+  """    AmmatillinenKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: amm
+    |              enum:
+    |                - amm
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: |
+    |                Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso2).
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |              items:
+    |                type: string
+    |              example:
+    |                - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
+    |                - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
+    |            tutkintonimikeKoodiUrit:
+    |              type: array
+    |              description: |
+    |                Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/tutkintonimikkeet).
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |              items:
+    |                type: string
+    |              example:
+    |                - tutkintonimikkeet_10091#2
+    |                - tutkintonimikkeet_10015#2
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: |
+    |                Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko).
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |              example: opintojenlaajuusyksikko_2#1
+    |            opintojenLaajuusNumero:
+    |              type: integer
+    |              description: |
+    |                Opintojen laajuus tai kesto numeroarvona.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |              example: 10
+    |""")
 case class AmmatillinenKoulutusMetadata(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,

@@ -4,7 +4,13 @@ import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.TestData.JulkaistuHakukohde
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.{HakuClient, HakukohdeClient}
-import fi.oph.kouta.external.service.{HakuService, HakukohdeService, HakukohderyhmaService, OrganisaatioServiceImpl}
+import fi.oph.kouta.external.service.{
+  HakuService,
+  HakukohdeSearchParams,
+  HakukohdeService,
+  HakukohderyhmaService,
+  OrganisaatioServiceImpl
+}
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
 import fi.vm.sade.utils.slf4j.Logging
@@ -13,26 +19,41 @@ import java.time.Instant
 import java.util.UUID
 
 trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with Logging {
-  val HakukohdePath = "/hakukohde"
+  val HakukohdePath       = "/hakukohde"
   val HakukohdeSearchPath = "/hakukohde/search"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
+    val organisaatioService  = new OrganisaatioServiceImpl(urlProperties.get)
     val hakukohderyhmaClient = new MockHakukohderyhmaClient(urlProperties.get)
 
-    val hakuService = new HakuService(new HakuClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val hakuService = new HakuService(
+      new HakuClient(TempElasticClient.client),
+      new MockKoutaClient(urlProperties.get),
+      organisaatioService
+    )
     val hakukohderyhmaService = new HakukohderyhmaService(hakukohderyhmaClient, organisaatioService)
-    val hakukohdeService = new HakukohdeService(new HakukohdeClient(TempElasticClient.client),hakukohderyhmaService, new MockKoutaClient(urlProperties.get), organisaatioService, hakuService)
+    val hakukohdeService = new HakukohdeService(
+      new HakukohdeClient(TempElasticClient.client),
+      hakukohderyhmaService,
+      new MockKoutaClient(urlProperties.get),
+      organisaatioService,
+      hakuService
+    )
     addServlet(new HakukohdeServlet(hakukohdeService), HakukohdePath)
   }
 
   val hakukohde = JulkaistuHakukohde
 
-  private def parseSearchPath(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean): String = {
+  private def parseSearchPath(
+      hakuOid: Option[HakuOid],
+      tarjoajaOids: Option[Set[OrganisaatioOid]],
+      q: Option[String],
+      all: Boolean
+  ): String = {
     val hakuString: String = hakuOid match {
       case Some(s) => s"haku=${s.toString}"
-      case None => ""
+      case None    => ""
     }
 
     val tarjoajaString: String = tarjoajaOids match {
@@ -44,14 +65,21 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with 
 
     val queryString: String = q match {
       case Some(s) => if (hakuString.nonEmpty || tarjoajaString.nonEmpty) s"&q=$s&" else s"q=$s&"
-      case None => ""
+      case None    => ""
     }
 
-    val allString: String = if (hakuString.nonEmpty || tarjoajaString.nonEmpty || queryString.nonEmpty) s"&all=${all.toString}" else s"all=${all.toString}"
+    val allString: String =
+      if (hakuString.nonEmpty || tarjoajaString.nonEmpty || queryString.nonEmpty) s"&all=${all.toString}"
+      else s"all=${all.toString}"
 
     logger.info(s"$HakukohdeSearchPath?$hakuString$tarjoajaString$queryString$allString")
 
     s"$HakukohdeSearchPath?$hakuString$tarjoajaString$queryString$allString"
+  }
+
+  private def parseSearchPath(searchParams: HakukohdeSearchParams) = {
+    println(s"$HakukohdeSearchPath${searchParams.toQueryString}")
+    s"$HakukohdeSearchPath${searchParams.toQueryString}"
   }
 
   def hakukohde(oid: String): Hakukohde = hakukohde.copy(oid = Some(HakukohdeOid(oid)))
@@ -78,13 +106,13 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with 
   def create(organisaatioOid: OrganisaatioOid, sessionId: UUID): String =
     create(HakukohdePath, hakukohde(organisaatioOid), sessionId, parseOid)
 
-  def search(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean, sessionId: UUID): Seq[Hakukohde] = {
-    val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
+  def search(searchParams: HakukohdeSearchParams, sessionId: UUID) = {
+    val searchPath: String = parseSearchPath(searchParams)
     get[Seq[Hakukohde]](searchPath, sessionId)
   }
 
-  def search(hakuOid: Option[HakuOid], tarjoajaOids: Option[Set[OrganisaatioOid]], q: Option[String], all: Boolean, sessionId: UUID, errorStatus: Int): Unit = {
-    val searchPath: String = parseSearchPath(hakuOid, tarjoajaOids, q, all)
+  def search(searchParams: HakukohdeSearchParams, sessionId: UUID, errorStatus: Int) = {
+    val searchPath: String = parseSearchPath(searchParams)
     get(searchPath, sessionId, errorStatus)
   }
 
@@ -93,7 +121,8 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with 
 
   def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
     ifUnmodifiedSince match {
-      case Some(ifUnmodifiedSinceVal) => update(HakukohdePath, hakukohde(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case Some(ifUnmodifiedSinceVal) =>
+        update(HakukohdePath, hakukohde(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
       case _ => update(HakukohdePath, hakukohde(oid), defaultSessionId, expectedStatus, expectedBody)
     }
 

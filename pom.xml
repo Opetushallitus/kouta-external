@@ -23,17 +23,14 @@
         <!-- Utility properties -->
         <scala-utils.version>1.2.3-SNAPSHOT</scala-utils.version>
         <scala-logging.version>1.3.0-SNAPSHOT</scala-logging.version>
-        <!--1. json4s.version>3.6.7</json4s.version-->
-        <!--json4s.version>4.0.3</json4s.version-->
         <json4s.version>3.6.11</json4s.version>
         <jackson.version>2.13.4</jackson.version>
-        <logback-access.version>1.2.3</logback-access.version>
+        <logback-access.version>1.2.9</logback-access.version>
 
         <!-- Cas properties -->
         <scala-cas.version>2.2.1-SNAPSHOT</scala-cas.version>
 
         <!-- Http related properties -->
-        <!--2. scalatra.version>2.7.0</scalatra.version-->
         <scalatra.version>2.7.0</scalatra.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 
@@ -42,12 +39,11 @@
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>
-        <slick.version>3.2.3</slick.version>
+        <slick.version>3.4.1</slick.version>
         <jdbc.version>42.2.6</jdbc.version>
 
         <!-- Test properties -->
         <scala-test.version>3.2.0-M4</scala-test.version>
-        <!-- 3. scalatra-scalatest.version>2.7.0</scalatra-scalatest.version-->
         <scalatra-scalatest.version>2.7.0</scalatra-scalatest.version>
         <jetty.version>9.4.46.v20220331</jetty.version>
         <testcontainers.version>1.15.3</testcontainers.version>
@@ -58,12 +54,12 @@
         <!-- Plugin properties -->
         <enforce.java.version>[11,)</enforce.java.version>
 
-        <plugin.scala-maven-plugin.version>4.3.1</plugin.scala-maven-plugin.version>
-        <plugin.maven-enforcer-plugin.version>3.0.0-M2</plugin.maven-enforcer-plugin.version>
-        <plugin.maven-assembly-plugin.version>3.1.1</plugin.maven-assembly-plugin.version>
-        <plugin.maven-jar-plugin.version>3.1.1</plugin.maven-jar-plugin.version>
-        <plugin.maven-surefire-plugin.version>2.22.0</plugin.maven-surefire-plugin.version>
-        <plugin.scalatest-maven-plugin.version>1.0</plugin.scalatest-maven-plugin.version>
+        <plugin.scala-maven-plugin.version>4.8.0</plugin.scala-maven-plugin.version>
+        <plugin.maven-enforcer-plugin.version>3.2.1</plugin.maven-enforcer-plugin.version>
+        <plugin.maven-assembly-plugin.version>3.4.2</plugin.maven-assembly-plugin.version>
+        <plugin.maven-jar-plugin.version>3.3.0</plugin.maven-jar-plugin.version>
+        <plugin.maven-surefire-plugin.version>2.22.2</plugin.maven-surefire-plugin.version>
+        <plugin.scalatest-maven-plugin.version>2.2.0</plugin.scalatest-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -664,6 +660,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${plugin.maven-assembly-plugin.version}</version>
                 <executions>

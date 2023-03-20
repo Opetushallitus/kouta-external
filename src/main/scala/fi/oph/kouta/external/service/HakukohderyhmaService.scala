@@ -33,7 +33,6 @@ class HakukohderyhmaService(hakukohderyhmaClient: HakukohderyhmaClient, val orga
       .filter(a => a.authority.startsWith("APP_KOUTA_HAKUKOHDE"))
       .filter(a => HakukohderyhmaOid.apply(a.authority.split("_").last).isValid)
       .map(a => HakukohderyhmaOid(a.authority.split("_").last))
-      .toSet
   }
 
   def authorizeHakukohde(oid: HakukohdeOid, hakukohde: Hakukohde)(implicit
@@ -56,12 +55,12 @@ class HakukohderyhmaService(hakukohderyhmaClient: HakukohderyhmaClient, val orga
 
   def getHakukohteetByHakukohderyhmaOid(
       oid: HakukohderyhmaOid
-  )(implicit authenticated: Authenticated): Future[Seq[HakukohdeOid]] = {
+  ): Future[Seq[HakukohdeOid]] = {
     hakukohderyhmaClient.getHakukohteet(oid)
   }
   def getHakukohderyhmatByHakukohdeOid(
       oid: HakukohdeOid
-  )(implicit authenticated: Authenticated): Future[Seq[HakukohderyhmaOid]] = {
+  ): Future[Seq[HakukohderyhmaOid]] = {
     cache.getFuture(oid, hakukohderyhmaClient.getHakukohderyhmat)
   }
 }

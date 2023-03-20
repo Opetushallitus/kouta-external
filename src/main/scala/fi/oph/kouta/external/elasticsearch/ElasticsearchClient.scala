@@ -77,7 +77,7 @@ trait ElasticsearchClient extends Logging {
           SearchIterator.iterate[T](client, search(index).keepAlive("1m").size(500)).toIndexedSeq
         )
       })(q => {
-        val request = search(index).bool(must(q)).keepAlive("1m").size(500)
+        val request = search(index).query(q).keepAlive("1m").size(500)
         logger.info(s"Elasticsearch request: ${request.show}")
         Future {
           SearchIterator

@@ -83,7 +83,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |                - amm-osaamisala
     |            osaamisalaKoodiUri:
     |              type: string
-    |              description: Osaamisala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/osaamisala/1)
+    |              description: Osaamisala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamisala/1)
     |              example: osaamisala_10#1
     |
     |"""
@@ -102,7 +102,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |      properties:
     |        koulutusalaKoodiUrit:
     |          type: array
-    |          description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso2/1)
+    |          description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso2/1)
     |          items:
     |            type: string
     |            example:
@@ -110,7 +110,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |              - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
     |        tutkintonimikeKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2)
+    |          description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/tutkintonimikekk/2)
     |          items:
     |            type: string
     |          example:
@@ -118,7 +118,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |            - tutkintonimikekk_111#2
     |        opintojenLaajuusyksikkoKoodiUri:
     |          type: string
-    |          description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |          description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |          example: opintojenlaajuusyksikko_2#1
     |        opintojenLaajuusNumero:
     |          type: double
@@ -235,7 +235,7 @@ case class OpePedagOpinnotKoulutusMetadata(
     |                - lk
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -243,7 +243,7 @@ case class OpePedagOpinnotKoulutusMetadata(
     |              example: 150
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
@@ -276,7 +276,7 @@ case class LukioKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_8#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -310,7 +310,7 @@ case class TuvaKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -341,14 +341,14 @@ case class TelmaKoulutusMetadata(
     |                - amm-muu
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -383,14 +383,14 @@ case class AmmatillinenMuuKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -425,7 +425,7 @@ case class VapaaSivistystyoKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -456,7 +456,7 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |                - kk-opintojakso
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
     |              type: integer
@@ -468,7 +468,7 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              example: 20
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
@@ -502,14 +502,14 @@ case class KkOpintojaksoKoulutusMetadata(
     |                - erikoislaakari
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            tutkintonimikeKoodiUrit:
     |              type: array
-    |              description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/tutkintonimikekk/2)
+    |              description: Lista koulutuksen tutkintonimikkeistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/tutkintonimikekk/2)
     |              items:
     |                type: string
     |              example:
@@ -539,14 +539,14 @@ case class ErikoislaakariKoulutusMetadata(
     |                - kk-opintokokonaisuus
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumeroMin:
     |              type: integer
@@ -585,19 +585,19 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     |                - erikoistumiskoulutus
     |            erikoistumiskoulutusKoodiUri:
     |              type: string
-    |              description: Erikoistumiskoulutuksen koodiURI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/erikoistumiskoulutukset/2)
+    |              description: Erikoistumiskoulutuksen koodiURI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/erikoistumiskoulutukset/2)
     |              example:
     |                - erikoistumiskoulutukset_001#2
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
@@ -660,14 +660,14 @@ case class TaiteenPerusopetusKoulutusMetadata(
     |                - erikoistumiskoulutus
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/opintojenlaajuusyksikko/1)
+    |              description: Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:

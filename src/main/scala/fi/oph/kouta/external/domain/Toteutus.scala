@@ -13,11 +13,11 @@ import java.util.UUID
     |        oid:
     |          type: string
     |          description: Toteutuksen yksilöivä tunniste. Järjestelmän generoima.
-    |          example: "1.2.246.562.17.00000000000000000009"
+    |          example: 1.2.246.562.17.00000000000000000009
     |        koulutusOid:
     |          type: string
     |          description: Toteutuksen koulutuksen oid
-    |          example: "1.2.246.562.11.00000000000000000008"
+    |          example: 1.2.246.562.11.00000000000000000008
     |        externalId:
     |          type: string
     |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa

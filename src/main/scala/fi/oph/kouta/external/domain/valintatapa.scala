@@ -10,7 +10,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |      properties:
     |        valintatapaKoodiUri:
     |          type: string
-    |          description: Valintatapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/valintatapajono/1)
+    |          description: Valintatapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/valintatapajono/1)
     |          example: valintatapajono_av#1
     |        nimi:
     |          type: object

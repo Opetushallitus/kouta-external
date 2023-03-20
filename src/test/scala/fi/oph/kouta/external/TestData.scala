@@ -38,6 +38,7 @@ import fi.oph.kouta.external.domain.{
   Lisatieto,
   Opetus,
   Osoite,
+  PaateltyAlkamiskausi,
   Row,
   SisaltoTeksti,
   Sorakuvaus,
@@ -368,7 +369,15 @@ object TestData {
     muokkaaja = TestUserOid,
     organisaatioOid = ChildOid,
     kielivalinta = Seq(Fi, Sv),
-    modified = None
+    modified = None,
+    paateltyAlkamiskausi = Some(
+      PaateltyAlkamiskausi(
+        TarkkaAlkamisajankohta,
+        "1.2.246.562.29.00000000000000017098",
+        "kausi_s#1",
+        "2023"
+      )
+    )
   )
 
   val AmmKoulutus = Koulutus(

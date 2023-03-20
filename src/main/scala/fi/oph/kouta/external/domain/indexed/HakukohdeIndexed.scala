@@ -2,7 +2,7 @@ package fi.oph.kouta.external.domain.indexed
 
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.domain._
-import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, ValintakokeenLisatilaisuudet}
+import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, PaateltyAlkamiskausi, ValintakokeenLisatilaisuudet}
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -39,7 +39,8 @@ case class HakukohdeIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-    toteutus: Option[Tarjoajat]
+    toteutus: Option[Tarjoajat],
+    paateltyAlkamiskausi: Option[PaateltyAlkamiskausi]
 ) {
   def toHakukohde(hakukohderyhmat: Option[Seq[HakukohderyhmaOid]]): Hakukohde = Hakukohde(
     oid = oid,
@@ -73,7 +74,8 @@ case class HakukohdeIndexed(
     metadata = metadata.map(_.toHakukohdeMetadata),
     organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
-    modified = modified
+    modified = modified,
+    paateltyAlkamiskausi = paateltyAlkamiskausi
   )
 
   def tarjoajat: Seq[OrganisaatioOid] =

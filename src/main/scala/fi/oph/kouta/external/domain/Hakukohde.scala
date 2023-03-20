@@ -1,11 +1,44 @@
 package fi.oph.kouta.external.domain
 
 import fi.oph.kouta.domain.oid._
-import fi.oph.kouta.domain.{Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa, Modified}
+import fi.oph.kouta.domain.{Alkamiskausityyppi, Hakulomaketyyppi, Julkaisutila, Kieli, LiitteenToimitustapa, Modified}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.time.LocalDateTime
 import java.util.UUID
+
+@SwaggerModel(
+  """    PaateltyAlkamiskausi:
+    |      type: object
+    |      properties:
+    |        alkamiskausityyppi:
+    |          type: string
+    |          description: Alkamiskausityyppi
+    |          example: "alkamiskausi ja -vuosi"
+    |          enum:
+    |            - alkamiskausi ja -vuosi
+    |            - tarkka alkamisajankohta
+    |            - henkilokohtainen suunnitelma
+    |        source:
+    |          type: string
+    |          description: Lähde-entiteetin oid (hakukohde, haku tai toteutus)
+    |          example: "1.2.246.562.29.00000000000000017098"
+    |        kausiUri:
+    |          type: string
+    |          description: Hakukohteen koulutuksen alkamiskausi
+    |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+    |          example: kausi_k#1
+    |        vuosi:
+    |          type: string
+    |          description: Hakukohteen koulutuksen alkamisvuosi
+    |          example: 2023
+    |""")
+case class PaateltyAlkamiskausi(
+    alkamiskausityyppi: Alkamiskausityyppi,
+    source: String, //lähde-entiteetin oid (hakukohde, haku tai toteutus)
+    kausiUri: String,
+    vuosi: String
+)
 
 @SwaggerModel(
   """    Hakukohde:
@@ -158,6 +191,10 @@ import java.util.UUID
     |           format: date-time
     |           description: Hakukohteen viimeisin muokkausaika. Järjestelmän generoima
     |           example: 2019-08-23T09:55:17
+    |        paateltyAlkamiskausi:
+    |           type: object
+    |           description: Hakukohteen päätelty alkamiskausi (tieto peräisin hakukohteelta, haulta tai toteutukselta)
+    |           $ref: '#/components/schemas/PaateltyAlkamiskausi'
     |""")
 case class Hakukohde(
     oid: Option[HakukohdeOid],
@@ -192,6 +229,7 @@ case class Hakukohde(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
+    paateltyAlkamiskausi: Option[PaateltyAlkamiskausi]
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde]  {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
   def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))

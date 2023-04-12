@@ -386,6 +386,31 @@ package object domain {
                                      koulutuksenAlkamisvuosi: Option[String] = None)
 
   @SwaggerModel(
+    """    PaateltyAlkamiskausi:
+      |      type: object
+      |      properties:
+      |        alkamiskausityyppi:
+      |          type: string
+      |          description: Alkamiskauden tyyppi
+      |          enum:
+      |            - 'henkilokohtainen suunnitelma'
+      |            - 'tarkka alkamisajankohta'
+      |            - 'alkamiskausi ja -vuosi'
+      |        kausiUri:
+      |          type: string
+      |          description: Päätelty koulutuksen alkamiskausi-koodiUri
+      |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+      |          example: kausi_k#1
+      |        vuosi:
+      |          type: string
+      |          description: Päätelty koulutuksen alkamisvuosi
+      |          example: 2020
+      |""")
+  case class PaateltyAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
+                                  kausiUri: Option[String] = None,
+                                  vuosi: Option[String] = None)
+
+  @SwaggerModel(
     """    TutkinnonOsa:
       |      type: object
       |      properties:

@@ -369,8 +369,15 @@ object TestData {
     organisaatioOid = ChildOid,
     kielivalinta = Seq(Fi, Sv),
     modified = None,
+    johtaaTutkintoon = Some(true),
+    hakutapaKoodiUri = Some("hakutapa_03#1"),
     opetuskieliKoodiUrit = Seq("oppilaitoksenopetuskieli_1#1"),
-    koulutusasteKoodiUrit = Seq("kansallinenkoulutusluokitus2016koulutusastetaso1_01#1")
+    koulutusasteKoodiUrit = Seq("kansallinenkoulutusluokitus2016koulutusastetaso1_01#1"),
+    paateltyAlkamiskausi = Some(PaateltyAlkamiskausi(
+      alkamiskausityyppi = Some(AlkamiskausiJaVuosi),
+      kausiUri = Some("kausi_k#1"),
+      vuosi = Some(LocalDate.now().getYear.toString)
+    ))
   )
 
   val AmmKoulutus = Koulutus(

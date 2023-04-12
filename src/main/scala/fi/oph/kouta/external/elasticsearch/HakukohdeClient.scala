@@ -25,8 +25,8 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
     val hakuOid               = searchParams.hakuOid
     val tarjoajaOids          = searchParams.tarjoajaOids
     val hakuQuery             = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
-    val tilaQuery             = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
     val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
+    val tilaQuery             = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
     val hakutapaQuery         = searchParams.hakutapa.map(hakutavat => termsQuery("hakutapaKoodiUri", hakutavat))
     val opetuskieletQuery     = searchParams.opetuskieli.map(termsQuery("opetuskieliKoodiUrit", _))
     val alkamiskausiQuery     = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
@@ -61,8 +61,8 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         tarjoajaQuery,
         qQuery,
         hakukohdeQuery,
-        tilaQuery,
         johtaaTutkintoonQuery,
+        tilaQuery,
         hakutapaQuery,
         opetuskieletQuery,
         alkamiskausiQuery,

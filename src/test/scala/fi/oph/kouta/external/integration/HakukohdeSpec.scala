@@ -143,48 +143,22 @@ class HakukohdeSpec
     get(hakukohdeWithHakukohderyhmaOid, hakukohderyhmaCrudSessionIds(testiHakukohderyhmaOid))
   }
 
+  val DefaultSearchParams = HakukohdeSearchParams(all = true, tarjoajaOids = Some(Set(OrganisaatioOid("1.2.246.562.10.81934895871"))))
+
   it should "deny the user to search without rights to haku" in {
-    search(Some(hakuOid), None, None, true, otherRoleSessionId, 403)
+    search(DefaultSearchParams.copy(hakuOid = Some(hakuOid)), otherRoleSessionId, 403)
   }
 
   it should "allow the user with pääkäyttäjä rights to search" in {
-    search(Some(hakuOid), None, None, true, ophPaakayttajaSessionId)
+    search(DefaultSearchParams.copy(hakuOid = Some(hakuOid)), ophPaakayttajaSessionId)
   }
 
   it should "allow the user with hakukohderyhmä rights to search" in {
-    search(Some(hakuOid), None, None, true, hakukohderyhmaCrudSessionIds(searchHakukohderyhmaOid))
-  }
-
-  val DefaultSearchParams = HakukohdeSearchParams(all = true, tarjoajaOids = Some(Set(OrganisaatioOid("1.2.246.562.10.81934895871"))))
-
-  it should "Search with tila" in {
-    val hakukohteet1 = search(DefaultSearchParams.copy(tila = Some(Set(Tallennettu))), ophPaakayttajaSessionId)
-    hakukohteet1.length should equal(0)
-
-    val hakukohteet2 = search(DefaultSearchParams.copy(tila = Some(Set(Julkaistu))), ophPaakayttajaSessionId)
-    hakukohteet2.length should equal(3)
+    search(DefaultSearchParams.copy(hakuOid = Some(hakuOid)), hakukohderyhmaCrudSessionIds(searchHakukohderyhmaOid))
   }
 
   def assertEachContains(items: Seq[Seq[String]], matchStr: String) = {
-    forAll (items) {x => assert(x contains matchStr)}
-  }
-
-  it should "Search with opetuskieli" in {
-    var hakukohteet = search(DefaultSearchParams.copy(opetuskieli = Some(Set("oppilaitoksenopetuskieli_1#1"))), ophPaakayttajaSessionId)
-    hakukohteet.length should not equal(0)
-    assertEachContains(hakukohteet.map(_.opetuskieliKoodiUrit), "oppilaitoksenopetuskieli_1#1")
-
-    hakukohteet = search(DefaultSearchParams.copy(opetuskieli = Some(Set("oppilaitoksenopetuskieli_2"))), ophPaakayttajaSessionId)
-    hakukohteet.length should equal(0)
-  }
-
-  it should "Search with koulutusaste" in {
-    var hakukohteet = search(DefaultSearchParams.copy(koulutusaste = Some(Set("kansallinenkoulutusluokitus2016koulutusastetaso1_01"))), ophPaakayttajaSessionId)
-    hakukohteet.length should not equal(0)
-    assertEachContains(hakukohteet.map(_.koulutusasteKoodiUrit), "kansallinenkoulutusluokitus2016koulutusastetaso1_01")
-
-    hakukohteet = search(DefaultSearchParams.copy(koulutusaste = Some(Set("kansallinenkoulutusluokitus2016koulutusastetaso1_99"))), ophPaakayttajaSessionId)
-    hakukohteet.length should equal(0)
+    forAll(items) { x => assert(x contains matchStr) }
   }
 
   it should "Search with johtaaTutkintoon" in {
@@ -195,6 +169,31 @@ class HakukohdeSpec
     hakukohteet.length should equal(3)
 
     hakukohteet = search(DefaultSearchParams.copy(johtaaTutkintoon = Some(false)), ophPaakayttajaSessionId)
+    hakukohteet.length should equal(0)
+  }
+
+  it should "Search with tila" in {
+    val hakukohteet1 = search(DefaultSearchParams.copy(tila = Some(Set(Tallennettu))), ophPaakayttajaSessionId)
+    hakukohteet1.length should equal(0)
+
+    val hakukohteet2 = search(DefaultSearchParams.copy(tila = Some(Set(Julkaistu))), ophPaakayttajaSessionId)
+    hakukohteet2.length should equal(3)
+  }
+
+  it should "Search with hakutapa" in {
+    var hakukohteet = search(DefaultSearchParams.copy(hakutapa = Some(Set("hakutapa_03"))), ophPaakayttajaSessionId)
+    hakukohteet.length should equal(3)
+
+    hakukohteet = search(DefaultSearchParams.copy(hakutapa = Some(Set("hakutapa_01"))), ophPaakayttajaSessionId)
+    hakukohteet.length should equal(0)
+  }
+
+  it should "Search with opetuskieli" in {
+    var hakukohteet = search(DefaultSearchParams.copy(opetuskieli = Some(Set("oppilaitoksenopetuskieli_1"))), ophPaakayttajaSessionId)
+    hakukohteet.length should not equal (0)
+    assertEachContains(hakukohteet.map(_.opetuskieliKoodiUrit), "oppilaitoksenopetuskieli_1#1")
+
+    hakukohteet = search(DefaultSearchParams.copy(opetuskieli = Some(Set("oppilaitoksenopetuskieli_2"))), ophPaakayttajaSessionId)
     hakukohteet.length should equal(0)
   }
 
@@ -217,6 +216,15 @@ class HakukohdeSpec
     hakukohteet.length should equal(3)
 
     hakukohteet = search(DefaultSearchParams.copy(alkamiskausi = Some("kausi_s#1")), ophPaakayttajaSessionId)
+    hakukohteet.length should equal(0)
+  }
+
+  it should "Search with koulutusaste" in {
+    var hakukohteet = search(DefaultSearchParams.copy(koulutusaste = Some(Set("kansallinenkoulutusluokitus2016koulutusastetaso1_01"))), ophPaakayttajaSessionId)
+    hakukohteet.length should not equal(0)
+    assertEachContains(hakukohteet.map(_.koulutusasteKoodiUrit), "kansallinenkoulutusluokitus2016koulutusastetaso1_01")
+
+    hakukohteet = search(DefaultSearchParams.copy(koulutusaste = Some(Set("kansallinenkoulutusluokitus2016koulutusastetaso1_99"))), ophPaakayttajaSessionId)
     hakukohteet.length should equal(0)
   }
 

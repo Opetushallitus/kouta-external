@@ -296,6 +296,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = (searchParams.hakuOid, searchParams.tarjoajaOids) match {
+        case (None, None) => Future.successful(BadRequest("You must give either haku or tarjoaja"))
         case (Some(oid), _) if !oid.isValid => Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
         case (_, Some(oids)) if oids.exists(!_.isValid) =>
           Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))

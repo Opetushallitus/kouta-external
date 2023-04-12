@@ -32,6 +32,11 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     case "false" => false
   }
 
+  private def parseOptionalMultiParam[T](param: Option[Seq[String]], f: (String) => T): Option[Set[T]] =
+    Option(param.getOrElse(Seq()).filter(_.nonEmpty).map(f).toSet).filter(_.nonEmpty)
+  private def parseOptionalMultiParam(param: Option[Seq[String]]): Option[Set[String]] =
+    Option(param.getOrElse(Seq()).filter(_.nonEmpty).toSet).filter(_.nonEmpty)
+
   registerPath(
     "/hakukohde/{oid}",
     """    get:
@@ -282,24 +287,24 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
 
     val searchParams = HakukohdeSearchParams(
       hakuOid = params.get("haku").map(HakuOid),
-      tarjoajaOids = multiParams.get("tarjoaja").map(_.map(OrganisaatioOid).toSet),
+      tarjoajaOids = parseOptionalMultiParam(multiParams.get("tarjoaja"), OrganisaatioOid),
       q = params.get("q"),
       all = parseOptionalBoolParam(params, "all").getOrElse(false),
       withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false),
       johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon"),
-      tila = multiParams.get("tila").map(_.filter(_.nonEmpty).map(Julkaisutila.withName).toSet).filter(_.nonEmpty),
+      tila = parseOptionalMultiParam(multiParams.get("tila"), Julkaisutila.withName),
       hakutapa = multiParams.get("hakutapa").map(_.toSet),
-      opetuskieli = multiParams.get("opetuskieli").map(_.toSet),
+      opetuskieli = parseOptionalMultiParam(multiParams.get("opetuskieli")),
       alkamiskausi = params.get("alkamiskausi"),
       alkamisvuosi = params.get("alkamisvuosi"),
-      koulutusaste = multiParams.get("koulutusaste").map(_.toSet),
+      koulutusaste = parseOptionalMultiParam(multiParams.get("koulutusaste"))
     )
 
     new AsyncResult() {
       override implicit def timeout: Duration = 5.minutes
 
       override val is: Future[ActionResult] = (searchParams.hakuOid, searchParams.tarjoajaOids) match {
-        case (None, None) => Future.successful(BadRequest("You must give either haku or tarjoaja"))
+        case (None, None)                   => Future.successful(BadRequest("You must give either haku or tarjoaja"))
         case (Some(oid), _) if !oid.isValid => Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
         case (_, Some(oids)) if oids.exists(!_.isValid) =>
           Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))

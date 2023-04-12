@@ -14,7 +14,7 @@ import java.util.UUID
     |        oid:
     |          type: string
     |          description: Koulutuksen yksilöivä tunniste. Järjestelmän generoima.
-    |          example: "1.2.246.562.13.00000000000000000009"
+    |          example: 1.2.246.562.13.00000000000000000009
     |        externalId:
     |          type: string
     |          description: Ulkoinen tunniste, jota voidaan käyttää kouta-entiteettien yhdistämiseen oppilaitosten omien tietojärjestelmien kanssa
@@ -27,7 +27,7 @@ import java.util.UUID
     |          $ref: '#/components/schemas/Koulutustyyppi'
     |        koulutuksetKoodiUri:
     |          type: array
-    |          description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+    |          description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/koulutus/11)
     |          items:
     |            type: string
     |          example:

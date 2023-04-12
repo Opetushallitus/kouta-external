@@ -235,7 +235,8 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |            items:
        |              type: string
        |          required: false
-       |          example: ["oppilaitoksenopetuskieli_1"]
+       |          example: 
+       |            - oppilaitoksenopetuskieli_1
        |          description: Hakukohteen opetuskielet. Viittaa koodistoon ${markdownKoodistoLink(
       "oppilaitoksenopetuskieli"
     )}
@@ -260,7 +261,8 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
        |            items:
        |              type: string
        |          required: false
-       |          example: ["kansallinenkoulutusluokitus2016koulutusastetaso1_5"]
+       |          example: 
+       |            - kansallinenkoulutusluokitus2016koulutusastetaso1_5
        |          description: 'Koulutuksen koulutusaste. Viittaa koodistoihin ${markdownKoodistoLink(
       "kansallinenkoulutusluokitus2016koulutusastetaso1"
     )} ja ${markdownKoodistoLink("kansallinenkoulutusluokitus2016koulutusastetaso2")}'

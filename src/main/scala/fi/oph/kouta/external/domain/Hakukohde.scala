@@ -76,7 +76,7 @@ import java.util.UUID
     |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake? Käytössä vain muulla kuin Opintopolun hakulomakkeella.
     |        pohjakoulutusvaatimusKoodiUrit:
     |          type: array
-    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/pohjakoulutusvaatimuskouta/1)
+    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/pohjakoulutusvaatimuskouta/1)
     |          items:
     |            type: string
     |          example:

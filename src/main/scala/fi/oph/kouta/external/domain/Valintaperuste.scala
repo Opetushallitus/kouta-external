@@ -33,11 +33,11 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          example: amm
     |        hakutapaKoodiUri:
     |          type: string
-    |          description: Valintaperustekuvaukseen liittyvä hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/hakutapa/11)
+    |          description: Valintaperustekuvaukseen liittyvä hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/hakutapa/11)
     |          example: hakutapa_03#1
     |        kohdejoukkoKoodiUri:
     |          type: string
-    |          description: Valintaperustekuvaukseen liittyvä kohdejoukko. Valintaperusteen ja siihen hakukohteen kautta liittyvän haun kohdejoukon tulee olla sama. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/haunkohdejoukko/1)
+    |          description: Valintaperustekuvaukseen liittyvä kohdejoukko. Valintaperusteen ja siihen hakukohteen kautta liittyvän haun kohdejoukon tulee olla sama. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/haunkohdejoukko/1)
     |          example: haunkohdejoukko_17#1
     |        julkinen:
     |          type: boolean

@@ -16,7 +16,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        tyyppiKoodiUri:
     |          type: string
-    |          description: Liitteen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/liitetyypitamm/1)
+    |          description: Liitteen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/liitetyypitamm/1)
     |          example: liitetyypitamm_3#1
     |        nimi:
     |          type: object

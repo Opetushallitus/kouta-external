@@ -67,8 +67,9 @@ class HakukohdeService(
       }
   }
 
-  private def hakukohteetWithHakukohderyhmat(oids: Set[HakukohdeOid], hakukohteet: Future[Seq[Hakukohde]])(implicit
-      authenticated: Authenticated
+  private def hakukohteetWithHakukohderyhmat(
+      oids: Set[HakukohdeOid],
+      hakukohteet: Future[Seq[Hakukohde]]
   ): Future[Seq[Hakukohde]] = {
     val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future
       .sequence(
@@ -81,6 +82,36 @@ class HakukohdeService(
     )
   }
 
+  def doSearch(
+      hakuOid: Option[HakuOid],
+      tarjoajaOids: Option[Set[OrganisaatioOid]],
+      q: Option[String],
+      all: Boolean,
+      withHakukohderyhmat: Boolean,
+      hakukohdeOids: Option[Set[HakukohdeOid]] = None
+  ): Future[Seq[Hakukohde]] = {
+    val tarjoajaOidsWithChilds = Some(
+      tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
+    )
+    val hakukohteet: Future[Seq[Hakukohde]] =
+      hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, hakukohdeOids)
+
+    if (withHakukohderyhmat) {
+      if (hakukohdeOids.isDefined) {
+        hakukohteetWithHakukohderyhmat(hakukohdeOids.getOrElse(Set()), hakukohteet)
+      } else {
+        hakukohteet.flatMap(hk =>
+          hakukohteetWithHakukohderyhmat(
+            hk.flatMap(_.oid).toSet,
+            Future.successful(hk)
+          )
+        )
+      }
+    } else {
+      hakukohteet
+    }
+  }
+
   def search(
       hakuOid: Option[HakuOid],
       tarjoajaOids: Option[Set[OrganisaatioOid]],
@@ -91,18 +122,7 @@ class HakukohdeService(
       authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
     val checkHakuExists = hakuOid.fold(Future.successful(()))(hakuService.get(_).map(_ => ()))
-    val tarjoajaOidsWithChilds = Some(
-      tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
-    )
-    checkHakuExists.flatMap(_ => {
-      val hakukohteet = hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, None)
-
-      if (withHakukohderyhmat) {
-        hakukohteet.flatMap(hk => hakukohteetWithHakukohderyhmat(hk.flatMap(_.oid).toSet, Future.successful(hk)))
-      } else {
-        hakukohteet
-      }
-    })
+    checkHakuExists.flatMap(_ => doSearch(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat, None))
   }
 
   def searchAuthorizeByHakukohderyhma(
@@ -114,35 +134,15 @@ class HakukohdeService(
   )(implicit
       authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
-    val authorizedHakukohderyhmaOids: Set[HakukohderyhmaOid] =
-      hakukohderyhmaService.getAuthorizedHakukohderyhmaOids match {
-        case s: Set[HakukohderyhmaOid] => s
-        case _ =>
-          val errorString: String = s"User missing rights to search via hakukohderyhma roles."
-          logger.warn(errorString)
-          throw new OrganizationAuthorizationFailedException(errorString)
-      }
+    val authorizedHakukohderyhmaOids: Set[HakukohderyhmaOid] = hakukohderyhmaService.getAuthorizedHakukohderyhmaOids
 
     Future
       .sequence(authorizedHakukohderyhmaOids.map(hakukohderyhmaService.getHakukohteetByHakukohderyhmaOid(_)))
       .map(_.flatten)
       .flatMap {
-        case oids if oids.nonEmpty =>
-          val tarjoajaOidsWithChilds = Some(
-            tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
-          )
-
-          val hakukohteet: Future[Seq[Hakukohde]] =
-            hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, Some(oids))
-
-          if (withHakukohderyhmat) {
-            hakukohteetWithHakukohderyhmat(oids, hakukohteet)
-          } else {
-            hakukohteet
-          }
+        case oids if oids.nonEmpty => doSearch(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat, Some(oids))
         case _ =>
           val errorString: String = s"User missing rights to search hakukohteet via hakukohderyhma roles."
-          logger.warn(errorString)
           throw new OrganizationAuthorizationFailedException(errorString)
       }
   }

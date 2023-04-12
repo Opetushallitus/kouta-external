@@ -58,10 +58,7 @@ Migraatiot ajetaan automaattisesti testien alussa tai kun kouta-external käynni
 
 ### 3.4. Ajaminen lokaalisti
 
-Ennen lokaalia ajoa täytyy olla elasticsearch pyörimässä. Kontin saa pystyyn ajamalla
-```shell
-docker run --rm --name koutaexternal-elastic --env "discovery.type=single-node" -p 127.0.0.1:9200:9200 -p 127.0.0.1:9300:9300 docker.elastic.co/elasticsearch/elasticsearch:7.17.3
-```
+Ennen lokaalia ajoa täytyy olla elasticsearch pyörimässä. Katso ohjeet elasticsearch-kontin käynnistämiseen [kouta-indeksoijan README:sta](https://github.com/Opetushallitus/kouta-indeksoija/#elasticsearch-kontin-käynnistys)
 
 tämän jälkeen käynnistä Ideassa embeddedJettyLauncher.scala (right-click -> Run). Tämä käynnistää samalla
 postgresql kontin. Sovellus käynnistyy porttiin 8097.

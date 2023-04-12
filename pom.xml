@@ -58,12 +58,12 @@
         <!-- Plugin properties -->
         <enforce.java.version>[11,)</enforce.java.version>
 
-        <plugin.scala-maven-plugin.version>4.3.1</plugin.scala-maven-plugin.version>
-        <plugin.maven-enforcer-plugin.version>3.0.0-M2</plugin.maven-enforcer-plugin.version>
-        <plugin.maven-assembly-plugin.version>3.1.1</plugin.maven-assembly-plugin.version>
-        <plugin.maven-jar-plugin.version>3.1.1</plugin.maven-jar-plugin.version>
-        <plugin.maven-surefire-plugin.version>2.22.0</plugin.maven-surefire-plugin.version>
-        <plugin.scalatest-maven-plugin.version>1.0</plugin.scalatest-maven-plugin.version>
+        <plugin.scala-maven-plugin.version>4.8.0</plugin.scala-maven-plugin.version>
+        <plugin.maven-enforcer-plugin.version>3.2.1</plugin.maven-enforcer-plugin.version>
+        <plugin.maven-assembly-plugin.version>3.4.2</plugin.maven-assembly-plugin.version>
+        <plugin.maven-jar-plugin.version>3.3.0</plugin.maven-jar-plugin.version>
+        <plugin.maven-surefire-plugin.version>2.22.2</plugin.maven-surefire-plugin.version>
+        <plugin.scalatest-maven-plugin.version>2.2.0</plugin.scalatest-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -664,6 +664,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${plugin.maven-assembly-plugin.version}</version>
                 <executions>

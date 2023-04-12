@@ -1,9 +1,10 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.external.kouta._
+import fi.oph.kouta.external.servlet.HakukohdeSearchParams
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{
@@ -83,13 +84,15 @@ class HakukohdeService(
   }
 
   def doSearch(
-      hakuOid: Option[HakuOid],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
-      q: Option[String],
-      all: Boolean,
-      withHakukohderyhmat: Boolean,
+      searchParams: HakukohdeSearchParams,
       hakukohdeOids: Option[Set[HakukohdeOid]] = None
   ): Future[Seq[Hakukohde]] = {
+    val hakuOid             = searchParams.hakuOid
+    val all                 = searchParams.all
+    val tarjoajaOids        = searchParams.tarjoajaOids
+    val withHakukohderyhmat = searchParams.withHakukohderyhmat
+    val q = searchParams.q
+
     val tarjoajaOidsWithChilds = Some(
       tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
     )
@@ -113,34 +116,27 @@ class HakukohdeService(
   }
 
   def search(
-      hakuOid: Option[HakuOid],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
-      q: Option[String],
-      all: Boolean,
-      withHakukohderyhmat: Boolean
+      searchParams: HakukohdeSearchParams
   )(implicit
       authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
-    val checkHakuExists = hakuOid.fold(Future.successful(()))(hakuService.get(_).map(_ => ()))
-    checkHakuExists.flatMap(_ => doSearch(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat, None))
+    val checkHakuExists = searchParams.hakuOid.fold(Future.successful(()))(hakuService.get(_).map(_ => ()))
+    checkHakuExists.flatMap(_ => doSearch(searchParams, None))
   }
 
   def searchAuthorizeByHakukohderyhma(
-      hakuOid: Option[HakuOid],
-      tarjoajaOids: Option[Set[OrganisaatioOid]],
-      q: Option[String],
-      all: Boolean,
-      withHakukohderyhmat: Boolean
+      searchParams: HakukohdeSearchParams
   )(implicit
       authenticated: Authenticated
   ): Future[Seq[Hakukohde]] = {
+
     val authorizedHakukohderyhmaOids: Set[HakukohderyhmaOid] = hakukohderyhmaService.getAuthorizedHakukohderyhmaOids
 
     Future
       .sequence(authorizedHakukohderyhmaOids.map(hakukohderyhmaService.getHakukohteetByHakukohderyhmaOid(_)))
       .map(_.flatten)
       .flatMap {
-        case oids if oids.nonEmpty => doSearch(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat, Some(oids))
+        case oids if oids.nonEmpty => doSearch(searchParams, Some(oids))
         case _ =>
           val errorString: String = s"User missing rights to search hakukohteet via hakukohderyhma roles."
           throw new OrganizationAuthorizationFailedException(errorString)

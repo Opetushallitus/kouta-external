@@ -17,13 +17,13 @@ import scala.concurrent.{ExecutionContext, Future}
 object HakukohdeServlet extends HakukohdeServlet(HakukohdeService)
 
 case class HakukohdeSearchParams(
-    haku: Option[HakuOid] = None,
-    tarjoaja: Option[Set[OrganisaatioOid]] = None,
+    hakuOid: Option[HakuOid] = None,
+    tarjoajaOids: Option[Set[OrganisaatioOid]] = None,
     q: Option[String] = None,
     all: Boolean = false,
     withHakukohderyhmat: Boolean = false,
     johtaaTutkintoon: Option[Boolean] = None,
-    tila: Option[Set[Julkaisutila]] = None,
+    tilat: Option[Set[Julkaisutila]] = None,
     hakutapa:  Option[KoodiUri] = None,
     opetuskielet: Option[Set[KoodiUri]] = None,
     alkamiskausi: Option[KoodiUri] = None,
@@ -242,39 +242,30 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
   get("/search") {
     implicit val authenticated: Authenticated = authenticate
 
-    val hakuOid  = params.get("haku").map(HakuOid)
-    val tarjoaja = multiParams.get("tarjoaja").map(_.map(OrganisaatioOid).toSet)
-    val q        = params.get("q")
-
-    val all = parseOptionalBoolParam(params, "all").getOrElse(false)
-    val withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false)
-    val johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon")
-
-    val tila = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet)
-
     val searchParams = HakukohdeSearchParams(
-      tila = tila,
-      johtaaTutkintoon = johtaaTutkintoon,
-      withHakukohderyhmat = withHakukohderyhmat,
-      all = all,
-      tarjoaja = tarjoaja,
-      q = q,
+      tilat = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet),
+      hakuOid = params.get("haku").map(HakuOid),
+      johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon"),
+      withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false),
+      all = parseOptionalBoolParam(params, "all").getOrElse(false),
+      tarjoajaOids = multiParams.get("tarjoaja").map(_.map(OrganisaatioOid).toSet),
+      q = params.get("q"),
     )
 
     new AsyncResult() {
       override implicit def timeout: Duration = 5.minutes
 
-      override val is: Future[ActionResult] = (hakuOid, tarjoaja) match {
+      override val is: Future[ActionResult] = (searchParams.hakuOid, searchParams.tarjoajaOids) match {
         case (None, None)                   => Future.successful(BadRequest("Query parameter is required"))
         case (Some(oid), _) if !oid.isValid => Future.successful(BadRequest(s"Invalid haku ${oid.toString}"))
         case (_, Some(oids)) if oids.exists(!_.isValid) =>
           Future.successful(BadRequest(s"Invalid tarjoaja ${oids.find(!_.isValid).get.toString}"))
-        case (hakuOid, tarjoajaOids) =>
-          hakukohdeService.search(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat).map(Ok(_)).recoverWith {
+        case (_, _) =>
+          hakukohdeService.search(searchParams).map(Ok(_)).recoverWith {
             case _: RoleAuthorizationFailedException =>
               logger.info(s"Authorization failed hakukohde search, retrying with hakukohderyhmä rights.")
               hakukohdeService
-                .searchAuthorizeByHakukohderyhma(hakuOid, tarjoajaOids, q, all, withHakukohderyhmat)
+                .searchAuthorizeByHakukohderyhma(searchParams)
                 .map(Ok(_))
           }
       }

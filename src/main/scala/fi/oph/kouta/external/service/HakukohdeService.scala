@@ -1,10 +1,10 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
+import fi.oph.kouta.domain.Julkaisutila
+import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.external.kouta._
-import fi.oph.kouta.external.servlet.HakukohdeSearchParams
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{
@@ -19,6 +19,21 @@ import fi.vm.sade.utils.slf4j.Logging
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+
+case class HakukohdeSearchParams(
+    hakuOid: Option[HakuOid] = None,
+    tarjoajaOids: Option[Set[OrganisaatioOid]] = None,
+    q: Option[String] = None,
+    all: Boolean = false,
+    withHakukohderyhmat: Boolean = false,
+    johtaaTutkintoon: Option[Boolean] = None,
+    tila: Option[Set[Julkaisutila]] = None,
+    hakutapa: Option[Set[String]] = None,
+    opetuskieli: Option[Set[String]] = None,
+    alkamiskausi: Option[String] = None,
+    alkamisvuosi: Option[String] = None,
+    koulutusaste: Option[Set[String]] = None
+)
 
 object HakukohdeService
     extends HakukohdeService(
@@ -87,17 +102,17 @@ class HakukohdeService(
       searchParams: HakukohdeSearchParams,
       hakukohdeOids: Option[Set[HakukohdeOid]] = None
   ): Future[Seq[Hakukohde]] = {
-    val hakuOid             = searchParams.hakuOid
-    val all                 = searchParams.all
     val tarjoajaOids        = searchParams.tarjoajaOids
     val withHakukohderyhmat = searchParams.withHakukohderyhmat
-    val q = searchParams.q
 
-    val tarjoajaOidsWithChilds = Some(
-      tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
-    )
+    val tarjoajaOidsWithChilds =
+      if (searchParams.all) None
+      else
+        Some(
+          tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
+        )
     val hakukohteet: Future[Seq[Hakukohde]] =
-      hakukohdeClient.search(hakuOid, if (all) None else tarjoajaOidsWithChilds, q, hakukohdeOids)
+      hakukohdeClient.search(searchParams.copy(tarjoajaOids = tarjoajaOidsWithChilds), hakukohdeOids)
 
     if (withHakukohderyhmat) {
       if (hakukohdeOids.isDefined) {

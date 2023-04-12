@@ -1,11 +1,12 @@
 package fi.oph.kouta.external.elasticsearch
 
-import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termsQuery}
+import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termQuery, termsQuery}
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.domain.indexed.HakukohdeIndexed
+import fi.oph.kouta.external.service.HakukohdeSearchParams
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,25 +21,29 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       .map(_.to[HakukohdeIndexed])
       .map(h => (h.toHakukohde(None), h.tarjoajat))
 
-  def search(
-              hakuOid: Option[HakuOid],
-              tarjoajaOids: Option[Set[OrganisaatioOid]],
-              q: Option[String],
-              hakukohdeOids: Option[Set[HakukohdeOid]]
-            ): Future[Seq[Hakukohde]] = {
-    val hakuQuery = hakuOid.map(oid => termsQuery("hakuOid", oid.toString))
-    val hakukohdeQuery = hakukohdeOids.map(oids => should(oids.map(oid => must(termsQuery("oid", oid.toString())))))
+  def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
+    val hakuOid               = searchParams.hakuOid
+    val tarjoajaOids          = searchParams.tarjoajaOids
+    val hakuQuery             = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
+    val tilaQuery             = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
+    val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
+    val hakutapaQuery         = searchParams.hakutapa.map(termsQuery("hakutapaKoodiUri.keyword", _))
+    val opetuskieletQuery     = searchParams.opetuskieli.map(termsQuery("opetuskieliKoodiUrit.keyword", _))
+    val alkamiskausiQuery     = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri.keyword", _))
+    val alkamisvuosiQuery     = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi.keyword", _))
+    val koulutusasteQuery     = searchParams.koulutusaste.map(termsQuery("koulutusasteKoodiUrit.keyword", _))
+    val hakukohdeQuery        = hakukohdeOids.map(oids => termsQuery("oid.keyword", oids.map(_.toString)))
     val tarjoajaQuery = tarjoajaOids.map(oids =>
       should(
         oids.map(oid =>
           should(
-            termsQuery("jarjestyspaikka.oid", oid.toString),
-            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid", oid.toString))
+            termsQuery("jarjestyspaikka.oid.keyword", oid.toString),
+            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
           )
         )
       )
     )
-    val qQuery = q.map(q =>
+    val qQuery = searchParams.q.map(q =>
       should(
         termsQuery("nimi.fi.keyword", q),
         termsQuery("nimi.sv.keyword", q),
@@ -51,8 +56,11 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         termsQuery("toteutus.tarjoajat.nimi.en.keyword", q)
       )
     )
-    searchItems[HakukohdeIndexed](Some(must(hakuQuery ++ tarjoajaQuery ++ qQuery ++ hakukohdeQuery)))
-      .map(_.map(_.toHakukohde(None)))
+    val query = must(
+      hakuQuery ++ tarjoajaQuery ++ qQuery ++ hakukohdeQuery ++ tilaQuery ++ johtaaTutkintoonQuery ++ hakutapaQuery ++
+        opetuskieletQuery ++ alkamiskausiQuery ++ alkamisvuosiQuery ++ koulutusasteQuery
+    )
+    searchItems[HakukohdeIndexed](Some(query)).map(_.map(_.toHakukohde(None)))
   }
 }
 

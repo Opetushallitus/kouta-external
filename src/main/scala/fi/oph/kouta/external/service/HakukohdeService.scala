@@ -33,7 +33,27 @@ case class HakukohdeSearchParams(
     alkamiskausi: Option[String] = None,
     alkamisvuosi: Option[String] = None,
     koulutusaste: Option[Set[String]] = None
-)
+) {
+  private def toMultiParamString[X <: Object](value: Option[Set[X]], key: String) =
+    value.map(vs => vs.map(v => s"$key=${v.toString}").mkString("&"))
+
+  def toQueryString(): String = {
+    "?" + List(
+      hakuOid.map(h => s"haku=${h.toString}"),
+      toMultiParamString[OrganisaatioOid](tarjoajaOids, "tarjoaja"),
+      q.map(q => s"q=$q"),
+      Some(s"all=${all.toString}"),
+      Some(s"withHakukohderyhmat=${withHakukohderyhmat}"),
+      johtaaTutkintoon.map(jt => s"johtaaTutkintoon=${jt.toString}"),
+      toMultiParamString(tila, "tila"),
+      toMultiParamString(hakutapa, "hakutapa"),
+      toMultiParamString(opetuskieli, "opetuskieli"),
+      alkamiskausi.map(ak => s"alkamiskausi=${ak}"),
+      alkamisvuosi.map(av => s"alkamisvuosi=${av}"),
+      toMultiParamString(koulutusaste, "koulutusaste")
+    ).flatten.mkString("&")
+  }
+}
 
 object HakukohdeService
     extends HakukohdeService(

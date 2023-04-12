@@ -284,7 +284,7 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
       all = parseOptionalBoolParam(params, "all").getOrElse(false),
       withHakukohderyhmat = parseOptionalBoolParam(params, "withHakukohderyhmat").getOrElse(false),
       johtaaTutkintoon = parseOptionalBoolParam(params, "johtaaTutkintoon"),
-      tila = multiParams.get("tila").map(_.map(Julkaisutila.withName).toSet),
+      tila = multiParams.get("tila").map(_.filter(_.nonEmpty).map(Julkaisutila.withName).toSet).filter(_.nonEmpty),
       hakutapa = multiParams.get("hakutapa").map(_.toSet),
       opetuskieli = multiParams.get("opetuskieli").map(_.toSet),
       alkamiskausi = params.get("alkamiskausi"),

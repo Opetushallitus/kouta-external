@@ -109,9 +109,9 @@ class HakukohdeService(
   ): Future[Seq[Hakukohde]] = {
     val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future
       .sequence(
-        oids.map(oid => hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map(hoids => Map(oid -> hoids)))
+        oids.map(oid => hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map((oid, _)))
       )
-      .map(_.reduce(_ ++ _))
+      .map(_.toMap)
 
     hakukohteet.flatMap(hk =>
       fetchedHakukohderyhmat.map(mk => hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty))))

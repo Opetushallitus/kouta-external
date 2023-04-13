@@ -45,15 +45,15 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
     )
     val qQuery = searchParams.q.map(q =>
       should(
-        termsQuery("nimi.fi.keyword", q),
-        termsQuery("nimi.sv.keyword", q),
-        termsQuery("nimi.en.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.fi.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.sv.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.en.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.fi.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.sv.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.en.keyword", q)
+        termQuery("nimi.fi", q),
+        termQuery("nimi.sv", q),
+        termQuery("nimi.en", q),
+        termQuery("jarjestyspaikka.nimi.fi", q),
+        termQuery("jarjestyspaikka.nimi.sv", q),
+        termQuery("jarjestyspaikka.nimi.en", q),
+        termQuery("toteutus.tarjoajat.nimi.fi", q),
+        termQuery("toteutus.tarjoajat.nimi.sv", q),
+        termQuery("toteutus.tarjoajat.nimi.en", q)
       )
     )
     val query = List(

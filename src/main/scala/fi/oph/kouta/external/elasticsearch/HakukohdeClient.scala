@@ -1,11 +1,12 @@
 package fi.oph.kouta.external.elasticsearch
 
-import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termsQuery}
+import com.sksamuel.elastic4s.ElasticApi.{bool, existsQuery, must, not, should, termQuery, termsQuery}
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
-import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid}
+import fi.oph.kouta.domain.oid.{HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.domain.indexed.HakukohdeIndexed
+import fi.oph.kouta.external.service.HakukohdeSearchParams
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -20,39 +21,56 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       .map(_.to[HakukohdeIndexed])
       .map(h => (h.toHakukohde(None), h.tarjoajat))
 
-  def search(
-              hakuOid: Option[HakuOid],
-              tarjoajaOids: Option[Set[OrganisaatioOid]],
-              q: Option[String],
-              hakukohdeOids: Option[Set[HakukohdeOid]]
-            ): Future[Seq[Hakukohde]] = {
-    val hakuQuery = hakuOid.map(oid => termsQuery("hakuOid", oid.toString))
-    val hakukohdeQuery = hakukohdeOids.map(oids => should(oids.map(oid => must(termsQuery("oid", oid.toString())))))
+  def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
+    val hakuOid               = searchParams.hakuOid
+    val tarjoajaOids          = searchParams.tarjoajaOids
+    val hakuQuery             = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
+    val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
+    val tilaQuery             = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
+    val hakutapaQuery         = searchParams.hakutapa.map(hakutavat => termsQuery("hakutapaKoodiUri", hakutavat))
+    val opetuskieletQuery     = searchParams.opetuskieli.map(termsQuery("opetuskieliKoodiUrit", _))
+    val alkamiskausiQuery     = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
+    val alkamisvuosiQuery     = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi", _))
+    val koulutusasteQuery     = searchParams.koulutusaste.map(asteet => termsQuery("koulutusasteKoodiUrit", asteet))
+    val hakukohdeQuery        = hakukohdeOids.map(oids => termsQuery("oid.keyword", oids.map(_.toString)))
     val tarjoajaQuery = tarjoajaOids.map(oids =>
       should(
         oids.map(oid =>
           should(
-            termsQuery("jarjestyspaikka.oid", oid.toString),
-            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid", oid.toString))
+            termsQuery("jarjestyspaikka.oid.keyword", oid.toString),
+            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
           )
         )
       )
     )
-    val qQuery = q.map(q =>
+    val qQuery = searchParams.q.map(q =>
       should(
-        termsQuery("nimi.fi.keyword", q),
-        termsQuery("nimi.sv.keyword", q),
-        termsQuery("nimi.en.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.fi.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.sv.keyword", q),
-        termsQuery("jarjestyspaikka.nimi.en.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.fi.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.sv.keyword", q),
-        termsQuery("toteutus.tarjoajat.nimi.en.keyword", q)
+        termQuery("nimi.fi", q),
+        termQuery("nimi.sv", q),
+        termQuery("nimi.en", q),
+        termQuery("jarjestyspaikka.nimi.fi", q),
+        termQuery("jarjestyspaikka.nimi.sv", q),
+        termQuery("jarjestyspaikka.nimi.en", q),
+        termQuery("toteutus.tarjoajat.nimi.fi", q),
+        termQuery("toteutus.tarjoajat.nimi.sv", q),
+        termQuery("toteutus.tarjoajat.nimi.en", q)
       )
     )
-    searchItems[HakukohdeIndexed](Some(must(hakuQuery ++ tarjoajaQuery ++ qQuery ++ hakukohdeQuery)))
-      .map(_.map(_.toHakukohde(None)))
+    val query = List(
+        hakuQuery,
+        tarjoajaQuery,
+        qQuery,
+        hakukohdeQuery,
+        johtaaTutkintoonQuery,
+        tilaQuery,
+        hakutapaQuery,
+        opetuskieletQuery,
+        alkamiskausiQuery,
+        alkamisvuosiQuery,
+        koulutusasteQuery
+      ).flatten
+
+    searchItems[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
   }
 }
 

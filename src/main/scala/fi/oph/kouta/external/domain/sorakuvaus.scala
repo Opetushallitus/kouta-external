@@ -58,14 +58,14 @@ import java.util.UUID
     |              $ref: '#/components/schemas/Kuvaus'
     |            koulutusKoodiUrit:
     |              type: array
-    |              description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+    |              description: Koulutuksen koodi URIt. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/koulutus/11)
     |              items:
     |                type: string
     |                example:
     |                  - koulutus_371101#1
     |            koulutusalaKoodiUri:
     |              type: string
-    |              description: Koulutusala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kansallinenkoulutusluokitus2016koulutusalataso2/1)
+    |              description: Koulutusala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso2/1)
     |              example: kansallinenkoulutusluokitus2016koulutusalataso2_054#1
     |        muokkaaja:
     |          type: string

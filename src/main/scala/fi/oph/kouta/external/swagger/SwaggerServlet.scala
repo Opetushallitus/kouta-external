@@ -74,7 +74,7 @@ class SwaggerServlet extends ScalatraServlet {
          |        type: string
          |        default: kouta-external-swagger
          |      required: true
-         |      description: Kutsujan <a href="https://confluence.csc.fi/pages/viewpage.action?pageId=50858064">Caller ID</a>
+         |      description: Kutsujan <a href="https://wiki.eduuni.fi/pages/viewpage.action?pageId=176867280">Caller ID</a>
          |  schemas:
          |""".stripMargin
 

@@ -14,26 +14,26 @@ import java.util.UUID
     |        oid:
     |          type: string
     |          description: Hakukohteen yksilöivä tunniste. Järjestelmän generoima.
-    |          example: "1.2.246.562.20.00000000000000000009"
+    |          example: 1.2.246.562.20.00000000000000000009
     |        externalId:
     |          type: string
     |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        toteutusOid:
     |          type: string
     |          description: Hakukohteeseen liitetyn toteutuksen oid.
-    |          example: "1.2.246.562.17.00000000000000000009"
+    |          example: 1.2.246.562.17.00000000000000000009
     |        hakukohderyhmat:
     |          type: array
     |          description: Hakukohderyhmien, joihin hakukohde kuuluu, oidit.
     |          items:
     |            type: string
     |          example:
-    |            - "1.2.246.562.28.00000000000000000001"
-    |            - "1.2.246.562.28.00000000000000000002"
+    |            - 1.2.246.562.28.00000000000000000001
+    |            - 1.2.246.562.28.00000000000000000002
     |        hakuOid:
     |          type: string
     |          description: Hakukohteeseen liitetyn haun oid.
-    |          example: "1.2.246.562.29.00000000000000000009"
+    |          example: 1.2.246.562.29.00000000000000000009
     |        tila:
     |          type: string
     |          example: "julkaistu"
@@ -76,7 +76,7 @@ import java.util.UUID
     |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake? Käytössä vain muulla kuin Opintopolun hakulomakkeella.
     |        pohjakoulutusvaatimusKoodiUrit:
     |          type: array
-    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/pohjakoulutusvaatimuskouta/1)
+    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/pohjakoulutusvaatimuskouta/1)
     |          items:
     |            type: string
     |          example:
@@ -109,7 +109,7 @@ import java.util.UUID
     |          example: 2019-08-23T09:55
     |        liitteidenToimitustapa:
     |          type: string
-    |          description: Jos liitteillä on sama toimitustapa, se ilmoitetaan tässä. 
+    |          description: Jos liitteillä on sama toimitustapa, se ilmoitetaan tässä.
     |          example: "hakijapalvelu"
     |          enum:
     |            - hakijapalvelu
@@ -153,6 +153,32 @@ import java.util.UUID
     |          example:
     |            - fi
     |            - sv
+    |        johtaaTutkintoon:
+    |          type: boolean
+    |          description: Onko koulutus tutkintoon johtavaa
+    |        hakutapaKoodiUri:
+    |          type: string
+    |          description: Haun hakutapa. Viittaa koodistoon [hakutapa](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/hakutapa)
+    |          example: hakutapa_03#1
+    |        opetuskieliKoodiUrit:
+    |          type: array
+    |          description: Lista toteutuksen opetuskielistä. Viittaa koodistoon [oppilaitoksenopetuskieli](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/oppilaitoksenopetuskieli)
+    |          items:
+    |            type: string
+    |            example:
+    |              - oppilaitoksenopetuskieli_1#1
+    |              - oppilaitoksenopetuskieli_2#1
+    |        paateltyAlkamiskausi:
+    |          type: object
+    |          $ref: '#/components/schemas/PaateltyAlkamiskausi'
+    |        koulutusasteKoodiUrit:
+    |          type: array
+    |          description: 'Koulutuksen koulutusaste. Viittaa koodistoihin [kansallinenkoulutusluokitus2016koulutusastetaso1](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusastetaso1) ja [kansallinenkoulutusluokitus2016koulutusastetaso2](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusastetaso2)'
+    |          items:
+    |            type: string
+    |            example:
+    |              - kansallinenkoulutusluokitus2016koulutusastetaso1_8#1
+    |              - kansallinenkoulutusluokitus2016koulutusastetaso2_31"1
     |        modified:
     |           type: string
     |           format: date-time
@@ -192,6 +218,11 @@ case class Hakukohde(
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
+    johtaaTutkintoon: Option[Boolean],
+    hakutapaKoodiUri: Option[String],
+    opetuskieliKoodiUrit: Seq[String],
+    koulutusasteKoodiUrit: Seq[String],
+    paateltyAlkamiskausi: Option[PaateltyAlkamiskausi]
 ) extends PerustiedotWithOid[HakukohdeOid, Hakukohde]  {
   override def withMuokkaaja(oid: UserOid): Hakukohde = this.copy(muokkaaja = oid)
   def withHakukohderyhmat(oids: Seq[HakukohderyhmaOid]): Hakukohde = this.copy(hakukohderyhmat = Some(oids))

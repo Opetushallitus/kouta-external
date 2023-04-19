@@ -124,7 +124,7 @@ package object domain {
       |      properties:
       |        otsikkoKoodiUri:
       |          type: string
-      |          description: Lisätiedon otsikon koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutuksenlisatiedot/1)
+      |          description: Lisätiedon otsikon koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/koulutuksenlisatiedot/1)
       |          example: koulutuksenlisatiedot_03#1
       |        teksti:
       |          type: object
@@ -199,7 +199,7 @@ package object domain {
       |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
       |        tyyppiKoodiUri:
       |          type: string
-      |          description: Valintakokeen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/valintakokeentyyppi/1)
+      |          description: Valintakokeen tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/valintakokeentyyppi/1)
       |          example: valintakokeentyyppi_1#1
       |        nimi:
       |          type: object
@@ -312,7 +312,7 @@ package object domain {
       |          $ref: '#/components/schemas/Teksti'
       |        postinumeroKoodiUri:
       |          type: string
-      |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/posti/2)
+      |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/posti/2)
       |          example: "posti_04230#2"
       |""")
   case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[String])
@@ -367,7 +367,7 @@ package object domain {
       |        koulutuksenAlkamiskausiKoodiUri:
       |          type: string
       |          description: Koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla.
-      |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kausi/1)
+      |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kausi/1)
       |          example: kausi_k#1
       |        koulutuksenAlkamisvuosi:
       |          type: string
@@ -386,6 +386,31 @@ package object domain {
                                      koulutuksenAlkamisvuosi: Option[String] = None)
 
   @SwaggerModel(
+    """    PaateltyAlkamiskausi:
+      |      type: object
+      |      properties:
+      |        alkamiskausityyppi:
+      |          type: string
+      |          description: Alkamiskauden tyyppi
+      |          enum:
+      |            - 'henkilokohtainen suunnitelma'
+      |            - 'tarkka alkamisajankohta'
+      |            - 'alkamiskausi ja -vuosi'
+      |        kausiUri:
+      |          type: string
+      |          description: Päätelty koulutuksen alkamiskausi-koodiUri
+      |            Viittaa koodistoon [kausi](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kausi)
+      |          example: kausi_k#1
+      |        vuosi:
+      |          type: string
+      |          description: Päätelty koulutuksen alkamisvuosi
+      |          example: 2020
+      |""")
+  case class PaateltyAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
+                                  kausiUri: Option[String] = None,
+                                  vuosi: Option[String] = None)
+
+  @SwaggerModel(
     """    TutkinnonOsa:
       |      type: object
       |      properties:
@@ -395,7 +420,7 @@ package object domain {
       |          example: 4804100
       |        koulutusKoodiUri:
       |          type: string
-      |          description: Koulutuksen koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/koulutus/11)
+      |          description: Koulutuksen koodi URI. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/koulutus/11)
       |          example: koulutus_371101#1
       |        tutkinnonosaId:
       |          type: number
@@ -416,7 +441,7 @@ package object domain {
       |      properties:
       |        A1Kielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen A1 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen A1 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -424,7 +449,7 @@ package object domain {
       |              - kieli_FI#1
       |        A2Kielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen A2 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen A2 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -432,7 +457,7 @@ package object domain {
       |              - kieli_FI#1
       |        B1Kielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen B1 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen B1 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -440,7 +465,7 @@ package object domain {
       |              - kieli_FI#1
       |        B2Kielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen B2 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen B2 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -448,7 +473,7 @@ package object domain {
       |              - kieli_FI#1
       |        B3Kielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen B3 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen B3 kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -456,7 +481,7 @@ package object domain {
       |              - kieli_FI#1
       |        aidinkielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen äidinkielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen äidinkielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:
@@ -464,7 +489,7 @@ package object domain {
       |              - kieli_FI#1
       |        muutKielet:
       |          type: array
-      |          description: Lista koulutuksen toteutuksen muista kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-ui/html/koodisto/kieli/1)
+      |          description: Lista koulutuksen toteutuksen muista kielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kieli/1)
       |          items:
       |            type: string
       |            example:

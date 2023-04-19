@@ -6,7 +6,14 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
 object TempElasticClient {
-  val url    = s"http://localhost:${TempElastic.start()}"
+  val useTestContainersElastic = true // Aseta falseksi, jos haluat ajaa testejä jo käynnissä olevaa elasticsearchia vasten
+  var url = ""
+  if (useTestContainersElastic) {
+    url = s"http://localhost:${TempElastic.start()}"
+  } else {
+    url = KoutaConfigurationFactory.configuration.elasticSearchConfiguration.elasticUrl
+  }
+
   val client = ElasticClient(JavaClient(ElasticProperties(url)))
 }
 

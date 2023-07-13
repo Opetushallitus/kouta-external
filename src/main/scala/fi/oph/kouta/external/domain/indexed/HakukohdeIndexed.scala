@@ -39,7 +39,7 @@ case class HakukohdeIndexed(
     organisaatio: Organisaatio,
     kielivalinta: Seq[Kieli],
     modified: Option[Modified],
-    toteutus: Option[Tarjoajat],
+    toteutus: Option[HakukohteenToteutus],
     johtaaTutkintoon: Option[Boolean],
     opetuskieliKoodiUrit: Seq[String],
     koulutusasteKoodiUrit: Seq[String],
@@ -87,10 +87,10 @@ case class HakukohdeIndexed(
   )
 
   def tarjoajat: Seq[OrganisaatioOid] =
-    toteutus.map(_.tarjoajat.map(_.oid)).getOrElse(Seq())
+    toteutus.map(_.tarjoajat.filter(_ != null).map(_.oid)).getOrElse(Seq())
 }
 
-case class Tarjoajat(tarjoajat: Seq[Organisaatio])
+case class HakukohteenToteutus(tarjoajat: Seq[Organisaatio])
 
 case class HakukohdeMetadataIndexed(valintakokeidenYleiskuvaus: Kielistetty,
                                kynnysehto: Kielistetty,

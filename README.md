@@ -65,16 +65,56 @@ Ennen lokaalia ajoa täytyy olla elasticsearch pyörimässä. Katso ohjeet elast
 Tämän jälkeen käynnistä Ideassa embeddedJettyLauncher.scala (right-click -> Run). Tämä käynnistää samalla
 postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
-### 3.5. Swagger
+### 3.5. Ajaminen lokaalisti testiympäristön ElasticSearchia vasten
+
+Luo seuraavanlainen `src/test/resources/dev-vars.yml`-tiedosto ja korvaa `*YMPÄRISTÖ*` testiympäristön arvolla `testi`, `hahtuva` tai `untuva`:
+
+    host_postgresql_koutaexternal: localhost
+    host_postgresql_koutaexternal_port: 5435
+    postgres_app_user: oph
+    host_postgresql_koutaexternal_app_password: oph
+
+    cas_url: https://virkailija.*YMPÄRISTÖ*opintopolku.fi/cas
+    kouta_external_cas_service: http://localhost:8097/kouta-external/auth/login
+    kouta_external_cas_username: DUMMY
+    kouta_external_cas_password: DUMMY
+
+    kouta_external_elasticsearch7_url: *ES_URL*
+    kouta_external_elasticsearch_auth_enabled: true
+    kouta_external_elasticsearch_username: *ES_TUNNUS*
+    kouta_external_elasticsearch_password: *ES_SALASANA*
+
+    host_virkailija: virkailija.*YMPÄRISTÖ*opintopolku.fi
+    host_alb_virkailija: virkailija.*YMPÄRISTÖ*opintopolku.fi
+
+    kouta_external_api_modify_enabled: true
+
+Korvaa myös `*ES_URL*` ES:n ympäristökohtaisella **julkisella** osoitteella, joka löytyy täältä: https://wiki.eduuni.fi/pages/viewpage.action?pageId=266406750
+
+Korvaa `*ES_TUNNUS*` ja `*ES_SALASANA*` oikeilla testiympäristön salasanoilla, jotka voit katsa SSM:stä AWS:n konsolin kautta tai [config.py-komentorivityökalulla](https://github.com/Opetushallitus/cloud-base/blob/master/docs/configuring-services.md#salaisuuden-hakeminen-ssmst%C3%A4-interaktiivisesti)
+
+Kytke päälle [Opintopolun VPN](https://github.com/Opetushallitus/cloud-base/blob/master/docs/vpn.md).
+
+**Huom!** Jos käytät SSM:stä löytyvää ElasticSearchin sisäverkon osoitetta etkä julkista, joudut tunneloimaan liikenteen bastionin läpi. Julkisella osoitteella riittää, että kytket päälle Opintopolun VPN:n
+
+Käynnistä kouta-external lokaalisti ajamalla IntelliJ IDEA:ssa EmbeddedJettyLauncher ja mene osoitteeseen:
+
+http://localhost:8097/kouta-external/auth/login
+
+Kirjaudu sisään omilla testitunnuksillasi.
+
+Lokaalin kouta-externalin pitäisi nyt ohjata kyselyt valitsemasi ympäristön ElasticSearchiin.
+
+### 3.6. Swagger
 
 Swagger löytyy osoitteesta [http://localhost:8097/kouta-external/swagger/](http://localhost:8097/kouta-external/swagger/)
 
-### 3.6. Kehitystyökalut
+### 3.7. Kehitystyökalut
 
 Suositeltava kehitysympäristö on [IntelliJ IDEA](https://www.jetbrains.com/idea/) +
 [scala plugin](https://plugins.jetbrains.com/plugin/1347-scala)
 
-### 3.7. Testidata
+### 3.8. Testidata
 
 Katso kouta-indeksoijan readme:stä kuinka saat lokaaliin elasticsearchiin indeksoitua dataa.
 Tämän jälkeen käynnistä kouta-external tätä lokaalia elasticsearchia vasten.

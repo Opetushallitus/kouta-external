@@ -121,4 +121,6 @@ case class ValintakokeenLisatilaisuudetIndexed(id: Option[UUID],
 }
 
 
-
+object HakukohdeIndexed {
+    def apply(): HakukohdeIndexed = {HakukohdeIndexed()}
+}

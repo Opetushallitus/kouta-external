@@ -70,7 +70,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         koulutusasteQuery
       ).flatten
 
-    searchItems[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
+    searchItemsSearchAfter[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
   }
 }
 

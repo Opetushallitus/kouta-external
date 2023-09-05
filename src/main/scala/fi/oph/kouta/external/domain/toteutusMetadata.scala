@@ -93,6 +93,9 @@ case class AmmatillinenToteutusMetadata(
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
+    |            isHakukohteetKaytossa:
+    |              type: boolean
+    |              description: Tieto siitä onko toteutuksella käytössä hakukohteet
     |            hakutermi:
     |              type: object
     |              $ref: '#/components/schemas/Hakutermi'

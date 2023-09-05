@@ -127,6 +127,7 @@ case class AmmatillinenOsaamisalaIndexed(koodi: KoodiUri, linkki: Kielistetty, o
 }
 
 trait TutkintoonJohtamatonToteutusMetadataIndexed extends ToteutusMetadataIndexed {
+  val isHakukohteetKaytossa: Option[Boolean]
   val hakutermi: Option[Hakutermi]
   val hakulomaketyyppi: Option[Hakulomaketyyppi]
   val hakulomakeLinkki: Kielistetty
@@ -134,6 +135,7 @@ trait TutkintoonJohtamatonToteutusMetadataIndexed extends ToteutusMetadataIndexe
   val lisatietoaValintaperusteista: Kielistetty
   val hakuaika: Option[Ajanjakso]
   val aloituspaikat: Option[Int]
+  val aloituspaikkakuvaus: Kielistetty
 }
 
 case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
@@ -143,6 +145,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -150,6 +153,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -162,6 +166,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -169,6 +174,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -182,6 +188,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -189,6 +196,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -201,6 +209,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -208,6 +217,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -221,6 +231,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -228,6 +239,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -240,6 +252,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -247,6 +260,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -284,7 +298,6 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -297,7 +310,6 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      aloituspaikat = aloituspaikat,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -312,7 +324,6 @@ case class OpePedagOpinnotToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -325,7 +336,6 @@ case class OpePedagOpinnotToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      aloituspaikat = aloituspaikat,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -429,7 +439,6 @@ case class TuvaToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     jarjestetaanErityisopetuksena: Boolean,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
@@ -443,7 +452,6 @@ case class TuvaToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      aloituspaikat = aloituspaikat,
       jarjestetaanErityisopetuksena = jarjestetaanErityisopetuksena,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
@@ -459,7 +467,6 @@ case class TelmaToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -472,7 +479,6 @@ case class TelmaToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
-      aloituspaikat = aloituspaikat,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -513,6 +519,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -520,6 +527,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -532,6 +540,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -539,6 +548,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -553,6 +563,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -560,6 +571,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -572,6 +584,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -579,6 +592,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -592,6 +606,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -599,6 +614,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
     opinnonTyyppi: Option[KoodiUri] = None,
@@ -614,6 +630,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = List.empty,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -621,6 +638,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
       tunniste = tunniste,
       opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
@@ -666,6 +684,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -673,6 +692,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
     opinnonTyyppi: Option[KoodiUri] = None,
@@ -688,6 +708,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -695,6 +716,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumero = opintojenLaajuusNumero,
       isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
@@ -714,6 +736,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -721,6 +744,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -733,6 +757,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -740,6 +765,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -758,6 +784,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -765,6 +792,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -781,6 +809,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -788,6 +817,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus
@@ -805,6 +835,7 @@ case class MuuToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -812,6 +843,7 @@ case class MuuToteutusMetadataIndexed(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -827,6 +859,7 @@ case class MuuToteutusMetadataIndexed(
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
       yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
       hakutermi = hakutermi,
       hakulomaketyyppi = hakulomaketyyppi,
       hakulomakeLinkki = hakulomakeLinkki,
@@ -834,6 +867,7 @@ case class MuuToteutusMetadataIndexed(
       lisatietoaValintaperusteista = lisatietoaValintaperusteista,
       hakuaika = hakuaika,
       aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus

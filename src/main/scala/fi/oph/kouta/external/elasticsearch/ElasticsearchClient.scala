@@ -1,9 +1,19 @@
 package fi.oph.kouta.external.elasticsearch
 
 import co.elastic.clients.elasticsearch
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import fi.oph.kouta.external.domain.indexed.{ESResult, HakukohdeIndexedTest}
+import fi.oph.kouta.external.domain.indexed.HakukohdeIndexedWrapper.Test
+//import co.elastic.clients.elasticsearch._types.query_dsl
+//import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery
 
 import java.util
 import co.elastic.clients.elasticsearch.core.SearchRequest
+import co.elastic.clients.elasticsearch.core.search.HitsMetadata
+import com.fasterxml.jackson.databind.ObjectMapper
+//import org.apache.lucene.search
+//import org.elasticsearch.action.search.SearchRequest
 import com.fasterxml.jackson.core.JsonParseException
 import com.sksamuel.elastic4s.ElasticDsl._
 import com.sksamuel.elastic4s.http.{JavaClient, NoOpHttpClientConfigCallback}
@@ -18,7 +28,6 @@ import org.elasticsearch.client
 import org.elasticsearch.index.query.QueryBuilders
 import org.elasticsearch.search.builder.SearchSourceBuilder
 import org.elasticsearch.search.sort.SortBuilders
-
 import fi.oph.kouta.external.{ElasticSearchConfiguration, KoutaConfigurationFactory}
 import fi.vm.sade.utils.Timer.timed
 import fi.vm.sade.utils.slf4j.Logging
@@ -30,6 +39,7 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder
 import org.elasticsearch.action
 import co.elastic.clients.elasticsearch.core.GetRequest
 import co.elastic.clients.elasticsearch.core.SearchResponse
+import com.fasterxml.jackson.databind.DeserializationFeature
 import org.elasticsearch.client.{RequestOptions, RestClient}
 import org.elasticsearch.client.RestClientBuilder.HttpClientConfigCallback
 import org.json4s.Serialization
@@ -70,101 +80,47 @@ trait ElasticsearchClient extends Logging {
         logger.debug(s"Elasticsearch response: {}", response.result.sourceAsString)
         Future.successful(response.result)
     }
-/*
-  protected def simpleSearch(field: String, value: String): Future[SearchResponse] =
-    client.execute {
-      val q = search(index).query(matchPhraseQuery(field, value))
-      logger.debug(s"Elasticsearch query: ${q.show}")
-      q
-    }.flatMap {
-      case failure: RequestFailure =>
-        Future.failed(ElasticSearchException(failure.error))
 
-      case response: RequestSuccess[SearchResponse] if response.result.hits.isEmpty =>
-        Future.failed(
-          new NoSuchElementException(s"Didn't find anything searching for $value in $field from $index")
-        )
-
-      case response: RequestSuccess[SearchResponse] =>
-        logger.debug(s"Elasticsearch status: {}", response.status)
-        logger.debug(s"Elasticsearch response: [{}]", response.result.hits.hits.map(_.sourceAsString).mkString(","))
-        Future.successful(response.result)
-    }
-*/
-  protected def searchItemsSearchAfter[T: HitReader : ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
-    logger.info("Suoritetaan searchItemsSearchAfter!")
-    logger.info(s"query = " + query.get)
+  protected def searchItemsNew[T: HitReader : ClassTag](query: Option[Query]): Unit = {
     logger.info(s"index = " + index)
-
-    val newclient = createJavaClient
-  //  val builder = new GetRequest.Builder
-  //  builder.index(index)
-  //  builder.id("1.2.246.562.20.00000000000000013343") // This should be fixed to real id
-
-    /* TÄMÄ TOIMII, MUTTA EI SEARCH AFTER!!
     val srBuilder = new SearchRequest.Builder()
     srBuilder.index(index)
+    srBuilder.size(5)
     val searchRequest = srBuilder.build()
-    */
-    val srBuilder = new SearchRequest.Builder()
-    srBuilder.index(index)
-    val searchRequest = srBuilder.build()
-    val list = searchRequest.searchAfter()
-
-    //val searchRequest = new SearchRequest(index);
-    //val searchSourceBuilder = new SearchSourceBuilder()
-    val arrSearchAfter: util.List[HakukohdeIndexed] = new util.ArrayList[HakukohdeIndexed]();
-    //searchSourceBuilder.searchAfter(Array[Object](4))
-    // searchSourceBuilder.searchAfter(new Object[]{sortAfterValue});
-
-    //List[HakukohdeIndexed] list = searchRequest.searchAfter()
-
-//    val aa = new HakukohdeIndexed()
-
 
     try {
-      //val response: co.elastic.clients.elasticsearch.core.GetResponse[HakukohdeIndexed] = esClient.get(getRequest,classOf[HakukohdeIndexed])
-      val response: co.elastic.clients.elasticsearch.core.SearchResponse[HakukohdeIndexed] = newclient.search(searchRequest,classOf[HakukohdeIndexed])
+      val newclient: co.elastic.clients.elasticsearch.ElasticsearchClient = createJavaClient
+      //
+      //val response: co.elastic.clients.elasticsearch.core.SearchResponse[HakukohdeIndexedTest] = newclient.search(searchRequest,classOf[HakukohdeIndexedTest])
+      val response: co.elastic.clients.elasticsearch.core.SearchResponse[ESResult] = newclient.search(searchRequest,classOf[ESResult])
+      //val response: co.elastic.clients.elasticsearch.core.SearchResponse[util.Map[Object, Object]] = newclient.search(searchRequest,classOf[util.Map[Object, Object]])
 
-      logger.info("response GetResponse = " + response.toString)
-    } catch {
+      //val list = searchRequest.searchAfter()
+      //logger.info("list = " + list)
+
+//      logger.info("response GetResponse = " + response.toString)
+//      logger.info("response.pitId() = " + response.pitId())
+//      logger.info("response.hits() = " + response.hits())
+
+      val hitList = response.hits().hits()
+ //     logger.info("list hits.hits.size = " + hitList.size())
+ //     logger.info("histList = " + hitList)
+      logger.info("hitList.get(0).source() = " + hitList.get(0).source())
+      val esResult = hitList.get(0).source()
+      logger.info("esResult.toResult() = " + esResult.toResult());
+ //     logger.info("esResult.organisaatio = " + esResult.organisaatio);
+//      logger.info("esResult.toResult().nimi = " + esResult.toResult().nimi);
+
+      // logger.info("hit.pohjakoulutusvaatimusTarkenne = " + hit.pohjakoulutusvaatimusTarkenne.values)
+
+      } catch {
       case e: JsonParsingException => println("Virhe: " + e.printStackTrace())
       case e: Exception => "Tämä virhe: " + e.printStackTrace()
-    }
+      }
+
+
 
     /*
-
-        //SECOND REQUEST WITH SEARCH AFTER
-        builder = new SearchSourceBuilder();
-        builder.sort(SortBuilders.fieldSort("name").order(SortOrder.DESC));
-        builder.size(2);
-        builder.query(QueryBuilders.matchAllQuery());
-
-        searchRequest = new SearchRequest();
-        searchRequest.indices("idx_movies_suggest");
-        searchRequest.source(builder);
-
-        //USING SEARCH AFTER
-        Object[] arrSearchAfter = new Object[]{"batman"};
-        builder.searchAfter(arrSearchAfter);
-
-        searchRequest = new SearchRequest();
-        searchRequest.indices("idx_movies_suggest");
-        searchRequest.source(builder);
-        response = client.search(searchRequest, RequestOptions.DEFAULT);
-
-        System.out.println(response);
-     */
-
-    /*
-    val search = esClient.search((s) => s.index("products").query((q) => q.term((t) => t.field("name").value((v) => v.stringValue("bicycle")))), classOf[Nothing])
-
-    import scala.collection.JavaConversions._
-    for (hit <- search.hits.hits) {
-      processProduct(hit.source)
-    }
-    */
-
     timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
       implicit val duration: FiniteDuration = Duration(1, TimeUnit.MINUTES)
 
@@ -177,7 +133,7 @@ trait ElasticsearchClient extends Logging {
         logger.info(s"Elasticsearch request2: ${request2}")
         val request3 = search(index).query(q)
         logger.info(s"Elasticsearch request3: ${request3.show}")
-      //  client.execute( search(index).query(q).sortBy("title").searchAfter(id) )
+        //  client.execute( search(index).query(q).sortBy("title").searchAfter(id) )
         val request = search(index).query(q).keepAlive("1m").size(500)
         logger.info(s"Elasticsearch request tässä: ${request.show}")
         logger.info("request.show jälkeen")
@@ -201,10 +157,33 @@ trait ElasticsearchClient extends Logging {
         }
       })
     }
+
+     */
   }
 
 
-  protected def searchItems[T: HitReader: ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
+  /*
+  protected def simpleSearch(field: String, value: String): Future[SearchResponse] =
+    client.execute {
+      val q = search(index).query(matchPhraseQuery(field, value))
+      logger.debug(s"Elasticsearch query: ${q.show}")
+      q
+    }.flatMap {
+      case failure: RequestFailure =>
+        Future.failed(ElasticSearchException(failure.error))
+
+      case response: RequestSuccess[SearchResponse] if response.result.hits.isEmpty =>
+        Future.failed(
+          new NoSuchElementException(s"Didn't find anything searching for $value in $field from $index")
+        )
+
+      case response: RequestSuccess[SearchResponse] =>
+        logger.debug(s"Elasticsearch status: {}", response.status)
+        logger.debug(s"Elasticsearch response: [{}]", response.result.hits.hits.map(_.sourceAsString).mkString(","))
+        Future.successful(response.result)
+    }
+*/
+  protected def searchItems[T: HitReader : ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
     logger.info(s"query = " + query)
     timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
       implicit val duration: FiniteDuration = Duration(1, TimeUnit.MINUTES)
@@ -240,10 +219,9 @@ trait ElasticsearchClient extends Logging {
   private val debugJsonEnabled = false
 
   protected def debugJson(response: GetResponse): GetResponse = {
-    if(debugJsonEnabled) logger.info(s"Elastic search response: ${response.sourceAsString}")
+    if (debugJsonEnabled) logger.info(s"Elastic search response: ${response.sourceAsString}")
     response
   }
-
   protected def createJavaClient : co.elastic.clients.elasticsearch.ElasticsearchClient = {
     val config: ElasticSearchConfiguration = KoutaConfigurationFactory.configuration.elasticSearchConfiguration;
     lazy val provider2 = {
@@ -261,13 +239,42 @@ trait ElasticsearchClient extends Logging {
         }
       }).build()
     // Create the transport with a Jackson mapper
-    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper())
+    val objectMapper: ObjectMapper = new JacksonJsonpMapper().objectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    //objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+    objectMapper.registerModule(DefaultScalaModule)
+    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(objectMapper))
     val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = new elasticsearch.ElasticsearchClient(transport)
 
     esClient
   }
-}
 
+  /*protected def createJavaClient : co.elastic.clients.elasticsearch.ElasticsearchClient = {
+    val config: ElasticSearchConfiguration = KoutaConfigurationFactory.configuration.elasticSearchConfiguration;
+    lazy val provider2 = {
+      val provider = new BasicCredentialsProvider
+      val credentials = new UsernamePasswordCredentials(config.username, config.password)
+      provider.setCredentials(AuthScope.ANY, credentials)
+      provider
+    }
+    val clientJava = RestClient.builder(
+        new HttpHost("pallero-opintopolku.es.eu-west-1.aws.found.io", 9243, "https"))
+      .setHttpClientConfigCallback(new HttpClientConfigCallback() {
+        def customizeHttpClient(httpClientBuilder: HttpAsyncClientBuilder): HttpAsyncClientBuilder = {
+          httpClientBuilder.disableAuthCaching
+          httpClientBuilder.setDefaultCredentialsProvider(provider2)
+        }
+      }).build()
+    // Create the transport with a Jackson mapper
+    val objectMapper = new JacksonJsonpMapper().objectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(objectMapper))
+    val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = new elasticsearch.ElasticsearchClient(transport)
+
+    esClient
+  }
+
+*/
+
+}
 object ElasticsearchClient {
   val config: ElasticSearchConfiguration = KoutaConfigurationFactory.configuration.elasticSearchConfiguration;
   val httpClientConfigCallback: HttpClientConfigCallback = if (config.authEnabled) {

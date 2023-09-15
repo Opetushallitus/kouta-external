@@ -1,0 +1,420 @@
+{
+    "esikatselu": true,
+    "formatoituModified": {
+      "en": "Apr. 21, 2022 at 12:15 PM UTC+3",
+      "fi": "21.4.2022 klo 12:15",
+      "sv": "21.4.2022 kl. 12:15"
+    },
+    "hakuajat": [
+      {
+        "alkaa": "2022-05-01T08:00",
+        "formatoituAlkaa": {
+          "en": "May. 1, 2022 at 08:00 AM UTC+3",
+          "fi": "1.5.2022 klo 08:00",
+          "sv": "1.5.2022 kl. 08:00"
+        },
+        "formatoituPaattyy": {
+          "en": "May. 31, 2022 at 03:00 PM UTC+3",
+          "fi": "31.5.2022 klo 15:00",
+          "sv": "31.5.2022 kl. 15:00"
+        },
+        "paattyy": "2022-05-31T15:00"
+      }
+    ],
+    "hakulomakeKuvaus": {
+    },
+    "hakulomakeLinkki": {
+      "en": "https://testiopintopolku.fi/hakemus/hakukohde/1.2.246.562.20.00000000000000013343?lang=en",
+      "fi": "https://testiopintopolku.fi/hakemus/hakukohde/1.2.246.562.20.00000000000000013343?lang=fi",
+      "sv": "https://testiopintopolku.fi/hakemus/hakukohde/1.2.246.562.20.00000000000000013343?lang=sv"
+    },
+    "hakuNimi": {
+      "en": "Metropolia UAS, Application on the Basis of Finnish Higher Education Studies, studies starting in autumn 2022 ",
+      "fi": "Metropolia AMK, haku suomalaisten korkeakouluopintojen perusteella, syksyll\u00e4 2022 alkavat opinnot"
+    },
+    "hakuOid": "1.2.246.562.29.00000000000000013336",
+    "hakutapaKoodiUri": "hakutapa_04#1",
+    "jarjestyspaikka": {
+      "jarjestaaUrheilijanAmmKoulutusta": null,
+      "nimi": {
+        "en": "Myllypuro Campus",
+        "fi": "Myllypuron kampus",
+        "sv": "Myllypuron kampus"
+      },
+      "oid": "1.2.246.562.10.59078453392",
+      "paikkakunta": {
+        "koodiUri": "kunta_091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        }
+      }
+    },
+    "johtaaTutkintoon": true,
+    "kaytetaanHaunAikataulua": false,
+    "kaytetaanHaunHakulomaketta": true,
+    "kielivalinta": [
+      "fi"
+    ],
+    "koulutusasteKoodiUrit": [
+      "kansallinenkoulutusluokitus2016koulutusastetaso1_6",
+      "kansallinenkoulutusluokitus2016koulutusastetaso2_62"
+    ],
+    "koulutustyyppi": "amk",
+    "koulutustyyppikoodi": "koulutustyyppi_3",
+    "koulutustyyppiPath": "kk/amk",
+  "liitteet": [
+
+    {
+      "formatoituToimitusaika": {
+        "en": "May. 10, 2023 at 12:00 AM UTC+3",
+        "fi": "10.5.2023 klo 00:00",
+        "sv": "10.5.2023 kl. 00:00"
+      },
+      "id": "75b901b7-5c5f-4dfd-b722-7835b9469f35",
+      "kuvaus": {
+        "fi": "<ul><li>Ajantasainen opintosuoritusote sek\u00e4 osasuoritustodistukset</li><li>Opintojaksokuvaukset suorittamistasi opinnoista</li><li>Opiskelutodistus</li></ul>"
+      },
+      "nimi": {
+        "fi": "Liitteet opiskeluoikeudesta toisessa korkeakoulussa"
+      },
+      "toimitusaika": "2023-05-10T00:00",
+      "toimitustapa": "lomake",
+      "tyyppi": {
+        "koodiUri": "liitetyypitamm_3#1",
+        "nimi": {
+          "en": "Certificates",
+          "fi": "Todistukset",
+          "sv": "Betyg"
+        }
+      }
+    }
+  ],
+    "liitteidenToimitustapa": "hakijapalvelu",
+    "liitteidenToimitusosoite": {
+      "osoite": {
+        "osoite": {
+          "fi": "Suomenkielinen teksti yksi",
+          "sv": "Ruotsinkielinen teksti kaksi",
+          "en": "Englanninkielinen teksti kolme"
+        },
+        "postinumeroKoodiUri": "posti_04230#2"
+      },
+      "sahkoposti": "joku email",
+      "verkkosivu": "nettisivu"
+    },   "liitteetOnkoSamaToimitusaika": false,
+    "liitteetOnkoSamaToimitusosoite": false,
+    "metadata": {
+      "aloituspaikat": {
+        "kuvaus": {
+          "fi": "<p>Haussa on k\u00e4yt\u00f6ss\u00e4 joustava valinta, jossa kaikki opiskelijavalintakriteerit t\u00e4ytt\u00e4v\u00e4t hakijat hyv\u00e4ksyt\u00e4\u00e4n hakemusten saapumisj\u00e4rjestyksess\u00e4 kunnes haku p\u00e4\u00e4ttyy tai aloituspaikat ovat t\u00e4yttyneet.</p>"
+        },
+        "lukumaara": 4
+      },
+      "isMuokkaajaOphVirkailija": false,
+      "kaytetaanHaunAlkamiskautta": true,
+      "kynnysehto": {
+      },
+      "uudenOpiskelijanUrl": {
+        "fi": "https://www.metropolia.fi/fi/opiskelu-metropoliassa/yleista-tietoa-opiskelusta/opintojen-aloitus"
+      },
+      "valintakokeidenYleiskuvaus": {
+      },
+      "valintaperusteenValintakokeidenLisatilaisuudet": [
+        {
+          "tilaisuudet": [
+            {
+              "aika": {
+                "alkaa": "2023-02-28T09:49",
+                "formatoituAlkaa": {
+                  "en": "Feb. 28, 2023 at 09:49 am UTC+2",
+                  "fi": "28.2.2023 klo 09:49",
+                  "sv": "28.2.2023 kl. 09:49"
+                },
+                "formatoituPaattyy": {
+                  "en": "Feb. 28, 2023 at 09:58 am UTC+2",
+                  "fi": "28.2.2023 klo 09:58",
+                  "sv": "28.2.2023 kl. 09:58"
+                },
+                "paattyy": "2023-02-28T09:58"
+              },
+              "jarjestamispaikka": {
+                "fi": "Lis\u00e4 j\u00e4rjest\u00e4mispaikka fi",
+                "sv": "Lis\u00e4 j\u00e4rjest\u00e4mispaikka sv"
+              },
+              "lisatietoja": {
+                "fi": "lis\u00e4tieto fi",
+                "sv": "lis\u00e4tieto sv"
+              },
+              "osoite": {
+                "osoite": {
+                  "fi": "Kivatie 1",
+                  "sv": "kivav\u00e4gen 1"
+                },
+                "postinumero": {
+                  "koodiUri": "posti_04230#2",
+                  "nimi": {
+                    "fi": "posti_04230#2 nimi fi",
+                    "sv": "posti_04230#2 nimi sv"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "modified": "2022-04-21T12:15:31",
+    "muokkaaja": {
+      "nimi": "Susanna Virkailija",
+      "oid": "1.2.246.562.24.27937569752"
+    },
+    "muuPohjakoulutusvaatimus": {
+    },
+    "nimi": {
+      "fi": "Haku suomalaisten korkeakouluopintojen perusteella (S22): Sosionomi (AMK), sosiaaliala, monimuotototeutus"
+    },
+    "odwKkTasot": {
+      "alempiKkAste": true,
+      "kkTutkinnonTaso": 1,
+      "kkTutkinnonTasoSykli": 1,
+      "ylempiKkAste": false
+    },
+    "oid": "1.2.246.562.20.00000000000000013343",
+    "opetuskieliKoodiUrit": [
+      "oppilaitoksenopetuskieli_1#1"
+    ],
+    "organisaatio": {
+      "nimi": {
+        "en": "Metropolia Ammattikorkeakoulu Oy",
+        "fi": "Metropolia Ammattikorkeakoulu Oy",
+        "sv": "Metropolia Ammattikorkeakoulu Oy"
+      },
+      "oid": "1.2.246.562.10.60198812368",
+      "paikkakunta": {
+        "koodiUri": "kunta_091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        }
+      }
+    },
+    "paateltyAlkamiskausi": {
+      "alkamiskausityyppi": "alkamiskausi ja -vuosi",
+      "kausiUri": "kausi_s#1",
+      "source": "1.2.246.562.29.00000000000000013336",
+      "vuosi": "2022"
+    },
+    "pohjakoulutusvaatimus": [
+      {
+        "koodiUri": "pohjakoulutusvaatimuskouta_xx#1",
+        "nimi": {
+          "en": "No required prior studies",
+          "fi": "Ei pohjakoulutusvaatimusta",
+          "sv": "Inget krav p\u00e5 grundutbildning"
+        }
+      }
+    ],
+    "pohjakoulutusvaatimusTarkenne": {
+      "fi": "<p>Tarkista hakukohteesi tarkemmat valintaperusteet ja hakukelpoisuusvaatimukset <a href=\"https://www.metropolia.fi/fi/opiskelu-metropoliassa/hakeminen/haku-suomalaisten-korkeakouluopintojen-perusteella\" rel=\"noopener noreferrer\" target=\"_blank\">hakuohjeista Metropolian sivuilta.</a></p>"
+    },
+    "salliikoHakukohdeHarkinnanvaraisuudenKysymisen": false,
+    "sora": {
+      "tila": "julkaistu"
+    },
+    "tila": "arkistoitu",
+    "timestamp": 1689842867850,
+    "toinenAsteOnkoKaksoistutkinto": false,
+    "toteutus": {
+      "formatoituModified": {
+        "en": "Jul. 12, 2022 at 08:02 PM UTC+3",
+        "fi": "12.7.2022 klo 20:02",
+        "sv": "12.7.2022 kl. 20:02"
+      },
+      "modified": "2022-07-12T20:02:10",
+      "muokkaaja": {
+        "nimi": "Susanna Virkailija",
+        "oid": "1.2.246.562.24.27937569752"
+      },
+      "nimi": {
+        "fi": "Sosionomi (AMK), sosiaaliala, monimuotototeutus"
+      },
+      "oid": "1.2.246.562.17.00000000000000000578",
+      "organisaatio": {
+        "nimi": {
+          "en": "Myllypuro Campus",
+          "fi": "Myllypuron kampus",
+          "sv": "Myllypuron kampus"
+        },
+        "oid": "1.2.246.562.10.59078453392",
+        "paikkakunta": {
+          "koodiUri": "kunta_091",
+          "nimi": {
+            "fi": "Helsinki",
+            "sv": "Helsingfors"
+          }
+        }
+      },
+      "organisaatiot": [
+        "1.2.246.562.10.59078453392"
+      ],
+      "tarjoajat": [
+        {
+          "nimi": {
+            "en": "Myllypuro Campus",
+            "fi": "Myllypuron kampus",
+            "sv": "Myllypuron kampus"
+          },
+          "oid": "1.2.246.562.10.59078453392",
+          "paikkakunta": {
+            "koodiUri": "kunta_091",
+            "nimi": {
+              "fi": "Helsinki",
+              "sv": "Helsingfors"
+            }
+          }
+        }
+      ],
+      "tila": "julkaistu"
+    },
+    "toteutusOid": "1.2.246.562.17.00000000000000000578",
+    "valintakokeet": [
+      {
+        "id": "9bc11caa-4ba3-46b1-81e7-59c106556118",
+        "metadata": {
+          "ohjeetEnnakkovalmistautumiseen": {
+            "fi": "suomeksi 1",
+            "sv": "ruotsiksi 1"
+          },
+          "ohjeetErityisjarjestelyihin": {
+            "fi": "suomeksi 2",
+            "sv": "ruotsiksi 3"
+          },
+          "tietoja": {
+            "fi": "suomeksi 3",
+            "sv": "ruotsiksi 3"
+          },
+          "vahimmaispisteet": 182.1,
+          "liittyyEnnakkovalmistautumista":true,
+          "ohjeetEnnakkovalmistautumiseen":{
+            "fi":"Ennakko-ohjeet fi",
+            "sv":"Ennakko-ohjeet sv"
+          },
+          "erityisjarjestelytMahdollisia":true,
+          "ohjeetErityisjarjestelyihin":{
+            "fi":"Erityisvalmistelut fi",
+            "sv":"Erityisvalmistelut sv"
+          }
+        },
+        "nimi": {
+        },
+        "tilaisuudet": [
+          {
+            "aika": {
+              "alkaa": "2023-07-17T09:00",
+              "formatoituAlkaa": {
+                "en": "Jul. 17, 2023 at 09:00 AM UTC+3",
+                "fi": "17.7.2023 klo 09:00",
+                "sv": "17.7.2023 kl. 09:00"
+              },
+              "formatoituPaattyy": {
+                "en": "Jul. 17, 2023 at 03:00 PM UTC+3",
+                "fi": "17.7.2023 klo 15:00",
+                "sv": "17.7.2023 kl. 15:00"
+              },
+              "paattyy": "2023-07-17T15:00"
+            },
+            "jarjestamispaikka": {
+              "fi": "Rauma"
+            },
+            "lisatietoja": {
+            },
+            "osoite": {
+              "osoite": {
+                "fi": "Steniuksenkatu 8"
+              },
+              "postinumero": {
+                "koodiUri": "posti_26100#2",
+                "nimi": {
+                  "fi": "RAUMA",
+                  "sv": "RAUMA"
+                }
+              }
+            }
+          }
+        ],
+        "tyyppi": {
+          "koodiUri": "valintakokeentyyppi_1#1",
+          "nimi": {
+            "fi": "P\u00e4\u00e4sy- ja soveltuvuuskoe",
+            "sv": "Intr\u00e4des- eller l\u00e4mplighetsprov"
+          }
+        }
+      }
+    ],
+    "valintaperuste": {
+      "_enrichedData": {
+        "muokkaajanNimi": "Susanna Virkailija"
+      },
+      "esikatselu": true,
+      "formatoituModified": {
+        "en": "Apr. 21, 2022 at 12:03 PM UTC+3",
+        "fi": "21.4.2022 klo 12:03",
+        "sv": "21.4.2022 kl. 12:03"
+      },
+      "hakutapa": {
+        "koodiUri": "hakutapa_04#1",
+        "nimi": {
+          "en": "Rolling admission (higher education)",
+          "fi": "Joustava haku",
+          "sv": "Flexibel ans\u00f6kan"
+        }
+      },
+      "id": "fa6383a6-d4e8-4a9f-97bd-1ab786d5ddd6",
+      "julkinen": false,
+      "kielivalinta": [
+        "fi",
+        "en"
+      ],
+      "kohdejoukko": {
+        "koodiUri": "haunkohdejoukko_12#1",
+        "nimi": {
+          "fi": "Korkeakoulutus",
+          "sv": "H\u00f6gskoleutbildning"
+        }
+      },
+      "koulutustyyppi": "amk",
+      "modified": "2022-04-21T12:03:30",
+      "muokkaaja": {
+        "nimi": "Susanna Virkailija",
+        "oid": "1.2.246.562.24.27937569752"
+      },
+      "nimi": {
+        "en": "Metropolia UAS,  Application on the Basis of Finnish Higher Education Studies, studies starting in autumn 2022 and spring 2023",
+        "fi": "Metropolia AMK, haku suomalaisten korkeakouluopintojen perusteella, syksyll\u00e4 2022 ja kev\u00e4\u00e4ll\u00e4 2023 alkavat opinnot"
+      },
+      "organisaatio": {
+        "nimi": {
+          "en": "Metropolia Ammattikorkeakoulu Oy",
+          "fi": "Metropolia Ammattikorkeakoulu Oy",
+          "sv": "Metropolia Ammattikorkeakoulu Oy"
+        },
+        "oid": "1.2.246.562.10.60198812368",
+        "paikkakunta": {
+          "koodiUri": "kunta_091",
+          "nimi": {
+            "fi": "Helsinki",
+            "sv": "Helsingfors"
+          }
+        }
+      },
+      "tila": "julkaistu",
+      "valintakokeet": [
+      ]
+    },
+    "voikoHakukohteessaOllaHarkinnanvaraisestiHakeneita": false,
+    "yhdenPaikanSaanto": {
+      "syy": "Hakukohde on yhden paikan s\u00e4\u00e4nn\u00f6n piiriss\u00e4",
+      "voimassa": true
+    }
+  }

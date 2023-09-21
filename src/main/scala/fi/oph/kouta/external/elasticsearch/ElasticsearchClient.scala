@@ -3,8 +3,7 @@ package fi.oph.kouta.external.elasticsearch
 import co.elastic.clients.elasticsearch
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import fi.oph.kouta.external.domain.indexed.{ESResult, HakukohdeIndexedTest}
-import fi.oph.kouta.external.domain.indexed.HakukohdeIndexedWrapper.Test
+import fi.oph.kouta.external.domain.indexed.{HakukohdeJavaClient, HakukohdeIndexedTest}
 //import co.elastic.clients.elasticsearch._types.query_dsl
 //import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery
 
@@ -81,37 +80,30 @@ trait ElasticsearchClient extends Logging {
         Future.successful(response.result)
     }
 
-  protected def searchItemsNew[T: HitReader : ClassTag](query: Option[Query]): Unit = {
+  //protected def searchItemsJavaClient[T: ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
+  protected def searchItemsJavaClient[T: ClassTag](query: Option[Query]): Unit = {
     logger.info(s"index = " + index)
-    val srBuilder = new SearchRequest.Builder()
-    srBuilder.index(index)
-    srBuilder.size(5)
+
+    val srBuilder = new SearchRequest.Builder().index(index).size(100)
     val searchRequest = srBuilder.build()
 
     try {
       val newclient: co.elastic.clients.elasticsearch.ElasticsearchClient = createJavaClient
-      //
-      //val response: co.elastic.clients.elasticsearch.core.SearchResponse[HakukohdeIndexedTest] = newclient.search(searchRequest,classOf[HakukohdeIndexedTest])
-      val response: co.elastic.clients.elasticsearch.core.SearchResponse[ESResult] = newclient.search(searchRequest,classOf[ESResult])
-      //val response: co.elastic.clients.elasticsearch.core.SearchResponse[util.Map[Object, Object]] = newclient.search(searchRequest,classOf[util.Map[Object, Object]])
+      // Tämä toimii, jos laittaa kiinteästi haettavan luokan (HakukohdeJavaClient)
+      val response: co.elastic.clients.elasticsearch.core.SearchResponse[HakukohdeJavaClient] = newclient.search(searchRequest,classOf[HakukohdeJavaClient])
 
-      //val list = searchRequest.searchAfter()
-      //logger.info("list = " + list)
+      // Tämä ei toimi
+//      val response: co.elastic.clients.elasticsearch.core.SearchResponse[T] = newclient.search(searchRequest,classOf[T])
 
-//      logger.info("response GetResponse = " + response.toString)
-//      logger.info("response.pitId() = " + response.pitId())
-//      logger.info("response.hits() = " + response.hits())
 
       val hitList = response.hits().hits()
- //     logger.info("list hits.hits.size = " + hitList.size())
- //     logger.info("histList = " + hitList)
-      logger.info("hitList.get(0).source() = " + hitList.get(0).source())
-      val esResult = hitList.get(0).source()
-      logger.info("esResult.toResult() = " + esResult.toResult());
- //     logger.info("esResult.organisaatio = " + esResult.organisaatio);
-//      logger.info("esResult.toResult().nimi = " + esResult.toResult().nimi);
-
-      // logger.info("hit.pohjakoulutusvaatimusTarkenne = " + hit.pohjakoulutusvaatimusTarkenne.values)
+      hitList.forEach(esResult =>
+        logger.info("esResult.toResult() = " + esResult.source().toResult())
+       )
+      logger.info("List size = " + hitList.size())
+//      logger.info("hitList.get(0).source() = " + hitList.get(0).source())
+//      val esResult = hitList.get(0).source()
+//      logger.info("esResult.toResult() = " + esResult.toResult());
 
       } catch {
       case e: JsonParsingException => println("Virhe: " + e.printStackTrace())

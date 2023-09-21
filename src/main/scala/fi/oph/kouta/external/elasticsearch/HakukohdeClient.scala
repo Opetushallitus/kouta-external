@@ -5,7 +5,7 @@ import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.domain.oid.{HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
-import fi.oph.kouta.external.domain.indexed.HakukohdeIndexed
+import fi.oph.kouta.external.domain.indexed.{HakukohdeIndexed, HakukohdeJavaClient}
 import fi.oph.kouta.external.service.HakukohdeSearchParams
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
@@ -70,7 +70,10 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         koulutusasteQuery
       ).flatten
 
-    searchItemsSearchAfter[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
+    //searchItemsSearchAfter[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
+    searchItemsJavaClient[HakukohdeJavaClient](Some(must(query)))
+    //searchItems[HakukohdeIndexed](Some(must(query)))
+    Future(Seq())
   }
 }
 

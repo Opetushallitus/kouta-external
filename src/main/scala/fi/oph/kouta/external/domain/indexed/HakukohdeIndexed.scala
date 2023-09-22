@@ -6,18 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, Oid, OrganisaatioOid, ToteutusOid, UserOid}
 import fi.oph.kouta.domain.{oid, _}
-import fi.oph.kouta.external.domain.{
-  Ajanjakso,
-  Aloituspaikat,
-  Hakukohde,
-  HakukohdeMetadata,
-  HakukohteenLinja,
-  Kielistetty,
-  Koodi,
-  KoodiNimi,
-  PaateltyAlkamiskausi,
-  ValintakokeenLisatilaisuudet
-}
+import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, Koodi, KoodiNimi, PaateltyAlkamiskausi, ValintakokeenLisatilaisuudet}
+import fi.oph.kouta.external.elasticsearch.ResultEntity
 
 import java.time.LocalDateTime
 import java.util
@@ -71,7 +61,6 @@ case class ValintakoeES @JsonCreator() (
     @JsonProperty("tilaisuudet") tilaisuudet: List[ValintakoeTilaisuus] // List[ValintakoetilaisuusIndexed]
 )
 
-// ESResult(List(Valintakoe(List(Map(aika -> Map(alkaa -> 2023-07-17T09:00, formatoituAlkaa -> Map(en -> Jul. 17, 2023 at 09:00 AM UTC+3, fi -> 17.7.2023 klo 09:00, sv -> 17.7.2023 kl. 09:00), formatoituPaattyy -> Map(en -> Jul. 17, 2023 at 03:00 PM UTC+3, fi -> 17.7.2023 klo 15:00, sv -> 17.7.2023 kl. 15:00), paattyy -> 2023-07-17T15:00), jarjestamispaikka -> Map(fi -> Rauma), lisatietoja -> Map(), osoite -> Map(osoite -> Map(fi -> Steniuksenkatu 8), postinumero -> Map(koodiUri -> posti_26100#2, nimi -> Map(fi -> RAUMA, sv -> RAUMA))))))))
 case class AikaJakso @JsonCreator() (
     @JsonProperty("alkaa") alkaa: String,
     @JsonProperty("formatoituAlkaa") formatoituAlkaa: Map[String, String],
@@ -104,17 +93,21 @@ case class AloituspaikatES @JsonCreator() (
     @JsonProperty("ensikertalaisille") ensikertalaisille: Int
 )
 case class KoulutuksenAlkamiskausiES @JsonCreator() (
+
     @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: String,
     @JsonProperty("henkilokohtaisenSuunnitelmanLisatiedot") henkilokohtaisenSuunnitelmanLisatiedot: Map[String, String],
     @JsonProperty("koulutuksenAlkamispaivamaara") koulutuksenAlkamispaivamaara: String,
     @JsonProperty("koulutuksenPaattymispaivamaara") koulutuksenPaattymispaivamaara: String,
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: String,
+    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiMapES,
     @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: String
 )
-
+case class KoulutuksenAlkamiskausiMapES @JsonCreator() (
+    @JsonProperty("koodiUri") koodiUri: String,
+    @JsonProperty("nimi") nimi: Map[String, String]
+                                                       )
 case class MetadataES @JsonCreator() (
+
     @JsonProperty("aloituspaikat") aloituspaikat: AloituspaikatES,
-    @JsonProperty("isMuokkaajaOphVirkailija") isMuokkaajaOphVirkailija: Boolean,
     @JsonProperty("kaytetaanHaunAlkamiskautta") kaytetaanHaunAlkamiskautta: Boolean,
     @JsonProperty("kynnysehto") kynnysehto: Map[String, String],
     @JsonProperty("uudenOpiskelijanUrl") uudenOpiskelijanUrl: Map[String, String],
@@ -123,6 +116,7 @@ case class MetadataES @JsonCreator() (
       ValintakoeLisatilaisuusIndexedES
     ],
     @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiES,
+
     @JsonProperty("hakukohteenLinja") hakukohteenLinja: HakukohteenLinjaES
     //aa: HakukohteenLinja
 )
@@ -160,7 +154,7 @@ case class PaateltyAlkamiskausiES @JsonCreator() (
     @JsonProperty("source") source: String,
     @JsonProperty("vuosi") vuosi: String
 )
-case class HakukohdeJavaClient @JsonCreator()(
+case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("oid") oid: String,
     @JsonProperty("externalId") externalId: String,
     @JsonProperty("toteutusOid") toteutusOid: String,
@@ -189,7 +183,7 @@ case class HakukohdeJavaClient @JsonCreator()(
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
     @JsonProperty("metadata") metadata: MetadataES,
     @JsonProperty("organisaatio") organisaatio: OrganisaatioES,
-    @JsonProperty("kielivalinta") kielivalinta: List[String],
+    @JsonProperty("kielivalinta") kielivalinta: Object, //Seq[String],
     @JsonProperty("modified") modified: String,
     @JsonProperty("toteutus") toteutus: ToteutusES,
     @JsonProperty("johtaaTutkintoon") johtaaTutkintoon: Boolean,
@@ -238,12 +232,12 @@ case class HakukohdeJavaClient @JsonCreator()(
       liitteet = getLiitteet(liitteet),
       valintakokeet = getValintakokeet(valintakokeet),
       hakuajat = hakuajat.map(hakuaika => {
-        Ajanjakso(LocalDateTime.parse(hakuaika.alkaa), Option.apply(LocalDateTime.parse(hakuaika.paattyy)))
+        Ajanjakso(parseLocalDateTime(hakuaika.alkaa), Option.apply(parseLocalDateTime(hakuaika.paattyy)))
       }),
       muokkaaja = Muokkaaja(UserOid(muokkaaja.oid)),
       metadata = getHakukohdeMetadataIndexed(metadata),
       organisaatio = Organisaatio(oid = OrganisaatioOid(organisaatio.oid)),
-      kielivalinta.map(kieli => Kieli.withName(kieli)).toSeq,
+      null,//kielivalinta.map(kieli => Kieli.withName(kieli)).toSeq,
       modified = Option.apply(Modified(LocalDateTime.parse(modified))),
       toteutus = Option.apply(Tarjoajat(toteutus.tarjoajat.map(tarjoaja => Organisaatio(OrganisaatioOid(tarjoaja.oid))))),
       johtaaTutkintoon = Option.apply(johtaaTutkintoon),
@@ -251,11 +245,15 @@ case class HakukohdeJavaClient @JsonCreator()(
       koulutusasteKoodiUrit = koulutusasteKoodiUrit,
       hakutapaKoodiUri = Option.apply(hakutapaKoodiUri),
       paateltyAlkamiskausi = Option.apply(
+        if(paateltyAlkamiskausi != null){
         PaateltyAlkamiskausi(
-          alkamiskausityyppi = Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)),
+          alkamiskausityyppi = if(paateltyAlkamiskausi != null) Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)) else null,
           kausiUri = Option.apply(paateltyAlkamiskausi.kausiUri),
           vuosi = Option.apply(paateltyAlkamiskausi.vuosi)
         )
+        } else {
+          PaateltyAlkamiskausi(null, null, null)
+        }
       )
     )
   }
@@ -266,6 +264,9 @@ case class HakukohdeJavaClient @JsonCreator()(
       Fi -> map.getOrElse("fi", None).toString,
       Sv -> map.getOrElse("sv", None).toString
     )
+  }
+  def parseLocalDateTime(dateString : String) : LocalDateTime = {
+    if(dateString != null) LocalDateTime.parse(dateString) else null
   }
   def getHakukohdeMetadataIndexed(metadataES: MetadataES): Option[HakukohdeMetadataIndexed] = {
     val result = HakukohdeMetadataIndexed(
@@ -280,8 +281,8 @@ case class HakukohdeJavaClient @JsonCreator()(
                 osoite = Option.apply(getOsoiteIndexed(tilaisuus.osoite)),
                 aika = Option.apply(
                   Ajanjakso(
-                    LocalDateTime.parse(tilaisuus.aika.alkaa),
-                    Option.apply(LocalDateTime.parse(tilaisuus.aika.paattyy))
+                    parseLocalDateTime(tilaisuus.aika.alkaa),
+                    Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy))
                   )
                 ),
                 lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
@@ -298,11 +299,11 @@ case class HakukohdeJavaClient @JsonCreator()(
             henkilokohtaisenSuunnitelmanLisatiedot =
               toKielistettyMap(metadataES.koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
             koulutuksenAlkamispaivamaara =
-              Option.apply(LocalDateTime.parse(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara)),
+              Option.apply(parseLocalDateTime(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara)),
             koulutuksenPaattymispaivamaara =
-              Option.apply(LocalDateTime.parse(metadataES.koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara)),
-            koulutuksenAlkamiskausi =
-              Option.apply(KoodiUri(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamiskausi)),
+              Option.apply( parseLocalDateTime(metadataES.koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara)),
+            koulutuksenAlkamiskausi = Option.apply(
+              if(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamiskausi != null) KoodiUri(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.koodiUri) else null),
             koulutuksenAlkamisvuosi = Option.apply(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi)
           )
         )
@@ -362,8 +363,8 @@ case class HakukohdeJavaClient @JsonCreator()(
             ),
             aika = Option.apply(
               Ajanjakso(
-                alkaa = LocalDateTime.parse(tilaisuus.aika.alkaa),
-                paattyy = Option.apply(LocalDateTime.parse(tilaisuus.aika.paattyy))
+                alkaa = if(tilaisuus.aika != null) LocalDateTime.parse(tilaisuus.aika.alkaa) else null,
+                paattyy = if(tilaisuus.aika != null) Option.apply(LocalDateTime.parse(tilaisuus.aika.paattyy)) else null
               )
             ),
             lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
@@ -379,10 +380,10 @@ case class HakukohdeJavaClient @JsonCreator()(
       .map(l => {
         LiiteIndexed(
           id = Option.apply(UUID.fromString(l.id)),
-          tyyppi = Option.apply(KoodiUri(l.tyyppi.koodiUri)),
+          tyyppi = if(l.tyyppi != null) Option.apply(KoodiUri(l.tyyppi.koodiUri)) else null,
           nimi = toKielistettyMap(l.nimi),
           kuvaus = toKielistettyMap(l.kuvaus),
-          toimitusaika = if(l.toimitusaika != null) Option.apply(LocalDateTime.parse(l.toimitusaika)) else null,
+          toimitusaika = Option.apply(parseLocalDateTime(l.toimitusaika)),
           toimitustapa = if(l.toimitustapa != null) Option.apply(LiitteenToimitustapa.withName(l.toimitustapa)) else null,
           if (l.toimitusosoite != null)
             Option.apply(
@@ -411,17 +412,6 @@ case class HakukohdeJavaClient @JsonCreator()(
             liitteenToimitusosoite.verkkosivu
           ))
 
-      /*Option.apply(liitteenToimitusosoite)
-        .map(liitteenToimitusosoite =>
-          LiitteenToimitusosoiteIndexed(
-            OsoiteIndexed(
-              toKielistettyMap(liitteenToimitusosoite.osoite.osoite),
-              Option.apply(KoodiUri(liitteenToimitusosoite.osoite.postinumeroKoodiUri))
-            ),
-            liitteenToimitusosoite.sahkoposti,
-            liitteenToimitusosoite.verkkosivu
-          )
-        )*/
     }
     null
 

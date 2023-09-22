@@ -1,9 +1,13 @@
 package fi.oph.kouta.external.elasticsearch
 
 import co.elastic.clients.elasticsearch
+import co.elastic.clients.elasticsearch._types
+import org.elasticsearch.search.sort.SortBuilders
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import fi.oph.kouta.external.domain.indexed.{HakukohdeJavaClient, HakukohdeIndexedTest}
+import fi.oph.kouta.external.domain.indexed.{HakukohdeIndexedTest, HakukohdeJavaClient, MetadataES}
+import org.elasticsearch.search.searchafter.SearchAfterBuilder
 //import co.elastic.clients.elasticsearch._types.query_dsl
 //import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery
 
@@ -56,6 +60,9 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper
 import co.elastic.clients.transport.ElasticsearchTransport
 import co.elastic.clients.transport.rest_client.RestClientTransport
 
+trait ResultEntity[T] {
+  def toResult: T
+}
 trait ElasticsearchClient extends Logging {
   val index: String
   val client: ElasticClient
@@ -83,8 +90,13 @@ trait ElasticsearchClient extends Logging {
   //protected def searchItemsJavaClient[T: ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
   protected def searchItemsJavaClient[T: ClassTag](query: Option[Query]): Unit = {
     logger.info(s"index = " + index)
+    logger.info("query = " + query)
 
-    val srBuilder = new SearchRequest.Builder().index(index).size(100)
+    val srBuilder = new SearchRequest.Builder().index(index)//.size(2) //.searchAfter()
+    //SortBuilders.scoreSort()
+    //srBuilder..fieldSort("name").order(SortOrder.DESC)
+   // srBuilder.searchAfter(List[HakukohdeJavaClient])
+    //val aa : SearchAfterBuilder
     val searchRequest = srBuilder.build()
 
     try {
@@ -93,15 +105,27 @@ trait ElasticsearchClient extends Logging {
       val response: co.elastic.clients.elasticsearch.core.SearchResponse[HakukohdeJavaClient] = newclient.search(searchRequest,classOf[HakukohdeJavaClient])
 
       // Tämä ei toimi
-//      val response: co.elastic.clients.elasticsearch.core.SearchResponse[T] = newclient.search(searchRequest,classOf[T])
+//      val response: co.elastic.clients.elasticsearch.core.SearchResponse[ResultEntity[T]] = newclient.search(searchRequest,classOf[ResultEntity[T]])
 
 
       val hitList = response.hits().hits()
+      val hitCount = hitList.size()
+    //  logger.info("hitList.get(9).source() = " + hitList.get(9).source())
+      //val sortList : util.List[_types.FieldValue] = hitList.get(9).sort()
+//      logger.info("hitList.get(9).sort() = " + hitList.get(9).sort())
+
+//      get(9).sort()
+
       hitList.forEach(esResult =>
+
+        // logger.info(esResult.source().metadata.koulutuksenAlkamiskausi)
+        //        esResult.source().asInstanceOf[ResultEntity].toResult
         logger.info("esResult.toResult() = " + esResult.source().toResult())
-       )
-      logger.info("List size = " + hitList.size())
-//      logger.info("hitList.get(0).source() = " + hitList.get(0).source())
+      )
+
+
+      logger.info("List size = " + response.hits().hits().size())
+
 //      val esResult = hitList.get(0).source()
 //      logger.info("esResult.toResult() = " + esResult.toResult());
 

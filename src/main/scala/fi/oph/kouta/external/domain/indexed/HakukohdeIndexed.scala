@@ -12,6 +12,7 @@ import fi.oph.kouta.external.elasticsearch.ResultEntity
 import java.time.LocalDateTime
 import java.util
 import java.util.UUID
+import scala.runtime.Nothing$
 
 // Haluttu luokkarakenne
 case class Result(oid: Option[Oid], oid2: Option[Oid], oid3: Option[Oid])
@@ -57,7 +58,7 @@ case class ValintakoeES @JsonCreator() (
     @JsonProperty("id") id: String,                                     //id: Option[UUID],
     @JsonProperty("tyyppi") tyyppi: ValintakoeTyyppi,                   // tyyppi: Option[KoodiUri],
     @JsonProperty("nimi") nimi: Map[String, String],                    // nimi: Kielistetty,
-    @JsonProperty("metadata") metadata: ValintaKoeMetadata,             // Option[ValintaKoeMetadataIndexed],
+    @JsonProperty("metadata") metadata: ValintaKoeMetadataES,             // Option[ValintaKoeMetadataIndexed],
     @JsonProperty("tilaisuudet") tilaisuudet: List[ValintakoeTilaisuus] // List[ValintakoetilaisuusIndexed]
 )
 
@@ -73,7 +74,7 @@ case class ValintakoeTilaisuus @JsonCreator() (
     @JsonProperty("lisatietoja") lisatietoja: Map[String, String],
     @JsonProperty("osoite") osoite: OsoiteES
 )
-case class ValintaKoeMetadata @JsonCreator() (
+case class ValintaKoeMetadataES @JsonCreator() (
     @JsonProperty("liittyyEnnakkovalmistautumista") liittyyEnnakkovalmistautumista: Boolean,
     @JsonProperty("ohjeetEnnakkovalmistautumiseen") ohjeetEnnakkovalmistautumiseen: Map[String, String],
     @JsonProperty("erityisjarjestelytMahdollisia") erityisjarjestelytMahdollisia: Boolean,
@@ -183,7 +184,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
     @JsonProperty("metadata") metadata: MetadataES,
     @JsonProperty("organisaatio") organisaatio: OrganisaatioES,
-    @JsonProperty("kielivalinta") kielivalinta: Object, //Seq[String],
+    @JsonProperty("kielivalinta") kielivalinta: Seq[String],
     @JsonProperty("modified") modified: String,
     @JsonProperty("toteutus") toteutus: ToteutusES,
     @JsonProperty("johtaaTutkintoon") johtaaTutkintoon: Boolean,
@@ -193,33 +194,33 @@ case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: PaateltyAlkamiskausiES
 ) {
 
-  def toResult(): HakukohdeIndexedTest = {
+  def toResult(): HakukohdeIndexed = {
 
-    HakukohdeIndexedTest(
+    HakukohdeIndexed(
       oid = Option.apply(oid).map(oid => HakukohdeOid(oid)),
       externalId = Option.apply(externalId),
       toteutusOid = ToteutusOid(toteutusOid),
       hakuOid = HakuOid(hakuOid),
-      tila = Julkaisutila.withName(tila),
+      tila = if(tila != null) Julkaisutila.withName(tila) else null,
       nimi = toKielistettyMap(nimi),
-      jarjestyspaikka = Option.apply(Organisaatio(OrganisaatioOid(organisaatio.oid))),
+      jarjestyspaikka = if(organisaatio != null) Option.apply(Organisaatio(OrganisaatioOid(organisaatio.oid))) else None,
       hakulomaketyyppi = Option.apply(hakulomaketyyppi).map(hakulomaketyyppi => Hakulomaketyyppi.withName(hakulomaketyyppi)),
       hakulomakeAtaruId = Option.apply(hakulomakeAtaruId).map(hakulomakeAtaruId => UUID.fromString(hakulomakeAtaruId)),
       hakulomakeKuvaus = toKielistettyMap(hakulomakeKuvaus),
       hakulomakeLinkki = toKielistettyMap(hakulomakeLinkki),
       kaytetaanHaunHakulomaketta = Option.apply(kaytetaanHaunHakulomaketta),
-      pohjakoulutusvaatimus = pohjakoulutusvaatimus
+      pohjakoulutusvaatimus = if(pohjakoulutusvaatimus != null) pohjakoulutusvaatimus
         .map(p => {
           KoodiUri(p.get("koodiUri").toString)
         })
-        .toSeq,
+        .toSeq else Seq.empty,
       pohjakoulutusvaatimusTarkenne = toKielistettyMap(pohjakoulutusvaatimusTarkenne),
       muuPohjakoulutusvaatimus = toKielistettyMap(muuPohjakoulutusvaatimus),
       toinenAsteOnkoKaksoistutkinto = Option.apply(toinenAsteOnkoKaksoistutkinto),
       kaytetaanHaunAikataulua = Option.apply(kaytetaanHaunAikataulua),
 
       valintaperuste = if (valintaperuste != null) Option.apply(UuidObject(UUID.fromString(valintaperuste.get("id").get.toString)))
-      else null,
+      else None,
       liitteetOnkoSamaToimitusaika = Option.apply(liitteetOnkoSamaToimitusaika),
       liitteetOnkoSamaToimitusosoite = Option.apply(liitteetOnkoSamaToimitusosoite),
       liitteidenToimitusaika = if (liitteidenToimitusaika != null) {
@@ -227,19 +228,19 @@ case class HakukohdeJavaClient @JsonCreator()  (
       } else {
         None
       },
-      liitteidenToimitustapa = if(liitteidenToimitustapa != null) Option.apply(LiitteenToimitustapa.withName(liitteidenToimitustapa)) else null,
+      liitteidenToimitustapa = if(liitteidenToimitustapa != null) Option.apply(LiitteenToimitustapa.withName(liitteidenToimitustapa)) else None,
       liitteidenToimitusosoite = getOsoite(liitteidenToimitusosoiteES),
       liitteet = getLiitteet(liitteet),
       valintakokeet = getValintakokeet(valintakokeet),
-      hakuajat = hakuajat.map(hakuaika => {
+      hakuajat = if(hakuajat != null)hakuajat.map(hakuaika => {
         Ajanjakso(parseLocalDateTime(hakuaika.alkaa), Option.apply(parseLocalDateTime(hakuaika.paattyy)))
-      }),
-      muokkaaja = Muokkaaja(UserOid(muokkaaja.oid)),
+      }) else List.empty,
+      muokkaaja = if(muokkaaja != null) Muokkaaja(UserOid(muokkaaja.oid)) else null,
       metadata = getHakukohdeMetadataIndexed(metadata),
-      organisaatio = Organisaatio(oid = OrganisaatioOid(organisaatio.oid)),
-      null,//kielivalinta.map(kieli => Kieli.withName(kieli)).toSeq,
-      modified = Option.apply(Modified(LocalDateTime.parse(modified))),
-      toteutus = Option.apply(Tarjoajat(toteutus.tarjoajat.map(tarjoaja => Organisaatio(OrganisaatioOid(tarjoaja.oid))))),
+      organisaatio = if(organisaatio != null) Organisaatio(oid = OrganisaatioOid(organisaatio.oid)) else null,
+      if(kielivalinta != null) kielivalinta.map(kieli => Kieli.withName(kieli)).toSeq else Seq.empty,
+      modified = if(modified != null) Option.apply(Modified(LocalDateTime.parse(modified))) else None,
+      toteutus = if(toteutus != null) Option.apply(Tarjoajat(toteutus.tarjoajat.map(tarjoaja => Organisaatio(OrganisaatioOid(tarjoaja.oid))))) else None,
       johtaaTutkintoon = Option.apply(johtaaTutkintoon),
       opetuskieliKoodiUrit = opetuskieliKoodiUrit,
       koulutusasteKoodiUrit = koulutusasteKoodiUrit,
@@ -247,7 +248,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
       paateltyAlkamiskausi = Option.apply(
         if(paateltyAlkamiskausi != null){
         PaateltyAlkamiskausi(
-          alkamiskausityyppi = if(paateltyAlkamiskausi != null) Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)) else null,
+          alkamiskausityyppi = if(paateltyAlkamiskausi != null) Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)) else None,
           kausiUri = Option.apply(paateltyAlkamiskausi.kausiUri),
           vuosi = Option.apply(paateltyAlkamiskausi.vuosi)
         )
@@ -259,17 +260,20 @@ case class HakukohdeJavaClient @JsonCreator()  (
   }
 
   def toKielistettyMap(map: Map[String, String]): Kielistetty = {
+    if(map != null)
     Map(
       En -> map.getOrElse("en", None).toString,
       Fi -> map.getOrElse("fi", None).toString,
       Sv -> map.getOrElse("sv", None).toString
     )
+    else Map.empty
   }
   def parseLocalDateTime(dateString : String) : LocalDateTime = {
     if(dateString != null) LocalDateTime.parse(dateString) else null
   }
   def getHakukohdeMetadataIndexed(metadataES: MetadataES): Option[HakukohdeMetadataIndexed] = {
-    val result = HakukohdeMetadataIndexed(
+    if(metadataES != null)
+    Option.apply(HakukohdeMetadataIndexed(
       valintakokeidenYleiskuvaus = toKielistettyMap(metadataES.valintakokeidenYleiskuvaus),
       kynnysehto = toKielistettyMap(metadataES.kynnysehto),
       valintaperusteenValintakokeidenLisatilaisuudet =
@@ -334,10 +338,12 @@ case class HakukohdeJavaClient @JsonCreator()  (
           lisatietoa = toKielistettyMap(metadata.hakukohteenLinja.lisatietoa)
         )
       )}
-    )
-    Option.apply(result)
+    ))
+    else None
+    //Option.apply(result)
   }
   def getValintakokeet(valintakoeList: List[ValintakoeES]): List[ValintakoeIndexed] = {
+    if(valintakoeList != null)
     valintakoeList.map(koe => {
       ValintakoeIndexed(
         id = Option.apply(UUID.fromString(koe.id)),
@@ -373,10 +379,11 @@ case class HakukohdeJavaClient @JsonCreator()  (
         })
       )
     })
+    else List.empty
 
   }
   def getLiitteet(liitteet: List[LiiteES]): List[LiiteIndexed] = {
-    liitteet
+    if(liitteet != null) liitteet
       .map(l => {
         LiiteIndexed(
           id = Option.apply(UUID.fromString(l.id)),
@@ -400,6 +407,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
         )
       })
       .toList
+    else List.empty
   }
   def getOsoite(liitteenToimitusosoite: LiitteenToimitusosoiteES): Option[LiitteenToimitusosoiteIndexed] = {
     if(liitteenToimitusosoite != null) {
@@ -413,17 +421,13 @@ case class HakukohdeJavaClient @JsonCreator()  (
           ))
 
     }
-    null
+    None
 
   }
 
   def getOsoiteIndexed(osoiteEs: OsoiteES): OsoiteIndexed = {
     OsoiteIndexed(
-      osoite = Map(
-        En -> osoiteEs.osoite.getOrElse("en", None).toString,
-        Fi -> osoiteEs.osoite.getOrElse("fi", None).toString,
-        Sv -> osoiteEs.osoite.getOrElse("sv", None).toString
-      ),
+      osoite = toKielistettyMap(osoiteEs.osoite),
       Option.apply(KoodiUri(osoiteEs.postinumeroKoodiUri))
     )
 
@@ -432,7 +436,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
     Option.apply(UuidObject(UUID.fromString(valintaperuste.get("id").get.toString)))
     val uuid =
       if (valintaperuste != null) Option.apply(UuidObject(UUID.fromString(valintaperuste.get("id").get.toString)))
-      else null
+      else None
     uuid
   }
 }
@@ -475,29 +479,23 @@ case class HakukohdeIndexed(
     hakutapaKoodiUri: Option[String],
     paateltyAlkamiskausi: Option[PaateltyAlkamiskausi]
 ) {
-//  @JsonProperty
-  /*  def this() = this(
-    None, None, ToteutusOid(""), HakuOid(""),
-    Poistettu, Map.empty, None, None, None, Map.empty, Map.empty, None, Seq.empty, Map.empty, Map.empty,
-   None, None, None, None, None, None, None, None, List.empty, List.empty, List.empty, Muokkaaja(UserOid("")), None, Organisaatio(OrganisaatioOid("")),
-    Seq.empty, None, None, None, Seq.empty, Seq.empty, None, None)*/
   def toHakukohde(hakukohderyhmat: Option[Seq[HakukohderyhmaOid]]): Hakukohde = Hakukohde(
     oid = oid,
     externalId = externalId,
     toteutusOid = toteutusOid,
     hakuOid = hakuOid,
     tila = tila,
-    nimi = Map.empty,
+    nimi = nimi,
     tarjoaja = jarjestyspaikka.map(_.oid),
     hakulomaketyyppi = hakulomaketyyppi,
     hakulomakeAtaruId = hakulomakeAtaruId,
-    hakulomakeKuvaus = Map.empty,
-    hakulomakeLinkki = Map.empty,
+    hakulomakeKuvaus = hakulomakeKuvaus,
+    hakulomakeLinkki = hakulomakeLinkki,
     hakukohderyhmat = hakukohderyhmat,
     kaytetaanHaunHakulomaketta = kaytetaanHaunHakulomaketta,
     pohjakoulutusvaatimusKoodiUrit = pohjakoulutusvaatimus.map(_.koodiUri),
-    pohjakoulutusvaatimusTarkenne = Map.empty,
-    muuPohjakoulutusvaatimus = Map.empty,
+    pohjakoulutusvaatimusTarkenne = pohjakoulutusvaatimusTarkenne,
+    muuPohjakoulutusvaatimus = muuPohjakoulutusvaatimus,
     toinenAsteOnkoKaksoistutkinto = toinenAsteOnkoKaksoistutkinto,
     kaytetaanHaunAikataulua = kaytetaanHaunAikataulua,
     valintaperusteId = valintaperuste.map(_.id),
@@ -509,11 +507,10 @@ case class HakukohdeIndexed(
     liitteet = liitteet.map(_.toLiite),
     valintakokeet = valintakokeet.map(_.toValintakoe),
     hakuajat = hakuajat,
-    muokkaaja = muokkaaja.oid,
-    //metadata = metadata.map(_.toHakukohdeMetadata),
-    metadata = Option.empty,
-    organisaatioOid = organisaatio.oid,
-    kielivalinta = Seq.empty,
+    muokkaaja = if(muokkaaja != null) muokkaaja.oid else null,
+    metadata = metadata.map(_.toHakukohdeMetadata),
+    organisaatioOid = if(organisaatio != null) organisaatio.oid else null,
+    kielivalinta = kielivalinta,
     modified = modified,
     johtaaTutkintoon = johtaaTutkintoon,
     hakutapaKoodiUri = hakutapaKoodiUri,

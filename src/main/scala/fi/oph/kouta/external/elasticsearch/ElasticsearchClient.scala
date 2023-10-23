@@ -4,10 +4,11 @@ import co.elastic.clients.elasticsearch
 import co.elastic.clients.elasticsearch._types
 import co.elastic.clients.elasticsearch._types.{FieldSort, FieldValue, SortOptions, SortOrder, Time, query_dsl}
 import co.elastic.clients.elasticsearch._types.query_dsl.{BoolQuery, MatchQuery, MultiMatchQuery, QueryBuilders, TermQuery, TermsQuery}
-import co.elastic.clients.elasticsearch.core.{ClosePointInTimeRequest, OpenPointInTimeRequest, SearchResponse}
+import co.elastic.clients.elasticsearch.core.{ClosePointInTimeRequest, OpenPointInTimeRequest, SearchResponse, search}
 import co.elastic.clients.elasticsearch.core.search.PointInTimeReference
 import scalaz.Scalaz.ToTraverseOps
 
+import java.util.ArrayList
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 //import org.elasticsearch.search.builder.SearchSourceBuilder
 //import org.elasticsearch.search.sort.{SortBuilders, SortOrder}
@@ -84,6 +85,9 @@ trait ResultEntity[T] {
 trait ElasticsearchClient extends Logging {
   val index: String
   val client: ElasticClient
+  val mapper: ObjectMapper = new ObjectMapper()
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    .registerModule(DefaultScalaModule)
 
   implicit val json4s: Serialization = org.json4s.jackson.Serialization
 
@@ -101,11 +105,13 @@ trait ElasticsearchClient extends Logging {
 
       case response: RequestSuccess[GetResponse] =>
         logger.debug(s"Elasticsearch status: {}", response.status)
-        //logger.debug(s"Elasticsearch response: {}", response.result.sourceAsString)
-        logger.info("Tästä poistettu lokitus!!")
+        logger.debug(s"Elasticsearch response: {}", response.result.sourceAsString)
+        //logger.info("########## Tästä poistettu lokitus!! ##########")
         Future.successful(response.result)
     }
       }
+
+  //protected def createSearchRequestBuilder()
 
   protected def searchItemsJavaClient[T: ClassTag](queryList: util.List[query_dsl.Query]): List[T] = {
   //protected def searchItemsJavaClient[T: ClassTag](queryList: util.List[query_dsl.Query]): Future[IndexedSeq[T]] = {
@@ -115,67 +121,63 @@ trait ElasticsearchClient extends Logging {
     //
     //timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
   //  timed(s"Search searchItemsJavaClient, queryList = ${queryList}", 100) {
-    val searchSize =5
-    var i = 0;
+    val searchSize =5000
     val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = createJavaClient
     val openPitRequest = new OpenPointInTimeRequest.Builder()
       .index(index).keepAlive(new Time.Builder().time("1m").build()).build()
     val openPointInTimeResponse = esClient.openPointInTime(openPitRequest)
-    val pitID = openPointInTimeResponse.id()
-    val query = QueryBuilders.bool.should(queryList).build._toQuery()
-    val pitr: PointInTimeReference = new PointInTimeReference.Builder().keepAlive(new Time.Builder().time("1m").build()).id(pitID).build()
-
+    val pitr: PointInTimeReference = new PointInTimeReference.Builder()
+      .keepAlive(new Time.Builder().time("1m").build()).id(openPointInTimeResponse.id()).build()
     val sortOpt = new SortOptions.Builder().field(FieldSort.of(f => f.field("oid.keyword").order(SortOrder.Asc))).build()
+    val query = QueryBuilders.bool.must(queryList).build._toQuery()
     var srBuilder = new SearchRequest.Builder()
-      .query(query)
-      .size(searchSize)
-//      .sort(sortOpt).pit(pitr)
+      .query(query).size(searchSize).sort(sortOpt).pit(pitr)
 
     val searchRequest = srBuilder.build()
 
     try {
-      val mapper = new ObjectMapper()
-        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-        .registerModule(DefaultScalaModule)
 
-      QueryBuilders.bool.should(queryList).build._toQuery()
+
+      //QueryBuilders.bool.must(queryList).build._toQuery()
       // TODO tarkista voiko em. mapperia käyttää createJavaClient:ssa (ObjectMapper vs. JsonpMapper)
 
       var response: co.elastic.clients.elasticsearch.core.SearchResponse[Object] = esClient.search(searchRequest,classOf[Object])
-      var hitList =  response.hits().hits()
+      var hitList2 =  response.hits().hits()
       logger.info("searchRequest = " + searchRequest)
-      logger.info("queryList = " + queryList)
+      //var hitList: List[search.Hit[Object]] = response.hits().hits()
+      var hitList = new ArrayList[search.Hit[Object]]
+      hitList.addAll(response.hits().hits())
+
       if(!hitList.isEmpty){
         val ekaosuma  = hitList.get(0).source()
         logger.info("histListin ekaosuma = " + ekaosuma)
       }
-      //logger.info("histList = " + hitList)
       var hitCount = hitList.size()
       logger.info("hitList.size() = " + hitList.size())
       var hitCountTotal = 0
       hitCountTotal += hitCount
 
-     /*
+/*
      // Search rest of results (While hitCount equals searchSize there is more search results)
-      while(hitCount == searchSize && hitList.size() < 11) {
+      while(hitCount == searchSize ) {
         val lastHit = response.hits().hits().last
-        val lastSortList = lastHit.sort()
+        val lastHitSort = lastHit.sort()
 
-        srBuilder = new SearchRequest.Builder().query(query).sort(sortOpt).size(searchSize).pit(pitr).searchAfter(lastSortList)
+        srBuilder = new SearchRequest.Builder().query(query).sort(sortOpt).size(searchSize).pit(pitr).searchAfter(lastHitSort)
         response = esClient.search(srBuilder.build(), classOf[Object])
         hitList.addAll(response.hits().hits())
         hitCount = response.hits().hits().size()
         hitCountTotal += hitCount
         logger.info("hitCountTotal = " + hitCountTotal)
-      }
-      */
+      }*/
+
 
       logger.info("hitCountTotal = " + hitCountTotal)
       //Future {response.hits().hits().map(hit => mapper.convertValue(hit, classTag[T].runtimeClass).asInstanceOf[T]).toList}
       //Future{
         //hitList.map(hit => mapper.convertValue(hit, classTag[T].runtimeClass).asInstanceOf[T]).toList
-        hitList.map(hit => mapper.convertValue(hit, classTag[T].runtimeClass).asInstanceOf[T]).toList
-
+      val listToReturn = hitList.map(hit => mapper.convertValue(hit.source(), classTag[T].runtimeClass).asInstanceOf[T]).toList
+      listToReturn
         //hitList.map(hit => mapper.convertValue(hit, classTag[T].runtimeClass).asInstanceOf[T]).toIndexedSeq
       //}
       } catch {
@@ -221,11 +223,11 @@ trait ElasticsearchClient extends Logging {
    //   logger.info("sqe = " + seq)
       query.fold[Future[IndexedSeq[T]]]({
         Future(
-          SearchIterator.iterate[T](client, search(index).keepAlive("1m").size(500)).toIndexedSeq
+          SearchIterator.iterate[T](client, ElasticApi.search(index).keepAlive("1m").size(500)).toIndexedSeq
         )
       })(q => {
-        val request = search(index).query(q).keepAlive("1m").size(5)
-        logger.info(s"Elasticsearch request: ${request.show}")
+        val request = ElasticApi.search(index).query(q).keepAlive("1m").size(5)
+        logger.info(s"XXXX Elasticsearch request: ${request.show}")
         Future {
           SearchIterator
             .hits(client, request)
@@ -270,10 +272,11 @@ trait ElasticsearchClient extends Logging {
         }
       }).build()
     // Create the transport with a Jackson mapper
-    val objectMapper: ObjectMapper = new JacksonJsonpMapper().objectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    //val objectMapper: ObjectMapper = new JacksonJsonpMapper().objectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     //objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-    objectMapper.registerModule(DefaultScalaModule)
-    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(objectMapper))
+    //objectMapper.registerModule(DefaultScalaModule)
+    //val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(objectMapper))
+    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(mapper))
     val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = new elasticsearch.ElasticsearchClient(transport)
 
     esClient

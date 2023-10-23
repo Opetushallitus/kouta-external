@@ -194,6 +194,14 @@ case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: PaateltyAlkamiskausiES
 ) {
 
+  def createPohjakoulutusvaatimus(pohjakoulutusvaatimus: List[Map[String, Object]]): Seq[KoodiUri] = {
+    if (pohjakoulutusvaatimus != null && !pohjakoulutusvaatimus.isEmpty) {
+      pohjakoulutusvaatimus.map(p => {
+        KoodiUri(p.get("koodiUri").get.toString)
+      }).toSeq
+    } else Seq.empty
+  }
+
   def toResult(): HakukohdeIndexed = {
 
     HakukohdeIndexed(
@@ -209,11 +217,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
       hakulomakeKuvaus = toKielistettyMap(hakulomakeKuvaus),
       hakulomakeLinkki = toKielistettyMap(hakulomakeLinkki),
       kaytetaanHaunHakulomaketta = Option.apply(kaytetaanHaunHakulomaketta),
-      pohjakoulutusvaatimus = if(pohjakoulutusvaatimus != null) pohjakoulutusvaatimus
-        .map(p => {
-          KoodiUri(p.get("koodiUri").toString)
-        })
-        .toSeq else Seq.empty,
+      pohjakoulutusvaatimus = createPohjakoulutusvaatimus(pohjakoulutusvaatimus),
       pohjakoulutusvaatimusTarkenne = toKielistettyMap(pohjakoulutusvaatimusTarkenne),
       muuPohjakoulutusvaatimus = toKielistettyMap(muuPohjakoulutusvaatimus),
       toinenAsteOnkoKaksoistutkinto = Option.apply(toinenAsteOnkoKaksoistutkinto),
@@ -260,12 +264,24 @@ case class HakukohdeJavaClient @JsonCreator()  (
   }
 
   def toKielistettyMap(map: Map[String, String]): Kielistetty = {
-    if(map != null)
-    Map(
+    println("map = " + map)
+    if(map != null && !map.isEmpty) {
+      println("map.get(en) = " + map.get("en"))
+      println("map.get(fi) = " + map.get("fi"))
+      println("map.get(sv) = " + map.get("sv"))
+    val mapToReturn = Map(
+//      if(map.get("en")!= null) En -> map.get("en").toString else null,
+//      if(map.get("fi")!= null) Fi -> map.get("fi").toString else null,
+//      if(map.get("sv")!= null) Sv -> map.get("sv").toString else null
+      //Fi -> "f" // if(map.get("fi") != null) Fi -> map.get("fi") else ()
       En -> map.getOrElse("en", None).toString,
       Fi -> map.getOrElse("fi", None).toString,
       Sv -> map.getOrElse("sv", None).toString
     )
+
+    println("mapToReturn = " + mapToReturn)
+    mapToReturn
+    }
     else Map.empty
   }
   def parseLocalDateTime(dateString : String) : LocalDateTime = {
@@ -311,17 +327,18 @@ case class HakukohdeJavaClient @JsonCreator()  (
             koulutuksenAlkamisvuosi = Option.apply(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi)
           )
         )
-      } else {
+      } else {/*
         Option.apply(
           KoulutuksenAlkamiskausiIndexed(
             alkamiskausityyppi = null,
             henkilokohtaisenSuunnitelmanLisatiedot = null,
             koulutuksenAlkamispaivamaara = null,
             koulutuksenPaattymispaivamaara = null,
-            koulutuksenAlkamiskausi = null,
+            koulutuksenAlkamiskausi = None,
             koulutuksenAlkamisvuosi = null
           )
-        )
+        )*/
+        None
       },
       kaytetaanHaunAlkamiskautta = Option.apply(metadataES.kaytetaanHaunAlkamiskautta),
       aloituspaikat = Option.apply(
@@ -387,7 +404,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
       .map(l => {
         LiiteIndexed(
           id = Option.apply(UUID.fromString(l.id)),
-          tyyppi = if(l.tyyppi != null) Option.apply(KoodiUri(l.tyyppi.koodiUri)) else null,
+          tyyppi = if(l.tyyppi != null) Option.apply(KoodiUri(l.tyyppi.koodiUri)) else None,
           nimi = toKielistettyMap(l.nimi),
           kuvaus = toKielistettyMap(l.kuvaus),
           toimitusaika = Option.apply(parseLocalDateTime(l.toimitusaika)),
@@ -403,7 +420,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
                 l.toimitusosoite.verkkosivu
               )
             )
-          else null
+          else None
         )
       })
       .toList

@@ -36,21 +36,9 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
   def searchESJava(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
 
     logger.info("HakukohdeSearchParams = " + searchParams)
-
-    //val tarjoajaOids = searchParams.tarjoajaOids
-
-    // OK alas
-
-    //    val hakuQueryOld = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
     val hakuQuery = searchParams.hakuOid.map(oid => TermQuery.of(m => m.field("hakuOid.keyword").value(oid.toString))._toQuery())
-
-        //val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
     val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(johtaaTutkintoon => TermQuery.of(m => m.field("johtaaTutkintoon").value(johtaaTutkintoon))._toQuery())
-
-    //    val alkamiskausiQuery = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
     val alkamiskausiQuery = searchParams.alkamiskausi.map(kausi => TermQuery.of(m => m.field("paateltyAlkamiskausi.kausiUri").value(kausi))._toQuery())
-
-    //val alkamisvuosiQuery = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi", _))
     val alkamisvuosiQuery = searchParams.alkamisvuosi.map(vuosi => TermQuery.of(m => m.field("paateltyAlkamiskausi.vuosi").value(vuosi))._toQuery())
 
     val qQuery =
@@ -68,32 +56,24 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
         ).build._toQuery()
       )
 
-    // Option[Set[String]]
     val hakutapaQuery = searchParams.hakutapa.map(t =>
       TermsQuery.of(m => m.field("hakutapaKoodiUri").terms(
         new TermsQueryField.Builder()
-          .value(searchParams.hakutapa.getOrElse(Set()).toList.map(m => FieldValue.of(m.toString)).asJava)
+          .value(searchParams.hakutapa.getOrElse(Set()).toList.map(m => FieldValue.of(m)).asJava)
           .build()
       ))._toQuery())
-/*
-    val hakutapaQuery = Option.apply(QueryBuilders.bool().must(
-      searchParams.hakutapa.getOrElse(Set()).toList.map(
-        q => TermQuery.of(m => m.field("hakutapaKoodiUri").value(q)
-        )._toQuery()
-      ).asJava
-    ).build()._toQuery())*/
-
 
     val koulutusasteQuery = searchParams.koulutusaste.map(aste =>
       TermsQuery.of(m => m.field("koulutusasteKoodiUrit").terms(
         new TermsQueryField.Builder()
-          .value(searchParams.koulutusaste.getOrElse(Set()).toList.map(m => FieldValue.of(m.toString)).asJava)
+          .value(searchParams.koulutusaste.getOrElse(Set()).toList.map(m => FieldValue.of(m)).asJava)
           .build()
       ))._toQuery())
+
     val opetuskieletQuery = searchParams.opetuskieli.map(aste =>
       TermsQuery.of(m => m.field("opetuskieliKoodiUrit").terms(
         new TermsQueryField.Builder()
-          .value(searchParams.opetuskieli.getOrElse(Set()).toList.map(m => FieldValue.of(m.toString)).asJava)
+          .value(searchParams.opetuskieli.getOrElse(Set()).toList.map(m => FieldValue.of(m)).asJava)
           .build()
       ))._toQuery())
     val hakukohdeQuery = hakukohdeOids.map(aste =>
@@ -109,25 +89,6 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
           .build()
       ))._toQuery())
 
-    logger.info("searchParams.tarjoajaOids = " + searchParams.tarjoajaOids)
-    // TODO: Tekeekö saman kuin alla oleva vanha kysely?
-    val tarjoajaQueryEiToimi = Option.apply(
-      QueryBuilders.bool.should(
-        QueryBuilders.bool.should(
-          TermsQuery.of(m => m.field("jarjestyspaikka.oid.keyword").terms(
-            new TermsQueryField.Builder()
-              .value(searchParams.tarjoajaOids.getOrElse(Set()).toList.map(m => FieldValue.of(m.toString)).asJava)
-              .build()
-          ))._toQuery(),
-          QueryBuilders.bool()
-            .must(TermsQuery.of(m => m.field("toteutus.tarjoajat.oid.keyword").terms(
-              new TermsQueryField.Builder()
-                .value(searchParams.tarjoajaOids.getOrElse(Set()).toList.map(m => FieldValue.of(m.toString)).asJava)
-                .build()))._toQuery())
-            .mustNot(ExistsQuery.of(m => m.field("jarjestyspaikka"))._toQuery()).build()._toQuery()
-        ).build()._toQuery()
-      ).build()._toQuery()
-    )
     val tarjoajaQuery =
       searchParams.tarjoajaOids.map(oids =>
         QueryBuilders.bool.should(
@@ -170,6 +131,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
     val searchResult =
       searchItemsJavaClient[HakukohdeJavaClient](queryList)
     logger.info("Saatiin yhteensä osumia: " + searchResult.size)
+
     Future(searchResult.map(_.toResult()).toSeq.map(_.toHakukohde(None)))
 //    searchResult.
     //.map(_.toResult()).toSeq.map(_.toHakukohde(None))

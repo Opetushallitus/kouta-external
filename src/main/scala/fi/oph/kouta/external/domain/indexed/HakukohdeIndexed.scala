@@ -1,27 +1,20 @@
 package fi.oph.kouta.external.domain.indexed
 
-import com.fasterxml.jackson.annotation.{JsonCreator, JsonIgnoreProperties, JsonProperty, JsonUnwrapped}
-import com.fasterxml.jackson.core.`type`.TypeReference
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, Oid, OrganisaatioOid, ToteutusOid, UserOid}
 import fi.oph.kouta.domain.{oid, _}
 import fi.oph.kouta.external.domain.{Ajanjakso, Aloituspaikat, Hakukohde, HakukohdeMetadata, HakukohteenLinja, Kielistetty, Koodi, KoodiNimi, PaateltyAlkamiskausi, ValintakokeenLisatilaisuudet}
-import fi.oph.kouta.external.elasticsearch.ResultEntity
 
 import java.time.LocalDateTime
-import java.util
 import java.util.UUID
-import scala.runtime.Nothing$
 
-// Haluttu luokkarakenne
 case class Result(oid: Option[Oid], oid2: Option[Oid], oid3: Option[Oid])
 case class LiitteenToimitusosoiteIndexedES(
     osoite: OsoiteIndexed,
     sahkoposti: Option[String],
     verkkosivu: Option[String]
 )
-case class liiteES(id: String)
+//case class liiteES(id: String)
 case class OsoiteES @JsonCreator() (
     @JsonProperty("osoite") osoite: Map[String, String],
     @JsonProperty("postinumeroKoodiUri") postinumeroKoodiUri: String
@@ -155,6 +148,10 @@ case class PaateltyAlkamiskausiES @JsonCreator() (
     @JsonProperty("source") source: String,
     @JsonProperty("vuosi") vuosi: String
 )
+case class KieliES @JsonCreator()(
+    @JsonProperty("kieli") kieli: String,
+
+                                 )
 case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("oid") oid: String,
     @JsonProperty("externalId") externalId: String,
@@ -211,6 +208,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
       hakuOid = HakuOid(hakuOid),
       tila = if(tila != null) Julkaisutila.withName(tila) else null,
       nimi = toKielistettyMap(nimi),
+      //nimi = nimi,
       jarjestyspaikka = if(organisaatio != null) Option.apply(Organisaatio(OrganisaatioOid(organisaatio.oid))) else None,
       hakulomaketyyppi = Option.apply(hakulomaketyyppi).map(hakulomaketyyppi => Hakulomaketyyppi.withName(hakulomaketyyppi)),
       hakulomakeAtaruId = Option.apply(hakulomakeAtaruId).map(hakulomakeAtaruId => UUID.fromString(hakulomakeAtaruId)),
@@ -264,25 +262,11 @@ case class HakukohdeJavaClient @JsonCreator()  (
   }
 
   def toKielistettyMap(map: Map[String, String]): Kielistetty = {
-    println("map = " + map)
-    if(map != null && !map.isEmpty) {
-      println("map.get(en) = " + map.get("en"))
-      println("map.get(fi) = " + map.get("fi"))
-      println("map.get(sv) = " + map.get("sv"))
-    val mapToReturn = Map(
-//      if(map.get("en")!= null) En -> map.get("en").toString else null,
-//      if(map.get("fi")!= null) Fi -> map.get("fi").toString else null,
-//      if(map.get("sv")!= null) Sv -> map.get("sv").toString else null
-      //Fi -> "f" // if(map.get("fi") != null) Fi -> map.get("fi") else ()
-      En -> map.getOrElse("en", None).toString,
-      Fi -> map.getOrElse("fi", None).toString,
-      Sv -> map.getOrElse("sv", None).toString
-    )
-
-    println("mapToReturn = " + mapToReturn)
-    mapToReturn
-    }
-    else Map.empty
+     Map(
+        En -> map.get("en"),
+        Fi -> map.get("fi"),
+        Sv -> map.get("sv")
+      ).collect { case (k, Some(v)) => (k, v) }
   }
   def parseLocalDateTime(dateString : String) : LocalDateTime = {
     if(dateString != null) LocalDateTime.parse(dateString) else null

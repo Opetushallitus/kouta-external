@@ -55,12 +55,7 @@ case class ValintakoeES @JsonCreator() (
     @JsonProperty("tilaisuudet") tilaisuudet: List[ValintakoeTilaisuus] // List[ValintakoetilaisuusIndexed]
 )
 
-case class AikaJakso @JsonCreator() (
-    @JsonProperty("alkaa") alkaa: String,
-    @JsonProperty("formatoituAlkaa") formatoituAlkaa: Map[String, String],
-    @JsonProperty("formatoituPaattyy") formatoituPaattyy: Map[String, String],
-    @JsonProperty("paattyy") paattyy: String
-)
+
 case class ValintakoeTilaisuus @JsonCreator() (
     @JsonProperty("aika") aika: AikaJakso,
     @JsonProperty("jarjestamispaikka") jarjestamispaikka: Map[String, String],
@@ -79,28 +74,18 @@ case class ValintakoeTyyppi @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
     @JsonProperty("nimi") nimi: Map[String, String] // nimi: Kielistetty,
 )
-case class MuokkaajaES @JsonCreator() (@JsonProperty("nimi") nimi: String, @JsonProperty("oid") oid: String)
 
 case class AloituspaikatES @JsonCreator() (
     @JsonProperty("kuvaus") kuvaus: Map[String, String],
     @JsonProperty("lukumaara") lukumaara: Int,
     @JsonProperty("ensikertalaisille") ensikertalaisille: Int
 )
-case class KoulutuksenAlkamiskausiES @JsonCreator() (
 
-    @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: String,
-    @JsonProperty("henkilokohtaisenSuunnitelmanLisatiedot") henkilokohtaisenSuunnitelmanLisatiedot: Map[String, String],
-    @JsonProperty("koulutuksenAlkamispaivamaara") koulutuksenAlkamispaivamaara: String,
-    @JsonProperty("koulutuksenPaattymispaivamaara") koulutuksenPaattymispaivamaara: String,
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiMapES,
-    @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: String
-)
 case class KoulutuksenAlkamiskausiMapES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
     @JsonProperty("nimi") nimi: Map[String, String]
                                                        )
-case class MetadataES @JsonCreator() (
-
+case class HakukohdeMetadataES @JsonCreator() (
     @JsonProperty("aloituspaikat") aloituspaikat: AloituspaikatES,
     @JsonProperty("kaytetaanHaunAlkamiskautta") kaytetaanHaunAlkamiskautta: Boolean,
     @JsonProperty("kynnysehto") kynnysehto: Map[String, String],
@@ -109,10 +94,9 @@ case class MetadataES @JsonCreator() (
     @JsonProperty("valintaperusteenValintakokeidenLisatilaisuudet") valintaperusteenValintakokeidenLisatilaisuudet: Seq[
       ValintakoeLisatilaisuusIndexedES
     ],
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiES,
-
-    @JsonProperty("hakukohteenLinja") hakukohteenLinja: HakukohteenLinjaES
-    //aa: HakukohteenLinja
+     @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiHakukohdeES,
+     @JsonProperty("hakukohteenLinja") hakukohteenLinja: HakukohteenLinjaES
+                                                //aa: HakukohteenLinja
 )
 
 case class HakukohteenLinjaES @JsonCreator() (
@@ -135,7 +119,7 @@ case class ValintakoetilaisuusES @JsonCreator() (
     @JsonProperty("lisatietoja") lisatietoja: Map[String, String],
     @JsonProperty("osoite") osoite: OsoiteES
 )
-case class OrganisaatioES @JsonCreator() (@JsonProperty("oid") oid: String)
+
 case class TarjoajaES @JsonCreator() (
     @JsonProperty("oid") oid: String
 )
@@ -152,6 +136,7 @@ case class KieliES @JsonCreator()(
     @JsonProperty("kieli") kieli: String,
 
                                  )
+
 case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("oid") oid: String,
     @JsonProperty("externalId") externalId: String,
@@ -179,7 +164,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
     @JsonProperty("valintakokeet") valintakokeet: List[ValintakoeES],
     @JsonProperty("hakuajat") hakuajat: List[AikaJakso],
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
-    @JsonProperty("metadata") metadata: MetadataES,
+    @JsonProperty("metadata") metadata: HakukohdeMetadataES,
     @JsonProperty("organisaatio") organisaatio: OrganisaatioES,
     @JsonProperty("kielivalinta") kielivalinta: Seq[String],
     @JsonProperty("modified") modified: String,
@@ -271,7 +256,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
   def parseLocalDateTime(dateString : String) : LocalDateTime = {
     if(dateString != null) LocalDateTime.parse(dateString) else null
   }
-  def getHakukohdeMetadataIndexed(metadataES: MetadataES): Option[HakukohdeMetadataIndexed] = {
+  def getHakukohdeMetadataIndexed(metadataES: HakukohdeMetadataES): Option[HakukohdeMetadataIndexed] = {
     if(metadataES != null)
     Option.apply(HakukohdeMetadataIndexed(
       valintakokeidenYleiskuvaus = toKielistettyMap(metadataES.valintakokeidenYleiskuvaus),

@@ -1,8 +1,10 @@
 package fi.oph.kouta.external.domain.indexed
 
+import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
 import fi.oph.kouta.domain.Alkamiskausityyppi
 import fi.oph.kouta.domain.oid.{OrganisaatioOid, UserOid}
 import fi.oph.kouta.external.domain._
+import fi.oph.kouta.domain.{oid, _}
 
 import java.time.LocalDateTime
 import java.util.UUID
@@ -31,6 +33,8 @@ case class ValintakoeIndexed(id: Option[UUID],
     metadata = metadata.map(_.toValintakoeMetadata),
     tilaisuudet = tilaisuudet.map(_.toValintakoetilaisuus)
   )
+
+
 }
 
 case class ValintaKoeMetadataIndexed(tietoja: Kielistetty = Map(),
@@ -94,3 +98,25 @@ case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
     tutkinnonosaViite = tutkinnonosaViite
   )
 }
+
+
+case class KoulutuksenAlkamiskausiHakukohdeES @JsonCreator()(
+  @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: String,
+  @JsonProperty("henkilokohtaisenSuunnitelmanLisatiedot") henkilokohtaisenSuunnitelmanLisatiedot: Map[String, String],
+  @JsonProperty("koulutuksenAlkamispaivamaara") koulutuksenAlkamispaivamaara: String,
+  @JsonProperty("koulutuksenPaattymispaivamaara") koulutuksenPaattymispaivamaara: String,
+  @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiMapES,
+  @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: String)
+
+case class AikaJakso @JsonCreator() (
+                                      @JsonProperty("alkaa") alkaa: String,
+                                      @JsonProperty("formatoituAlkaa") formatoituAlkaa: Map[String, String],
+                                      @JsonProperty("formatoituPaattyy") formatoituPaattyy: Map[String, String],
+                                      @JsonProperty("paattyy") paattyy: String
+                                    )
+
+case class MuokkaajaES @JsonCreator() (
+                                        @JsonProperty("nimi") nimi: String,
+                                        @JsonProperty("oid") oid: String)
+
+case class OrganisaatioES @JsonCreator() (@JsonProperty("oid") oid: String)

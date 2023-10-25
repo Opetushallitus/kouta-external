@@ -1,5 +1,7 @@
 package fi.oph.kouta.external.elasticsearch
 
+import co.elastic.clients.elasticsearch._types.FieldValue
+import co.elastic.clients.elasticsearch._types.query_dsl.{QueryBuilders, TermsQuery, TermsQueryField}
 import com.sksamuel.elastic4s.ElasticApi.{must, should, termsQuery}
 import com.sksamuel.elastic4s.ElasticClient
 
@@ -8,12 +10,14 @@ import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.domain.Tallennettu
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Haku
-import fi.oph.kouta.external.domain.indexed.HakuIndexed
+import fi.oph.kouta.external.domain.indexed.{HakuIndexed, HakuJavaClient}
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.util.TimeUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+
+import scala.collection.JavaConverters._
 
 class HakuClient(val client: ElasticClient) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "haku-kouta"
@@ -27,7 +31,27 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
 
   def findByOids(hakuOids: Set[HakuOid]): Future[Seq[Haku]] = {
     val hakukohteetQuery = should(termsQuery("oid", hakuOids.map(_.toString)))
+
+    val hakukohteetQueryNew =
+
+      QueryBuilders.bool.should(
+        TermsQuery.of(m => m.field("oid").terms(
+          new TermsQueryField.Builder()
+            .value(hakuOids.toList.map(m => FieldValue.of(m.toString)).asJava)
+            .build()
+        ))._toQuery()
+      ).build()._toQuery()
+    //)
+    val queryList = List(
+      hakukohteetQueryNew
+    ).asJava
+
     searchItems[HakuIndexed](Some(must(hakukohteetQuery))).map(_.map(_.toHaku()))
+
+    val searchResult = searchItemsJavaClient[HakuJavaClient](queryList)
+    Future(searchResult.map(_.toResult()).toSeq.map(_.toHaku()))
+
+
   }
 
   private def byTarjoajaAndTila(tarjoajaOids: Option[Set[OrganisaatioOid]], haku: HakuIndexed): Boolean =
@@ -60,7 +84,10 @@ class HakuClient(val client: ElasticClient) extends ElasticsearchClient with Kou
         )
       )
     )
+    //searchItemsJavaClient[HakuIndexed](Some(must(hakukohteetQuery)))
+
     val query = ataruIdQuery ++ tarjoajaQuery ++ alkamisvuosiQuery ++ hakuvuosiQuery
+    logger.info("search: query = " + query)
     searchItems[HakuIndexed](if (query.isEmpty) None else Some(must(query)))
       .map(_.filter(byTarjoajaAndTila(tarjoajaOids, _)).map(_.toHaku()))
   }

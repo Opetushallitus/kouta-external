@@ -122,95 +122,13 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       koulutusasteQuery
     ).flatten.asJava
 
-      //  searchItems[HakukohdeIndexed](Some(must(Option.empty))).map(_.map(_.toHakukohde(None)))
-    //searchItemsJavaClient[HakukohdeJavaClient](Some(must(query))).map(_.toResult()).map(_.toHakukohde(None))
-
-    //val searchResult: List[HakukohdeJavaClient] = searchItemsJavaClient[HakukohdeJavaClient](Option.apply(Some(must(query))))
-    //logger.info("queryList = " + queryList)
-    //val searchResult: List[HakukohdeJavaClient] = searchItemsJavaClient[HakukohdeJavaClient](queryList)
     val searchResult =
       searchItemsJavaClient[HakukohdeJavaClient](queryList)
     logger.info("Saatiin yhteensä osumia: " + searchResult.size)
 
     Future(searchResult.map(_.toResult()).toSeq.map(_.toHakukohde(None)))
-//    searchResult.
-    //.map(_.toResult()).toSeq.map(_.toHakukohde(None))
-    //val searchResult: Future[List[HakukohdeJavaClient]] = searchItemsJavaClient[HakukohdeJavaClient](Option.apply(null))
-
-    //Future(Seq.empty)
   }
 
-  /*
-
-      val termsQueryField: TermsQueryField = new TermsQueryField.Builder()
-        .value(
-          util.Arrays.asList(
-            searchParams.tila.map(t => FieldValue.of(t.toString())).get
-
-          )
-        ).build()
-      val tilaQuery = searchParams.tila.map(tilat => TermsQuery.of(m.apply() => m.field("tila.keyword").terms(
-        //termsQueryField
-        new TermsQueryField.Builder()
-          .value(
-            util.Arrays.asList(
-              searchParams.tila.map(m => FieldValue.of(m.toString())).get
-            )
-
-          ).build()
-      ))._toQuery())
-
-
-  */
-  //val alkamiskausiQuery = searchParams.alkamiskausi.map(TermsQuery("paateltyAlkamiskausi.kausiUri", _))
-  /* val queryBuilder = QueryBuilders.boolQuery()
-   .filter(QueryBuilders.termsQuery("paateltyAlkamiskausi.kausiUri", searchParams.alkamiskausi))
-   queryBuilder.filter(QueryBuilders.termsQuery("paateltyAlkamiskausi.vuosi", searchParams.alkamisvuosi))
-*/
-  /*
-  BoolQueryBuilder query = QueryBuilders.boolQuery()
-     .filter(QueryBuilders.termsQuery("department", departments))
-     .filter(QueryBuilders.termsQuery("job", jobs))
-     .filter(QueryBuilders.termsQuery("name", names));
-   */
-  /*
-
-      val alkamiskausiQuery = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
-      val alkamisvuosiQuery = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi", _))
-      val koulutusasteQuery = searchParams.koulutusaste.map(asteet => termsQuery("koulutusasteKoodiUrit", asteet))
-
-    */
-
-  /*val tarjoajaQuery = tarjoajaOids.map(oids =>
-    should(
-      oids.map(oid =>
-        should(
-          termsQuery("jarjestyspaikka.oid.keyword", oid.toString),
-          not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
-        )
-      )
-    )
-  )*/
-  //val tarjoajaQuery = null
-
-  /*  val tarjoajaQuery = tarjoajaOids.map(oids =>
-      TermsQuery.of(m => m.field("jarjestyspaikka.oid.keyword").terms(
-        new TermsQueryField.Builder()
-          .value(util.Arrays.asList(tarjoajaOids.map(m => FieldValue.of(m.toString())).get)).build()
-      )))
-*/
-
-  /*should(
-    oids.map(oid =>
-      should(
-        TermsQuery("jarjestyspaikka.oid.keyword", oid.toString),
-        not(existsQueshoury("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
-      )
-    )
-  )
-
-   */
-  //)
 
 
   def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {

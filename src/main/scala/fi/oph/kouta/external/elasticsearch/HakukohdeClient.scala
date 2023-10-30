@@ -33,7 +33,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       .map(_.to[HakukohdeIndexed])
       .map(h => (h.toHakukohde(None), h.tarjoajat))
 
-  def searchESJava(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
+  def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
 
     logger.info("HakukohdeSearchParams = " + searchParams)
     val hakuQuery = searchParams.hakuOid.map(oid => TermQuery.of(m => m.field("hakuOid.keyword").value(oid.toString))._toQuery())
@@ -123,7 +123,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
     ).flatten.asJava
 
     val searchResult =
-      searchItemsJavaClient[HakukohdeJavaClient](queryList)
+      searchItems[HakukohdeJavaClient](queryList)
     logger.info("Saatiin yhteensä osumia: " + searchResult.size)
 
     Future(searchResult.map(_.toResult()).toSeq.map(_.toHakukohde(None)))
@@ -131,7 +131,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
 
 
 
-  def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
+  def searchOld(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
     val hakuOid = searchParams.hakuOid
     val tarjoajaOids = searchParams.tarjoajaOids
     val hakuQuery = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
@@ -180,7 +180,7 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       koulutusasteQuery
     ).flatten
 
-    searchItems[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
+    searchItemsOld[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
   }
 /*  def searchOldClient(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
     logger.info("HakukohdeSearchParams = " + searchParams)

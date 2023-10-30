@@ -6,6 +6,7 @@ import co.elastic.clients.elasticsearch._types.{FieldSort, FieldValue, SortOptio
 import co.elastic.clients.elasticsearch._types.query_dsl.{BoolQuery, MatchQuery, MultiMatchQuery, QueryBuilders, TermQuery, TermsQuery}
 import co.elastic.clients.elasticsearch.core.{ClosePointInTimeRequest, OpenPointInTimeRequest, SearchResponse, search}
 import co.elastic.clients.elasticsearch.core.search.PointInTimeReference
+import fi.oph.kouta.external.domain.indexed.HakuJavaClient
 import scalaz.Scalaz.ToTraverseOps
 
 import java.util.ArrayList
@@ -15,7 +16,7 @@ import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import fi.oph.kouta.external.domain.indexed.{HakukohdeIndexedTest, HakukohdeJavaClient, MetadataES}
+import fi.oph.kouta.external.domain.indexed.{HakukohdeIndexedTest, HakukohdeJavaClient}
 //import org.elasticsearch.action.search
 import org.elasticsearch.client
 //import org.elasticsearch.index.query.BoolQueryBuilder
@@ -106,58 +107,61 @@ trait ElasticsearchClient extends Logging {
       case response: RequestSuccess[GetResponse] =>
         logger.debug(s"Elasticsearch status: {}", response.status)
         logger.debug(s"Elasticsearch response: {}", response.result.sourceAsString)
-        //logger.info("########## Tästä poistettu lokitus!! ##########")
         Future.successful(response.result)
     }
       }
 
   //protected def createSearchRequestBuilder()
 
-  protected def searchItemsJavaClient[T: ClassTag](queryList: util.List[query_dsl.Query]): List[T] = {
-  //protected def searchItemsJavaClient[T: ClassTag](queryList: util.List[query_dsl.Query]): Future[IndexedSeq[T]] = {
-    //protected def searchItemsJavaClient[T: ClassTag](queryList: util.List[query_dsl.Query]): Future[List[T]] = {
+  protected def searchItems[T: ClassTag](queryList: util.List[query_dsl.Query]): List[T] = {
     logger.info("################# Start searchItemsJavaClient!! #################")
-    //logger.info(s"index = " + index)
-    //
-    //timed(s"SearchItems from ElasticSearch (Query: ${query}", 100) {
-  //  timed(s"Search searchItemsJavaClient, queryList = ${queryList}", 100) {
-    val searchSize =5000
+    val searchSize =500
     val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = createJavaClient
     val openPitRequest = new OpenPointInTimeRequest.Builder()
       .index(index).keepAlive(new Time.Builder().time("1m").build()).build()
     val openPointInTimeResponse = esClient.openPointInTime(openPitRequest)
     val pitr: PointInTimeReference = new PointInTimeReference.Builder()
-      .keepAlive(new Time.Builder().time("1m").build()).id(openPointInTimeResponse.id()).build()
+      .keepAlive(new Time.Builder().time("1m").build()).id(esClient.openPointInTime(openPitRequest).id()).build()
     val sortOpt = new SortOptions.Builder().field(FieldSort.of(f => f.field("oid.keyword").order(SortOrder.Asc))).build()
     val query = QueryBuilders.bool.must(queryList).build._toQuery()
-    var srBuilder = new SearchRequest.Builder()
-      .query(query).size(searchSize).sort(sortOpt).pit(pitr)
+    var srBuilder = new SearchRequest.Builder().query(query).size(searchSize).sort(sortOpt).pit(pitr)
 
     val searchRequest = srBuilder.build()
 
     try {
-
-
-      //QueryBuilders.bool.must(queryList).build._toQuery()
-      // TODO tarkista voiko em. mapperia käyttää createJavaClient:ssa (ObjectMapper vs. JsonpMapper)
-
-      var response: co.elastic.clients.elasticsearch.core.SearchResponse[Object] = esClient.search(searchRequest,classOf[Object])
+      var response: co.elastic.clients.elasticsearch.core.SearchResponse[Map[String, Object]] = esClient.search(searchRequest,classOf[Map[String, Object]])
       var hitList2 =  response.hits().hits()
       logger.info("searchRequest = " + searchRequest)
       //var hitList: List[search.Hit[Object]] = response.hits().hits()
-      var hitList = new ArrayList[search.Hit[Object]]
+      //var hitList = new ArrayList[search.Hit[Object]]
+      var hitList = new ArrayList[search.Hit[Map[String, Object]]]
+
       hitList.addAll(response.hits().hits())
 
       if(!hitList.isEmpty){
-        val ekaosuma  = hitList.get(0).source()
-        logger.info("histListin ekaosuma = " + ekaosuma)
+      val ekaosuma = hitList.get(0).source()
+      logger.info("histListin ekaosuma = " + ekaosuma)
+
+      logger.info("organisaatio = " +ekaosuma.get("organisaatio"))
+      val mappedValue = mapper.convertValue(ekaosuma, classOf[HakuJavaClient])
+
+      logger.info("mappedValue = " + mappedValue)
+      logger.info("mappedValue.organisaatio = " + mappedValue.organisaatio)
+      //val mappedValue2 = mapper.convertValue(ekaosuma, classOf[HakuJavaClient])
+      //val toResult = mappedValue2.toResult()
+      logger.info("toResult = " + mappedValue.toResult)
+
+      logger.info("toResult.organisaatio = " + mappedValue.toResult.organisaatio)
+      //logger.info("toResult.toHaku() = " + toResult.toHaku())
+
+      logger.info("VIIMEINEN PRINTTI")
       }
       var hitCount = hitList.size()
       logger.info("hitList.size() = " + hitList.size())
       var hitCountTotal = 0
       hitCountTotal += hitCount
 
-/*
+
      // Search rest of results (While hitCount equals searchSize there is more search results)
       while(hitCount == searchSize ) {
         val lastHit = response.hits().hits().last
@@ -169,7 +173,7 @@ trait ElasticsearchClient extends Logging {
         hitCount = response.hits().hits().size()
         hitCountTotal += hitCount
         logger.info("hitCountTotal = " + hitCountTotal)
-      }*/
+      }
 
 
       logger.info("hitCountTotal = " + hitCountTotal)
@@ -213,7 +217,7 @@ trait ElasticsearchClient extends Logging {
         Future.successful(response.result)
     }
 */
-  protected def searchItems[T: HitReader : ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
+  protected def searchItemsOld[T: HitReader : ClassTag](query: Option[Query]): Future[IndexedSeq[T]] = {
     logger.info("################# Start searchItems!! #################")
     //logger.info(s"queryOldSearch = " + query)
 

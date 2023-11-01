@@ -34,8 +34,6 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
       .map(h => (h.toHakukohde(None), h.tarjoajat))
 
   def search(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
-
-    logger.info("HakukohdeSearchParams = " + searchParams)
     val hakuQuery = searchParams.hakuOid.map(oid => TermQuery.of(m => m.field("hakuOid.keyword").value(oid.toString))._toQuery())
     val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(johtaaTutkintoon => TermQuery.of(m => m.field("johtaaTutkintoon").value(johtaaTutkintoon))._toQuery())
     val alkamiskausiQuery = searchParams.alkamiskausi.map(kausi => TermQuery.of(m => m.field("paateltyAlkamiskausi.kausiUri").value(kausi))._toQuery())
@@ -124,124 +122,8 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
 
     val searchResult =
       searchItems[HakukohdeJavaClient](queryList)
-    logger.info("Saatiin yhteensä osumia: " + searchResult.size)
-
     Future(searchResult.map(_.toResult()).toSeq.map(_.toHakukohde(None)))
   }
-
-
-
-  def searchOld(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
-    val hakuOid = searchParams.hakuOid
-    val tarjoajaOids = searchParams.tarjoajaOids
-    val hakuQuery = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
-    val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
-    val tilaQuery = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
-    val hakutapaQuery = searchParams.hakutapa.map(hakutavat => termsQuery("hakutapaKoodiUri", hakutavat))
-    val opetuskieletQuery = searchParams.opetuskieli.map(termsQuery("opetuskieliKoodiUrit", _))
-    val alkamiskausiQuery = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
-    val alkamisvuosiQuery = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi", _))
-    val koulutusasteQuery = searchParams.koulutusaste.map(asteet => termsQuery("koulutusasteKoodiUrit", asteet))
-    val hakukohdeQuery = hakukohdeOids.map(oids => termsQuery("oid.keyword", oids.map(_.toString)))
-    val tarjoajaQuery = tarjoajaOids.map(oids =>
-      should(
-        oids.map(oid =>
-          should(
-            termsQuery("jarjestyspaikka.oid.keyword", oid.toString),
-            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
-          )
-        )
-      )
-    )
-    val qQuery = searchParams.q.map(q =>
-      should(
-        termQuery("nimi.fi", q),
-        termQuery("nimi.sv", q),
-        termQuery("nimi.en", q),
-        termQuery("jarjestyspaikka.nimi.fi", q),
-        termQuery("jarjestyspaikka.nimi.sv", q),
-        termQuery("jarjestyspaikka.nimi.en", q),
-        termQuery("toteutus.tarjoajat.nimi.fi", q),
-        termQuery("toteutus.tarjoajat.nimi.sv", q),
-        termQuery("toteutus.tarjoajat.nimi.en", q)
-      )
-    )
-    val query = List(
-      hakuQuery,
-      tarjoajaQuery,
-      qQuery,
-      hakukohdeQuery,
-      johtaaTutkintoonQuery,
-      tilaQuery,
-      hakutapaQuery,
-      opetuskieletQuery,
-      alkamiskausiQuery,
-      alkamisvuosiQuery,
-      koulutusasteQuery
-    ).flatten
-
-    searchItemsOld[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
-  }
-/*  def searchOldClient(searchParams: HakukohdeSearchParams, hakukohdeOids: Option[Set[HakukohdeOid]]): Future[Seq[Hakukohde]] = {
-    logger.info("HakukohdeSearchParams = " + searchParams)
-    val hakuOid               = searchParams.hakuOid
-    val tarjoajaOids          = searchParams.tarjoajaOids
-    val hakuQuery             = hakuOid.map(oid => termQuery("hakuOid.keyword", oid.toString))
-    val johtaaTutkintoonQuery = searchParams.johtaaTutkintoon.map(termQuery("johtaaTutkintoon", _))
-    val tilaQuery             = searchParams.tila.map(tilat => termsQuery("tila.keyword", tilat.map(_.toString)))
-    val hakutapaQuery         = searchParams.hakutapa.map(hakutavat => termsQuery("hakutapaKoodiUri", hakutavat))
-    val opetuskieletQuery     = searchParams.opetuskieli.map(termsQuery("opetuskieliKoodiUrit", _))
-    val alkamiskausiQuery     = searchParams.alkamiskausi.map(termQuery("paateltyAlkamiskausi.kausiUri", _))
-    val alkamisvuosiQuery     = searchParams.alkamisvuosi.map(termQuery("paateltyAlkamiskausi.vuosi", _))
-    val koulutusasteQuery     = searchParams.koulutusaste.map(asteet => termsQuery("koulutusasteKoodiUrit", asteet))
-    val hakukohdeQuery        = hakukohdeOids.map(oids => termsQuery("oid.keyword", oids.map(_.toString)))
-    logger.info("oids = " + tarjoajaOids)
-    val tarjoajaQuery = tarjoajaOids.map(oids =>
-      should(
-        oids.map(oid =>
-          should(
-            termsQuery("jarjestyspaikka.oid.keyword", oid.toString),
-            not(existsQuery("jarjestyspaikka")).must(termsQuery("toteutus.tarjoajat.oid.keyword", oid.toString))
-          )
-        )
-      )
-    )
-    val qQuery = searchParams.q.map(q =>
-      should(
-        termQuery("nimi.fi", q),
-        termQuery("nimi.sv", q),
-        termQuery("nimi.en", q),
-        termQuery("jarjestyspaikka.nimi.fi", q),
-        termQuery("jarjestyspaikka.nimi.sv", q),
-        termQuery("jarjestyspaikka.nimi.en", q),
-        termQuery("toteutus.tarjoajat.nimi.fi", q),
-        termQuery("toteutus.tarjoajat.nimi.sv", q),
-        termQuery("toteutus.tarjoajat.nimi.en", q)
-      )
-    )
-    val query = List(
-        hakuQuery,
-        tarjoajaQuery,
-        qQuery,
-        hakukohdeQuery,
-        johtaaTutkintoonQuery,
-        tilaQuery,
-        hakutapaQuery,
-        opetuskieletQuery,
-        alkamiskausiQuery,
-        alkamisvuosiQuery,
-        koulutusasteQuery
-      ).flatten
-
- //searchItems[HakukohdeIndexed](Some(must(query))).map(_.map(_.toHakukohde(None)))
-    //searchItemsJavaClient[HakukohdeJavaClient](Some(must(query))).map(_.toResult()).map(_.toHakukohde(None))
-
-    val searchResult: List[HakukohdeJavaClient] = searchItemsJavaClient[HakukohdeJavaClient](Some(must(query)))
-    Future(searchResult.map(_.toResult()).toSeq.map(_.toHakukohde(None)))
-//    Future(Seq.empty)
-  }
-
- */
 }
 
 object HakukohdeClient extends HakukohdeClient(ElasticsearchClient.client)

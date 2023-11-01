@@ -207,24 +207,20 @@ alkamiskausityyppi: Option[Alkamiskausityyppi],
   }
 // def getLiitteet(liitteet: List[LiiteES]): List[LiiteIndexed] = {
   def createHakukohteet(list: List[EmbeddedHakukohdeIndexedES]) : List[EmbeddedHakukohdeIndexed] = {
-    val o1 = list.apply(0)
-    //EmbeddedHakukohdeIndexed(oid = HakukohdeOid(o1.oid), jarjestyspaikka = None, toteutus = null, tila = Julkaisutila.withName(o1.tila))
     list.map(m => EmbeddedHakukohdeIndexed(oid = HakukohdeOid(m.oid), jarjestyspaikka = None, toteutus = null, tila = Julkaisutila.withName(m.tila)))
-
-
-//    val o2: EmbeddedHakukohdeIndexed = list.apply(0).asInstanceOf[EmbeddedHakukohdeIndexed]
-//    println("o1 = " + o1)
-    //List.empty
   }
   def parseLocalDateTime(dateString: String): LocalDateTime = {
     if (dateString != null) LocalDateTime.parse(dateString) else null
   }
   def toKielistettyMap(map: Map[String, String]): Kielistetty = {
+  if(map != null) {
     Map(
       En -> map.get("en"),
       Fi -> map.get("fi"),
       Sv -> map.get("sv")
-    ).collect { case (k, Some(v)) => (k, v) }
+    ).collect { case (k, Some(v)) => (k, v) }} else {
+      Map.empty
+  }
   }
 }
 

@@ -119,14 +119,15 @@ trait ElasticsearchClient extends Logging {
 
     try {
       val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = createJavaClient
-      val openPitRequest = new OpenPointInTimeRequest.Builder()
-        .index(index).keepAlive(new Time.Builder().time("1m").build()).build()
-      val openPointInTimeResponse = esClient.openPointInTime(openPitRequest)
-      val pitr: PointInTimeReference = new PointInTimeReference.Builder()
-        .keepAlive(new Time.Builder().time("1m").build()).id(esClient.openPointInTime(openPitRequest).id()).build()
+      //val openPitRequest = new OpenPointInTimeRequest.Builder()
+      //  .index(index).keepAlive(new Time.Builder().time("1m").build()).build()
+      //logger.info("openPitRequest = " + openPitRequest)
+      //val openPointInTimeResponse = esClient.openPointInTime(openPitRequest)
+      //val pitr: PointInTimeReference = new PointInTimeReference.Builder()
+      //  .keepAlive(new Time.Builder().time("1m").build()).id(esClient.openPointInTime(openPitRequest).id()).build()
       val sortOpt = new SortOptions.Builder().field(FieldSort.of(f => f.field("oid.keyword").order(SortOrder.Asc))).build()
       val query = QueryBuilders.bool.must(queryList).build._toQuery()
-      var srBuilder = new SearchRequest.Builder().query(query).size(searchSize).sort(sortOpt).pit(pitr)
+      var srBuilder = new SearchRequest.Builder().query(query).size(searchSize).sort(sortOpt)//.pit(pitr)
 
       val searchRequest = srBuilder.build()
       var response: co.elastic.clients.elasticsearch.core.SearchResponse[Map[String, Object]] = esClient.search(searchRequest,classOf[Map[String, Object]])
@@ -139,7 +140,8 @@ trait ElasticsearchClient extends Logging {
         val lastHit = response.hits().hits().last
         val lastHitSort = lastHit.sort()
 
-        srBuilder = new SearchRequest.Builder().query(query).sort(sortOpt).size(searchSize).pit(pitr).searchAfter(lastHitSort)
+        srBuilder = new SearchRequest.Builder().query(query).sort(sortOpt).size(searchSize)
+          //.pit(pitr).searchAfter(lastHitSort)
         response = esClient.search(srBuilder.build(), classOf[Object])
         hitList.addAll(response.hits().hits())
         hitCount = response.hits().hits().size()

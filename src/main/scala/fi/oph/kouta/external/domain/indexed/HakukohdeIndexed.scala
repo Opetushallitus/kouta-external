@@ -193,7 +193,6 @@ case class HakukohdeJavaClient @JsonCreator()  (
       hakuOid = HakuOid(hakuOid),
       tila = if(tila != null) Julkaisutila.withName(tila) else null,
       nimi = toKielistettyMap(nimi),
-      //nimi = nimi,
       jarjestyspaikka = if(organisaatio != null) Option.apply(Organisaatio(OrganisaatioOid(organisaatio.oid))) else None,
       hakulomaketyyppi = Option.apply(hakulomaketyyppi).map(hakulomaketyyppi => Hakulomaketyyppi.withName(hakulomaketyyppi)),
       hakulomakeAtaruId = Option.apply(hakulomakeAtaruId).map(hakulomakeAtaruId => UUID.fromString(hakulomakeAtaruId)),
@@ -264,15 +263,17 @@ case class HakukohdeJavaClient @JsonCreator()  (
       valintaperusteenValintakokeidenLisatilaisuudet =
         metadataES.valintaperusteenValintakokeidenLisatilaisuudet.map(lisaTilaisuus => {
           ValintakokeenLisatilaisuudetIndexed(
-            id = Option.apply(UUID.fromString(lisaTilaisuus.id)),
+            id = Option.apply(if(lisaTilaisuus.id != null) UUID.fromString(lisaTilaisuus.id) else null),
             tilaisuudet = lisaTilaisuus.tilaisuudet.map(tilaisuus =>
               ValintakoetilaisuusIndexed(
                 osoite = Option.apply(getOsoiteIndexed(tilaisuus.osoite)),
                 aika = Option.apply(
-                  Ajanjakso(
-                    parseLocalDateTime(tilaisuus.aika.alkaa),
-                    Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy))
-                  )
+                  if(tilaisuus.aika != null)
+                    Ajanjakso(
+                      parseLocalDateTime(tilaisuus.aika.alkaa),
+                      Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy))
+                    )
+                  else null
                 ),
                 lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
                 jarjestamispaikka = toKielistettyMap(tilaisuus.jarjestamispaikka)
@@ -333,7 +334,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
     valintakoeList.map(koe => {
       ValintakoeIndexed(
         id = Option.apply(UUID.fromString(koe.id)),
-        tyyppi = Option.apply(KoodiUri(koe.tyyppi.koodiUri)),
+        tyyppi = Option.apply(if(koe.tyyppi != null)KoodiUri(koe.tyyppi.koodiUri) else null),
         nimi = toKielistettyMap(koe.nimi),
         metadata = Option.apply(
           ValintaKoeMetadataIndexed(
@@ -355,7 +356,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
             ),
             aika = Option.apply(
               Ajanjakso(
-                alkaa = if(tilaisuus.aika != null) LocalDateTime.parse(tilaisuus.aika.alkaa) else null,
+                alkaa = if(tilaisuus.aika != null) parseLocalDateTime(tilaisuus.aika.alkaa) else null,
                 paattyy = if(tilaisuus.aika != null) Option.apply(LocalDateTime.parse(tilaisuus.aika.paattyy)) else null
               )
             ),

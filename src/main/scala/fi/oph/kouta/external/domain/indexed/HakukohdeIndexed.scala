@@ -234,12 +234,11 @@ case class HakukohdeJavaClient @JsonCreator()  (
       paateltyAlkamiskausi = Option.apply(
         if(paateltyAlkamiskausi != null){
         PaateltyAlkamiskausi(
-          alkamiskausityyppi = if(paateltyAlkamiskausi != null) Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)) else None,
+          alkamiskausityyppi = Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)),
           kausiUri = Option.apply(paateltyAlkamiskausi.kausiUri),
-          vuosi = Option.apply(paateltyAlkamiskausi.vuosi)
-        )
+          vuosi = Option.apply(paateltyAlkamiskausi.vuosi))
         } else {
-          PaateltyAlkamiskausi(null, null, null)
+          null
         }
       )
     )

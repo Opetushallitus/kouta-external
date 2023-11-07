@@ -146,3 +146,4 @@ Projekti käyttää [Scalafmt](https://scalameta.org/scalafmt/) formatteria kood
 formatoitiin. Voit
 vaihtaa idean scalan code style asetuksista formatteriksi scalafmt ja laittaa vaikka päälle
 automaattisen formatoinnin tallennuksen yhteydessä.
+

@@ -93,6 +93,9 @@ case class AmmatillinenToteutusMetadata(
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
     |          properties:
+    |            isHakukohteetKaytossa:
+    |              type: boolean
+    |              description: Tieto siitä onko toteutuksella käytössä hakukohteet
     |            hakutermi:
     |              type: object
     |              $ref: '#/components/schemas/Hakutermi'
@@ -126,9 +129,15 @@ case class AmmatillinenToteutusMetadata(
     |              type: integer
     |              description: Toteutuksen aloituspaikkojen lukumäärä
     |              example: 100
+    |            aloituspaikkakuvaus:
+    |              type: object
+    |              description: Koulutuksen toteutuksen aloituspaikkoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Teksti'
+    |
     |"""
 )
 sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
+  def isHakukohteetKaytossa: Option[Boolean]
   def hakutermi: Option[Hakutermi]
   def hakulomaketyyppi: Option[Hakulomaketyyppi]
   def hakulomakeLinkki: Kielistetty
@@ -136,6 +145,7 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
   def lisatietoaValintaperusteista: Kielistetty
   def hakuaika: Option[Ajanjakso]
   def aloituspaikat: Option[Int]
+  def aloituspaikkakuvaus: Kielistetty
 }
 
 @SwaggerModel("""    AmmatillinenTutkinnonOsaToteutusMetadata:
@@ -157,6 +167,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -164,6 +175,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -190,6 +202,7 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -197,6 +210,7 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -221,6 +235,7 @@ case class AmmatillinenMuuToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -228,6 +243,7 @@ case class AmmatillinenMuuToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -292,10 +308,6 @@ case class AmmattikorkeakouluToteutusMetadata(
     |              example: amm-ope-erityisope-ja-opo
     |              enum:
     |                - amm-ope-erityisope-ja-opo
-    |            aloituspaikat:
-    |              type: integer
-    |              description: Toteutuksen aloituspaikkojen lukumäärä
-    |              example: 100
     |""")
 case class AmmOpeErityisopeJaOpoToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
@@ -304,7 +316,6 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -321,10 +332,6 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     |              example: ope-pedag-opinnot
     |              enum:
     |                - ope-pedag-opinnot
-    |            aloituspaikat:
-    |              type: integer
-    |              description: Toteutuksen aloituspaikkojen lukumäärä
-    |              example: 100
     |""")
 case class OpePedagOpinnotToteutusMetadata(
     tyyppi: Koulutustyyppi = OpePedagOpinnot,
@@ -333,7 +340,6 @@ case class OpePedagOpinnotToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -442,10 +448,6 @@ case class LukioToteutusMetadata(
     |              example: tuva
     |              enum:
     |                - tuva
-    |            aloituspaikat:
-    |              type: integer
-    |              description: Toteutuksen aloituspaikkojen lukumäärä
-    |              example: 100
     |            jarjestetaanErityisopetuksena:
     |              type: boolean
     |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
@@ -457,7 +459,6 @@ case class TuvaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     jarjestetaanErityisopetuksena: Boolean,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
@@ -475,10 +476,6 @@ case class TuvaToteutusMetadata(
     |              example: telma
     |              enum:
     |                - telma
-    |            aloituspaikat:
-    |              type: integer
-    |              description: Toteutuksen aloituspaikkojen lukumäärä
-    |              example: 100
     |""")
 case class TelmaToteutusMetadata(
     tyyppi: Koulutustyyppi = Telma,
@@ -487,7 +484,6 @@ case class TelmaToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    aloituspaikat: Option[Int],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -536,6 +532,7 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -543,6 +540,7 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -567,6 +565,7 @@ case class AikuistenPerusopetusToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -574,6 +573,7 @@ case class AikuistenPerusopetusToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -598,6 +598,7 @@ case class KkOpintojaksoToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -605,6 +606,7 @@ case class KkOpintojaksoToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
     opinnonTyyppiKoodiUri: Option[String] = None,
@@ -670,11 +672,13 @@ case class KkOpintokokonaisuusToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
     opinnonTyyppiKoodiUri: Option[String] = None,
@@ -706,11 +710,13 @@ case class ErikoistumiskoulutusToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     lisatietoaHakeutumisesta: Kielistetty,
     lisatietoaValintaperusteista: Kielistetty,
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -762,6 +768,7 @@ case class TaiteenPerusopetusToteutusMetadata(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeLinkki: Kielistetty,
@@ -769,6 +776,7 @@ case class TaiteenPerusopetusToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty,
     hakuaika: Option[Ajanjakso],
     aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -811,6 +819,7 @@ case class MuuToteutusMetadata(
     asiasanat: List[Keyword] = List(),
     ammattinimikkeet: List[Keyword] = List(),
     yhteyshenkilot: Seq[Yhteyshenkilo] = Seq(),
+    isHakukohteetKaytossa: Option[Boolean] = None,
     hakutermi: Option[Hakutermi] = None,
     hakulomaketyyppi: Option[Hakulomaketyyppi] = None,
     hakulomakeLinkki: Kielistetty = Map(),
@@ -818,6 +827,7 @@ case class MuuToteutusMetadata(
     lisatietoaValintaperusteista: Kielistetty = Map(),
     hakuaika: Option[Ajanjakso] = None,
     aloituspaikat: Option[Int] = None,
+    aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false

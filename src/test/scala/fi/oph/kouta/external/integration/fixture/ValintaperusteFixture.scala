@@ -20,7 +20,7 @@ trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec 
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val valintaperusteService = new ValintaperusteService(
-      new ValintaperusteClient(TempElasticClient.client),
+      new ValintaperusteClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
       organisaatioService
     )

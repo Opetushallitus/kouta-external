@@ -1,14 +1,8 @@
 package fi.oph.kouta.external.elasticsearch
 
+import co.elastic.clients.elasticsearch
 import co.elastic.clients.elasticsearch._types.FieldValue
 import co.elastic.clients.elasticsearch._types.query_dsl.{BoolQuery, ExistsQuery, Query, QueryBuilders, TermQuery, TermsQuery, TermsQueryField}
-
-import java.util
-import java.util
-import scala.collection.mutable.ListBuffer
-import scala.util.{Failure, Success}
-import com.sksamuel.elastic4s.ElasticApi.{existsQuery, must, not, should, termQuery, termsQuery}
-//import com.sksamuel.elastic4s.ElasticApi.{bool, existsQuery, must, not, termQuery, termsQuery}
 import com.sksamuel.elastic4s.ElasticClient
 import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.domain.oid.{HakukohdeOid, OrganisaatioOid}
@@ -19,12 +13,10 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-//import collection.mutable._
-
 
 import scala.collection.JavaConverters._
 
-class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient with KoutaJsonFormats {
+class HakukohdeClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "hakukohde-kouta"
 
   def getHakukohde(oid: HakukohdeOid): Future[(Hakukohde, Seq[OrganisaatioOid])] =
@@ -126,4 +118,4 @@ class HakukohdeClient(val client: ElasticClient) extends ElasticsearchClient wit
   }
 }
 
-object HakukohdeClient extends HakukohdeClient(ElasticsearchClient.client)
+object HakukohdeClient extends HakukohdeClient(ElasticsearchClient.client, ElasticsearchClient.clientJava)

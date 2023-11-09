@@ -237,9 +237,7 @@ case class HakukohdeJavaClient @JsonCreator()  (
           alkamiskausityyppi = Option.apply(Alkamiskausityyppi.withName(paateltyAlkamiskausi.alkamiskausityyppi)),
           kausiUri = Option.apply(paateltyAlkamiskausi.kausiUri),
           vuosi = Option.apply(paateltyAlkamiskausi.vuosi))
-        } else {
-          null
-        }
+        } else null
       )
     )
   }

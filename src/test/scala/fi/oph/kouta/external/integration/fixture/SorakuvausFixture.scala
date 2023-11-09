@@ -17,7 +17,7 @@ trait SorakuvausFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val sorakuvausService = new SorakuvausService(new SorakuvausClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val sorakuvausService = new SorakuvausService(new SorakuvausClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new SorakuvausServlet(sorakuvausService), SorakuvausPath)
   }
 

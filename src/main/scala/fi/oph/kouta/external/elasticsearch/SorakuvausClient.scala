@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.elasticsearch
 
+import co.elastic.clients.elasticsearch
 import com.sksamuel.elastic4s.ElasticClient
 
 import java.util.UUID
@@ -11,9 +12,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SorakuvausClient(val client: ElasticClient) extends ElasticsearchClient with KoutaJsonFormats {
+class SorakuvausClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "sorakuvaus-kouta"
-
   def getSorakuvaus(id: UUID): Future[Sorakuvaus] =
     getItem(id.toString)
       .map(debugJson)
@@ -21,4 +21,4 @@ class SorakuvausClient(val client: ElasticClient) extends ElasticsearchClient wi
       .map(_.toSorakuvaus)
 }
 
-object SorakuvausClient extends SorakuvausClient(ElasticsearchClient.client)
+object SorakuvausClient extends SorakuvausClient(ElasticsearchClient.client, ElasticsearchClient.clientJava)

@@ -21,7 +21,7 @@ trait KoulutusFixture extends AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

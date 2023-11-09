@@ -19,7 +19,7 @@ trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val hakuService = new HakuService(
-      new HakuClient(TempElasticClient.client),
+      new HakuClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
       organisaatioService
     )

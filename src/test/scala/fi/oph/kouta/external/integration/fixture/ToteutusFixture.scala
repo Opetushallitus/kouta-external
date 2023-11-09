@@ -19,7 +19,7 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService)
     addServlet(new ToteutusServlet(toteutusService), ToteutusPath)
   }
 

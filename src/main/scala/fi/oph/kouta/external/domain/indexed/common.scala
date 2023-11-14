@@ -109,14 +109,20 @@ case class KoulutuksenAlkamiskausiHakukohdeES @JsonCreator()(
   @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: String)
 
 case class AikaJakso @JsonCreator() (
-                                      @JsonProperty("alkaa") alkaa: String,
-                                      @JsonProperty("formatoituAlkaa") formatoituAlkaa: Map[String, String],
-                                      @JsonProperty("formatoituPaattyy") formatoituPaattyy: Map[String, String],
-                                      @JsonProperty("paattyy") paattyy: String
-                                    )
+    @JsonProperty("alkaa") alkaa: String,
+    @JsonProperty("formatoituAlkaa") formatoituAlkaa: Map[String, String],
+    @JsonProperty("formatoituPaattyy") formatoituPaattyy: Map[String, String],
+    @JsonProperty("paattyy") paattyy: String
+)
 
-case class MuokkaajaES @JsonCreator() (
-                                        @JsonProperty("nimi") nimi: String,
-                                        @JsonProperty("oid") oid: String)
+case class MuokkaajaES @JsonCreator() (@JsonProperty("nimi") nimi: String, @JsonProperty("oid") oid: String)
 
 case class OrganisaatioES @JsonCreator() (@JsonProperty("oid") oid: String)
+
+case class ValintakoeES @JsonCreator() (
+    @JsonProperty("id") id: String,
+    @JsonProperty("tyyppi") tyyppi: ValintakoeTyyppi,
+    @JsonProperty("nimi") nimi: Map[String, String],
+    @JsonProperty("metadata") metadata: ValintaKoeMetadataES,
+    @JsonProperty("tilaisuudet") tilaisuudet: List[ValintakoeTilaisuus]
+)

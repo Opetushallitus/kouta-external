@@ -39,14 +39,6 @@ case class LiitteetToimitusosoiteOsoite @JsonCreator() (
     @JsonProperty("postinumero") postinumero: String
 )
 
-case class ValintakoeES @JsonCreator() (
-    @JsonProperty("id") id: String,
-    @JsonProperty("tyyppi") tyyppi: ValintakoeTyyppi,
-    @JsonProperty("nimi") nimi: Map[String, String],
-    @JsonProperty("metadata") metadata: ValintaKoeMetadataES,
-    @JsonProperty("tilaisuudet") tilaisuudet: List[ValintakoeTilaisuus]
-)
-
 case class ValintakoeTilaisuus @JsonCreator() (
     @JsonProperty("aika") aika: AikaJakso,
     @JsonProperty("jarjestamispaikka") jarjestamispaikka: Map[String, String],

@@ -35,7 +35,7 @@
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
 
         <!-- Elasticsearch properties -->
-        <elastic4sVersion>8.5.0</elastic4sVersion>
+        <elastic4sVersion>8.10.0</elastic4sVersion>
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>

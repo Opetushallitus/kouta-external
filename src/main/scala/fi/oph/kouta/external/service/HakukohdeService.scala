@@ -131,23 +131,26 @@ class HakukohdeService(
         Some(
           tarjoajaOids.getOrElse(Set()).flatMap(organisaatioService.getAllChildOidsFlat(_, false))
         )
-    val hakukohteet: Future[Seq[Hakukohde]] =
-      hakukohdeClient.search(searchParams.copy(tarjoajaOids = tarjoajaOidsWithChilds), hakukohdeOids)
-
-    if (withHakukohderyhmat) {
-      if (hakukohdeOids.isDefined) {
-        hakukohteetWithHakukohderyhmat(hakukohdeOids.getOrElse(Set()), hakukohteet)
-      } else {
-        hakukohteet.flatMap(hk =>
-          hakukohteetWithHakukohderyhmat(
-            hk.flatMap(_.oid).toSet,
-            Future.successful(hk)
+      val hakukohteet: Future[Seq[Hakukohde]] =
+        hakukohdeClient.search(searchParams.copy(tarjoajaOids = tarjoajaOidsWithChilds), hakukohdeOids)
+      if (withHakukohderyhmat) {
+        if (hakukohdeOids.isDefined) {
+          hakukohteetWithHakukohderyhmat(hakukohdeOids.getOrElse(Set()), hakukohteet)
+        } else {
+          hakukohteet.flatMap(hk =>
+            hakukohteetWithHakukohderyhmat(
+              hk.flatMap(_.oid).toSet,
+              Future.successful(hk)
+            )
           )
-        )
+        }
+      } else {
+        hakukohteet
       }
-    } else {
-      hakukohteet
-    }
+
+
+
+
   }
 
   def search(

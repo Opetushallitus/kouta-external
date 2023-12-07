@@ -1,7 +1,16 @@
 package fi.oph.kouta.external
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient
+import co.elastic.clients.json.jackson.JacksonJsonpMapper
+import co.elastic.clients.transport.ElasticsearchTransport
+import co.elastic.clients.transport.rest_client.RestClientTransport
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.sksamuel.elastic4s.http.JavaClient
 import com.sksamuel.elastic4s.{ElasticClient, ElasticProperties}
+import fi.oph.kouta.external.TempElasticClient.createJavaClient
+import org.apache.http.HttpHost
+import org.elasticsearch.client.RestClient
 import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -15,6 +24,20 @@ object TempElasticClient {
   }
 
   val client = ElasticClient(JavaClient(ElasticProperties(url)))
+  val clientJava = createJavaClient(url)
+
+  def createJavaClient(elasticUrl: String): co.elastic.clients.elasticsearch.ElasticsearchClient = {
+    //val config: ElasticSearchConfiguration = KoutaConfigurationFactory.configuration.elasticSearchConfiguration;
+    val clientJava = RestClient.builder(HttpHost.create(elasticUrl)).build()
+
+    val mapper: ObjectMapper = new ObjectMapper()
+      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+      .registerModule(DefaultScalaModule)
+
+    val transport: ElasticsearchTransport = new RestClientTransport(clientJava, new JacksonJsonpMapper(mapper))
+    val esClient: co.elastic.clients.elasticsearch.ElasticsearchClient = new ElasticsearchClient(transport)
+    esClient
+  }
 }
 
 private object TempElastic {

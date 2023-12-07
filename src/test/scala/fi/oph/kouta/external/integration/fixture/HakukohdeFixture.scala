@@ -28,13 +28,13 @@ trait HakukohdeFixture extends KoutaIntegrationSpec with AccessControlSpec with 
     val hakukohderyhmaClient = new MockHakukohderyhmaClient(urlProperties.get)
 
     val hakuService = new HakuService(
-      new HakuClient(TempElasticClient.client),
+      new HakuClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
       organisaatioService
     )
     val hakukohderyhmaService = new HakukohderyhmaService(hakukohderyhmaClient, organisaatioService)
     val hakukohdeService = new HakukohdeService(
-      new HakukohdeClient(TempElasticClient.client),
+      new HakukohdeClient(TempElasticClient.client, TempElasticClient.clientJava),
       hakukohderyhmaService,
       new MockKoutaClient(urlProperties.get),
       organisaatioService,

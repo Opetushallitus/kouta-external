@@ -36,6 +36,7 @@
 
         <!-- Elasticsearch properties -->
         <elastic4sVersion>8.5.0</elastic4sVersion>
+        <elasticsearch-java-version>8.10.0</elasticsearch-java-version>
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>
@@ -64,6 +65,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>${elasticsearch-java-version}</version>
+        </dependency>
+        <dependency>
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
             <version>${kouta-common.version}</version>
@@ -74,7 +80,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
         <dependency>
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
@@ -197,6 +202,10 @@
                 <exclusion>
                     <groupId>com.fasterxml.jackson.module</groupId>
                     <artifactId>jackson-module-scala_2.12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.elasticsearch.client</groupId>
+                    <artifactId>elasticsearch-rest-client</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

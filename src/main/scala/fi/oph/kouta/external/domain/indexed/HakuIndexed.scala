@@ -29,7 +29,7 @@ case class EmbeddedToteutusIndexedES @JsonCreator() (
 case class HakuMetadataES @JsonCreator() (
     @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES],
     @JsonProperty("tulevaisuudenAikataulu") tulevaisuudenAikataulu: List[AikaJakso],
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiHakukohdeES
+    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES]
 )
 
 case class YhteyshenkiloES @JsonCreator() (
@@ -157,7 +157,7 @@ case class HakuJavaClient @JsonCreator() (
   }
   def getHakuMetadataIndexed(metadataES: Option[HakuMetadataES]): Option[HakuMetadataIndexed] = {
     if (metadataES != null) {
-      val koulutuksenAlkamiskausi = metadataES.get.koulutuksenAlkamiskausi
+      val koulutuksenAlkamiskausiOption = metadataES.get.koulutuksenAlkamiskausi
       Option.apply(
         HakuMetadataIndexed(
           yhteyshenkilot = metadataES.get.yhteyshenkilot.map(m =>
@@ -176,7 +176,7 @@ case class HakuJavaClient @JsonCreator() (
               Option.apply(parseLocalDateTime(m.paattyy))
             )
           ),
-          koulutuksenAlkamiskausi = Option.apply(
+          koulutuksenAlkamiskausi = koulutuksenAlkamiskausiOption.map(koulutuksenAlkamiskausi =>
             KoulutuksenAlkamiskausiIndexed(
               alkamiskausityyppi =
                 Option.apply(Alkamiskausityyppi.withName(koulutuksenAlkamiskausi.alkamiskausityyppi)),

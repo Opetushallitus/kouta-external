@@ -27,89 +27,86 @@ case class EmbeddedToteutusIndexedES @JsonCreator() (
     @JsonProperty("tarjoajat") tarjoajat: Object
 )
 case class HakuMetadataES @JsonCreator() (
-    @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES],
-    @JsonProperty("tulevaisuudenAikataulu") tulevaisuudenAikataulu: List[AikaJakso],
+    @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES] = Seq(),
+    @JsonProperty("tulevaisuudenAikataulu") tulevaisuudenAikataulu: List[AikaJakso] = List(),
     @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES]
 )
 
 case class YhteyshenkiloES @JsonCreator() (
-    @JsonProperty("nimi") nimi: Map[String, String],
-    @JsonProperty("puhelinnumero") puhelinnumero: Map[String, String],
-    @JsonProperty("sahkoposti") sahkoposti: Map[String, String],
-    @JsonProperty("titteli") titteli: Map[String, String],
-    @JsonProperty("wwwSivu") wwwSivu: Map[String, String],
-    @JsonProperty("wwwSivuTeksti") wwwSivuTeksti: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map(),
+    @JsonProperty("puhelinnumero") puhelinnumero: Map[String, String] = Map(),
+    @JsonProperty("sahkoposti") sahkoposti: Map[String, String] = Map(),
+    @JsonProperty("titteli") titteli: Map[String, String] = Map(),
+    @JsonProperty("wwwSivu") wwwSivu: Map[String, String] = Map(),
+    @JsonProperty("wwwSivuTeksti") wwwSivuTeksti: Map[String, String] = Map()
 )
 
 case class HakuTapaES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
-    @JsonProperty("nimi") nimi: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
 case class KohdejoukkoES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
-    @JsonProperty("nimi") nimi: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
 case class KohdejoukonTarkenneES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
-    @JsonProperty("nimi") nimi: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
 case class HakuJavaClient @JsonCreator() (
-    @JsonProperty("oid") oid: String,
-    @JsonProperty("externalId") externalId: String,
+    @JsonProperty("oid") oid: Option[String],
+    @JsonProperty("externalId") externalId: Option[String],
     @JsonProperty("tila") tila: String,
     @JsonProperty("nimi") nimi: Map[String, String],
     @JsonProperty("hakukohteet") hakukohteet: List[EmbeddedHakukohdeIndexedES],
     @JsonProperty("hakutapa") hakutapa: HakuTapaES,
-    @JsonProperty("hakukohteenLiittamisenTakaraja") hakukohteenLiittamisenTakaraja: String,
-    @JsonProperty("hakukohteenMuokkaamisenTakaraja") hakukohteenMuokkaamisenTakaraja: String,
-    @JsonProperty("ajastettuJulkaisu") ajastettuJulkaisu: String,
-    @JsonProperty("kohdejoukko") kohdejoukko: KohdejoukkoES,
-    @JsonProperty("kohdejoukonTarkenne") kohdejoukonTarkenne: KohdejoukonTarkenneES,
-    @JsonProperty("hakulomaketyyppi") hakulomaketyyppi: String,
-    @JsonProperty("hakulomakeAtaruId") hakulomakeAtaruId: String,
-    @JsonProperty("hakulomakeKuvaus") hakulomakeKuvaus: Map[String, String],
-    @JsonProperty("hakulomakeLinkki") hakulomakeLinkki: Map[String, String],
+    @JsonProperty("hakukohteenLiittamisenTakaraja") hakukohteenLiittamisenTakaraja: Option[String],
+    @JsonProperty("hakukohteenMuokkaamisenTakaraja") hakukohteenMuokkaamisenTakaraja: Option[String],
+    @JsonProperty("ajastettuJulkaisu") ajastettuJulkaisu: Option[String],
+    @JsonProperty("kohdejoukko") kohdejoukko: Option[KohdejoukkoES],
+    @JsonProperty("kohdejoukonTarkenne") kohdejoukonTarkenne: Option[KohdejoukonTarkenneES],
+    @JsonProperty("hakulomaketyyppi") hakulomaketyyppi: Option[String],
+    @JsonProperty("hakulomakeAtaruId") hakulomakeAtaruId: Option[String],
+    @JsonProperty("hakulomakeKuvaus") hakulomakeKuvaus: Map[String, String] = Map(),
+    @JsonProperty("hakulomakeLinkki") hakulomakeLinkki: Map[String, String] = Map(),
     @JsonProperty("metadata") metadata: Option[HakuMetadataES],
     @JsonProperty("organisaatio") organisaatio: OrganisaatioES,
-    @JsonProperty("hakuajat") hakuajat: List[AikaJakso],
-    @JsonProperty("valintakokeet") valintakokeet: List[ValintakoeES],
+    @JsonProperty("hakuajat") hakuajat: List[AikaJakso] = List(),
+    @JsonProperty("valintakokeet") valintakokeet: List[ValintakoeES] = List(),
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
-    @JsonProperty("kielivalinta") kielivalinta: Seq[String],
-    @JsonProperty("modified") modified: String
+    @JsonProperty("kielivalinta") kielivalinta: Seq[String] = Seq(),
+    @JsonProperty("modified") modified: Option[String]
 ) {
 
   def toResult(): HakuIndexed = {
     HakuIndexed(
-      oid = Option.apply(oid).map(oid => HakuOid(oid)),
-      externalId = Option.apply(externalId),
+      oid = oid.map(HakuOid),
+      externalId = externalId,
       tila = if (tila != null) Julkaisutila.withName(tila) else null,
       nimi = toKielistettyMap(nimi),
       hakukohteet = createHakukohteet(hakukohteet),
       hakutapa = Option.apply(if (hakutapa != null) KoodiUri(hakutapa.koodiUri) else null),
-      hakukohteenLiittamisenTakaraja = Option.apply(parseLocalDateTime(hakukohteenLiittamisenTakaraja)),
-      hakukohteenMuokkaamisenTakaraja = Option.apply(parseLocalDateTime(hakukohteenMuokkaamisenTakaraja)),
-      ajastettuJulkaisu = Option.apply(parseLocalDateTime(ajastettuJulkaisu)),
-      kohdejoukko = Option.apply(KoodiUri(kohdejoukko.koodiUri)),
-      kohdejoukonTarkenne =
-        Option.apply(if (kohdejoukonTarkenne != null) KoodiUri(kohdejoukonTarkenne.koodiUri) else null),
-      hakulomaketyyppi = Option.apply(Hakulomaketyyppi.withName(hakulomaketyyppi)),
-      hakulomakeAtaruId = Option.apply(hakulomakeAtaruId).map(hakulomakeAtaruId => UUID.fromString(hakulomakeAtaruId)),
+      hakukohteenLiittamisenTakaraja = hakukohteenLiittamisenTakaraja.map(parseLocalDateTime),
+      hakukohteenMuokkaamisenTakaraja = hakukohteenMuokkaamisenTakaraja.map(parseLocalDateTime),
+      ajastettuJulkaisu = ajastettuJulkaisu.map(parseLocalDateTime),
+      kohdejoukko = kohdejoukko.map(kj => KoodiUri(kj.koodiUri)),
+      kohdejoukonTarkenne = kohdejoukonTarkenne.map(kjt => KoodiUri(kjt.koodiUri)),
+      hakulomaketyyppi = hakulomaketyyppi.map(Hakulomaketyyppi.withName),
+      hakulomakeAtaruId = hakulomakeAtaruId.map(UUID.fromString),
       hakulomakeKuvaus = toKielistettyMap(hakulomakeKuvaus),
       hakulomakeLinkki = toKielistettyMap(hakulomakeLinkki),
       metadata = getHakuMetadataIndexed(metadata),
-      organisaatio = if (organisaatio != null) Organisaatio(oid = OrganisaatioOid(organisaatio.oid)) else null,
-      hakuajat =
-        if (hakuajat != null) hakuajat.map(hakuaika => {
-          Ajanjakso(parseLocalDateTime(hakuaika.alkaa), Option.apply(parseLocalDateTime(hakuaika.paattyy)))
-        })
-        else List.empty,
+      organisaatio = Organisaatio(oid = OrganisaatioOid(organisaatio.oid)),
+      hakuajat = hakuajat.map(hakuaika => {
+        Ajanjakso(parseLocalDateTime(hakuaika.alkaa), Option.apply(parseLocalDateTime(hakuaika.paattyy)))
+      }),
       valintakokeet = getValintakokeet(valintakokeet),
-      muokkaaja = if (muokkaaja != null) Muokkaaja(UserOid(muokkaaja.oid)) else null,
-      kielivalinta = if (kielivalinta != null) kielivalinta.map(kieli => Kieli.withName(kieli)) else Seq.empty,
-      modified = if (modified != null) Option.apply(Modified(LocalDateTime.parse(modified))) else None
+      muokkaaja = Muokkaaja(UserOid(muokkaaja.oid)),
+      kielivalinta = kielivalinta.map(kieli => Kieli.withName(kieli)),
+      modified = modified.map(m => Modified(LocalDateTime.parse(m)))
     )
   }
 

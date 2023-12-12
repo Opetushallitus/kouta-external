@@ -8,6 +8,7 @@ import fi.vm.sade.utils.slf4j.Logging
 
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.UUID
+import scala.util.Try
 
 case class EmbeddedToteutusIndexed(tarjoajat: List[Organisaatio])
 case class EmbeddedHakukohdeIndexed(
@@ -60,9 +61,9 @@ case class HakuJavaClient @JsonCreator() (
     @JsonProperty("oid") oid: Option[String],
     @JsonProperty("externalId") externalId: Option[String],
     @JsonProperty("tila") tila: String,
-    @JsonProperty("nimi") nimi: Map[String, String],
-    @JsonProperty("hakukohteet") hakukohteet: List[EmbeddedHakukohdeIndexedES],
-    @JsonProperty("hakutapa") hakutapa: HakuTapaES,
+    @JsonProperty("nimi") nimi: Map[String, String] = Map(),
+    @JsonProperty("hakukohteet") hakukohteet: List[EmbeddedHakukohdeIndexedES] = List(),
+    @JsonProperty("hakutapa") hakutapa: Option[HakuTapaES],
     @JsonProperty("hakukohteenLiittamisenTakaraja") hakukohteenLiittamisenTakaraja: Option[String],
     @JsonProperty("hakukohteenMuokkaamisenTakaraja") hakukohteenMuokkaamisenTakaraja: Option[String],
     @JsonProperty("ajastettuJulkaisu") ajastettuJulkaisu: Option[String],
@@ -88,7 +89,7 @@ case class HakuJavaClient @JsonCreator() (
       tila = if (tila != null) Julkaisutila.withName(tila) else null,
       nimi = toKielistettyMap(nimi),
       hakukohteet = createHakukohteet(hakukohteet),
-      hakutapa = Option.apply(if (hakutapa != null) KoodiUri(hakutapa.koodiUri) else null),
+      hakutapa = hakutapa.map(h => KoodiUri(h.koodiUri)),
       hakukohteenLiittamisenTakaraja = hakukohteenLiittamisenTakaraja.map(parseLocalDateTime),
       hakukohteenMuokkaamisenTakaraja = hakukohteenMuokkaamisenTakaraja.map(parseLocalDateTime),
       ajastettuJulkaisu = ajastettuJulkaisu.map(parseLocalDateTime),
@@ -101,7 +102,7 @@ case class HakuJavaClient @JsonCreator() (
       metadata = getHakuMetadataIndexed(metadata),
       organisaatio = Organisaatio(oid = OrganisaatioOid(organisaatio.oid)),
       hakuajat = hakuajat.map(hakuaika => {
-        Ajanjakso(parseLocalDateTime(hakuaika.alkaa), Option.apply(parseLocalDateTime(hakuaika.paattyy)))
+        Ajanjakso(parseLocalDateTime(hakuaika.alkaa), hakuaika.paattyy.map(parseLocalDateTime))
       }),
       valintakokeet = getValintakokeet(valintakokeet),
       muokkaaja = Muokkaaja(UserOid(muokkaaja.oid)),
@@ -111,95 +112,83 @@ case class HakuJavaClient @JsonCreator() (
   }
 
   def getValintakokeet(valintakoeList: List[ValintakoeES]): Option[List[ValintakoeIndexed]] = {
-    if (valintakoeList != null) {
-      Option.apply(valintakoeList.map(koe => {
-        ValintakoeIndexed(
-          id = Option.apply(UUID.fromString(koe.id)),
-          tyyppi = Option.apply(if (koe.tyyppi != null) KoodiUri(koe.tyyppi.koodiUri) else null),
-          nimi = toKielistettyMap(koe.nimi),
-          metadata = Option.apply(
-            ValintaKoeMetadataIndexed(
-              tietoja = toKielistettyMap(koe.metadata.tietoja),
-              vahimmaispisteet = Option.apply(koe.metadata.vahimmaispisteet),
-              liittyyEnnakkovalmistautumista = Option.apply(koe.metadata.liittyyEnnakkovalmistautumista),
-              ohjeetEnnakkovalmistautumiseen = toKielistettyMap(koe.metadata.ohjeetEnnakkovalmistautumiseen),
-              erityisjarjestelytMahdollisia = Option.apply(koe.metadata.erityisjarjestelytMahdollisia),
-              ohjeetErityisjarjestelyihin = toKielistettyMap(koe.metadata.ohjeetErityisjarjestelyihin)
-            )
-          ),
-          tilaisuudet = koe.tilaisuudet.map(tilaisuus => {
+    Some(valintakoeList.map(koe => {
+      ValintakoeIndexed(
+        id = Try(UUID.fromString(koe.id)).toOption,
+        tyyppi = koe.tyyppi.map(tyyppi => KoodiUri(tyyppi.koodiUri)),
+        nimi = toKielistettyMap(koe.nimi),
+        metadata = koe.metadata.map(metadata =>
+          ValintaKoeMetadataIndexed(
+            tietoja = toKielistettyMap(metadata.tietoja),
+            vahimmaispisteet = metadata.vahimmaispisteet,
+            liittyyEnnakkovalmistautumista = metadata.liittyyEnnakkovalmistautumista,
+            ohjeetEnnakkovalmistautumiseen = toKielistettyMap(metadata.ohjeetEnnakkovalmistautumiseen),
+            erityisjarjestelytMahdollisia = metadata.erityisjarjestelytMahdollisia,
+            ohjeetErityisjarjestelyihin = toKielistettyMap(metadata.ohjeetErityisjarjestelyihin)
+          )
+        ),
+        tilaisuudet = koe.tilaisuudet.map(tilaisuus => {
 
-            ValintakoetilaisuusIndexed(
-              osoite = Option.apply(
-                OsoiteIndexed(
-                  osoite = toKielistettyMap(tilaisuus.osoite.osoite),
-                  postinumero = Option.apply(KoodiUri(tilaisuus.osoite.postinumeroKoodiUri))
-                )
-              ),
-              aika = Option.apply(
-                Ajanjakso(
-                  alkaa = if (tilaisuus.aika != null) parseLocalDateTime(tilaisuus.aika.alkaa) else null,
-                  paattyy =
-                    if (tilaisuus.aika != null) Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy)) else null
-                )
-              ),
-              lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
-              jarjestamispaikka = toKielistettyMap(tilaisuus.jarjestamispaikka)
-            )
-          })
-        )
-      }))
-    } else Option.apply(List.empty)
+          ValintakoetilaisuusIndexed(
+            osoite = Some(OsoiteIndexed(
+              osoite = tilaisuus.osoite.map(osoite => toKielistettyMap(osoite.osoite)).getOrElse(Map()),
+              postinumero = tilaisuus.osoite.map(osoite => KoodiUri(osoite.postinumeroKoodiUri))
+            )),
+            aika = tilaisuus.aika.map(aika => Ajanjakso(
+              alkaa = parseLocalDateTime(aika.alkaa),
+              paattyy = aika.paattyy.map(paattyy => parseLocalDateTime(paattyy))
+            )),
+            lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
+            jarjestamispaikka = toKielistettyMap(tilaisuus.jarjestamispaikka)
+          )
+        })
+      )
+    }))
 
   }
-  def getHakuMetadataIndexed(metadataES: Option[HakuMetadataES]): Option[HakuMetadataIndexed] = {
-    if (metadataES != null) {
-      val koulutuksenAlkamiskausiOption = metadataES.get.koulutuksenAlkamiskausi
-      Option.apply(
-        HakuMetadataIndexed(
-          yhteyshenkilot = metadataES.get.yhteyshenkilot.map(m =>
-            Yhteyshenkilo(
-              nimi = toKielistettyMap(m.nimi),
-              titteli = toKielistettyMap(m.titteli),
-              sahkoposti = toKielistettyMap(m.sahkoposti),
-              puhelinnumero = toKielistettyMap(m.puhelinnumero),
-              wwwSivu = toKielistettyMap(m.wwwSivu),
-              Option.apply(toKielistettyMap(m.wwwSivuTeksti))
-            )
-          ),
-          tulevaisuudenAikataulu = metadataES.get.tulevaisuudenAikataulu.map(m =>
-            Ajanjakso(
-              parseLocalDateTime(m.alkaa),
-              Option.apply(parseLocalDateTime(m.paattyy))
-            )
-          ),
-          koulutuksenAlkamiskausi = koulutuksenAlkamiskausiOption.map(koulutuksenAlkamiskausi =>
-            KoulutuksenAlkamiskausiIndexed(
-              alkamiskausityyppi = koulutuksenAlkamiskausi.alkamiskausityyppi.map(Alkamiskausityyppi.withName),
-              henkilokohtaisenSuunnitelmanLisatiedot =
-                toKielistettyMap(koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
-              koulutuksenAlkamispaivamaara = koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara.map(parseLocalDateTime),
-              koulutuksenPaattymispaivamaara = koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara.map(parseLocalDateTime),
-              koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.map(ka => KoodiUri(ka.koodiUri)),
-              koulutuksenAlkamisvuosi = koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi
-            )
+  def getHakuMetadataIndexed(metadataESOption: Option[HakuMetadataES]): Option[HakuMetadataIndexed] = {
+    metadataESOption.map(metadataES =>
+      HakuMetadataIndexed(
+        yhteyshenkilot = metadataES.yhteyshenkilot.map(m =>
+          Yhteyshenkilo(
+            nimi = toKielistettyMap(m.nimi),
+            titteli = toKielistettyMap(m.titteli),
+            sahkoposti = toKielistettyMap(m.sahkoposti),
+            puhelinnumero = toKielistettyMap(m.puhelinnumero),
+            wwwSivu = toKielistettyMap(m.wwwSivu),
+            wwwSivuTeksti = Some(toKielistettyMap(m.wwwSivuTeksti))
+          )
+        ),
+        tulevaisuudenAikataulu = metadataES.tulevaisuudenAikataulu.map(m =>
+          Ajanjakso(
+            parseLocalDateTime(m.alkaa),
+            m.paattyy.map(parseLocalDateTime)
+          )
+        ),
+        koulutuksenAlkamiskausi = metadataES.koulutuksenAlkamiskausi.map(koulutuksenAlkamiskausi =>
+          KoulutuksenAlkamiskausiIndexed(
+            alkamiskausityyppi = koulutuksenAlkamiskausi.alkamiskausityyppi.map(Alkamiskausityyppi.withName),
+            henkilokohtaisenSuunnitelmanLisatiedot =
+              toKielistettyMap(koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
+            koulutuksenAlkamispaivamaara = koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara.map(parseLocalDateTime),
+            koulutuksenPaattymispaivamaara = koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara.map(parseLocalDateTime),
+            koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.map(ka => KoodiUri(ka.koodiUri)),
+            koulutuksenAlkamisvuosi = koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi
           )
         )
       )
-    } else None
+    )
   }
 
   def createHakukohteet(list: List[EmbeddedHakukohdeIndexedES]): List[EmbeddedHakukohdeIndexed] = {
-    if (list != null)
-      list.map(m =>
-        EmbeddedHakukohdeIndexed(
-          oid = HakukohdeOid(m.oid),
-          jarjestyspaikka = None,
-          toteutus = null,
-          tila = Julkaisutila.withName(m.tila)
-        )
+    list.map(m =>
+      EmbeddedHakukohdeIndexed(
+        oid = HakukohdeOid(m.oid),
+        jarjestyspaikka = None,
+        toteutus = null,
+        tila = Julkaisutila.withName(m.tila)
       )
-    else List.empty
+    )
   }
   def parseLocalDateTime(dateString: String): LocalDateTime = {
     if (dateString != null) LocalDateTime.parse(dateString) else null

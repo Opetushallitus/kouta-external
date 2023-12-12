@@ -101,12 +101,12 @@ case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
 
 
 case class KoulutuksenAlkamiskausiHakukohdeES @JsonCreator()(
-  @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: String,
-  @JsonProperty("henkilokohtaisenSuunnitelmanLisatiedot") henkilokohtaisenSuunnitelmanLisatiedot: Map[String, String],
-  @JsonProperty("koulutuksenAlkamispaivamaara") koulutuksenAlkamispaivamaara: String,
-  @JsonProperty("koulutuksenPaattymispaivamaara") koulutuksenPaattymispaivamaara: String,
-  @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiMapES,
-  @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: String)
+  @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: Option[String],
+  @JsonProperty("henkilokohtaisenSuunnitelmanLisatiedot") henkilokohtaisenSuunnitelmanLisatiedot: Map[String, String] = Map(),
+  @JsonProperty("koulutuksenAlkamispaivamaara") koulutuksenAlkamispaivamaara: Option[String],
+  @JsonProperty("koulutuksenPaattymispaivamaara") koulutuksenPaattymispaivamaara: Option[String],
+  @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiMapES],
+  @JsonProperty("koulutuksenAlkamisvuosi") koulutuksenAlkamisvuosi: Option[String])
 
 case class AikaJakso @JsonCreator() (
     @JsonProperty("alkaa") alkaa: String,

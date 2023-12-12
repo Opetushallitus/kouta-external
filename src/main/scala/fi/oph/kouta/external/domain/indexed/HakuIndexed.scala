@@ -175,20 +175,13 @@ case class HakuJavaClient @JsonCreator() (
           ),
           koulutuksenAlkamiskausi = koulutuksenAlkamiskausiOption.map(koulutuksenAlkamiskausi =>
             KoulutuksenAlkamiskausiIndexed(
-              alkamiskausityyppi =
-                Option.apply(Alkamiskausityyppi.withName(koulutuksenAlkamiskausi.alkamiskausityyppi)),
+              alkamiskausityyppi = koulutuksenAlkamiskausi.alkamiskausityyppi.map(Alkamiskausityyppi.withName),
               henkilokohtaisenSuunnitelmanLisatiedot =
                 toKielistettyMap(koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
-              koulutuksenAlkamispaivamaara =
-                Option.apply(parseLocalDateTime(koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara)),
-              koulutuksenPaattymispaivamaara =
-                Option.apply(parseLocalDateTime(koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara)),
-              koulutuksenAlkamiskausi = Option.apply(
-                if (koulutuksenAlkamiskausi.koulutuksenAlkamiskausi != null)
-                  KoodiUri(koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.koodiUri)
-                else null
-              ),
-              koulutuksenAlkamisvuosi = Option.apply(koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi)
+              koulutuksenAlkamispaivamaara = koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara.map(parseLocalDateTime),
+              koulutuksenPaattymispaivamaara = koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara.map(parseLocalDateTime),
+              koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.map(ka => KoodiUri(ka.koodiUri)),
+              koulutuksenAlkamisvuosi = koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi
             )
           )
         )

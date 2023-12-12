@@ -7,6 +7,7 @@ import fi.oph.kouta.external.domain._
 
 import java.time.LocalDateTime
 import java.util.UUID
+import scala.util.Try
 
 case class OsoiteES @JsonCreator() (
     @JsonProperty("osoite") osoite: Map[String, String],
@@ -68,7 +69,7 @@ case class AloituspaikatES @JsonCreator() (
 
 case class KoulutuksenAlkamiskausiMapES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
-    @JsonProperty("nimi") nimi: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
 case class HakukohdeMetadataES @JsonCreator() (
@@ -80,14 +81,14 @@ case class HakukohdeMetadataES @JsonCreator() (
     @JsonProperty("valintaperusteenValintakokeidenLisatilaisuudet") valintaperusteenValintakokeidenLisatilaisuudet: Seq[
       ValintakoeLisatilaisuusIndexedES
     ],
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: KoulutuksenAlkamiskausiHakukohdeES,
-    @JsonProperty("hakukohteenLinja") hakukohteenLinja: HakukohteenLinjaES
+    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES],
+    @JsonProperty("hakukohteenLinja") hakukohteenLinja: Option[HakukohteenLinjaES]
 )
 
 case class HakukohteenLinjaES @JsonCreator() (
-    @JsonProperty("linja") linja: KoodiES,
-    @JsonProperty("alinHyvaksyttyKeskiarvo") alinHyvaksyttyKeskiarvo: String,
-    @JsonProperty("lisatietoa") lisatietoa: Map[String, String]
+    @JsonProperty("linja") linja: Option[KoodiES],
+    @JsonProperty("alinHyvaksyttyKeskiarvo") alinHyvaksyttyKeskiarvo: Option[String],
+    @JsonProperty("lisatietoa") lisatietoa: Map[String, String] = Map()
 )
 
 case class KoodiES @JsonCreator() (
@@ -149,7 +150,7 @@ case class HakukohdeJavaClient @JsonCreator() (
     @JsonProperty("valintakokeet") valintakokeet: List[ValintakoeES],
     @JsonProperty("hakuajat") hakuajat: List[AikaJakso],
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
-    @JsonProperty("metadata") metadata: HakukohdeMetadataES,
+    @JsonProperty("metadata") metadata: Option[HakukohdeMetadataES],
     @JsonProperty("organisaatio") organisaatio: OrganisaatioES,
     @JsonProperty("kielivalinta") kielivalinta: Seq[String],
     @JsonProperty("modified") modified: String,
@@ -251,77 +252,61 @@ case class HakukohdeJavaClient @JsonCreator() (
   def parseLocalDateTime(dateString: String): LocalDateTime = {
     if (dateString != null) LocalDateTime.parse(dateString) else null
   }
-  def getHakukohdeMetadataIndexed(metadataES: HakukohdeMetadataES): Option[HakukohdeMetadataIndexed] = {
-    if (metadataES != null) {
-      Option.apply(
-        HakukohdeMetadataIndexed(
-          valintakokeidenYleiskuvaus = toKielistettyMap(metadataES.valintakokeidenYleiskuvaus),
-          kynnysehto = toKielistettyMap(metadataES.kynnysehto),
-          valintaperusteenValintakokeidenLisatilaisuudet =
-            metadataES.valintaperusteenValintakokeidenLisatilaisuudet.map(lisaTilaisuus => {
-              ValintakokeenLisatilaisuudetIndexed(
-                id = Option.apply(if (lisaTilaisuus.id != null) UUID.fromString(lisaTilaisuus.id) else null),
-                tilaisuudet = lisaTilaisuus.tilaisuudet.map(tilaisuus =>
-                  ValintakoetilaisuusIndexed(
-                    osoite = Option.apply(getOsoiteIndexed(tilaisuus.osoite)),
-                    aika = Option.apply(
-                      if (tilaisuus.aika != null)
-                        Ajanjakso(
-                          parseLocalDateTime(tilaisuus.aika.alkaa),
-                          Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy))
-                        )
-                      else null
-                    ),
-                    lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
-                    jarjestamispaikka = toKielistettyMap(tilaisuus.jarjestamispaikka)
-                  )
-                )
-              )
-            }),
-          koulutuksenAlkamiskausi = if (metadataES.koulutuksenAlkamiskausi != null) {
-            Option.apply(
-              KoulutuksenAlkamiskausiIndexed(
-                alkamiskausityyppi =
-                  Option.apply(Alkamiskausityyppi.withName(metadataES.koulutuksenAlkamiskausi.alkamiskausityyppi)),
-                henkilokohtaisenSuunnitelmanLisatiedot =
-                  toKielistettyMap(metadataES.koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
-                koulutuksenAlkamispaivamaara =
-                  Option.apply(parseLocalDateTime(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara)),
-                koulutuksenPaattymispaivamaara =
-                  Option.apply(parseLocalDateTime(metadataES.koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara)),
-                koulutuksenAlkamiskausi = Option.apply(
-                  if (metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamiskausi != null)
-                    KoodiUri(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.koodiUri)
+  def getHakukohdeMetadataIndexed(metadataESOption: Option[HakukohdeMetadataES]): Option[HakukohdeMetadataIndexed] = {
+    metadataESOption.map(metadataES => HakukohdeMetadataIndexed(
+      valintakokeidenYleiskuvaus = toKielistettyMap(metadataES.valintakokeidenYleiskuvaus),
+      kynnysehto = toKielistettyMap(metadataES.kynnysehto),
+      valintaperusteenValintakokeidenLisatilaisuudet =
+        metadataES.valintaperusteenValintakokeidenLisatilaisuudet.map(lisaTilaisuus => {
+          ValintakokeenLisatilaisuudetIndexed(
+            id = Option.apply(if (lisaTilaisuus.id != null) UUID.fromString(lisaTilaisuus.id) else null),
+            tilaisuudet = lisaTilaisuus.tilaisuudet.map(tilaisuus =>
+              ValintakoetilaisuusIndexed(
+                osoite = Option.apply(getOsoiteIndexed(tilaisuus.osoite)),
+                aika = Option.apply(
+                  if (tilaisuus.aika != null)
+                    Ajanjakso(
+                      parseLocalDateTime(tilaisuus.aika.alkaa),
+                      Option.apply(parseLocalDateTime(tilaisuus.aika.paattyy))
+                    )
                   else null
                 ),
-                koulutuksenAlkamisvuosi = Option.apply(metadataES.koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi)
+                lisatietoja = toKielistettyMap(tilaisuus.lisatietoja),
+                jarjestamispaikka = toKielistettyMap(tilaisuus.jarjestamispaikka)
               )
             )
-          } else {
-            None
-          },
-          kaytetaanHaunAlkamiskautta = Option.apply(metadataES.kaytetaanHaunAlkamiskautta),
-          aloituspaikat = Option.apply(
-            Aloituspaikat(
-              lukumaara = Option.apply(metadataES.aloituspaikat.lukumaara),
-              ensikertalaisille = Option.apply(metadataES.aloituspaikat.ensikertalaisille),
-              kuvaus = toKielistettyMap(metadataES.aloituspaikat.kuvaus)
-            )
-          ),
-          hakukohteenLinja = if (metadata.hakukohteenLinja != null) {
-            Option.apply(
-              HakukohteenLinja(
-                linja = None,
-                alinHyvaksyttyKeskiarvo = None,
-                lisatietoa = toKielistettyMap(metadata.hakukohteenLinja.lisatietoa)
-              )
-            )
-          } else {
-            null
-          }
+          )
+        }),
+      koulutuksenAlkamiskausi = metadataES.koulutuksenAlkamiskausi.map(koulutuksenAlkamiskausi =>
+        KoulutuksenAlkamiskausiIndexed(
+          alkamiskausityyppi =
+            koulutuksenAlkamiskausi.alkamiskausityyppi.map(Alkamiskausityyppi.withName),
+          henkilokohtaisenSuunnitelmanLisatiedot =
+            toKielistettyMap(koulutuksenAlkamiskausi.henkilokohtaisenSuunnitelmanLisatiedot),
+          koulutuksenAlkamispaivamaara =
+            koulutuksenAlkamiskausi.koulutuksenAlkamispaivamaara.map(parseLocalDateTime),
+          koulutuksenPaattymispaivamaara =
+            koulutuksenAlkamiskausi.koulutuksenPaattymispaivamaara.map(parseLocalDateTime),
+          koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.map(ka => KoodiUri(ka.koodiUri)),
+          koulutuksenAlkamisvuosi = koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi
+        )
+      ),
+      kaytetaanHaunAlkamiskautta = Option.apply(metadataES.kaytetaanHaunAlkamiskautta),
+      aloituspaikat = Option.apply(
+        Aloituspaikat(
+          lukumaara = Option.apply(metadataES.aloituspaikat.lukumaara),
+          ensikertalaisille = Option.apply(metadataES.aloituspaikat.ensikertalaisille),
+          kuvaus = toKielistettyMap(metadataES.aloituspaikat.kuvaus)
+        )
+      ),
+      hakukohteenLinja = metadataES.hakukohteenLinja.map(hakukohteenLinja =>
+        HakukohteenLinja(
+          linja = hakukohteenLinja.linja.map(koodi => Koodi(Some(koodi.koodiUri))),
+          alinHyvaksyttyKeskiarvo = hakukohteenLinja.alinHyvaksyttyKeskiarvo.flatMap(ka => Try(ka.toDouble).toOption),
+          lisatietoa = toKielistettyMap(hakukohteenLinja.lisatietoa)
         )
       )
-    } else None
+    ))
   }
   def getValintakokeet(valintakoeList: List[ValintakoeES]): List[ValintakoeIndexed] = {
     if (valintakoeList != null) {

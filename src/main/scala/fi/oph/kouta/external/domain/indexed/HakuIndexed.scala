@@ -20,12 +20,12 @@ case class EmbeddedHakukohdeIndexed(
 
 case class EmbeddedHakukohdeIndexedES @JsonCreator() (
     @JsonProperty("oid") oid: String,
-    @JsonProperty("jarjestyspaikka") jarjestyspaikka: Option[Object],
+    @JsonProperty("jarjestyspaikka") jarjestyspaikka: Option[OrganisaatioES],
     @JsonProperty("toteutus") toteutus: EmbeddedToteutusIndexedES,
     @JsonProperty("tila") tila: String
 )
 case class EmbeddedToteutusIndexedES @JsonCreator() (
-    @JsonProperty("tarjoajat") tarjoajat: Object
+    @JsonProperty("tarjoajat") tarjoajat: List[OrganisaatioES] = List()
 )
 case class HakuMetadataES @JsonCreator() (
     @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES] = Seq(),
@@ -86,7 +86,7 @@ case class HakuJavaClient @JsonCreator() (
     HakuIndexed(
       oid = oid.map(HakuOid),
       externalId = externalId,
-      tila = if (tila != null) Julkaisutila.withName(tila) else null,
+      tila = Julkaisutila.withName(tila),
       nimi = toKielistettyMap(nimi),
       hakukohteet = createHakukohteet(hakukohteet),
       hakutapa = hakutapa.map(h => KoodiUri(h.koodiUri)),
@@ -180,29 +180,25 @@ case class HakuJavaClient @JsonCreator() (
     )
   }
 
-  def createHakukohteet(list: List[EmbeddedHakukohdeIndexedES]): List[EmbeddedHakukohdeIndexed] = {
-    list.map(m =>
+  def createHakukohteet(hakukohteet: List[EmbeddedHakukohdeIndexedES]): List[EmbeddedHakukohdeIndexed] = {
+    hakukohteet.map(m =>
       EmbeddedHakukohdeIndexed(
         oid = HakukohdeOid(m.oid),
-        jarjestyspaikka = None,
-        toteutus = null,
+        jarjestyspaikka = m.jarjestyspaikka.map(j => Organisaatio(OrganisaatioOid(j.oid))),
+        toteutus = EmbeddedToteutusIndexed(m.toteutus.tarjoajat.map(t => Organisaatio(OrganisaatioOid(t.oid)))),
         tila = Julkaisutila.withName(m.tila)
       )
     )
   }
   def parseLocalDateTime(dateString: String): LocalDateTime = {
-    if (dateString != null) LocalDateTime.parse(dateString) else null
+    LocalDateTime.parse(dateString)
   }
   def toKielistettyMap(map: Map[String, String]): Kielistetty = {
-    if (map != null) {
-      Map(
-        En -> map.get("en"),
-        Fi -> map.get("fi"),
-        Sv -> map.get("sv")
-      ).collect { case (k, Some(v)) => (k, v) }
-    } else {
-      Map.empty
-    }
+    Map(
+      En -> map.get("en"),
+      Fi -> map.get("fi"),
+      Sv -> map.get("sv")
+    ).collect { case (k, Some(v)) => (k, v) }
   }
 }
 

@@ -93,7 +93,7 @@ case class HakukohteenLinjaES @JsonCreator() (
 
 case class KoodiES @JsonCreator() (
     @JsonProperty("koodiUri") koodiUri: String,
-    @JsonProperty("nimi") nimi: Map[String, String]
+    @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
 case class ValintakoeLisatilaisuusIndexedES @JsonCreator() (
@@ -139,7 +139,7 @@ case class HakukohdeJavaClient @JsonCreator() (
     @JsonProperty("hakulomakeKuvaus") hakulomakeKuvaus: Map[String, String] = Map(),
     @JsonProperty("hakulomakeLinkki") hakulomakeLinkki: Map[String, String] = Map(),
     @JsonProperty("kaytetaanHaunHakulomaketta") kaytetaanHaunHakulomaketta: Option[Boolean],
-    @JsonProperty("pohjakoulutusvaatimus") pohjakoulutusvaatimus: List[Map[String, Object]] = List(),
+    @JsonProperty("pohjakoulutusvaatimus") pohjakoulutusvaatimus: List[KoodiES] = List(),
     @JsonProperty("pohjakoulutusvaatimusTarkenne") pohjakoulutusvaatimusTarkenne: Map[String, String] = Map(),
     @JsonProperty("muuPohjakoulutusvaatimus") muuPohjakoulutusvaatimus: Map[String, String] = Map(),
     @JsonProperty("toinenAsteOnkoKaksoistutkinto") toinenAsteOnkoKaksoistutkinto: Option[Boolean],
@@ -166,18 +166,6 @@ case class HakukohdeJavaClient @JsonCreator() (
     @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: Option[PaateltyAlkamiskausiES]
 ) {
 
-  def createPohjakoulutusvaatimus(pohjakoulutusvaatimus: List[Map[String, Object]]): Seq[KoodiUri] = {
-    if (pohjakoulutusvaatimus != null && !pohjakoulutusvaatimus.isEmpty) {
-      pohjakoulutusvaatimus
-        .map(p => {
-          KoodiUri(p.get("koodiUri").get.toString)
-        })
-        .toSeq
-    } else {
-      Seq.empty
-    }
-  }
-
   def toResult(): HakukohdeIndexed = {
     HakukohdeIndexed(
       oid = oid.map(HakukohdeOid),
@@ -192,7 +180,7 @@ case class HakukohdeJavaClient @JsonCreator() (
       hakulomakeKuvaus = toKielistettyMap(hakulomakeKuvaus),
       hakulomakeLinkki = toKielistettyMap(hakulomakeLinkki),
       kaytetaanHaunHakulomaketta = kaytetaanHaunHakulomaketta,
-      pohjakoulutusvaatimus = createPohjakoulutusvaatimus(pohjakoulutusvaatimus),
+      pohjakoulutusvaatimus = pohjakoulutusvaatimus.map(p => KoodiUri(p.koodiUri)),
       pohjakoulutusvaatimusTarkenne = toKielistettyMap(pohjakoulutusvaatimusTarkenne),
       muuPohjakoulutusvaatimus = toKielistettyMap(muuPohjakoulutusvaatimus),
       toinenAsteOnkoKaksoistutkinto = toinenAsteOnkoKaksoistutkinto,
@@ -236,7 +224,7 @@ case class HakukohdeJavaClient @JsonCreator() (
     ).collect { case (k, Some(v)) => (k, v) }
   }
   def parseLocalDateTime(dateString: String): LocalDateTime = {
-    if (dateString != null) LocalDateTime.parse(dateString) else null
+    LocalDateTime.parse(dateString)
   }
   def getHakukohdeMetadataIndexed(metadataESOption: Option[HakukohdeMetadataES]): Option[HakukohdeMetadataIndexed] = {
     metadataESOption.map(metadataES => HakukohdeMetadataIndexed(
@@ -441,9 +429,9 @@ case class HakukohdeIndexed(
     liitteet = liitteet.map(_.toLiite),
     valintakokeet = valintakokeet.map(_.toValintakoe),
     hakuajat = hakuajat,
-    muokkaaja = if (muokkaaja != null) muokkaaja.oid else null,
+    muokkaaja = muokkaaja.oid,
     metadata = metadata.map(_.toHakukohdeMetadata),
-    organisaatioOid = if (organisaatio != null) organisaatio.oid else null,
+    organisaatioOid = organisaatio.oid,
     kielivalinta = kielivalinta,
     modified = modified,
     johtaaTutkintoon = johtaaTutkintoon,

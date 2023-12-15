@@ -43,20 +43,6 @@ class HakuClient(val client: ElasticClient, val clientJava: elasticsearch.Elasti
     Future(searchResult.map(_.toResult()).toSeq.map(_.toHaku()))
   }
 
-  private def byTarjoajaAndTila(tarjoajaOids: Option[Set[OrganisaatioOid]], haku: HakuIndexed): Boolean =
-    tarjoajaOids.fold(true)(oids =>
-      haku.hakukohteet.exists(hakukohde => {
-        hakukohde.tila match {
-          case Tallennettu => false
-          case _ =>
-            hakukohde.jarjestyspaikka.fold(hakukohde.toteutus.tarjoajat.exists(t => oids.contains(t.oid)))(j =>
-              oids.contains(j.oid)
-            )
-        }
-      })
-    )
-
-
   def search(
               ataruId: Option[String],
               tarjoajaOids: Option[Set[OrganisaatioOid]],

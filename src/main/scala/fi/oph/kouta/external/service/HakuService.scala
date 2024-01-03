@@ -36,7 +36,11 @@ class HakuService(
     AuthorizationRules(roleEntity.readRoles.filterNot(_ == Indexer), allowAccessToParentOrganizations = true)
 
   def get(oid: HakuOid)(implicit authenticated: Authenticated): Future[(Haku, Instant)] =
-    hakuClient.getHaku(oid).map(Some(_)).map(authorizeGet(_, readRules).get)
+   {
+//     val haku = hakuClient.getHaku(oid)
+     hakuClient.getHaku(oid).map(Some(_)).map(authorizeGet(_, readRules).get)
+
+   }
 
   def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] = {
     koutaClient.create("kouta-backend.haku", KoutaHakuRequest(authenticated, haku)).map {

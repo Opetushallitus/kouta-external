@@ -32,15 +32,22 @@ class HakuService(
     with Logging {
 
   override val roleEntity: RoleEntity = Role.Haku
-  protected val readRules: AuthorizationRules =
-    AuthorizationRules(roleEntity.readRoles.filterNot(_ == Indexer), allowAccessToParentOrganizations = true)
 
   def get(oid: HakuOid)(implicit authenticated: Authenticated): Future[(Haku, Instant)] =
-   {
-//     val haku = hakuClient.getHaku(oid)
-     hakuClient.getHaku(oid).map(Some(_)).map(authorizeGet(_, readRules).get)
-
-   }
+    hakuClient
+      .getHaku(oid)
+      .map(Some(_))
+      .map(result =>
+        authorizeGet(
+          result,
+          AuthorizationRules(
+            roleEntity.readRoles.filterNot(_ == Indexer),
+            allowAccessToParentOrganizations = true,
+            additionalAuthorizedOrganisaatioOids =
+              result.map(_._1.hakukohteenLiittajaOrganisaatiot).getOrElse(Seq.empty)
+          )
+        ).get
+      )
 
   def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] = {
     koutaClient.create("kouta-backend.haku", KoutaHakuRequest(authenticated, haku)).map {

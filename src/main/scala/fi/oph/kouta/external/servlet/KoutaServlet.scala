@@ -30,19 +30,14 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
   protected def externalModifyEnabled(): Boolean =
     KoutaConfigurationFactory.configuration.securityConfiguration.externalApiModifyEnabled
 
-  protected def createLastModifiedHeader[E <: Perustiedot[_, E]](entity: E): String = {
-    // Oletetaan, että modified on Helsingin ajassa, kun sen mukana ei ole aikavyöhyketietoa
-    val instant = entity.modified.get.value.atZone(ZoneId.of("Europe/Helsinki")).toInstant
-    renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1))
-  }
-
-  protected def createLastModifiedHeader(instant: Instant): Map[String, String] = {
+  protected def createLastModifiedHeader[E <: Perustiedot[_, E]](entity: E): Map[String, String] = {
     //- system_time range in database is of form ["2017-02-28 13:40:02.442277+02",)
     //- RFC-1123 date-time format used in headers has no millis
     //- if x-Last-Modified/x-If-Unmodified-Since header is set to 2017-02-28 13:40:02, it will never be inside system_time range
     //-> this is why we wan't to set it to 2017-02-28 13:40:03 instead
-    val value = renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1))
-    Map(KoutaServlet.LastModifiedHeader -> value)
+    // Oletetaan, että modified on Helsingin ajassa, kun sen mukana ei ole aikavyöhyketietoa
+    val instant = entity.modified.get.value.atZone(ZoneId.of("Europe/Helsinki")).toInstant
+    Map(KoutaServlet.LastModifiedHeader -> renderHttpDate(instant.truncatedTo(java.time.temporal.ChronoUnit.SECONDS).plusSeconds(1)))
   }
 
   protected def getIfUnmodifiedSince: Instant =

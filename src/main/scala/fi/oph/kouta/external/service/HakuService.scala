@@ -33,20 +33,18 @@ class HakuService(
 
   override val roleEntity: RoleEntity = Role.Haku
 
-  def get(oid: HakuOid)(implicit authenticated: Authenticated): Future[(Haku, Instant)] =
+  def get(oid: HakuOid)(implicit authenticated: Authenticated): Future[Haku] =
     hakuClient
-      .getHaku(oid)
-      .map(Some(_))
-      .map(result =>
+      .getHaku(oid).map(haku =>
         authorizeGet(
-          result,
+          haku,
           AuthorizationRules(
             roleEntity.readRoles.filterNot(_ == Indexer),
             allowAccessToParentOrganizations = true,
             additionalAuthorizedOrganisaatioOids =
-              result.map(_._1.hakukohteenLiittajaOrganisaatiot).getOrElse(Seq.empty)
+              haku.hakukohteenLiittajaOrganisaatiot
           )
-        ).get
+        )
       )
 
   def create(haku: Haku)(implicit authenticated: Authenticated): Future[KoutaResponse[HakuOid]] = {

@@ -50,7 +50,7 @@ class ValintaperusteServlet(valintaperusteService: ValintaperusteService)
 
     valintaperusteService.get(UUID.fromString(params("id")))
       .map { valintaperuste =>
-        Ok(valintaperuste, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(valintaperuste)))
+        Ok(valintaperuste, headers = createLastModifiedHeader(valintaperuste))
       }
   }
 

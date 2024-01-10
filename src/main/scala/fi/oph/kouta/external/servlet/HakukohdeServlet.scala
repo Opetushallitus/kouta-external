@@ -68,12 +68,12 @@ class HakukohdeServlet(hakukohdeService: HakukohdeService)
     hakukohdeService
       .get(hakukohdeOid)
       .map { hakukohde: Hakukohde =>
-        Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+        Ok(hakukohde, headers = createLastModifiedHeader(hakukohde))
       }
       .recoverWith { case _: RoleAuthorizationFailedException =>
         logger.info(s"Authorization failed hakukohde $hakukohdeOid, retrying with hakukohderyhmä rights.")
         hakukohdeService.getHakukohdeAuthorizeByHakukohderyhma(hakukohdeOid).map { hakukohde: Hakukohde =>
-          Ok(hakukohde, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(hakukohde)))
+          Ok(hakukohde, headers = createLastModifiedHeader(hakukohde))
         }
       }
   }

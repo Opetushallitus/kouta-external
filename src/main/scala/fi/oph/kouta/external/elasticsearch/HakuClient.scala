@@ -21,12 +21,11 @@ import scala.collection.JavaConverters._
 class HakuClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "haku-kouta"
 
-  def getHaku(oid: HakuOid): Future[(Haku, Instant)] =
+  def getHaku(oid: HakuOid): Future[Haku] =
     getItem(oid.s)
       .map(debugJson)
       .map(_.to[HakuIndexed])
       .map(_.toHaku())
-      .map(h => (h, TimeUtils.localDateTimeToInstant(h.modified.get.value)))
 
   def findByOids(hakuOids: Set[HakuOid]): Future[Seq[Haku]] = {
     val hakukohteetQuery =

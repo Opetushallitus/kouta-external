@@ -579,7 +579,8 @@ case class AikuistenPerusopetusToteutusMetadata(
     isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
-@SwaggerModel("""    KkOpintojaksoToteutusMetadata:
+@SwaggerModel(
+  """    KkOpintojaksoToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -590,6 +591,25 @@ case class AikuistenPerusopetusToteutusMetadata(
     |              example: kk-opintojakso
     |              enum:
     |                - kk-opintojakso
+    |            isAvoinKorkeakoulutus:
+    |              type: boolean
+    |              description: Onko koulutus avointa korkeakoulutusta?
+    |            tunniste:
+    |              type: string
+    |              description: Hakijalle näkyvä tunniste
+    |            opinnonTyyppiKoodiUri:
+    |              type: string
+    |              description: Opinnon tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/html/koodisto/opinnontyyppi/1)
+    |              example: opinnontyyppi_1#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_6#1
+    |            opintojenLaajuusNumero:
+    |              type: integer
+    |              description: Opintojen laajuus tai kesto numeroarvona.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |              example: 10
     |""")
 case class KkOpintojaksoToteutusMetadata(
     tyyppi: Koulutustyyppi = KkOpintojakso,
@@ -659,6 +679,16 @@ case class ErikoislaakariToteutusMetadata(
     |              type: integer
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 10
+    |            isAvoinKorkeakoulutus:
+    |              type: boolean
+    |              description: Onko koulutus avointa korkeakoulutusta?
+    |            tunniste:
+    |              type: string
+    |              description: Hakijalle näkyvä tunniste
+    |            opinnonTyyppiKoodiUri:
+    |              type: string
+    |              description: Opinnon tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/html/koodisto/opinnontyyppi/1)
+    |              example: opinnontyyppi_1#1
     |"""
 )
 case class KkOpintokokonaisuusToteutusMetadata(

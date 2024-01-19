@@ -42,6 +42,9 @@ import java.util.UUID
     |            - tallennettu
     |            - poistettu
     |          description: "Koulutuksen julkaisutila. Uudet koulutukset luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun koulutus on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut koulutukset voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut koulutukset voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
+    |        esikatselu:
+    |          type: boolean
+    |          description: Onko koulutus nähtävissä esikatselussa
     |        tarjoajat:
     |          type: array
     |          description: Koulutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit
@@ -50,6 +53,17 @@ import java.util.UUID
     |          example:
     |            - 1.2.246.562.10.00101010101
     |            - 1.2.246.562.10.00101010102
+    |        julkinen:
+    |          type: boolean
+    |          description: Parametri, jolla voidaan määritellä, voivatko muut oppilaitokset luoda toteutuksia tälle kyseiselle koulutukselle. Julkisia koulutuksia ovat mm. ammatilliset tutkinnot, korkeakoulujen yhteisesti sovitut koulutukset sekä jotkin muut koulutukset (tuva, telma, opistovuosi, lukio). Älä valitse tätä, jos koulutus ei ole tarkoitettu yhteiskäyttöön ja siitä ei ole sovittu OPH:n kanssa. Julkiset koulutukset näkyvät kaikilla muilla oppilaitoksilla koulutustarjonnan ylläpidon käyttöliittymässä.
+    |        kielivalinta:
+    |          type: array
+    |          description: Kielet, joilla koulutuksen tiedot esitetään Opintopolussa. Jos tiettyä kieliversiota ei ole valittu, näytetään kieliversiot järjestyksessä fi->sv->en, en->fi->sv, sv->fi->en.
+    |          items:
+    |            $ref: '#/components/schemas/Kieli'
+    |          example:
+    |            - fi
+    |            - sv
     |        nimi:
     |          type: object
     |          description: Koulutuksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -68,16 +82,16 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoKoulutusMetadata'
     |            - $ref: '#/components/schemas/OpePedagOpinnotKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintojaksoKoulutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintokokonaisuusKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaKoulutusMetadata'
+    |            - $ref: '#/components/schemas/AmmatillinenMuuKoulutusMetadata'
     |            - $ref: '#/components/schemas/LukioKoulutusMetadata'
     |            - $ref: '#/components/schemas/TuvaKoulutusMetadata'
     |            - $ref: '#/components/schemas/TelmaKoulutusMetadata'
-    |            - $ref: '#/components/schemas/AmmatillinenMuuKoulutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusKoulutusMetadata'
-    |            - $ref: '#/components/schemas/KkOpintojaksoKoulutusMetadata'
     |            - $ref: '#/components/schemas/ErikoislaakariKoulutusMetadata'
-    |            - $ref: '#/components/schemas/KkOpintokokonaisuusKoulutusMetadata'
     |            - $ref: '#/components/schemas/ErikoistumiskoulutusMetadata'
     |            - $ref: '#/components/schemas/TaiteenPerusopetusKoulutusMetadata'
     |            - $ref: '#/components/schemas/MuuKoulutusMetadata'
@@ -94,9 +108,6 @@ import java.util.UUID
     |                teksti:
     |                  fi: Opintojen suomenkielinen lisätietokuvaus
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
-    |        julkinen:
-    |          type: boolean
-    |          description: Parametri, jolla voidaan määritellä, voivatko muut oppilaitokset luoda toteutuksia tälle kyseiselle koulutukselle. Julkisia koulutuksia ovat mm. ammatilliset tutkinnot, korkeakoulujen yhteisesti sovitut koulutukset sekä jotkin muut koulutukset (tuva, telma, opistovuosi, lukio). Älä valitse tätä, jos koulutus ei ole tarkoitettu yhteiskäyttöön ja siitä ei ole sovittu OPH:n kanssa. Julkiset koulutukset näkyvät kaikilla muilla oppilaitoksilla koulutustarjonnan ylläpidon käyttöliittymässä.
     |        muokkaaja:
     |          type: string
     |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid
@@ -105,14 +116,6 @@ import java.util.UUID
     |           type: string
     |           description: Koulutuksen luoneen organisaation oid
     |           example: 1.2.246.562.10.00101010101
-    |        kielivalinta:
-    |          type: array
-    |          description: Kielet, joilla koulutuksen tiedot esitetään Opintopolussa. Jos tiettyä kieliversiota ei ole valittu, näytetään kieliversiot järjestyksessä fi->sv->en, en->fi->sv, sv->fi->en.
-    |          items:
-    |            $ref: '#/components/schemas/Kieli'
-    |          example:
-    |            - fi
-    |            - sv
     |        teemakuva:
     |          type: string
     |          description: Koulutuksen Opintopolussa näytettävän teemakuvan URL.
@@ -135,6 +138,7 @@ case class Koulutus(
     koulutustyyppi: Koulutustyyppi,
     koulutuksetKoodiUri: Seq[String],
     tila: Julkaisutila,
+    esikatselu: Option[Boolean],
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
     sorakuvausId: Option[UUID],

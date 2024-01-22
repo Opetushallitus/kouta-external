@@ -539,7 +539,8 @@ case class KkOpintojaksoKoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String] = Seq(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -637,7 +638,8 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     isAvoinKorkeakoulutus: Option[Boolean] = None,
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadata
 
 @SwaggerModel(

@@ -138,7 +138,7 @@ case class Koulutus(
     koulutustyyppi: Koulutustyyppi,
     koulutuksetKoodiUri: Seq[String],
     tila: Julkaisutila,
-    esikatselu: Option[Boolean],
+    esikatselu: Option[Boolean] = Option.apply(true),
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
     sorakuvausId: Option[UUID],

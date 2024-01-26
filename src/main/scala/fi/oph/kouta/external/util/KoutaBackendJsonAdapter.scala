@@ -12,7 +12,6 @@ import org.json4s.{JBool, JObject, JString}
 trait KoutaBackendJsonAdapter {
   def adaptToKoutaBackendJson(entityType: Any, koutaExternalJson: JValue): JValue = {
     entityType match {
-      case k: KoutaKoulutusRequest        => adaptKoulutusJson(koutaExternalJson)
       case t: KoutaToteutusRequest        => adaptToteutusJson(koutaExternalJson)
       case hk: KoutaHakukohdeRequest      => adaptHakukohdeJson(koutaExternalJson)
       case vp: KoutaValintaperusteRequest => adaptValintaperusteJson(koutaExternalJson)

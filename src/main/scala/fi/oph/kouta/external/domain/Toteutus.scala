@@ -190,6 +190,7 @@ case class Toteutus(
     externalId: Option[String],
     koulutusOid: KoulutusOid,
     tila: Julkaisutila,
+    esikatselu: Option[Boolean] = Some(true),
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
     metadata: Option[ToteutusMetadata],

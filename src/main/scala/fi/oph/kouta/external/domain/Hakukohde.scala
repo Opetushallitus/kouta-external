@@ -192,6 +192,7 @@ case class Hakukohde(
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
+    esikatselu: Option[Boolean] = Some(true),
     tarjoaja: Option[OrganisaatioOid],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],

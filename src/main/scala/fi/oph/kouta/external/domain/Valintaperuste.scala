@@ -119,6 +119,7 @@ case class Valintaperuste(
     id: Option[UUID],
     externalId: Option[String],
     tila: Julkaisutila,
+    esikatselu: Option[Boolean] = Some(true),
     koulutustyyppi: Koulutustyyppi,
     hakutapaKoodiUri: Option[String],
     kohdejoukkoKoodiUri: Option[String],

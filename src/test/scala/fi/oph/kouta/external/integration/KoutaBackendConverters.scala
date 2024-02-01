@@ -7,16 +7,16 @@ import org.json4s.{Extraction, JValue}
 object KoutaBackendConverters extends KoutaJsonFormats with KoutaBackendJsonAdapter {
 
   def convertKoulutus(koulutus: Koulutus): JValue =
-    adaptKoulutusJson(Extraction.decompose(koulutus))
+    Extraction.decompose(koulutus)
 
   def convertToteutus(toteutus: Toteutus): JValue =
-    adaptToteutusJson(Extraction.decompose(toteutus))
+    Extraction.decompose(toteutus)
 
   def convertHakukohde(hakukohde: Hakukohde): JValue = {
     adaptHakukohdeJson(Extraction.decompose(hakukohde))
   }
 
   def convertValintaperuste(valintaperuste: Valintaperuste): JValue = {
-    adaptValintaperusteJson(Extraction.decompose(valintaperuste))
+    Extraction.decompose(valintaperuste)
   }
 }

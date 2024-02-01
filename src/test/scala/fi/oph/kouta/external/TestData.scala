@@ -410,7 +410,8 @@ object TestData {
     kielivalinta = Seq(Fi, Sv),
     teemakuva = None,
     ePerusteId = Some(1234567),
-    modified = None
+    modified = None,
+    esikatselu = Some(false)
   )
 
   val AmmToteutus = Toteutus(

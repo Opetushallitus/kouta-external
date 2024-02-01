@@ -26,6 +26,9 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - arkistoitu
     |            - tallennettu
     |          description: Valintaperustekuvauksen julkaisutila. Jos kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
+    |        esikatselu:
+    |          type: boolean
+    |          description: Onko koulutus nähtävissä esikatselussa
     |        koulutustyyppi:
     |          type: string
     |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?

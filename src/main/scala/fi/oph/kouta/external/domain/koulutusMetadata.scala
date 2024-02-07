@@ -689,7 +689,8 @@ case class ErikoistumiskoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String],
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumeroMin: Option[Double],
-    opintojenLaajuusNumeroMax: Option[Double]
+    opintojenLaajuusNumeroMax: Option[Double],
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi]
 ) extends KoulutusMetadata
 
 @SwaggerModel(

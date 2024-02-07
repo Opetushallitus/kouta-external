@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.domain
 
 import fi.oph.kouta.domain.{Amm, Erikoislaakari, Koulutustyyppi}
+import fi.oph.kouta.external.Korkeakoulutustyyppi
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -512,6 +513,11 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            korkeakoulutustyypit:
+    |              type: array
+    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              items:
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class KkOpintojaksoKoulutusMetadata(
@@ -524,7 +530,8 @@ case class KkOpintojaksoKoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String] = Seq(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi]
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -595,6 +602,11 @@ case class ErikoislaakariKoulutusMetadata(
     |              type: integer
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
+    |            korkeakoulutustyypit:
+    |              type: array
+    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              items:
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class KkOpintokokonaisuusKoulutusMetadata(
@@ -607,7 +619,8 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     isAvoinKorkeakoulutus: Option[Boolean] = None,
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi]
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -657,7 +670,8 @@ case class ErikoistumiskoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String],
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumeroMin: Option[Double],
-    opintojenLaajuusNumeroMax: Option[Double]
+    opintojenLaajuusNumeroMax: Option[Double],
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi]
 ) extends KoulutusMetadata
 
 @SwaggerModel(

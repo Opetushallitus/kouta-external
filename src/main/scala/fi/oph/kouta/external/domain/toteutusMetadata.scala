@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.domain
 
 import fi.oph.kouta.domain._
+import fi.oph.kouta.domain.oid.ToteutusOid
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -594,6 +595,8 @@ case class AikuistenPerusopetusToteutusMetadata(
 case class KkOpintojaksoToteutusMetadata(
     tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
+    opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
+    opintojenLaajuusNumero: Option[Double] = None,
     opetus: Option[Opetus],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -684,7 +687,8 @@ case class KkOpintokokonaisuusToteutusMetadata(
     opinnonTyyppiKoodiUri: Option[String] = None,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOpintojaksot: Seq[ToteutusOid]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(

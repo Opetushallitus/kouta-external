@@ -2,6 +2,7 @@ package fi.oph.kouta.external.domain.indexed
 
 import fi.oph.kouta.domain._
 import fi.oph.kouta.domain.oid.KoulutusOid
+import fi.oph.kouta.external.Korkeakoulutustyyppi
 import fi.oph.kouta.external.domain._
 
 import java.util.UUID
@@ -313,7 +314,8 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
     opintojenLaajuusNumeroMax: Option[Double],
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppi: Option[KoodiUri] = None
+    opinnonTyyppi: Option[KoodiUri] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: KkOpintojaksoKoulutusMetadata =
     KkOpintojaksoKoulutusMetadata(
@@ -326,7 +328,8 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
       opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
       isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
       tunniste = tunniste,
-      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri)
+      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
+      korkeakoulutustyypit = korkeakoulutustyypit
     )
 }
 
@@ -357,7 +360,8 @@ case class KkOpintokokonaisuusKoulutusMetadataIndexed(
     opintojenLaajuusyksikko: Option[KoodiUri],
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppi: Option[KoodiUri] = None
+    opinnonTyyppi: Option[KoodiUri] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: KkOpintokokonaisuusKoulutusMetadata =
     KkOpintokokonaisuusKoulutusMetadata(
@@ -370,7 +374,8 @@ case class KkOpintokokonaisuusKoulutusMetadataIndexed(
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       isAvoinKorkeakoulutus = isAvoinKorkeakoulutus,
       tunniste = tunniste,
-      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri)
+      opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
+      korkeakoulutustyypit = korkeakoulutustyypit
     )
 }
 
@@ -382,7 +387,8 @@ case class ErikoistumiskoulutusMetadataIndexed(
     koulutusala: Seq[KoodiUri] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri],
     opintojenLaajuusNumeroMin: Option[Double],
-    opintojenLaajuusNumeroMax: Option[Double]
+    opintojenLaajuusNumeroMax: Option[Double],
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: ErikoistumiskoulutusMetadata =
     ErikoistumiskoulutusMetadata(
@@ -393,7 +399,8 @@ case class ErikoistumiskoulutusMetadataIndexed(
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
-      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax
+      opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
+      korkeakoulutustyypit = korkeakoulutustyypit
     )
 }
 

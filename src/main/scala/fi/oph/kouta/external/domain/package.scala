@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
@@ -562,3 +563,5 @@ package object domain {
                        sv: Option[String] = None,
                        en: Option[String] = None)
 }
+
+case class Korkeakoulutustyyppi(koulutustyyppi: Koulutustyyppi, tarjoajat: Seq[OrganisaatioOid])

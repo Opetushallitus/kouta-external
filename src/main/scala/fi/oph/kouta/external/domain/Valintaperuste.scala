@@ -26,6 +26,9 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |            - arkistoitu
     |            - tallennettu
     |          description: Valintaperustekuvauksen julkaisutila. Jos kuvaus on julkaistu, se näkyy oppijalle Opintopolussa.
+    |        esikatselu:
+    |          type: boolean
+    |          description: Onko koulutus nähtävissä esikatselussa
     |        koulutustyyppi:
     |          type: string
     |          description: Minkä tyyppisille koulutuksille valintaperustekuvaus on tarkoitettu käytettäväksi?
@@ -119,6 +122,7 @@ case class Valintaperuste(
     id: Option[UUID],
     externalId: Option[String],
     tila: Julkaisutila,
+    esikatselu: Option[Boolean] = Some(true),
     koulutustyyppi: Koulutustyyppi,
     hakutapaKoodiUri: Option[String],
     kohdejoukkoKoodiUri: Option[String],

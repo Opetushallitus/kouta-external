@@ -562,6 +562,28 @@ package object domain {
   case class KoodiNimi(fi: Option[String] = None,
                        sv: Option[String] = None,
                        en: Option[String] = None)
+
+
+  @SwaggerModel(
+    """    Korkeakoulutustyyppi:
+      |      type: object
+      |      properties:
+      |        koulutustyyppi:
+      |          type: string
+      |          description: "Korkeakoulutustyyppi, sallitut arvot:
+      |            'yo' (yliopisto),
+      |            'amk' (ammattikorkea)"
+      |          example: yo
+      |        tarjoajat:
+      |          type: array
+      |          description: Ko. korkeakoulutustyyppiä tarjoavien organisaatioiden yksilöivät organisaatio-oidit.
+      |          items:
+      |            type: string
+      |          example:
+      |            - 1.2.246.562.10.00101010101
+      |            - 1.2.246.562.10.00101010102
+      |""")
+  case class Korkeakoulutustyyppi(koulutustyyppi: Koulutustyyppi, tarjoajat: Seq[OrganisaatioOid])
+
 }
 
-case class Korkeakoulutustyyppi(koulutustyyppi: Koulutustyyppi, tarjoajat: Seq[OrganisaatioOid])

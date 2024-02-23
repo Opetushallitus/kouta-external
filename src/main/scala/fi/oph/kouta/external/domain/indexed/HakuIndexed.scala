@@ -66,6 +66,7 @@ case class HakuJavaClient @JsonCreator() (
     @JsonProperty("hakutapa") hakutapa: Option[HakuTapaES],
     @JsonProperty("hakukohteenLiittamisenTakaraja") hakukohteenLiittamisenTakaraja: Option[String],
     @JsonProperty("hakukohteenMuokkaamisenTakaraja") hakukohteenMuokkaamisenTakaraja: Option[String],
+    @JsonProperty("hakukohteenLiittajaOrganisaatiot") hakukohteenLiittajaOrganisaatiot: Seq[OrganisaatioOid],
     @JsonProperty("ajastettuJulkaisu") ajastettuJulkaisu: Option[String],
     @JsonProperty("kohdejoukko") kohdejoukko: Option[KohdejoukkoES],
     @JsonProperty("kohdejoukonTarkenne") kohdejoukonTarkenne: Option[KohdejoukonTarkenneES],
@@ -92,6 +93,7 @@ case class HakuJavaClient @JsonCreator() (
       hakutapa = hakutapa.map(h => KoodiUri(h.koodiUri)),
       hakukohteenLiittamisenTakaraja = hakukohteenLiittamisenTakaraja.map(parseLocalDateTime),
       hakukohteenMuokkaamisenTakaraja = hakukohteenMuokkaamisenTakaraja.map(parseLocalDateTime),
+      hakukohteenLiittajaOrganisaatiot = hakukohteenLiittajaOrganisaatiot,
       ajastettuJulkaisu = ajastettuJulkaisu.map(parseLocalDateTime),
       kohdejoukko = kohdejoukko.map(kj => KoodiUri(kj.koodiUri)),
       kohdejoukonTarkenne = kohdejoukonTarkenne.map(kjt => KoodiUri(kjt.koodiUri)),
@@ -211,6 +213,7 @@ case class HakuIndexed(
     hakutapa: Option[KoodiUri],
     hakukohteenLiittamisenTakaraja: Option[LocalDateTime],
     hakukohteenMuokkaamisenTakaraja: Option[LocalDateTime],
+    hakukohteenLiittajaOrganisaatiot: Seq[OrganisaatioOid],
     ajastettuJulkaisu: Option[LocalDateTime],
     kohdejoukko: Option[KoodiUri],
     kohdejoukonTarkenne: Option[KoodiUri],
@@ -247,6 +250,7 @@ case class HakuIndexed(
         hakutapaKoodiUri = hakutapa.map(_.koodiUri),
         hakukohteenLiittamisenTakaraja = hakukohteenLiittamisenTakaraja,
         hakukohteenMuokkaamisenTakaraja = hakukohteenMuokkaamisenTakaraja,
+        hakukohteenLiittajaOrganisaatiot = hakukohteenLiittajaOrganisaatiot,
         ajastettuJulkaisu = ajastettuJulkaisu,
         alkamiskausiKoodiUri = metadata.flatMap(m =>
           m.toHakuMetadata.koulutuksenAlkamiskausi

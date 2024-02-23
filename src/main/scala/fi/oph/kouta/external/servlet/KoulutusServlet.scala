@@ -48,7 +48,7 @@ class KoulutusServlet(koulutusService: KoulutusService)
     implicit val authenticated: Authenticated = authenticate
 
     koulutusService.get(KoulutusOid(params("oid"))).map { koulutus =>
-      Ok(koulutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(koulutus)))
+      Ok(koulutus, headers = createLastModifiedHeader(koulutus))
     }
   }
 

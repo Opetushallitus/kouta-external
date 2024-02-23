@@ -50,7 +50,7 @@ class SorakuvausServlet(sorakuvausService: SorakuvausService)
 
     sorakuvausService.get(UUID.fromString(params("id")))
       .map { sorakuvaus =>
-        Ok(sorakuvaus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(sorakuvaus)))
+        Ok(sorakuvaus, headers = createLastModifiedHeader(sorakuvaus))
       }
   }
 

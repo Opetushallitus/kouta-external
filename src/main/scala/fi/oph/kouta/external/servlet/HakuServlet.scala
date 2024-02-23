@@ -46,9 +46,8 @@ class HakuServlet(hakuService: HakuService) extends KoutaServlet with CasAuthent
   get("/:oid") {
     implicit val authenticated: Authenticated = authenticate
 
-    hakuService.get(HakuOid(params("oid"))).map { case (haku, modified) =>
-      Ok(haku, headers = createLastModifiedHeader(modified))
-    }
+    hakuService.get(HakuOid(params("oid"))).map(haku =>
+      Ok(haku, headers = createLastModifiedHeader(haku)))
   }
 
   registerPath(

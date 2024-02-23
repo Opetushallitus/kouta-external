@@ -48,7 +48,7 @@ class ToteutusServlet(toteutusService: ToteutusService)
 
     toteutusService.get(ToteutusOid(params("oid")))
       .map { toteutus =>
-        Ok(toteutus, headers = Map(KoutaServlet.LastModifiedHeader -> createLastModifiedHeader(toteutus)))
+        Ok(toteutus, headers = createLastModifiedHeader(toteutus))
       }
   }
 

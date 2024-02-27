@@ -493,6 +493,13 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              example: kk-opintojakso
     |              enum:
     |                - kk-opintojakso
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
@@ -505,13 +512,21 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              type: integer
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
-    |            koulutusalaKoodiUrit:
+    |            isAvoinKorkeakoulutus:
+    |              type: boolean
+    |              description: Onko koulutus avointa korkeakoulutusta?
+    |            tunniste:
+    |              type: string
+    |              description: Hakijalle näkyvä tunniste
+    |            opinnonTyyppiKoodiUri:
+    |              type: string
+    |              description: Opinnon tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/html/koodisto/opinnontyyppi/1)
+    |              example: opinnontyyppi_1#1
+    |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
-    |                type: string
-    |                example:
-    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class KkOpintojaksoKoulutusMetadata(
@@ -524,7 +539,8 @@ case class KkOpintojaksoKoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String] = Seq(),
     isAvoinKorkeakoulutus: Option[Boolean],
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -595,6 +611,21 @@ case class ErikoislaakariKoulutusMetadata(
     |              type: integer
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
+    |            isAvoinKorkeakoulutus:
+    |              type: boolean
+    |              description: Onko koulutus avointa korkeakoulutusta?
+    |            tunniste:
+    |              type: string
+    |              description: Hakijalle näkyvä tunniste
+    |            opinnonTyyppiKoodiUri:
+    |              type: string
+    |              description: Opinnon tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/html/koodisto/opinnontyyppi/1)
+    |              example: opinnontyyppi_1#1
+    |            korkeakoulutustyypit:
+    |              type: array
+    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              items:
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class KkOpintokokonaisuusKoulutusMetadata(
@@ -607,7 +638,8 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     isAvoinKorkeakoulutus: Option[Boolean] = None,
     tunniste: Option[String] = None,
-    opinnonTyyppiKoodiUri: Option[String] = None
+    opinnonTyyppiKoodiUri: Option[String] = None,
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi] = Seq()
 ) extends KoulutusMetadata
 
 @SwaggerModel(
@@ -657,7 +689,8 @@ case class ErikoistumiskoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String],
     opintojenLaajuusyksikkoKoodiUri: Option[String],
     opintojenLaajuusNumeroMin: Option[Double],
-    opintojenLaajuusNumeroMax: Option[Double]
+    opintojenLaajuusNumeroMax: Option[Double],
+    korkeakoulutustyypit: Seq[Korkeakoulutustyyppi]
 ) extends KoulutusMetadata
 
 @SwaggerModel(

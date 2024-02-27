@@ -14,13 +14,13 @@ import java.util.UUID
     |          type: string
     |          description: Toteutuksen yksilöivä tunniste. Järjestelmän generoima.
     |          example: 1.2.246.562.17.00000000000000000009
+    |        externalId:
+    |          type: string
+    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        koulutusOid:
     |          type: string
     |          description: Toteutuksen koulutuksen oid
     |          example: 1.2.246.562.11.00000000000000000008
-    |        externalId:
-    |          type: string
-    |          description: Ulkoinen tunniste jota voidaan käyttää Kouta lomakkeiden mäppäykseen oppilaitosten omien tietojärjestelmien kanssa
     |        tila:
     |          type: string
     |          example: "julkaistu"
@@ -30,6 +30,9 @@ import java.util.UUID
     |            - tallennettu
     |            - poistettu
     |          description: "Toteutuksen julkaisutila. Uudet toteutukset luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun toteutus on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut toteutukset voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut toteutukset voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
+    |        esikatselu:
+    |          type: boolean
+    |          description: Onko toteutus nähtävissä esikatselussa
     |        tarjoajat:
     |          type: array
     |          description: Toteutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit
@@ -57,20 +60,20 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/YliopistoToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmattikorkeaToteutusMetadata'
-    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoToteutusMetadata'
-    |            - $ref: '#/components/schemas/OpePedagOpinnotToteutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
+    |            - $ref: '#/components/schemas/KkOpintokokonaisuusToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenTutkinnonOsaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenOsaamisalaToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenMuuToteutusMetadata'
+    |            - $ref: '#/components/schemas/AmmOpeErityisopeJaOpoToteutusMetadata'
+    |            - $ref: '#/components/schemas/OpePedagOpinnotToteutusMetadata'
     |            - $ref: '#/components/schemas/LukioToteutusMetadata'
     |            - $ref: '#/components/schemas/TuvaToteutusMetadata'
     |            - $ref: '#/components/schemas/TelmaToteutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoOpistovuosiToteutusMetadata'
     |            - $ref: '#/components/schemas/VapaaSivistystyoMuuToteutusMetadata'
     |            - $ref: '#/components/schemas/AikuistenPerusopetusToteutusMetadata'
-    |            - $ref: '#/components/schemas/KkOpintojaksoToteutusMetadata'
     |            - $ref: '#/components/schemas/ErikoislaakariToteutusMetadata'
-    |            - $ref: '#/components/schemas/KkOpintokokonaisuusToteutusMetadata'
     |            - $ref: '#/components/schemas/ErikoistumiskoulutusToteutusMetadata'
     |            - $ref: '#/components/schemas/TaiteenPerusopetusToteutusMetadata'
     |            - $ref: '#/components/schemas/MuuToteutusMetadata'
@@ -187,6 +190,7 @@ case class Toteutus(
     externalId: Option[String],
     koulutusOid: KoulutusOid,
     tila: Julkaisutila,
+    esikatselu: Option[Boolean] = Some(true),
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
     metadata: Option[ToteutusMetadata],

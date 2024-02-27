@@ -698,7 +698,8 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     opinnonTyyppi: Option[KoodiUri] = None,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOpintojaksot: Seq[ToteutusOid] = Seq()
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: KkOpintokokonaisuusToteutusMetadata = {
     KkOpintokokonaisuusToteutusMetadata(
@@ -724,7 +725,8 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
       opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      liitetytOpintojaksot = liitetytOpintojaksot
     )
   }
 }

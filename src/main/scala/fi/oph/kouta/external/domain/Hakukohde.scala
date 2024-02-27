@@ -43,6 +43,9 @@ import java.util.UUID
     |            - tallennettu
     |            - poistettu
     |          description: "Hakukohteen julkaisutila. Uudet hakukohteet luodaan tallennettu-tilaisina (käyttöliittymässä tilana: Luonnos). Kun hakukohde on julkaistu, se näkyy oppijalle Opintopolussa. Tallennetut hakukohteet voi muuttaa poistetuiksi, jolloin ne häviävät. Julkaistut hakukohteet voi arkistoida, jolloin ne häviävät Opintopolusta näkyvistä. Sallitut tilasiirtymät Poistettu <-- Tallennettu --> Julkaistu <--> Arkistoitu"
+    |        esikatselu:
+    |          type: boolean
+    |          description: Onko koulutus nähtävissä esikatselussa
     |        nimi:
     |          type: object
     |          description: Hakukohteen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -192,6 +195,7 @@ case class Hakukohde(
     hakuOid: HakuOid,
     tila: Julkaisutila,
     nimi: Kielistetty,
+    esikatselu: Option[Boolean] = Some(true),
     tarjoaja: Option[OrganisaatioOid],
     hakulomaketyyppi: Option[Hakulomaketyyppi],
     hakulomakeAtaruId: Option[UUID],

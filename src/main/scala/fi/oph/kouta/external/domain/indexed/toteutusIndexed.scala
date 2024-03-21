@@ -101,7 +101,7 @@ case class AmmatillinenToteutusMetadataIndexed(
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
-    ammatillinenPerustutkintoErityisopetuksena: Boolean,
+    ammatillinenPerustutkintoErityisopetuksena: Option[Boolean] = None,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false
@@ -114,7 +114,7 @@ case class AmmatillinenToteutusMetadataIndexed(
     asiasanat = asiasanat,
     ammattinimikkeet = ammattinimikkeet,
     yhteyshenkilot = yhteyshenkilot,
-    ammatillinenPerustutkintoErityisopetuksena = ammatillinenPerustutkintoErityisopetuksena,
+    ammatillinenPerustutkintoErityisopetuksena = ammatillinenPerustutkintoErityisopetuksena.getOrElse(false),
     hasJotpaRahoitus = hasJotpaRahoitus,
     isTaydennyskoulutus = isTaydennyskoulutus,
     isTyovoimakoulutus = isTyovoimakoulutus

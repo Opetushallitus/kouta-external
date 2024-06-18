@@ -2,6 +2,7 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
+import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.time.LocalDateTime
@@ -118,6 +119,8 @@ package object domain {
   abstract class KielistettySwagger
 
   type Kielistetty = Map[Kieli, String]
+
+  type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
 
   @SwaggerModel(
     """    Lisatieto:
@@ -316,7 +319,7 @@ package object domain {
       |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/posti/2)
       |          example: "posti_04230#2"
       |""")
-  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[String])
+  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Kielistetty)
 
   @SwaggerModel(
     """    Ammattinimike:
@@ -541,6 +544,9 @@ package object domain {
       |""")
   case class Koodi(koodiUri: Option[String] = None,
                    nimi: Option[KoodiNimi] = None)
+
+  case class Postinumerokoodi(koodiUri: String,
+                              nimi: String)
 
   @SwaggerModel(
     """    KoodiNimi:

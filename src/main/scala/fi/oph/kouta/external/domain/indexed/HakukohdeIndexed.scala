@@ -11,7 +11,7 @@ import scala.util.Try
 
 case class OsoiteES @JsonCreator() (
     @JsonProperty("osoite") osoite: Map[String, String] = Map(),
-    @JsonProperty("postinumeroKoodiUri") postinumeroKoodiUri: String
+    @JsonProperty("postinumeroKoodiUri") postinumeroKoodiUri: Map[String, PostinumeroKoodiES] = Map()
 )
 
 case class LiitteenToimitusosoiteES @JsonCreator() (
@@ -96,6 +96,11 @@ case class KoodiES @JsonCreator() (
     @JsonProperty("nimi") nimi: Map[String, String] = Map()
 )
 
+case class PostinumeroKoodiES @JsonCreator()(
+                                   @JsonProperty("koodiUri") koodiUri: String,
+                                   @JsonProperty("nimi") nimi: String
+                                 )
+
 case class ValintakoeLisatilaisuusIndexedES @JsonCreator() (
     @JsonProperty("id") id: Option[String],
     @JsonProperty("tilaisuudet") tilaisuudet: Seq[ValintakoetilaisuusES] = Seq()
@@ -164,7 +169,7 @@ case class HakukohdeJavaClient @JsonCreator() (
     @JsonProperty("koulutusasteKoodiUrit") koulutusasteKoodiUrit: Seq[String],
     @JsonProperty("hakutapaKoodiUri") hakutapaKoodiUri: Option[String],
     @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: Option[PaateltyAlkamiskausiES]
-) {
+) extends WithKielistettyOsoite {
 
   def toResult(): HakukohdeIndexed = {
     HakukohdeIndexed(
@@ -298,12 +303,7 @@ case class HakukohdeJavaClient @JsonCreator() (
         ),
         tilaisuudet = koe.tilaisuudet.map(tilaisuus => {
           ValintakoetilaisuusIndexed(
-            osoite = tilaisuus.osoite.map(osoite =>
-              OsoiteIndexed(
-                osoite = toKielistettyMap(osoite.osoite),
-                postinumero = Some(KoodiUri(osoite.postinumeroKoodiUri))
-              )
-            ),
+            osoite = toKielistettyOsoite(tilaisuus.osoite),
             aika = tilaisuus.aika.map(aika =>
               Ajanjakso(
                 alkaa = parseLocalDateTime(aika.alkaa),
@@ -329,10 +329,7 @@ case class HakukohdeJavaClient @JsonCreator() (
           toimitustapa = liite.toimitustapa.map(LiitteenToimitustapa.withName),
           toimitusosoite = liite.toimitusosoite.map(toimitusosoite =>
             LiitteenToimitusosoiteIndexed(
-              OsoiteIndexed(
-                osoite = toimitusosoite.osoite.map(to => toKielistettyMap(to.osoite)).getOrElse(Map()),
-                postinumero = toimitusosoite.osoite.map(to => KoodiUri(to.postinumeroKoodiUri))
-              ),
+              toKielistettyOsoite(toimitusosoite.osoite).get,
               toimitusosoite.sahkoposti,
               toimitusosoite.verkkosivu
             )
@@ -343,10 +340,7 @@ case class HakukohdeJavaClient @JsonCreator() (
   def getOsoite(liitteenToimitusosoiteOption: Option[LiitteenToimitusosoiteES]): Option[LiitteenToimitusosoiteIndexed] = {
     liitteenToimitusosoiteOption.map(liitteenToimitusosoite =>
       LiitteenToimitusosoiteIndexed(
-        OsoiteIndexed(
-          liitteenToimitusosoite.osoite.map(osoite => toKielistettyMap(osoite.osoite)).getOrElse(Map()),
-          liitteenToimitusosoite.osoite.map(osoite => KoodiUri(osoite.postinumeroKoodiUri))
-        ),
+        toKielistettyOsoite(liitteenToimitusosoite.osoite).get,
         liitteenToimitusosoite.sahkoposti,
         liitteenToimitusosoite.verkkosivu
       )
@@ -354,12 +348,7 @@ case class HakukohdeJavaClient @JsonCreator() (
   }
 
   def getOsoiteIndexed(osoiteEs: Option[OsoiteES]): Option[OsoiteIndexed] = {
-    osoiteEs.map(osoite =>
-      OsoiteIndexed(
-        osoite = toKielistettyMap(osoite.osoite),
-        Some(KoodiUri(osoite.postinumeroKoodiUri))
-      )
-    )
+    toKielistettyOsoite(osoiteEs)
   }
 }
 case class HakukohdeIndexed(

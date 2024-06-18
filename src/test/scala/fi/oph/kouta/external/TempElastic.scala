@@ -55,6 +55,7 @@ private object TempElastic {
     val dockerImager = DockerImageName.parse("190073735177.dkr.ecr.eu-west-1.amazonaws.com/utility/elasticsearch-kouta:8.5.2").asCompatibleSubstituteFor("docker.elastic.co/elasticsearch/elasticsearch")
     val embeddedElastic = new ElasticsearchContainer(dockerImager)
     embeddedElastic.getEnvMap.put("xpack.security.enabled", "false")
+    embeddedElastic.getEnvMap.put("ES_JAVA_OPTS", "-Xms2g -Xmx2g")
 
     embeddedElastic.start()
     elastic = Some(embeddedElastic)

@@ -81,7 +81,7 @@ case class HakuJavaClient @JsonCreator() (
     @JsonProperty("muokkaaja") muokkaaja: MuokkaajaES,
     @JsonProperty("kielivalinta") kielivalinta: Seq[String] = Seq(),
     @JsonProperty("modified") modified: Option[String]
-) {
+) extends WithKielistettyOsoite {
 
   def toResult(): HakuIndexed = {
     HakuIndexed(
@@ -132,10 +132,7 @@ case class HakuJavaClient @JsonCreator() (
         tilaisuudet = koe.tilaisuudet.map(tilaisuus => {
 
           ValintakoetilaisuusIndexed(
-            osoite = Some(OsoiteIndexed(
-              osoite = tilaisuus.osoite.map(osoite => toKielistettyMap(osoite.osoite)).getOrElse(Map()),
-              postinumero = tilaisuus.osoite.map(osoite => KoodiUri(osoite.postinumeroKoodiUri))
-            )),
+            osoite = toKielistettyOsoite(tilaisuus.osoite),
             aika = tilaisuus.aika.map(aika => Ajanjakso(
               alkaa = parseLocalDateTime(aika.alkaa),
               paattyy = aika.paattyy.map(paattyy => parseLocalDateTime(paattyy))

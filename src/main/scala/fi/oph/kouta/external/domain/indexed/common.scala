@@ -75,32 +75,6 @@ case class OsoiteIndexed(osoite: Kielistetty, postinumero: KielistettyPostinumer
   def toOsoite: Osoite = {
     Osoite(osoite, postinumeroKoodiUri = kielistettyPostinumeroToKielistettyPostinumeroKoodiUri(postinumero))
   }
-
-  def toKielistettyOsoite(osoiteES: Option[OsoiteES]): Option[OsoiteIndexed] = {
-    def toKielistettyMap(map: Map[String, String]): Kielistetty = {
-      Map(
-        En -> map.get("en"),
-        Fi -> map.get("fi"),
-        Sv -> map.get("sv")
-      ).collect { case (k, Some(v)) => (k, v) }
-    }
-
-    def toKielistettyPostinumeroMap(map: Map[String, PostinumeroKoodiES]): KielistettyPostinumero = {
-      Map(
-        En -> map.get("en"),
-        Fi -> map.get("fi"),
-        Sv -> map.get("sv")
-      ).collect { case (k, Some(v)) => (k, Postinumerokoodi(koodiUri = v.koodiUri, nimi = v.nimi)) }
-    }
-
-    osoiteES match {
-      case Some(osoite) => Some(OsoiteIndexed(
-        osoite = toKielistettyMap(osoite.osoite),
-        postinumero = toKielistettyPostinumeroMap(osoite.postinumeroKoodiUri)
-      ))
-      case None => None
-    }
-  }
 }
 
 case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskausityyppi],

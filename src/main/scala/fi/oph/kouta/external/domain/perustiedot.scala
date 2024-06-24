@@ -1,10 +1,10 @@
 package fi.oph.kouta.external.domain
 
-import java.util.UUID
 import fi.oph.kouta.domain.oid._
-import fi.oph.kouta.domain.{En, Fi, Julkaisutila, Kieli, Modified, Sv}
-import fi.oph.kouta.external.domain.indexed.{KoodiUri, OsoiteES, OsoiteIndexed, PostinumeroKoodiES}
+import fi.oph.kouta.domain.{Julkaisutila, Kieli, Modified}
 import fi.oph.kouta.security.AuthorizableEntity
+
+import java.util.UUID
 
 trait WithTila {
   val tila: Julkaisutila

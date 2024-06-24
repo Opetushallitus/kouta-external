@@ -147,10 +147,6 @@ class HakukohdeService(
       } else {
         hakukohteet
       }
-
-
-
-
   }
 
   def search(

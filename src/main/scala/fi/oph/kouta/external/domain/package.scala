@@ -115,6 +115,21 @@ package object domain {
       |          type: string
       |          example: Linkki englanninkieliselle sivulle
       |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
+      |    KielistettyPostinumero:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Suomenkielisen osoitteen postinumerokoodiuri"
+      |        sv:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
+      |        en:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
       |""")
   abstract class KielistettySwagger
 
@@ -315,11 +330,11 @@ package object domain {
       |          description: Osoite eri kielillä. Kielet on määritetty kielivalinnassa.
       |          $ref: '#/components/schemas/Teksti'
       |        postinumeroKoodiUri:
-      |          type: string
+      |          type: object
       |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/posti/2)
-      |          example: "posti_04230#2"
+      |          $ref: '#/components/schemas/KielistettyPostinumero'
       |""")
-  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Kielistetty)
+  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[Kielistetty])
 
   @SwaggerModel(
     """    Ammattinimike:

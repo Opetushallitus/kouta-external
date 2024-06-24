@@ -73,7 +73,10 @@ case class OsoiteIndexed(osoite: Kielistetty, postinumero: KielistettyPostinumer
   }
 
   def toOsoite: Osoite = {
-    Osoite(osoite, postinumeroKoodiUri = kielistettyPostinumeroToKielistettyPostinumeroKoodiUri(postinumero))
+    Osoite(
+      osoite,
+      postinumeroKoodiUri = if (postinumero.nonEmpty)
+        Some(kielistettyPostinumeroToKielistettyPostinumeroKoodiUri(postinumero)) else None)
   }
 }
 

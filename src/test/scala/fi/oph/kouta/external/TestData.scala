@@ -31,7 +31,7 @@ object TestData {
   val Osoite1 =
     Osoite(
       osoite = Map(Fi -> "Kivatie 1", Sv -> "kivavägen 1"),
-      postinumeroKoodiUri = Map(Fi -> "posti_04230#2")
+      postinumeroKoodiUri = Some(Map(Fi -> "posti_04230#2"))
     )
 
   val Yhteystieto1 = Yhteyshenkilo(

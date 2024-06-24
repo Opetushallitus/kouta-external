@@ -352,7 +352,7 @@ case class HakukohdeJavaClient @JsonCreator() (
           toimitustapa = liite.toimitustapa.map(LiitteenToimitustapa.withName),
           toimitusosoite = liite.toimitusosoite.map(toimitusosoite =>
             LiitteenToimitusosoiteIndexed(
-              toimitusosoite.osoite.map(_.toKielistettyOsoite).get,
+              toimitusosoite.osoite.map(_.toKielistettyOsoite).getOrElse(OsoiteIndexed(osoite = Map(), postinumero = Map())),
               toimitusosoite.sahkoposti,
               toimitusosoite.verkkosivu
             )
@@ -363,7 +363,7 @@ case class HakukohdeJavaClient @JsonCreator() (
   def getOsoite(liitteenToimitusosoiteOption: Option[LiitteenToimitusosoiteES]): Option[LiitteenToimitusosoiteIndexed] = {
     liitteenToimitusosoiteOption.map(liitteenToimitusosoite =>
       LiitteenToimitusosoiteIndexed(
-        liitteenToimitusosoite.osoite.map(_.toKielistettyOsoite).get,
+        liitteenToimitusosoite.osoite.map(_.toKielistettyOsoite).getOrElse(OsoiteIndexed(osoite = Map(), postinumero = Map())),
         liitteenToimitusosoite.sahkoposti,
         liitteenToimitusosoite.verkkosivu
       )

@@ -32,6 +32,7 @@ class KoulutusSpec
   val tarjoajaOid: KoulutusOid             = KoulutusOid("1.2.246.562.13.00000000000000000004")
   val ammMuuOid: KoulutusOid               = KoulutusOid("1.2.246.562.13.00000000000000000005")
   val aikuistenPerusopetusOid: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000006")
+  val osaamismerkkiOid: KoulutusOid        = KoulutusOid("1.2.246.562.13.00000000000000000007")
 
   val sorakuvausId: UUID = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
 
@@ -107,6 +108,10 @@ class KoulutusSpec
 
   it should "allow the user to read aikuisten perusopetus -koulutus" in {
     get(aikuistenPerusopetusOid, crudSessionIds(ChildOid))
+  }
+
+  it should "allow the user to read osaamismerkkikoulutus" in {
+    get(osaamismerkkiOid, crudSessionIds(ChildOid))
   }
 
   genericCreateTests()

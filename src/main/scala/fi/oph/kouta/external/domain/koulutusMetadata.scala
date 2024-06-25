@@ -70,7 +70,8 @@ sealed trait KoulutusMetadata {
     |                Opintojen laajuus tai kesto numeroarvona.
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |              example: 10
-    |""")
+    |"""
+)
 case class AmmatillinenKoulutusMetadata(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
@@ -82,8 +83,7 @@ case class AmmatillinenKoulutusMetadata(
     opintojenLaajuusyksikkoKoodiUri: Option[String] = None
 ) extends KoulutusMetadata
 
-@SwaggerModel(
-"""    AmmatillinenTutkinnonOsaKoulutusMetadata:
+@SwaggerModel("""    AmmatillinenTutkinnonOsaKoulutusMetadata:
       |      allOf:
       |        - $ref: '#/components/schemas/KoulutusMetadata'
       |        - type: object
@@ -445,6 +445,53 @@ case class VapaaSivistystyoKoulutusMetadata(
     koulutusalaKoodiUrit: Seq[String] = Seq(),
     opintojenLaajuusyksikkoKoodiUri: Option[String] = None,
     opintojenLaajuusNumero: Option[Double]
+) extends KoulutusMetadata
+
+@SwaggerModel(
+  """    VapaaSivistystyoOsaamismerkkiKoulutusMetadata:
+    |      allOf:
+    |        - $ref: '#/components/schemas/KoulutusMetadata'
+    |        - type: object
+    |          properties:
+    |            tyyppi:
+    |              type: string
+    |              description: Koulutuksen metatiedon tyyppi
+    |              example: vapaa-sivistystyo-osaamismerkki
+    |              enum:
+    |                - vapaa-sivistystyo-osaamismerkki
+    |            linkkiEPerusteisiin:
+    |              type: object
+    |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |            koulutusalaKoodiUrit:
+    |              type: array
+    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              items:
+    |                type: string
+    |                example:
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |            opintojenLaajuusyksikkoKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              example: opintojenlaajuusyksikko_4#1
+    |            opintojenLaajuusNumero:
+    |              type: double
+    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              example: 1
+    |            osaamismerkkiKoodiUri:
+    |              type: string
+    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamismerkit)"
+    |              example: osaamismerkit_1009
+    |"""
+)
+case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty = Map(),
+    lisatiedot: Seq[Lisatieto] = Seq(),
+    linkkiEPerusteisiin: Kielistetty = Map(),
+    koulutusalaKoodiUrit: Seq[String] = Seq(),
+    opintojenLaajuusNumero: Option[Double],
+    opintojenLaajuusyksikkoKoodiUri: Option[String],
+    osaamismerkkiKoodiUri: Option[String],
 ) extends KoulutusMetadata
 
 @SwaggerModel(

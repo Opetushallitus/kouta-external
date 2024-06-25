@@ -38,6 +38,7 @@ package object domain {
     |        - tuva
     |        - vapaa-sivistystyo-muu
     |        - vapaa-sivistystyo-opistovuosi
+    |        - vapaa-sivistystyo-osaamismerkki
     |        - yo
 """)
   abstract class KoulutustyyppiSwagger

@@ -2,57 +2,8 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
-import fi.oph.kouta.domain.{
-  AlkamiskausiJaVuosi,
-  Amm,
-  EiSähköistä,
-  Euro,
-  Fi,
-  Hakijapalvelu,
-  Julkaistu,
-  Kieli,
-  Maksullinen,
-  MuuOsoite,
-  Sv,
-  Tallennettu,
-  TarkkaAlkamisajankohta
-}
-import fi.oph.kouta.external.domain.{
-  Ajanjakso,
-  Aloituspaikat,
-  AmmatillinenKoulutusMetadata,
-  AmmatillinenOsaamisala,
-  AmmatillinenToteutusMetadata,
-  Apuraha,
-  Column,
-  GenericValintaperusteMetadata,
-  Haku,
-  HakuMetadata,
-  Hakukohde,
-  HakukohdeMetadata,
-  Keyword,
-  KoulutuksenAlkamiskausi,
-  Koulutus,
-  Liite,
-  LiitteenToimitusosoite,
-  Lisatieto,
-  Opetus,
-  Osoite,
-  PaateltyAlkamiskausi,
-  Row,
-  SisaltoTeksti,
-  Sorakuvaus,
-  SorakuvausMetadata,
-  Taulukko,
-  Toteutus,
-  ValintaKoeMetadata,
-  Valintakoe,
-  Valintakoetilaisuus,
-  ValintakokeenLisatilaisuudet,
-  Valintaperuste,
-  Valintatapa,
-  Yhteyshenkilo
-}
+import fi.oph.kouta.domain._
+import fi.oph.kouta.external.domain._
 
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime, LocalTime}
@@ -78,7 +29,10 @@ object TestData {
     LocalDate.now().plusDays(1).atTime(LocalTime.parse("09:58")).truncatedTo(ChronoUnit.MINUTES)
 
   val Osoite1 =
-    Osoite(osoite = Map(Fi -> "Kivatie 1", Sv -> "kivavägen 1"), postinumeroKoodiUri = Some("posti_04230#2"))
+    Osoite(
+      osoite = Map(Fi -> "Kivatie 1", Sv -> "kivavägen 1"),
+      postinumeroKoodiUri = Some(Map(Fi -> "posti_04230#2"))
+    )
 
   val Yhteystieto1 = Yhteyshenkilo(
     nimi = Map(Fi -> "Aku Ankka", Sv -> "Aku Ankka"),

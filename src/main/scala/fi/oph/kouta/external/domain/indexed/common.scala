@@ -67,8 +67,17 @@ case class ValintakoetilaisuusIndexed(
   )
 }
 
-case class OsoiteIndexed(osoite: Kielistetty, postinumero: Option[KoodiUri]) {
-  def toOsoite: Osoite = Osoite(osoite, postinumero.map(_.koodiUri))
+case class OsoiteIndexed(osoite: Kielistetty, postinumero: KielistettyPostinumero) {
+  def kielistettyPostinumeroToKielistettyPostinumeroKoodiUri(postinumero: KielistettyPostinumero): Kielistetty = {
+    postinumero.flatMap(kielistetty => Map(kielistetty._1 -> kielistetty._2.koodiUri))
+  }
+
+  def toOsoite: Osoite = {
+    Osoite(
+      osoite,
+      postinumeroKoodiUri = if (postinumero.nonEmpty)
+        Some(kielistettyPostinumeroToKielistettyPostinumeroKoodiUri(postinumero)) else None)
+  }
 }
 
 case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskausityyppi],

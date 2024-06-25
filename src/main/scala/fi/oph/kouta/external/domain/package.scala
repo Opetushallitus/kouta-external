@@ -2,6 +2,7 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
+import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.time.LocalDateTime
@@ -114,10 +115,27 @@ package object domain {
       |          type: string
       |          example: Linkki englanninkieliselle sivulle
       |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
+      |    KielistettyPostinumero:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Suomenkielisen osoitteen postinumerokoodiuri"
+      |        sv:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
+      |        en:
+      |          type: string
+      |          example: "posti_04230#2"
+      |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
       |""")
   abstract class KielistettySwagger
 
   type Kielistetty = Map[Kieli, String]
+
+  type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
 
   @SwaggerModel(
     """    Lisatieto:
@@ -312,11 +330,11 @@ package object domain {
       |          description: Osoite eri kielillä. Kielet on määritetty kielivalinnassa.
       |          $ref: '#/components/schemas/Teksti'
       |        postinumeroKoodiUri:
-      |          type: string
+      |          type: object
       |          description: Postinumero. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/posti/2)
-      |          example: "posti_04230#2"
+      |          $ref: '#/components/schemas/KielistettyPostinumero'
       |""")
-  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[String])
+  case class Osoite(osoite: Kielistetty, postinumeroKoodiUri: Option[Kielistetty])
 
   @SwaggerModel(
     """    Ammattinimike:
@@ -541,6 +559,9 @@ package object domain {
       |""")
   case class Koodi(koodiUri: Option[String] = None,
                    nimi: Option[KoodiNimi] = None)
+
+  case class Postinumerokoodi(koodiUri: String,
+                              nimi: String)
 
   @SwaggerModel(
     """    KoodiNimi:

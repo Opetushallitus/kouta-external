@@ -133,7 +133,7 @@ import java.util.UUID
 )
 case class Koulutus(
     oid: Option[KoulutusOid],
-    externalId: Option[String],
+    externalId: Option[String] = None,
     johtaaTutkintoon: Boolean,
     koulutustyyppi: Koulutustyyppi,
     koulutuksetKoodiUri: Seq[String],
@@ -141,15 +141,15 @@ case class Koulutus(
     esikatselu: Option[Boolean] = Some(true),
     tarjoajat: List[OrganisaatioOid],
     nimi: Kielistetty,
-    sorakuvausId: Option[UUID],
-    metadata: Option[KoulutusMetadata],
+    sorakuvausId: Option[UUID] = None,
+    metadata: Option[KoulutusMetadata] = None,
     julkinen: Boolean,
     muokkaaja: UserOid,
     organisaatioOid: OrganisaatioOid,
     kielivalinta: Seq[Kieli],
-    teemakuva: Option[String],
-    ePerusteId: Option[Long],
-    modified: Option[Modified]
+    teemakuva: Option[String] = None,
+    ePerusteId: Option[Long] = None,
+    modified: Option[Modified] = None
 ) extends PerustiedotWithOid[KoulutusOid, Koulutus]
     with AuthorizableMaybeJulkinen[Koulutus] {
   override def withMuokkaaja(muokkaaja: UserOid): Koulutus = copy(muokkaaja = muokkaaja)

@@ -547,6 +547,28 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     isTyovoimakoulutus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
+case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
+    tyyppi: Koulutustyyppi = VapaaSivistystyoOsaamismerkki,
+    kuvaus: Kielistetty,
+    opetus: Option[Opetus],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean] = None,
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false,
+    suoritetaanNayttona: Boolean = false,
+) extends TutkintoonJohtamatonToteutusMetadata
+
 @SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
@@ -611,7 +633,8 @@ case class AikuistenPerusopetusToteutusMetadata(
     |              description: Opintojen laajuus tai kesto numeroarvona.
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |              example: 10
-    |""")
+    |"""
+)
 case class KkOpintojaksoToteutusMetadata(
     tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,

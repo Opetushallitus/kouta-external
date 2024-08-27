@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.domain
 
 import fi.oph.kouta.domain._
-import fi.oph.kouta.domain.oid.ToteutusOid
+import fi.oph.kouta.domain.oid.{KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 @SwaggerModel(
@@ -511,7 +511,8 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
@@ -544,9 +545,22 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
 ) extends TutkintoonJohtamatonToteutusMetadata
 
+@SwaggerModel("""    VapaaSivistystyoOsaamismerkkiToteutusMetadata:
+                |      allOf:
+                |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
+                |        - type: object
+                |          properties:
+                |            tyyppi:
+                |              type: string
+                |              description: Koulutuksen metatiedon tyyppi
+                |              example: vapaa-sivistystyo-osaamismerkki
+                |              enum:
+                |                - vapaa-sivistystyo-osaamismerkki
+                |""")
 case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoOsaamismerkki,
     kuvaus: Kielistetty,
@@ -566,7 +580,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
-    suoritetaanNayttona: Boolean = false,
+    suoritetaanNayttona: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:

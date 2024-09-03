@@ -11,6 +11,7 @@
 
     <modules>
 	    <module>kouta-external</module>
+	    <module>europass-publisher</module>
     </modules>
 
     <properties>

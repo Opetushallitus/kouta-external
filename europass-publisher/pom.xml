@@ -66,6 +66,14 @@
 	</executions>
       </plugin>
       <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+	<version>${plugin.exec-maven-plugin.version}</version>
+	<configuration>
+	  <mainClass>fi.oph.kouta.EuropassPublisherApp</mainClass>
+	</configuration>
+      </plugin>
+      <plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-enforcer-plugin</artifactId>
 	<version>${plugin.maven-enforcer-plugin.version}</version>

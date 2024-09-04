@@ -3,7 +3,7 @@ package fi.oph.kouta
 /**
  * @author ${user.name}
  */
-object App {
+object EuropassPublisherApp {
   
   def foo(x : Array[String]) = x.foldLeft("")((a,b) => a + b)
   

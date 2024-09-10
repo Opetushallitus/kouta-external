@@ -39,7 +39,7 @@ jobs:
       - uses: actions/cache@v3
         id: restore-build
         with:
-          path: target
+          path: kouta-external/target
           key: ${{ github.sha }}
 
   deploy-container:
@@ -53,7 +53,7 @@ jobs:
         id: restore-build
         with:
           path: |
-            target
+            kouta-external/target
           key: ${{ github.sha }}
 
       - name: Build and deploy Docker container
@@ -65,8 +65,8 @@ jobs:
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
           export ARTIFACT_NAME="kouta-external"
-          mv target/kouta-external-*-jar-with-dependencies.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
-          cp -vr src/main/resources/* $DOCKER_BUILD_DIR/config/
+          mv kouta-external/target/kouta-external-*-jar-with-dependencies.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
+          cp -vr kouta-external/src/main/resources/* $DOCKER_BUILD_DIR/config/
           export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
           ./ci-tools/common/pull-image.sh
           ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME

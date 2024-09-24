@@ -1,4 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>fi.oph.kouta</groupId>
@@ -13,32 +16,72 @@
   </parent>
 
   <dependencies>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>org.json4s</groupId>
+            <artifactId>json4s-xml_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-scala_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.asynchttpclient</groupId>
+            <artifactId>async-http-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatra</groupId>
+            <artifactId>scalatra_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatra</groupId>
+            <artifactId>scalatra-json_2.12</artifactId>
+        </dependency>
+	<dependency>
+	  <groupId>org.http4s</groupId>
+	  <artifactId>http4s-json4s-jackson_2.12</artifactId>
+	</dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-access</artifactId>
+        </dependency>
 
-    <!-- Test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_${scala.compat.version}</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.specs2</groupId>
-      <artifactId>specs2-core_${scala.compat.version}</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.specs2</groupId>
-      <artifactId>specs2-junit_${scala.compat.version}</artifactId>
-      <scope>test</scope>
-    </dependency>
+        <!-- Jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+	<!-- Test -->
+	<dependency>
+	  <groupId>org.scalatra</groupId>
+	  <artifactId>scalatra-scalatest_2.12</artifactId>
+	  <scope>test</scope>
+	  <exclusions>
+	    <exclusion>
+	      <groupId>org.eclipse.jetty</groupId>
+	      <artifactId>jetty-webapp</artifactId>
+	    </exclusion>
+	  </exclusions>
+	</dependency>
+
+	<!-- <dependency>
+	  <groupId>org.specs2</groupId>
+	  <artifactId>specs2-core_${scala.compat.version}</artifactId>
+	  <scope>test</scope>
+      </dependency> -->
   </dependencies>
 
   <build>
@@ -148,10 +191,9 @@
 	<artifactId>scalatest-maven-plugin</artifactId>
 	<version>${plugin.scalatest-maven-plugin.version}</version>
 	<configuration>
-	  <stdout>G</stdout>
+	  <stdout>GF</stdout>
+	  <filereports>WIF TestSuiteReport.txt</filereports>
 	  <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-	  <junitxml>.</junitxml>
-	  <filereports>TestSuiteReport.txt</filereports>
 	</configuration>
 	<executions>
 	  <execution>

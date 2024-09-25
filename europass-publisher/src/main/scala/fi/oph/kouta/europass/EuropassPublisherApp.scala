@@ -1,8 +1,5 @@
-package fi.oph.kouta
+package fi.oph.kouta.europass
 
-/**
- * @author ${user.name}
- */
 object EuropassPublisherApp {
   
   def foo(x : Array[String]) = x.foldLeft("")((a,b) => a + b)

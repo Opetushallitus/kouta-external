@@ -1,4 +1,4 @@
-package fi.oph.kouta.test
+package fi.oph.kouta.europass.test
 
 import scala.io.Source
 import org.json4s._

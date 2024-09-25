@@ -113,7 +113,7 @@
 	<artifactId>exec-maven-plugin</artifactId>
 	<version>${plugin.exec-maven-plugin.version}</version>
 	<configuration>
-	  <mainClass>fi.oph.kouta.EuropassPublisherApp</mainClass>
+	  <mainClass>fi.oph.kouta.europass.EuropassPublisherApp</mainClass>
 	</configuration>
       </plugin>
       <plugin>
@@ -149,7 +149,7 @@
 	    <configuration>
 	      <archive>
 		<manifest>
-		  <mainClass>fi.oph.kouta.EuropassPublisherApp</mainClass>
+		  <mainClass>fi.oph.kouta.europass.EuropassPublisherApp</mainClass>
 		</manifest>
 	      </archive>
 	      <descriptorRefs>

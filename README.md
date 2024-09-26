@@ -50,7 +50,21 @@ Esimerkiksi `mvn test -Dsuites="fi.oph.kouta.external.integration.HakukohdeSpec"
 
 Koska Elasticsearch-datadumpin lataaminen kestää jonkin aikaa, luku-rajapintojen testejä toteuttaessa kannattaa ajaa testejä valmiiksi käynnistetyllä Elasticsearchilla.
 Katso ohjeet Elasticsearch-kontin käynnistämiseen [kouta-indeksoijan README:sta](https://github.com/Opetushallitus/kouta-indeksoija/#elasticsearch-kontin-käynnistys). 
-Huom! Jos käytät linuxia, vaihda komennon parametri `-p 127.0.0.1:9200:9200` -> `-p 9200:9200`. Muuten elasticdump ei saa yhteyttä elasticsearchiin. 
+
+Voit vaihtoehtoisesti käyttää valmista docker-compose-sääntöä (ks. [./docker-compose.yml]) Elasticsearchin ajamiseen:
+```
+$ docker-compose up -d kouta-elastic
+```
+
+Ja voit ladata tiedot etukäteen komennolla:
+```
+$ docker-compose up elasticdump-loader
+```
+
+Jos saat virheilmoituksen "Elasticsearch exited unexpectedly." on kyse todennäköisesti muistin loppumisesta.  Vapauta oman koneesi muistia (tai varaa Elastic-kontille lisää muistia) ja yritä uudelleen.
+
+Huom! Jos käytät linuxia ja kouta-indeksoijan ohjeita, vaihda komennon parametri `-p 127.0.0.1:9200:9200` -> `-p 9200:9200`. Muuten elasticdump ei saa yhteyttä elasticsearchiin.
+
 Aseta sitten muuttuja `useTestContainersElastic = false` täällä: https://github.com/Opetushallitus/kouta-external/blob/master/src/test/scala/fi/oph/kouta/external/TempElastic.scala#L9.
 Nyt voit ajaa testejä ilman jatkuvaa Elasticsearchin uudelleenkäynnistelyä ja dumppien latailua. Muista palauttaa `useTestContainersElastic = true`, kun olet valmis.
 

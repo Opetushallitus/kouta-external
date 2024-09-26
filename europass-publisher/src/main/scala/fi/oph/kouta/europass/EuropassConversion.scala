@@ -12,6 +12,9 @@ object EuropassConversion {
     "sv" -> "http://publications.europa.eu/resource/authority/language/SWE"
   )
 
+  def organisaatioUrl(oid: String): String =
+    "https://rdf.oph.fi/organisaatio/" ++ oid
+
   def koulutusUrl(oid: String): String =
     "https://rdf.oph.fi/koulutus/" ++ oid
 
@@ -20,10 +23,14 @@ object EuropassConversion {
 
   def konfoUrl(lang: String, oid: String): Elem =
     <loq:homepage
-      xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
       <loq:language uri={langCodes.getOrElse(lang, "")}/>
       <loq:contentUrl>{s"https://opintopolku.fi/konfo/$lang/toteutus/$oid"}</loq:contentUrl>
     </loq:homepage>
+
+  def tarjoajaAsElmXml(tarjoaja: JValue): Elem =
+    <loq:providedBy idref={organisaatioUrl((tarjoaja \ "oid").extract[String])}
+        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"/>
 
   def toteutusAsElmXml(toteutus: JValue): Elem = {
     val oid = (toteutus \ "oid").extract[String]
@@ -33,6 +40,7 @@ object EuropassConversion {
       {langs.map(konfoUrl(_, oid))}
       <loq:learningAchievementSpecification
           idref={koulutusUrl((toteutus \ "koulutusOid").extract[String])}/>
+      {(toteutus \ "tarjoajat").children.map(tarjoajaAsElmXml)}
     </loq:learningOpportunity>
   }
 

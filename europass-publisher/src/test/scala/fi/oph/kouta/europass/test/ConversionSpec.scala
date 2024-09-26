@@ -36,5 +36,6 @@ class ConversionSpec extends ScalatraFlatSpec {
     assert(((toteutusXml \ "homepage")(0) \ "contentUrl").text == "https://opintopolku.fi/konfo/en/toteutus/1.2.246.562.17.00000000000000000002")
     assert((toteutusXml \ "homepage")(1) \ "language" \@ "uri" == "http://publications.europa.eu/resource/authority/language/FIN")
     assert(toteutusXml \ "learningAchievementSpecification" \@ "idref" == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001")
+    assert(toteutusXml \ "providedBy" \@ "idref" == "https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871")
   }
 }

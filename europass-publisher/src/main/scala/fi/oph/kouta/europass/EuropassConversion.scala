@@ -12,7 +12,10 @@ object EuropassConversion {
     "sv" -> "http://publications.europa.eu/resource/authority/language/SWE"
   )
 
-  def toteutusURL(oid: String): String =
+  def koulutusUrl(oid: String): String =
+    "https://rdf.oph.fi/koulutus/" ++ oid
+
+  def toteutusUrl(oid: String): String =
     "https://rdf.oph.fi/koulutus-toteutus/" ++ oid
 
   def konfoUrl(lang: String, oid: String): Elem =
@@ -25,9 +28,11 @@ object EuropassConversion {
   def toteutusAsElmXml(toteutus: JValue): Elem = {
     val oid = (toteutus \ "oid").extract[String]
     val langs = List("en", "fi", "sv")
-    <loq:learningOpportunity id={toteutusURL(oid)}
-      xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+    <loq:learningOpportunity id={toteutusUrl(oid)}
+        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
       {langs.map(konfoUrl(_, oid))}
+      <loq:learningAchievementSpecification
+          idref={koulutusUrl((toteutus \ "koulutusOid").extract[String])}/>
     </loq:learningOpportunity>
   }
 

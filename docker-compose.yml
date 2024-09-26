@@ -9,6 +9,11 @@ services:
     environment:
       discovery.type: single-node
       xpack.security.enabled: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
     volumes:
       - kouta-elastic-data:/usr/share/elasticsearch/data
     ports:
@@ -18,7 +23,8 @@ services:
   elasticdump-loader:
     image: docker.io/elasticdump/elasticsearch-dump:v6.110.0
     depends_on:
-      - kouta-elastic
+      kouta-elastic:
+        condition: service_healthy
     volumes:
       - ./kouta-external/src/test/resources/elastic_dump:/tmp
     command: >

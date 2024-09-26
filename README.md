@@ -38,35 +38,43 @@ Lokaalin ajon asetuksia voi muuttaa muokkaamalla '/src/test/resources/dev-vars.y
 
 ### 3.2. Testien ajaminen
 
-Testejä varten täytyy Docker daemon olla käynnissä. Yksittäisen testisuiten tai testin voi ajaa IntelliJ IDEA:ssa halutun testiluokan tai funktion päältä, run -> scalaTest.
-Testien ajaminen käynnistää docker-kontteihin PostgreSQL-tietokannan ja Elasticsearch-hakukoneen.
-PostgreSQL-tietokanta käynnistyy test-vars.yml-tiedostossa määritelyyn porttiin (oletuksena 5435).
-Elasticsearch-kontti käynnistetään satunnaiseen porttiin käyttäen TestContainers-työkalua.
-Ennen testien ajamista Elasticsearchiin ladataan dataa, joka on luotu kouta-indeksoijalla käyttäen [ElasticDump-työkalua](https://github.com/elasticsearch-dump/elasticsearch-dump).
+Testejä varten täytyy Docker daemon olla käynnissä ja Kouta-indeksoijan
+Elasticsearch käynnissä (ks. alla). Yksittäisen testisuiten tai testin voi ajaa
+IntelliJ IDEA:ssa halutun testiluokan tai funktion päältä, run -> scalaTest.
+Testien ajaminen käynnistää docker-kontteihin PostgreSQL-tietokannan.
+PostgreSQL-tietokanta käynnistyy test-vars.yml-tiedostossa määritelyyn porttiin
+(oletuksena 5435).
 
 Jos Maven on asennettuna, voi testit ajaa myös komentoriviltä `mvn test` komennolla tai rajaamalla
 ajettavien testejä `mvn test -Dsuites="<testiluokan nimet pilkulla erotettuna>"`.
 Esimerkiksi `mvn test -Dsuites="fi.oph.kouta.external.integration.HakukohdeSpec"`
 
-Koska Elasticsearch-datadumpin lataaminen kestää jonkin aikaa, luku-rajapintojen testejä toteuttaessa kannattaa ajaa testejä valmiiksi käynnistetyllä Elasticsearchilla.
-Katso ohjeet Elasticsearch-kontin käynnistämiseen [kouta-indeksoijan README:sta](https://github.com/Opetushallitus/kouta-indeksoija/#elasticsearch-kontin-käynnistys). 
+#### Elasticsearchin käynnistys
 
-Voit vaihtoehtoisesti käyttää valmista docker-compose-sääntöä (ks. [./docker-compose.yml]) Elasticsearchin ajamiseen:
+Voit käyttää valmista docker-compose-sääntöä (ks. [./docker-compose.yml]) Elasticsearchin ajamiseen:
 ```
 $ docker-compose up -d kouta-elastic
 ```
 
-Ja voit ladata tiedot etukäteen komennolla:
+Mikäli image ei löydy, pitää ensin kirjautua ECR:iin, katso ohjeet [kouta-indeksoijan README:sta](https://github.com/Opetushallitus/kouta-indeksoija/#elasticsearch-kontin-käynnistys). 
+
+Ja voit ladata testidatan etukäteen komennolla:
 ```
 $ docker-compose up elasticdump-loader
 ```
 
 Jos saat virheilmoituksen "Elasticsearch exited unexpectedly." on kyse todennäköisesti muistin loppumisesta.  Vapauta oman koneesi muistia (tai varaa Elastic-kontille lisää muistia) ja yritä uudelleen.
 
-Huom! Jos käytät linuxia ja kouta-indeksoijan ohjeita, vaihda komennon parametri `-p 127.0.0.1:9200:9200` -> `-p 9200:9200`. Muuten elasticdump ei saa yhteyttä elasticsearchiin.
+Koska Elasticsearch-datadumpin lataaminen kestää jonkin aikaa,
+luku-rajapintojen testejä toteuttaessa kannattaa ajaa testejä valmiiksi
+käynnistetyllä Elasticsearchilla.  Jos sen sijaan
+useTestContainersElastic-muuttuja on True, testit käynnistävät
+Elasticsearch-hakukoneen.  Elasticsearch-kontti käynnistetään satunnaiseen
+porttiin käyttäen TestContainers-työkalua.  Ennen testien ajamista
+Elasticsearchiin ladataan dataa, joka on luotu kouta-indeksoijalla käyttäen
+[ElasticDump-työkalua](https://github.com/elasticsearch-dump/elasticsearch-dump).
 
-Aseta sitten muuttuja `useTestContainersElastic = false` täällä: https://github.com/Opetushallitus/kouta-external/blob/master/src/test/scala/fi/oph/kouta/external/TempElastic.scala#L9.
-Nyt voit ajaa testejä ilman jatkuvaa Elasticsearchin uudelleenkäynnistelyä ja dumppien latailua. Muista palauttaa `useTestContainersElastic = true`, kun olet valmis.
+Huom! Jos käytät linuxia ja [kouta-indeksoijan ohjeita](https://github.com/Opetushallitus/kouta-indeksoija/#elasticsearch-kontin-käynnistys), vaihda komennon parametri `-p 127.0.0.1:9200:9200` -> `-p 9200:9200`. Muuten elasticdump ei saa yhteyttä elasticsearchiin.
 
 ### 3.3. Migraatiot
 

@@ -22,6 +22,7 @@
              [ERROR] Target option 1.5 is no longer supported. Use 1.6 or later. -->
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+	<scala.compat.version>2.12</scala.compat.version>
 
         <kouta-common.version>2.19.6-SNAPSHOT</kouta-common.version>
 
@@ -49,8 +50,9 @@
         <jdbc.version>42.2.6</jdbc.version>
 
         <!-- Test properties -->
-        <scala-test.version>3.2.0-M4</scala-test.version>
+        <scala-test.version>3.1.1</scala-test.version>
         <scalatra-scalatest.version>2.7.0</scalatra-scalatest.version>
+	<spec2.version>4.2.0</spec2.version>
         <jetty.version>9.4.46.v20220331</jetty.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <mockserver-netty.version>5.5.1</mockserver-netty.version>
@@ -66,6 +68,7 @@
         <plugin.maven-jar-plugin.version>3.3.0</plugin.maven-jar-plugin.version>
         <plugin.maven-surefire-plugin.version>2.22.2</plugin.maven-surefire-plugin.version>
         <plugin.scalatest-maven-plugin.version>2.2.0</plugin.scalatest-maven-plugin.version>
+	<plugin.exec-maven-plugin.version>3.4.1</plugin.exec-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -229,6 +232,24 @@
         </dependency>
 
         <!-- Test dependencies -->
+	<dependency>
+		<groupId>org.scalatest</groupId>
+		<artifactId>scalatest_${scala.compat.version}</artifactId>
+		<version>${scala-test.version}</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.specs2</groupId>
+		<artifactId>specs2-core_${scala.compat.version}</artifactId>
+		<version>${spec2.version}</version>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.specs2</groupId>
+		<artifactId>specs2-junit_${scala.compat.version}</artifactId>
+		<version>${spec2.version}</version>
+		<scope>test</scope>
+	</dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
             <artifactId>scalatra-scalatest_2.12</artifactId>

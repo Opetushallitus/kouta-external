@@ -31,4 +31,7 @@ object ElasticClient {
       }
   }
 
+  def getToteutus(oid: String): Future[JValue] =
+    getJson(s"toteutus-kouta/_doc/$oid")
+
 }

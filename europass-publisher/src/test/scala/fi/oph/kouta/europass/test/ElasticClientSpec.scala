@@ -25,9 +25,10 @@ class ElasticClientSpec extends ScalatraFlatSpec {
 
   "example toteutus" should "be loadable" in {
     Await.result(ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")
-      .map{result: JValue => assert((result \ "found").extract[Boolean])}, 60.second)
+      .map{result: JValue => assert((result \ "tila").extract[String]
+        == "julkaistu")}, 60.second)
     Await.result(ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")
-      .map{result: JValue => assert((result \ "_source" \ "koulutusOid").extract[String]
+      .map{result: JValue => assert((result \ "koulutusOid").extract[String]
         == "1.2.246.562.13.00000000000000000001")}, 60.second)
   }
 }

@@ -1,0 +1,33 @@
+
+volumes:
+  kouta-elastic-data:
+
+services:
+  kouta-elastic:
+    image: 190073735177.dkr.ecr.eu-west-1.amazonaws.com/utility/elasticsearch-kouta:8.5.2
+    container_name: kouta-elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - kouta-elastic-data:/usr/share/elasticsearch/data
+    ports:
+      - "127.0.0.1:9200:9200"
+      - "127.0.0.1:9300:9300"
+
+  elasticdump-loader:
+    image: docker.io/elasticdump/elasticsearch-dump:v6.110.0
+    depends_on:
+      kouta-elastic:
+        condition: service_healthy
+    volumes:
+      - ./kouta-external/src/test/resources/elastic_dump:/tmp
+    command: >
+      multielasticdump --direction=load --input=/tmp
+      --output=http://kouta-elasticsearch:9200
+      --includeType=data,mapping,alias,settings,template

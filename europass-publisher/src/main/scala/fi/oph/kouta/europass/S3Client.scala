@@ -8,6 +8,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.regions.Region
 import java.io._
+import java.nio.file.Path
 
 import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
@@ -37,9 +38,20 @@ object S3Client {
     else
       getTestClient()
 
-  def objectAttributes(objectName: String): Future[GetObjectAttributesResponse] =
-    toScala(client.getObjectAttributes(
-      asJavaConsumer[GetObjectAttributesRequest.Builder]{r => r.bucket(s3Bucket).key(objectName)}))
+  def objectAttributes(objectName: String): GetObjectAttributesResponse =
+    client.getObjectAttributes(
+      asJavaConsumer[GetObjectAttributesRequest.Builder]{r => r.bucket(s3Bucket).key(objectName)}
+    ).join()
+
+  def sendFile(file: Path, contentType: String, objectName: String): PutObjectResponse =
+    client.putObject(
+      asJavaConsumer[PutObjectRequest.Builder]{r =>
+        r.bucket(s3Bucket)
+          .key(objectName)
+          .contentType(contentType)
+      },
+      file
+    ).join()
 
   def createPipe(): (InputStream, OutputStream) = {
     val input = new PipedInputStream()

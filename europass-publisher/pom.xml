@@ -24,6 +24,8 @@
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>
+
+	<!-- HTTP -->
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.12</artifactId>
@@ -31,6 +33,37 @@
         <dependency>
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
+	    <exclusions>
+		<!-- Because software.amazon.awssdk:s3 brings a newer version in -->
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-common</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-handler</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-buffer</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-transport</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-codec</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-codec-http</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>io.netty</groupId>
+		    <artifactId>netty-transport-native-unix-common</artifactId>
+		</exclusion>
+	    </exclusions>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
@@ -44,6 +77,8 @@
 	  <groupId>org.http4s</groupId>
 	  <artifactId>http4s-json4s-jackson_2.12</artifactId>
 	</dependency>
+
+	<!-- Config and logging -->
 	<dependency>
 	  <groupId>com.typesafe</groupId>
 	  <artifactId>config</artifactId>
@@ -55,6 +90,22 @@
         <dependency>
             <groupId>com.github.blemale</groupId>
             <artifactId>scaffeine_2.12</artifactId>
+        </dependency>
+
+	<!-- Amazon -->
+	<dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+	    <exclusions>
+                <exclusion>
+                    <groupId>software.amazon.awssdk</groupId>
+                    <artifactId>apache-client</artifactId>
+                </exclusion>
+		<exclusion>
+		    <groupId>org.reactivestreams</groupId>
+		    <artifactId>reactive-streams</artifactId>
+		</exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Jetty -->
@@ -85,11 +136,6 @@
 	  </exclusions>
 	</dependency>
 
-	<!-- <dependency>
-	  <groupId>org.specs2</groupId>
-	  <artifactId>specs2-core_${scala.compat.version}</artifactId>
-	  <scope>test</scope>
-      </dependency> -->
   </dependencies>
 
   <build>

@@ -495,7 +495,8 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadataIndexed(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: VapaaSivistystyoOpistovuosiToteutusMetadata = {
     VapaaSivistystyoOpistovuosiToteutusMetadata(
@@ -507,7 +508,8 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadataIndexed(
       yhteyshenkilot = yhteyshenkilot,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      liitetytOsaamismerkit = liitetytOsaamismerkit
     )
   }
 }
@@ -530,7 +532,8 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: VapaaSivistystyoMuuToteutusMetadata = {
     VapaaSivistystyoMuuToteutusMetadata(
@@ -551,7 +554,54 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      liitetytOsaamismerkit = liitetytOsaamismerkit
+    )
+  }
+}
+
+case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
+    tyyppi: Koulutustyyppi,
+    kuvaus: Kielistetty,
+    opetus: Option[OpetusIndexed],
+    asiasanat: List[Keyword],
+    ammattinimikkeet: List[Keyword],
+    yhteyshenkilot: Seq[Yhteyshenkilo],
+    isHakukohteetKaytossa: Option[Boolean],
+    hakutermi: Option[Hakutermi],
+    hakulomaketyyppi: Option[Hakulomaketyyppi],
+    hakulomakeLinkki: Kielistetty,
+    lisatietoaHakeutumisesta: Kielistetty,
+    lisatietoaValintaperusteista: Kielistetty,
+    hakuaika: Option[Ajanjakso],
+    aloituspaikat: Option[Int],
+    aloituspaikkakuvaus: Kielistetty = Map(),
+    hasJotpaRahoitus: Option[Boolean] = None,
+    isTaydennyskoulutus: Boolean = false,
+    isTyovoimakoulutus: Boolean = false,
+    suoritetaanNayttona: Boolean = false
+) extends TutkintoonJohtamatonToteutusMetadataIndexed {
+  override def toToteutusMetadata: VapaaSivistystyoOsaamismerkkiToteutusMetadata = {
+    VapaaSivistystyoOsaamismerkkiToteutusMetadata(
+      tyyppi = tyyppi,
+      kuvaus = kuvaus,
+      opetus = opetus.map(_.toOpetus),
+      asiasanat = asiasanat,
+      ammattinimikkeet = ammattinimikkeet,
+      yhteyshenkilot = yhteyshenkilot,
+      isHakukohteetKaytossa = isHakukohteetKaytossa,
+      hakutermi = hakutermi,
+      hakulomaketyyppi = hakulomaketyyppi,
+      hakulomakeLinkki = hakulomakeLinkki,
+      lisatietoaHakeutumisesta = lisatietoaHakeutumisesta,
+      lisatietoaValintaperusteista = lisatietoaValintaperusteista,
+      hakuaika = hakuaika,
+      aloituspaikat = aloituspaikat,
+      aloituspaikkakuvaus = aloituspaikkakuvaus,
+      hasJotpaRahoitus = hasJotpaRahoitus,
+      isTaydennyskoulutus = isTaydennyskoulutus,
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      suoritetaanNayttona = suoritetaanNayttona
     )
   }
 }

@@ -25,6 +25,7 @@ kouta-external.elasticsearch.username={{kouta_external_elasticsearch_username}}
 kouta-external.elasticsearch.password={{kouta_external_elasticsearch_password}}
 
 host.virkailija={{host_virkailija}}
+host.alb.virkailija={{host_alb_virkailija}}
 kayttooikeus-service.userDetails.byUsername=http://{{host_alb_virkailija}}/kayttooikeus-service/userDetails/$1
 organisaatio-service.organisaatio.oid.jalkelaiset=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/$1/jalkelaiset
 organisaatio-service.organisaatio.hierarkia=https://{{host_virkailija}}/organisaatio-service/rest/organisaatio/v4/hierarkia/hae

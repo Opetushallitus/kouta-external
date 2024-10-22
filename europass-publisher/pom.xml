@@ -31,6 +31,41 @@
         <dependency>
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
+            <exclusions>
+                <!-- Because dokumenttipalvelu library brings a newer version in -->
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-resolver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-buffer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-unix-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.reactivestreams</groupId>
+                    <artifactId>reactive-streams</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
@@ -56,6 +91,10 @@
             <groupId>com.github.blemale</groupId>
             <artifactId>scaffeine_2.12</artifactId>
         </dependency>
+	<dependency>
+	    <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
+	    <artifactId>dokumenttipalvelu</artifactId>
+	</dependency>
 
         <!-- Jetty -->
         <dependency>
@@ -85,11 +124,6 @@
 	  </exclusions>
 	</dependency>
 
-	<!-- <dependency>
-	  <groupId>org.specs2</groupId>
-	  <artifactId>specs2-core_${scala.compat.version}</artifactId>
-	  <scope>test</scope>
-      </dependency> -->
   </dependencies>
 
   <build>

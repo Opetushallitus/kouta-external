@@ -31,4 +31,13 @@ class ElasticClientSpec extends ScalatraFlatSpec {
       .map{result: JValue => assert((result \ "koulutusOid").extract[String]
         == "1.2.246.562.13.00000000000000000001")}, 60.second)
   }
+
+  "published toteutukset" should "have both toteutukset" in {
+    Await.result(ElasticClient.listPublished(None)
+      .map{result: Stream[JValue] => {
+        assert(result.toArray.length == 2)
+        assert(result.map(_ \ "oid").map(_.extract[String]).toList ==
+          List("1.2.246.562.17.00000000000000000001", "1.2.246.562.17.00000000000000000002"))
+      }}, 60.second)
+  }
 }

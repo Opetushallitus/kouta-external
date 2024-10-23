@@ -9,7 +9,7 @@ import fi.oph.kouta.europass.Publisher
 
 class PublisherSpec extends ScalatraFlatSpec {
 
-  "publisher" should "create correct toteutusXml from ElasticSearch" in {
+  "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
     Await.result(
       Publisher.toteutusToFile(
@@ -23,6 +23,19 @@ class PublisherSpec extends ScalatraFlatSpec {
     // w.write(writer.toString)
     // w.close()
 
+  }
+
+  "publishedToteutuksetToFile" should "create XML from ElasticSearch" in {
+    val writer = new StringWriter()
+    Await.result(
+      Publisher.publishedToteutuksetToFile(new BufferedWriter(writer)),
+      60.second)
+    assert(writer.toString.contains(
+      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000001\">"
+    ))
+    assert(writer.toString.contains(
+      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\">"
+    ))
   }
 
 }

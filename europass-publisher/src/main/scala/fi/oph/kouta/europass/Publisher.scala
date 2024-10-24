@@ -1,6 +1,7 @@
 package fi.oph.kouta.europass
 
-import java.io.BufferedWriter
+import scala.concurrent.Future
+import java.io.{File, BufferedWriter, FileWriter}
 
 object Publisher {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
@@ -34,5 +35,16 @@ object Publisher {
         )
         dest.close()
       }}
+
+  def publishedToteutuksetAsFile(): Future[String] = {
+    val tempFile = File.createTempFile("europass-export", ".xml")
+    tempFile.deleteOnExit()
+    val writer = new BufferedWriter(new FileWriter(tempFile))
+    publishedToteutuksetToFile(writer)
+      .map{_ => {
+        writer.close()
+        tempFile.getPath()
+      }}
+  }
 
 }

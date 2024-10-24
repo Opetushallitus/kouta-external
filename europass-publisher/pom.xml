@@ -28,6 +28,8 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.12</artifactId>
         </dependency>
+
+	<!-- HTTP -->
         <dependency>
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
@@ -79,6 +81,16 @@
 	  <groupId>org.http4s</groupId>
 	  <artifactId>http4s-json4s-jackson_2.12</artifactId>
 	</dependency>
+
+	<!-- utilities -->
+	<dependency>
+	    <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
+	    <artifactId>dokumenttipalvelu</artifactId>
+	</dependency>
+        <dependency>
+            <groupId>fi.vm.sade</groupId>
+            <artifactId>scala-logging_2.12</artifactId>
+        </dependency>
 	<dependency>
 	  <groupId>com.typesafe</groupId>
 	  <artifactId>config</artifactId>
@@ -91,10 +103,6 @@
             <groupId>com.github.blemale</groupId>
             <artifactId>scaffeine_2.12</artifactId>
         </dependency>
-	<dependency>
-	    <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
-	    <artifactId>dokumenttipalvelu</artifactId>
-	</dependency>
 
         <!-- Jetty -->
         <dependency>

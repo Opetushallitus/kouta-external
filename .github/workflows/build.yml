@@ -45,10 +45,12 @@ jobs:
       - uses: actions/cache@v3
         id: restore-build
         with:
-          path: kouta-external/target
+          path: |
+            kouta-external/target
+            europass-publisher/target
           key: ${{ github.sha }}
 
-  deploy-container:
+  deploy-kouta-container:
     needs: test-and-build
     runs-on: ubuntu-latest
 
@@ -60,6 +62,7 @@ jobs:
         with:
           path: |
             kouta-external/target
+            europass-publisher/target
           key: ${{ github.sha }}
 
       - name: Build and deploy Docker container
@@ -70,10 +73,45 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          export ARTIFACT_NAME="kouta-external"
-          mv kouta-external/target/kouta-external-*-jar-with-dependencies.jar $DOCKER_BUILD_DIR/artifact/${ARTIFACT_NAME}.jar
-          cp -vr kouta-external/src/main/resources/* $DOCKER_BUILD_DIR/config/
           export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
+          export KOUTA_ARTIFACT_NAME="kouta-external"
+
+          mv kouta-external/target/kouta-external-*-jar-with-dependencies.jar \
+            $DOCKER_BUILD_DIR/artifact/${KOUTA_ARTIFACT_NAME}.jar
+          cp -vr kouta-external/src/main/resources/* $DOCKER_BUILD_DIR/config/
           ./ci-tools/common/pull-image.sh
-          ./ci-tools/github-build/build-fatjar.sh $ARTIFACT_NAME
-          ./ci-tools/github-build/upload-image.sh $ARTIFACT_NAME
+          ./ci-tools/github-build/build-fatjar.sh $KOUTA_ARTIFACT_NAME
+          ./ci-tools/github-build/upload-image.sh $KOUTA_ARTIFACT_NAME
+
+  deploy-europass-container:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        id: restore-build
+        with:
+          path: |
+            kouta-external/target
+            europass-publisher/target
+          key: ${{ github.sha }}
+
+      - name: Build and deploy Docker container
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          git clone https://github.com/Opetushallitus/ci-tools.git
+          source ci-tools/common/setup-tools.sh
+          export BASE_IMAGE="baseimage-fatjar-openjdk11:master"
+          export EUROPASS_ARTIFACT_NAME="kouta-external-europass"
+
+          mv europass-publisher/target/europass-publisher-*-jar-with-dependencies.jar \
+            $DOCKER_BUILD_DIR/artifact/${EUROPASS_ARTIFACT_NAME}.jar
+          cp -vr europass-publisher/src/main/resources/* $DOCKER_BUILD_DIR/config/
+          ./ci-tools/common/pull-image.sh
+          ./ci-tools/github-build/build-fatjar.sh $EUROPASS_ARTIFACT_NAME
+          ./ci-tools/github-build/upload-image.sh $EUROPASS_ARTIFACT_NAME

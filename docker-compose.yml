@@ -49,7 +49,7 @@ services:
     environment:
       AWS_ACCESS_KEY_ID: none
       AWS_SECRET_ACCESS_KEY: none
-      AWS_DEFAULT_REGION: us-east-1
+      AWS_DEFAULT_REGION: eu-west-1
     depends_on:
       europass-s3:
         condition: service_healthy

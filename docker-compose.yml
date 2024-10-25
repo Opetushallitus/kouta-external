@@ -31,3 +31,26 @@ services:
       multielasticdump --direction=load --input=/tmp
       --output=http://kouta-elasticsearch:9200
       --includeType=data,mapping,alias,settings,template
+
+  europass-s3:
+    image: docker.io/localstack/localstack:s3-latest
+    container_name: kouta-europass-s3
+    ports:
+      - "127.0.0.1:4566:4566"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:4566 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  s3-configurator:
+    image: docker.io/amazon/aws-cli
+    command: --endpoint-url http://europass-s3:4566 s3api create-bucket --bucket europass-publish
+    environment:
+      AWS_ACCESS_KEY_ID: none
+      AWS_SECRET_ACCESS_KEY: none
+      AWS_DEFAULT_REGION: eu-west-1
+    depends_on:
+      europass-s3:
+        condition: service_healthy
+

@@ -3,13 +3,14 @@ package fi.oph.kouta.europass.test
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.concurrent.duration._
 import scala.concurrent.Await
+import scala.io.Source
 import java.io._
 
 import fi.oph.kouta.europass.Publisher
 
 class PublisherSpec extends ScalatraFlatSpec {
 
-  "publisher" should "create correct toteutusXml from ElasticSearch" in {
+  "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
     Await.result(
       Publisher.toteutusToFile(
@@ -23,6 +24,29 @@ class PublisherSpec extends ScalatraFlatSpec {
     // w.write(writer.toString)
     // w.close()
 
+  }
+
+  "publishedToteutuksetToFile" should "create XML from ElasticSearch" in {
+    val writer = new StringWriter()
+    Await.result(
+      Publisher.publishedToteutuksetToFile(new BufferedWriter(writer)),
+      60.second)
+    val content = writer.toString
+    assert(content.contains(
+      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000001\">"
+    ))
+    assert(content.contains(
+      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\">"
+    ))
+  }
+
+  "publishedToteutuksetAsFile" should "return XML filename" in {
+    val fileName = Await.result(
+      Publisher.publishedToteutuksetAsFile(),
+      60.second)
+    assert(fileName.contains("europass-export"))
+    val content = Source.fromFile(fileName).mkString
+    assert(content.contains("<loq:title language=\"sv\">nimi sv</loq:title>"))
   }
 
 }

@@ -1,7 +1,8 @@
 package fi.oph.kouta.external.client
 
+import fi.oph.kouta.http.DefaultHttpClient
+
 import java.util.{Map => JavaMap}
-import fi.vm.sade.utils.http.DefaultHttpClient
 import io.netty.handler.codec.http.cookie.DefaultCookie
 import scalaj.http.HttpOptions._
 import org.asynchttpclient.Dsl._

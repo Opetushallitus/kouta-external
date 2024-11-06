@@ -16,7 +16,7 @@ import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{AuthorizationRules, OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global

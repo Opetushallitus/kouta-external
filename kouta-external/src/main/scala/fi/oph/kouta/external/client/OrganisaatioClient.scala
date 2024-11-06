@@ -5,7 +5,7 @@ import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.properties.OphProperties
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 

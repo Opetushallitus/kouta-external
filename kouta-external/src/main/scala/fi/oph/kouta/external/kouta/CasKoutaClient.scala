@@ -8,7 +8,7 @@ import fi.oph.kouta.external.util.{KoutaBackendJsonAdapter, KoutaJsonFormats}
 import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.http4s._
 import org.http4s.client.Client
 import org.http4s.client.blaze.defaultClient

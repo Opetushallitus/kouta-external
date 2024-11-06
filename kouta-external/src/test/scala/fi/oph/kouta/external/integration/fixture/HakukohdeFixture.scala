@@ -13,7 +13,7 @@ import fi.oph.kouta.external.service.{
 }
 import fi.oph.kouta.external.servlet.HakukohdeServlet
 import fi.oph.kouta.external.{MockHakukohderyhmaClient, MockKoutaClient, TempElasticClient}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 
 import java.time.Instant
 import java.util.UUID

@@ -1,7 +1,7 @@
 package fi.oph.kouta.europass
 
 import fi.vm.sade.valinta.dokumenttipalvelu.Dokumenttipalvelu
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Future
 import java.io.{BufferedInputStream, FileInputStream}
@@ -47,7 +47,7 @@ object EuropassPublisherApp extends Logging {
       case _ => new Dokumenttipalvelu(awsRegion, awsBucket)
     }
   }
-  
+
   def main(args : Array[String]) {
     val future: Future[PutObjectResponse] = Publisher.publishedToteutuksetAsFile()
       .flatMap{fileName: String => {

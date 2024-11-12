@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.{JsonCreator, JsonProperty}
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, OrganisaatioOid, UserOid}
 import fi.oph.kouta.domain.{Alkamiskausityyppi, En, Fi, Hakulomaketyyppi, Julkaisutila, Kieli, Modified, Sv}
 import fi.oph.kouta.external.domain._
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 
 import java.time.{LocalDateTime, ZoneOffset}
 import java.util.UUID

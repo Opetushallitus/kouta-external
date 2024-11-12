@@ -8,7 +8,7 @@ import fi.oph.kouta.external.client.KayttooikeusClient
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.security.{CasSession, ServiceTicket, Session}
 import fi.vm.sade.utils.cas.CasClient.Username
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import scalaz.concurrent.Task
 
 import scala.concurrent.duration.Duration

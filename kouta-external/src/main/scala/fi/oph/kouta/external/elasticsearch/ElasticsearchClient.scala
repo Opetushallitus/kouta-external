@@ -19,7 +19,7 @@ import com.sksamuel.elastic4s.http.{JavaClient, NoOpHttpClientConfigCallback}
 import com.sksamuel.elastic4s.requests.get.GetResponse
 import com.sksamuel.elastic4s._
 import fi.oph.kouta.external.{ElasticSearchConfiguration, KoutaConfigurationFactory}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.apache.http.HttpHost
 import org.apache.http.auth.{AuthScope, UsernamePasswordCredentials}
 import org.apache.http.client.config.RequestConfig.Builder

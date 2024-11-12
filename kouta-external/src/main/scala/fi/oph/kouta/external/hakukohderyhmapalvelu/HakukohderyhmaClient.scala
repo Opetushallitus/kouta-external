@@ -5,7 +5,7 @@ import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.kouta.{CallerId, CasKoutaClient, KoutaClient}
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.http4s.client.Client
 import org.http4s.client.blaze.{BlazeClientConfig, SimpleHttp1Client}
 import org.http4s.{Headers, Method}

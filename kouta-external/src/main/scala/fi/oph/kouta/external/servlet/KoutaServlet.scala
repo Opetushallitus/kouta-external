@@ -11,7 +11,7 @@ import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.service.{KoulutustyyppiAuthorizationFailedException, OrganizationAuthorizationFailedException, RoleAuthorizationFailedException}
 import fi.oph.kouta.util.TimeUtils.renderHttpDate
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.json4s.MappingException
 import org.json4s.jackson.Serialization.write
 import org.scalatra._

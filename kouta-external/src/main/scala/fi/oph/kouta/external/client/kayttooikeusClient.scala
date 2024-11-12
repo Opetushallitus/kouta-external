@@ -3,7 +3,7 @@ package fi.oph.kouta.external.client
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.security.Authority
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import org.json4s.jackson.JsonMethods.parse
 
 object KayttooikeusClient extends KayttooikeusClient

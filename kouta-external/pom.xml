@@ -10,9 +10,9 @@
     <name>kouta-external</name>
 
     <parent>
-	    <artifactId>kouta-external-parent</artifactId>
-	    <groupId>fi.oph.kouta</groupId>
-	    <version>0.2-SNAPSHOT</version>
+        <artifactId>kouta-external-parent</artifactId>
+        <groupId>fi.oph.kouta</groupId>
+        <version>0.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -96,16 +96,7 @@
         <!-- Utility dependencies -->
         <dependency>
             <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-utils_2.12</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
             <artifactId>scala-properties_2.12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>fi.vm.sade</groupId>
-            <artifactId>scala-logging_2.12</artifactId>
         </dependency>
         <dependency>
             <groupId>org.reflections</groupId>
@@ -168,12 +159,12 @@
         <dependency>
             <groupId>com.typesafe.slick</groupId>
             <artifactId>slick_2.12</artifactId>
-	    <exclusions>
-		    <exclusion>
-			    <groupId>org.reactivestreams</groupId>
-			    <artifactId>reactive-streams</artifactId>
-		    </exclusion>
-	    </exclusions>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.reactivestreams</groupId>
+                    <artifactId>reactive-streams</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.typesafe.slick</groupId>

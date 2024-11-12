@@ -31,10 +31,9 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          (cd postgresql/docker && docker build --tag koutaexternal-postgres .)
-          sudo apt install docker-compose
-          docker-compose up -d kouta-elastic
-          docker-compose up elasticdump-loader
+          cd postgresql/docker
+          docker build --tag koutaexternal-postgres .
+          cd -
 
       - name: Build with Maven
         env:

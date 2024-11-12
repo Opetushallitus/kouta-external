@@ -1,6 +1,6 @@
 package fi.oph.kouta.external
 
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 
 object TempDbUtils {
 

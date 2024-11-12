@@ -15,7 +15,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
 object TempElasticClient {
-  val useTestContainersElastic = false // Aseta trueksi, jos haluat että testit käynnistävät itse Elasticsearchin
+  val useTestContainersElastic = true // Aseta falseksi, jos haluat ajaa testejä jo käynnissä olevaa elasticsearchia vasten
   var url = ""
   if (useTestContainersElastic) {
     url = s"http://localhost:${TempElastic.start()}"

@@ -7,7 +7,7 @@ import fi.oph.kouta.external.hakukohderyhmapalvelu.HakukohderyhmaClient
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}

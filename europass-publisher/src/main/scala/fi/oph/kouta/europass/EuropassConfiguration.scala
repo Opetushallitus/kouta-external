@@ -2,6 +2,7 @@ package fi.oph.kouta.europass
 
 import fi.vm.sade.utils.slf4j.Logging
 import com.typesafe.config.{Config, ConfigFactory}
+import java.io.File
 
 object EuropassConfiguration extends Logging {
   def classPathUrls(cl: ClassLoader): Array[java.net.URL] = cl match {
@@ -14,12 +15,16 @@ object EuropassConfiguration extends Logging {
     logger.info("Reading configuration from classpath: " +
       classPathUrls(getClass.getClassLoader).mkString(", "))
 
-    val templatedConfig = ConfigFactory.load("kouta-external-europass")
-    logger.info(s"Templated config is $templatedConfig")
+    val configFile = new File(System.getProperty("user.home") +
+      "/oph-configuration/kouta-external-europass.properties")
+    val templatedConfig = if (configFile.exists()) {
+      ConfigFactory.load(ConfigFactory.parseFile(configFile))
+    } else {
+      logger.warn("Actual config file kouta-external-europass.properties not found")
+      ConfigFactory.load()
+    }
     val localConfig = ConfigFactory.load("europass-publisher")
-    logger.info(s"Local config is $localConfig")
     val fallbackConfig = ConfigFactory.load("default")
-    logger.info(s"Fallback config is $fallbackConfig")
     return templatedConfig.withFallback(localConfig).withFallback(fallbackConfig)
   }
 

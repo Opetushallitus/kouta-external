@@ -1,6 +1,6 @@
 package fi.oph.kouta.europass
 
-import fi.vm.sade.utils.slf4j.Logging
+import fi.oph.kouta.logging.Logging
 import com.typesafe.config.{Config, ConfigFactory}
 import java.io.File
 

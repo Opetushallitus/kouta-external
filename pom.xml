@@ -11,8 +11,7 @@
 
     <modules>
         <module>kouta-external</module>
-        <!-- Disabloitu koska testejä ei pysty ajamaan pelkällä komennolla: mvn clean test -->
-        <!--module>europass-publisher</module-->
+        <module>europass-publisher</module>
     </modules>
 
     <properties>

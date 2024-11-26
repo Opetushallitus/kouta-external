@@ -19,7 +19,18 @@
         <dependency>
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.github.ben-manes.caffeine</groupId>
+                    <artifactId>caffeine</artifactId>
+                </exclusion>
+		<exclusion>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
+		</exclusion>
+            </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.json4s</groupId>
             <artifactId>json4s-xml_2.12</artifactId>

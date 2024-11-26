@@ -31,9 +31,7 @@ jobs:
         run: |
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
-          cd postgresql/docker
-          docker build --tag koutaexternal-postgres .
-          cd -
+          (cd postgresql/docker && docker build --tag koutaexternal-postgres .)
 
       - name: Build with Maven
         env:

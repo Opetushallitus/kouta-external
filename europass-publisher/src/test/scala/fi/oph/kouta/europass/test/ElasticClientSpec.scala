@@ -8,7 +8,7 @@ import scala.concurrent.Await
 
 import fi.oph.kouta.europass.ElasticClient
 
-class ElasticClientSpec extends ScalatraFlatSpec {
+class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val formats = DefaultFormats
 

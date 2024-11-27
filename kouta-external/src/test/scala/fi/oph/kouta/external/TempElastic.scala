@@ -15,7 +15,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer
 import org.testcontainers.utility.DockerImageName
 
 object TempElasticClient {
-  val useTestContainersElastic = (System.getenv("TEST_USE_PRERUN_ELASTIC") == null)
+  val useTestContainersElastic = !(System.getenv("TEST_USE_PRERUN_ELASTIC") == "true")
   var url = ""
   if (useTestContainersElastic) {
     url = s"http://localhost:${TempElastic.start()}"

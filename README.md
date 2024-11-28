@@ -42,7 +42,15 @@ Jos Maven on asennettuna, voi testit ajaa myös komentoriviltä `mvn test` komen
 ajettavien testejä `mvn test -Dsuites="<testiluokan nimet pilkulla erotettuna>"`.
 Esimerkiksi `mvn test -Dsuites="fi.oph.kouta.external.integration.HakukohdeSpec"`
 
+Jos ajat testejä monta kertaa peräkkäin, ajamista voi nopeuttaa
+pitämällä testidatalla täytetyn ElasticSearchin koko ajan käynnissä.
+Tämä onnistuu seuraavilla komennoilla:
 
+``` shell
+$ docker-compose up -d kouta-elastic
+$ docker-compose up elasticdump-loader
+$ export TEST_USE_PRERUN_ELASTIC=true
+```
 
 ### 3.3. Migraatiot
 

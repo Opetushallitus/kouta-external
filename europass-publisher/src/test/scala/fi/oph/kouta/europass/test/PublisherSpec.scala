@@ -8,7 +8,7 @@ import java.io._
 
 import fi.oph.kouta.europass.Publisher
 
-class PublisherSpec extends ScalatraFlatSpec {
+class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
 
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()

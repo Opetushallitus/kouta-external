@@ -33,13 +33,15 @@ jobs:
           source ci-tools/common/setup-tools.sh
           (cd postgresql/docker && docker build --tag koutaexternal-postgres .)
           sudo apt install docker-compose
+          docker-compose up -d kouta-elastic
+          docker-compose up elasticdump-loader
 
       - name: Build with Maven
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          mvn clean package -B
+          TEST_USE_PRERUN_ELASTIC=true mvn clean package -B
 
       - uses: actions/cache@v3
         id: restore-build

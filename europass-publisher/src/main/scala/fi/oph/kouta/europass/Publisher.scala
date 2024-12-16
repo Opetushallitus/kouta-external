@@ -21,30 +21,24 @@ object Publisher {
         dest.close()
       }}
 
-  def publishedToteutuksetToFile(dest: BufferedWriter) =
-    ElasticClient.listPublished(None)
-      .map{toteutukset => toteutukset.toList.map(EuropassConversion.toteutusAsElmXml)}
-      .map{toteutusXmlList => {
-        dest.write(
-          <loq:Courses xsdVersion="3.1.0"
-              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-            <loq:learningOpportunityReferences>
-              {toteutusXmlList}
-            </loq:learningOpportunityReferences>
-          </loq:Courses>.toString
-        )
-        dest.close()
-      }}
+  def publishedToteutuksetToFile(dest: BufferedWriter) = {
+    val toteutusStream = ElasticClient.listPublished(None)
+    val toteutusXmlStream = toteutusStream.map(EuropassConversion.toteutusAsElmXml)
+    dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
+      "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n" +
+      "<loq:learningOpportunityReferences>\n")
+    toteutusXmlStream.foreach{toteutus => dest.write(toteutus.toString)}
+    dest.write("\n</loq:learningOpportunityReferences>\n</loq:Courses>")
+    dest.close()
+  }
 
-  def publishedToteutuksetAsFile(): Future[String] = {
+  def publishedToteutuksetAsFile(): String = {
     val tempFile = File.createTempFile("europass-export", ".xml")
     tempFile.deleteOnExit()
     val writer = new BufferedWriter(new FileWriter(tempFile))
     publishedToteutuksetToFile(writer)
-      .map{_ => {
-        writer.close()
-        tempFile.getPath()
-      }}
+    writer.close()
+    tempFile.getPath()
   }
 
 }

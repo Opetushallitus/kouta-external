@@ -49,14 +49,11 @@ object EuropassPublisherApp extends Logging {
   }
 
   def main(args : Array[String]) {
-    val future: Future[PutObjectResponse] = Publisher.publishedToteutuksetAsFile()
-      .flatMap{fileName: String => {
-        logger.info(s"Toteutukset dumped in $fileName")
-        toScala(dokumenttipalvelu.putObject(
-          s3Key, fileName, "application/xml", new BufferedInputStream(new FileInputStream(fileName))
-        ))
-      }}
-    val result = Await.result(future, 60.minute)
+    val fileName = Publisher.publishedToteutuksetAsFile()
+    logger.info(s"Toteutukset dumped in $fileName")
+    val result = dokumenttipalvelu.putObject(
+      s3Key, fileName, "application/xml", new BufferedInputStream(new FileInputStream(fileName))
+    ).join()
     logger.info(s"Uploaded to S3 with result $result")
   }
 

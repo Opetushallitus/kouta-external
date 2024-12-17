@@ -5,6 +5,7 @@ import org.json4s.jackson.JsonMethods.{parse, render, compact}
 import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
+import fi.oph.kouta.logging.Logging
 import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Future
@@ -25,7 +26,7 @@ object ElasticQueries {
   }
 }
 
-object ElasticClient {
+object ElasticClient extends Logging {
 
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val formats = DefaultFormats
@@ -66,6 +67,7 @@ object ElasticClient {
     getJson(s"toteutus-kouta/_doc/$oid").map{_ \ "_source"}
 
   def listPublished(after: Option[String]): Stream[JValue] = {
+    logger.info(s"listPublished: querying page after $after")
     val result = postJsonSync("toteutus-kouta/_search", ElasticQueries.toteutusSearch(after))
     val hits: List[JValue] = (result \ "hits" \ "hits").children
     hits match {

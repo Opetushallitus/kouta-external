@@ -31,6 +31,22 @@
             </exclusions>
         </dependency>
 
+	<dependency>
+	    <groupId>fi.oph.kouta</groupId>
+	    <artifactId>kouta-external</artifactId>
+	    <version>0.2-SNAPSHOT</version>
+	    <exclusions>
+		<exclusion>
+		    <groupId>fi.vm.sade</groupId>
+		    <artifactId>scala-logging_2.12</artifactId>
+		</exclusion>
+		<exclusion>
+		    <groupId>org.scalatra.scalate</groupId>
+		    <artifactId>scalate-core_2.12</artifactId>
+		</exclusion>
+	    </exclusions>
+	</dependency>
+
         <dependency>
             <groupId>org.json4s</groupId>
             <artifactId>json4s-xml_2.12</artifactId>

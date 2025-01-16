@@ -1,0 +1,4 @@
+kouta-external.elasticsearch.url={{kouta_external_elasticsearch7_url}}
+kouta-external.elasticsearch.auth-enabled={{kouta_external_elasticsearch_auth_enabled | default('false')}}
+kouta-external.elasticsearch.username={{kouta_external_elasticsearch_username}}
+kouta-external.elasticsearch.password={{kouta_external_elasticsearch_password}}

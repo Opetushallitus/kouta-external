@@ -12,10 +12,9 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
 
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
-    Await.result(
-      Publisher.toteutusToFile(
-        "1.2.246.562.17.00000000000000000001", new BufferedWriter(writer)),
-      60.second)
+    Publisher.toteutusToFile(
+      "1.2.246.562.17.00000000000000000001", new BufferedWriter(writer)
+    )
     assert(writer.toString.contains("<loq:contentUrl>https://opintopolku.fi/konfo/sv/toteutus/1.2.246.562.17.00000000000000000001</loq:contentUrl>"))
     assert(writer.toString.contains("<loq:providedBy idref=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.594252633210\"/>"))
 

@@ -5,15 +5,29 @@ import org.json4s.jackson.JsonMethods.{parse, render, compact}
 import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
+import com.sksamuel.elastic4s.{ElasticClient => ScalaElasticClient}
+import co.elastic.clients.elasticsearch._types.query_dsl.{Query, QueryBuilders, MatchQuery}
+import co.elastic.clients.elasticsearch.{ElasticsearchClient => JavaElasticClient}
+
 import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import fi.oph.kouta.external.elasticsearch.ElasticsearchClient
+import fi.oph.kouta.external.util.KoutaJsonFormats
+
 import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Future
 
 import scala.collection.immutable.Stream.concat
+import scala.collection.JavaConverters._
 
 object ElasticQueries {
   import org.json4s.JsonDSL._
+
+  def toteutusByOid(oid: String): Query =
+    QueryBuilders.bool.must(
+      MatchQuery.of(q => q.field("oid.keyword").query(oid))._toQuery()
+    ).build()._toQuery()
 
   def toteutusSearch(after: Option[String]) : JValue = {
     val query = (("query" -> ("match" -> ("tila" -> "julkaistu"))) ~
@@ -26,8 +40,18 @@ object ElasticQueries {
   }
 }
 
-object ElasticClient extends Logging {
+class ToteutusOps(
+  val client: ScalaElasticClient,
+  val clientJava: JavaElasticClient
+) extends ElasticsearchClient with KoutaJsonFormats {
+  val index: String = "toteutus-kouta"
+  def getToteutus(oid: String) =
+    searchItems[ToteutusIndexed](List(ElasticQueries.toteutusByOid(oid)).asJava)
+}
 
+object ToteutusOps extends ToteutusOps(ElasticsearchClient.client, ElasticsearchClient.clientJava)
+
+object ElasticClient extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val formats = DefaultFormats
 
@@ -63,8 +87,7 @@ object ElasticClient extends Logging {
     }
   }
 
-  def getToteutus(oid: String): Future[JValue] =
-    getJson(s"toteutus-kouta/_doc/$oid").map{_ \ "_source"}
+  def getToteutus(oid: String): List[ToteutusIndexed] = ToteutusOps.getToteutus(oid)
 
   def listPublished(after: Option[String]): Stream[JValue] = {
     logger.info(s"listPublished: querying page after $after")

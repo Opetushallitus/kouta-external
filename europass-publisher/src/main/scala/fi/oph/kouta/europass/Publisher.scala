@@ -7,20 +7,20 @@ import java.io.{File, BufferedWriter, FileWriter}
 object Publisher extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
-  def toteutusToFile(oid: String, dest: BufferedWriter) =
-    ElasticClient.getToteutus(oid)
-      .map(EuropassConversion.toteutusAsElmXml)
-      .map{toteutusXml => {
-        dest.write(
-          <loq:Courses xsdVersion="3.1.0"
-              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-            <loq:learningOpportunityReferences>
-              {toteutusXml}
-            </loq:learningOpportunityReferences>
-          </loq:Courses>.toString
-        )
-        dest.close()
-      }}
+  def toteutusToFile(oid: String, dest: BufferedWriter) = {
+    val toteutusXml = EuropassConversion.toteutusAsElmXmlNew(
+      ElasticClient.getToteutus(oid)(0)
+    )
+    dest.write(
+      <loq:Courses xsdVersion="3.1.0"
+          xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+        <loq:learningOpportunityReferences>
+          {toteutusXml}
+        </loq:learningOpportunityReferences>
+      </loq:Courses>.toString
+    )
+    dest.close()
+  }
 
   def publishedToteutuksetToFile(dest: BufferedWriter) = {
     var writtenToteutusCount = 0;

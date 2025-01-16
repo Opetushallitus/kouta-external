@@ -7,6 +7,7 @@ import scala.concurrent.duration._
 import scala.concurrent.Await
 
 import fi.oph.kouta.europass.ElasticClient
+import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
 
 class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
@@ -24,12 +25,10 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   }
 
   "example toteutus" should "be loadable" in {
-    Await.result(ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")
-      .map{result: JValue => assert((result \ "tila").extract[String]
-        == "julkaistu")}, 60.second)
-    Await.result(ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")
-      .map{result: JValue => assert((result \ "koulutusOid").extract[String]
-        == "1.2.246.562.13.00000000000000000001")}, 60.second)
+    val tot = ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")(0)
+    assert(tot.tila.name == "julkaistu")
+    assert(tot.koulutusOid.map(_.toString).getOrElse("")
+      == "1.2.246.562.13.00000000000000000001")
   }
 
   "published toteutukset" should "have both toteutukset" in {

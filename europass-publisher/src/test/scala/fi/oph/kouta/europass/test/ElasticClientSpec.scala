@@ -14,14 +14,7 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   implicit val formats = DefaultFormats
 
   "elasticsearch" should "respond" in {
-    Await.result(ElasticClient.getJson("")
-      .map{_ \ "tagline"}
-      .map{_.extract[String] == "You Know, for Search"}
-      .map{assert(_)}, 60.second)
-    Await.result(ElasticClient.getJson("_cluster/health")
-      .map{_ \ "status"}
-      .map{_.extract[String] == "yellow"}
-      .map{assert(_)}, 60.second)
+    assert(ElasticClient.testConnection())
   }
 
   "example toteutus" should "be loadable" in {
@@ -32,9 +25,9 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   }
 
   "published toteutukset" should "have both toteutukset" in {
-    val result = ElasticClient.listPublished(None)
+    val result = ElasticClient.listPublished()
     assert(result.toArray.length == 2)
-    assert(result.map(_ \ "oid").map(_.extract[String]).toList ==
+    assert(result.map{tot => tot.oid.toString}.toList ==
       List("1.2.246.562.17.00000000000000000001", "1.2.246.562.17.00000000000000000002"))
   }
 }

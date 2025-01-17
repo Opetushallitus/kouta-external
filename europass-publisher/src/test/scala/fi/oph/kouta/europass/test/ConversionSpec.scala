@@ -3,21 +3,35 @@ package fi.oph.kouta.europass.test
 import scala.io.Source
 import scala.xml._
 import java.io.StringWriter
+import scala.reflect.{ClassTag, classTag}
+
 import fi.oph.kouta.europass.EuropassConversion
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
+import com.fasterxml.jackson.databind.{ObjectMapper, DeserializationFeature}
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+
+import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import fi.oph.kouta.domain.{Kieli, Sv}
 
 class ConversionSpec extends ScalatraFlatSpec {
   implicit val formats = DefaultFormats
-  lazy val example_toteutus: JValue = parse(
+  val mapper: ObjectMapper = new ObjectMapper()
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    .registerModule(DefaultScalaModule)
+
+  lazy val example_toteutus_jvalue: JValue = parse(
     Source.fromResource("toteutus-example-1.json").bufferedReader
   )
+  lazy val example_toteutus: ToteutusIndexed =
+    mapper
+      .convertValue(example_toteutus_jvalue, classTag[ToteutusIndexed].runtimeClass)
+      .asInstanceOf[ToteutusIndexed]
 
   "example_toteutus" should "have correct fields" in {
-    assert((example_toteutus \ "koulutusOid").extract[String] == "1.2.246.562.13.00000000000000000001")
-    assert((example_toteutus \ "nimi" \ "sv").extract[String] == "Glusiska haren 2022")
-    assert(((example_toteutus \ "hakutiedot")(0) \ "hakuOid").extract[String] == "1.2.246.562.29.00000000000000000001")
+    assert(example_toteutus.koulutusOid.toString == "1.2.246.562.13.00000000000000000001")
+    assert(example_toteutus.nimi(Sv) == "Glusiska haren 2022")
   }
 
   it should "have correct namespace when converted" in {

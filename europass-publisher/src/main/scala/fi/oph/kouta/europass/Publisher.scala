@@ -8,7 +8,7 @@ object Publisher extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
-    val toteutusXml = EuropassConversion.toteutusAsElmXmlNew(
+    val toteutusXml = EuropassConversion.toteutusAsElmXml(
       ElasticClient.getToteutus(oid)(0)
     )
     dest.write(
@@ -24,7 +24,7 @@ object Publisher extends Logging {
 
   def publishedToteutuksetToFile(dest: BufferedWriter) = {
     var writtenToteutusCount = 0;
-    val toteutusStream = ElasticClient.listPublished(None)
+    val toteutusStream = ElasticClient.listPublished()
     val toteutusXmlStream = toteutusStream.map(EuropassConversion.toteutusAsElmXml)
     dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
       "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n" +

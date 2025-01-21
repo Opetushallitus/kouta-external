@@ -13,6 +13,7 @@ import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
 import fi.oph.kouta.external.elasticsearch.ElasticsearchClient
 import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.{ElasticSearchConfiguration, KoutaConfigurationFactory}
 
 import scala.collection.JavaConverters._
 
@@ -33,6 +34,12 @@ class ToteutusOps(
   val clientJava: JavaElasticClient
 ) extends ElasticsearchClient with KoutaJsonFormats {
   val index: String = "toteutus-kouta"
+  override val config: ElasticSearchConfiguration = ElasticSearchConfiguration(
+    elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url"),
+    authEnabled = false,
+    username = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.username"),
+    password = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.password"),
+  )
 
   def getToteutus(oid: String) =
     searchItems[ToteutusIndexed](List(ElasticQueries.toteutusByOid(oid)).asJava)
@@ -44,7 +51,18 @@ object ToteutusOps extends ToteutusOps(ElasticsearchClient.client, Elasticsearch
 
 object ElasticClient extends Logging {
 
-  def testConnection(): Boolean = ElasticsearchClient.clientJava.ping().value
+  def testConnection(): Boolean = {
+    KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+    try {
+      ElasticsearchClient.clientJava.ping().value
+    } catch {
+      case e: java.lang.ExceptionInInitializerError =>
+        logger.warn("Got exception:", e)
+        logger.warn("with cause:", e.getCause)
+        false
+    }
+  }
+
   def getToteutus(oid: String): List[ToteutusIndexed] = ToteutusOps.getToteutus(oid)
   def listPublished(): List[ToteutusIndexed] = ToteutusOps.searchToteutukset("julkaistu")
 

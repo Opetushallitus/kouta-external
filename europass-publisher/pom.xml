@@ -275,6 +275,12 @@
                     <stdout>GF</stdout>
                     <filereports>WIF TestSuiteReport.txt</filereports>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <systemProperties>
+                        <property>
+                            <name>kouta-external.config-profile</name>
+                            <value>template</value>
+                        </property>
+                    </systemProperties>
                 </configuration>
                 <executions>
                     <execution>

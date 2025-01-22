@@ -14,20 +14,23 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   implicit val formats = DefaultFormats
 
   "elasticsearch" should "respond" in {
-    assert(ElasticClient.testConnection())
+    val res1 = ElasticClient.getJson("")
+    assert((res1 \ "tagline").extract[String] == "You Know, for Search")
+    val res2 = ElasticClient.getJson("_cluster/health")
+    assert((res2 \ "status").extract[String] == "yellow")
   }
 
   "example toteutus" should "be loadable" in {
-    val tot = ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")(0)
+    val tot = ElasticClient.getToteutus("1.2.246.562.17.00000000000000000002")
     assert(tot.tila.name == "julkaistu")
     assert(tot.koulutusOid.map(_.toString).getOrElse("")
       == "1.2.246.562.13.00000000000000000001")
   }
 
   "published toteutukset" should "have both toteutukset" in {
-    val result = ElasticClient.listPublished()
+    val result = ElasticClient.listPublished(None)
     assert(result.toArray.length == 2)
-    assert(result.map{tot => tot.oid.toString}.toList ==
+    assert(result.map{tot => tot.oid.map(_.toString).getOrElse("")}.toList ==
       List("1.2.246.562.17.00000000000000000001", "1.2.246.562.17.00000000000000000002"))
   }
 }

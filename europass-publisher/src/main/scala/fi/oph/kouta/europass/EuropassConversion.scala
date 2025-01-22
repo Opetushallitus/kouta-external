@@ -41,10 +41,7 @@ object EuropassConversion {
       {langs.map(konfoUrl(_, oid))}
       <loq:learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
-      {toteutus.tarjoajat.map{t =>
-        <loq:providedBy idref={organisaatioUrl(t.oid.toString)}
-          xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"/>
-      }}
+      {toteutus.tarjoajat.map{t => <loq:providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       {toteutus.nimi.keys.map(lang => nimiAsElmXml(lang.name, toteutus.nimi(lang)))}
     </loq:learningOpportunity>
   }

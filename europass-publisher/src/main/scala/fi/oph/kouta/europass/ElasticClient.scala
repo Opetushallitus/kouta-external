@@ -5,65 +5,72 @@ import org.json4s.jackson.JsonMethods.{parse, render, compact}
 import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
-import com.sksamuel.elastic4s.{ElasticClient => ScalaElasticClient}
-import co.elastic.clients.elasticsearch._types.query_dsl.{Query, QueryBuilders, MatchQuery}
-import co.elastic.clients.elasticsearch.{ElasticsearchClient => JavaElasticClient}
-
 import fi.oph.kouta.logging.Logging
-import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
-import fi.oph.kouta.external.elasticsearch.ElasticsearchClient
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.external.{ElasticSearchConfiguration, KoutaConfigurationFactory}
+import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import java.util.concurrent.CompletableFuture
 
-import scala.collection.JavaConverters._
+import scala.collection.immutable.Stream.concat
 
 object ElasticQueries {
-  def toteutusByOid(oid: String): Query =
-    QueryBuilders.bool.must(
-      MatchQuery.of(q => q.field("oid.keyword").query(oid))._toQuery()
-    ).build()._toQuery()
+  import org.json4s.JsonDSL._
 
-  def toteutuksetByTila(tila: String): Query =
-    QueryBuilders.bool.must(
-      MatchQuery.of(q => q.field("tila").query(tila))._toQuery()
-    ).build()._toQuery()
+  def toteutusSearch(after: Option[String]) : JValue = {
+    val query = (("query" -> ("match" -> ("tila" -> "julkaistu"))) ~
+                  ("size" -> 1000) ~
+                  ("sort" -> ("oid.keyword" -> "asc")))
+    after match {
+      case None => query
+      case Some(s) => query ~ ("search_after" -> List(after))
+    }
+  }
 }
 
-class ToteutusOps(
-  val client: ScalaElasticClient,
-  val clientJava: JavaElasticClient
-) extends ElasticsearchClient with KoutaJsonFormats {
-  val index: String = "toteutus-kouta"
-  override val config: ElasticSearchConfiguration = ElasticSearchConfiguration(
-    elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url"),
-    authEnabled = false,
-    username = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.username"),
-    password = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.password"),
-  )
+object ElasticClient extends Logging with KoutaJsonFormats {
 
-  def getToteutus(oid: String) =
-    searchItems[ToteutusIndexed](List(ElasticQueries.toteutusByOid(oid)).asJava)
-  def searchToteutukset(tila: String) = 
-    searchItems[ToteutusIndexed](List(ElasticQueries.toteutuksetByTila(tila)).asJava)
-}
+  lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
+  lazy val username = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.username")
+  lazy val password = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.password")
+  lazy val realm = new Realm.Builder(username, password)
+    .setUsePreemptiveAuth(true)
+    .setScheme(Realm.AuthScheme.BASIC)
+    .build()
+  val httpClient = asyncHttpClient()
 
-object ToteutusOps extends ToteutusOps(ElasticsearchClient.client, ElasticsearchClient.clientJava)
-
-object ElasticClient extends Logging {
-
-  def testConnection(): Boolean = {
-    KoutaConfigurationFactory.setupWithDefaultTemplateFile()
-    try {
-      ElasticsearchClient.clientJava.ping().value
-    } catch {
-      case e: java.lang.ExceptionInInitializerError =>
-        logger.warn("Got exception:", e)
-        logger.warn("with cause:", e.getCause)
-        false
+  def getJson(urlSuffix: String): JValue = {
+    val req = get(s"${elasticUrl}/${urlSuffix}").setRealm(realm).build()
+    val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
+    resp match {
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
     }
   }
 
-  def getToteutus(oid: String): List[ToteutusIndexed] = ToteutusOps.getToteutus(oid)
-  def listPublished(): List[ToteutusIndexed] = ToteutusOps.searchToteutukset("julkaistu")
+  def postJson(urlSuffix: String, body: JValue): JValue = {
+    val req: Request = post(s"${elasticUrl}/${urlSuffix}")
+      .setRealm(realm)
+      .setHeader("Content-type", "application/json")
+      .setBody(compact(render(body)))
+      .build()
+    val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
+    resp match {
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix with "
+        ++ s"body $body failed: ${r.getResponseBody()}")
+    }
+  }
 
+  def getToteutus(oid: String): ToteutusIndexed =
+    (getJson(s"toteutus-kouta/_doc/$oid") \ "_source").extract[ToteutusIndexed]
+
+  def listPublished(after: Option[String]): Stream[ToteutusIndexed] = {
+    logger.info(s"listPublished: querying page after $after")
+    val result = postJson("toteutus-kouta/_search", ElasticQueries.toteutusSearch(after))
+    val hits: List[JValue] = (result \ "hits" \ "hits").children
+    hits match {
+      case Nil => Stream.empty
+      case _ => concat(hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream,
+        listPublished(Some((hits.last \ "sort")(0).extract[String])))
+    }
+  }
 }

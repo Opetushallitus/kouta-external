@@ -9,11 +9,10 @@ import fi.oph.kouta.europass.EuropassConversion
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.Serialization.{read, write}
 import org.scalatra.test.scalatest.ScalatraFlatSpec
-import com.fasterxml.jackson.databind.{ObjectMapper, DeserializationFeature}
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
 
-import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
 import fi.oph.kouta.domain.{Kieli, Sv}
 
 class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
@@ -21,6 +20,20 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     Source.fromResource("toteutus-example-1.json").bufferedReader
   )
   lazy val example_toteutus: ToteutusIndexed = example_toteutus_jvalue.extract[ToteutusIndexed]
+  lazy val example_koulutus: KoulutusIndexed = read[KoulutusIndexed](
+    Source.fromResource("koulutus-example-1.json").bufferedReader
+  )
+
+  "example_koulutus" should "have correct fields" in {
+    assert(example_koulutus.oid.getOrElse("").toString == "1.2.246.562.13.00000000000000000006")
+    assert(example_koulutus.nimi(Sv) == "nimi sv")
+  }
+
+  it should "contain required elements" in {
+    val koulutusXml: Elem = EuropassConversion.koulutusAsElmXml(example_koulutus)
+    assert(koulutusXml \@ "id" == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
+    assert((koulutusXml \ "title")(0).text == "nimi fi")
+  }
 
   "example_toteutus" should "have correct fields" in {
     assert(example_toteutus.koulutusOid.getOrElse("").toString == "1.2.246.562.13.00000000000000000001")

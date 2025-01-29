@@ -11,8 +11,6 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
 import java.util.concurrent.CompletableFuture
 
-import scala.collection.immutable.Stream.concat
-
 abstract class Query
 
 case class MatchQuery(`match`: Map[String, String]) extends Query
@@ -82,8 +80,8 @@ object ElasticClient extends Logging with KoutaJsonFormats {
     val hits: List[JValue] = (result \ "hits" \ "hits").children
     hits match {
       case Nil => Stream.empty
-      case _ => concat(hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream,
-        listPublished(Some((hits.last \ "sort")(0).extract[String])))
+      case _ => hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream #:::
+        listPublished(Some((hits.last \ "sort")(0).extract[String]))
     }
   }
 }

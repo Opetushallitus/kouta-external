@@ -10,8 +10,6 @@ import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
 import scala.concurrent.Future
 
-import scala.collection.immutable.Stream.concat
-
 object ElasticQueries {
   import org.json4s.JsonDSL._
 
@@ -72,8 +70,8 @@ object ElasticClient extends Logging {
     val hits: List[JValue] = (result \ "hits" \ "hits").children
     hits match {
       case Nil => Stream.empty
-      case _ => concat(hits.map(_ \ "_source").toStream,
-        listPublished(Some((hits.last \ "sort")(0).extract[String])))
+      case _ => hits.map(_ \ "_source").toStream #:::
+        listPublished(Some((hits.last \ "sort")(0).extract[String]))
     }
   }
 }

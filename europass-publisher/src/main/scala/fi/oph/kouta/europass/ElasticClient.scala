@@ -29,7 +29,7 @@ case class Search(
   search_after: Option[List[String]]
 )
 
-object ElasticClient extends Logging with KoutaJsonFormats {
+trait ElasticClient extends Logging with KoutaJsonFormats {
 
   lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
   lazy val username = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.username")
@@ -80,8 +80,11 @@ object ElasticClient extends Logging with KoutaJsonFormats {
     val hits: List[JValue] = (result \ "hits" \ "hits").children
     hits match {
       case Nil => Stream.empty
+      // Stream.concat is eager in its second argument, #::: is truly lazy
       case _ => hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream #:::
         listPublished(Some((hits.last \ "sort")(0).extract[String]))
     }
   }
 }
+
+object ElasticClient extends ElasticClient

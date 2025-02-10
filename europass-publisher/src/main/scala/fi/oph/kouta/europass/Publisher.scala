@@ -7,6 +7,9 @@ import java.io.{File, BufferedWriter, FileWriter}
 object Publisher extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
+  val initialLogDelayInItems = 10
+  val subsequentLogDelayInItems = 200
+
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
     val toteutusXml = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
@@ -30,7 +33,7 @@ object Publisher extends Logging {
     toteutusXmlStream.foreach{toteutus => {
       dest.write(toteutus.toString)
       writtenToteutusCount += 1
-      if (writtenToteutusCount % 200 == 10) {
+      if (writtenToteutusCount % subsequentLogDelayInItems == initialLogDelayInItems) {
         logger.info(s"publishedToteutuksetToFile: $writtenToteutusCount toteutukset written")
       }
     }}

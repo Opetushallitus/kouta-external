@@ -41,7 +41,7 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
 
   "published toteutukset" should "have both toteutukset" in {
     val result = ElasticClient.listPublished(None)
-    assert(result.toArray.length == 2)
+    assert(result.toArray.length == 2)  // testidatan molemmat toteutukset ovat julkaistuja
     assert(result.map{tot => tot.oid.map(_.toString).getOrElse("")}.toList ==
       List("1.2.246.562.17.00000000000000000001", "1.2.246.562.17.00000000000000000002"))
   }

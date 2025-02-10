@@ -1,32 +1,35 @@
 package fi.oph.kouta.europass
 
 import org.json4s._
-import org.json4s.jackson.JsonMethods.{parse, render, compact}
+import org.json4s.jackson.JsonMethods.parse
+import org.json4s.jackson.Serialization.{read, write}
 import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
+import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
 import java.util.concurrent.CompletableFuture
-import scala.compat.java8.FutureConverters._
-import scala.concurrent.Future
 
-object ElasticQueries {
-  import org.json4s.JsonDSL._
+abstract class Query
 
-  def toteutusSearch(after: Option[String]) : JValue = {
-    val query = (("query" -> ("match" -> ("tila" -> "julkaistu"))) ~
-                  ("size" -> 1000) ~
-                  ("sort" -> ("oid.keyword" -> "asc")))
-    after match {
-      case None => query
-      case Some(s) => query ~ ("search_after" -> List(after))
-    }
-  }
+case class MatchQuery(`match`: Map[String, String]) extends Query
+
+object MatchQuery {
+  def apply(matchParams: (String, String)*) = new MatchQuery(matchParams.toMap)
 }
 
-object ElasticClient {
+trait SortOrder
+case object Asc extends SortOrder
 
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
-  implicit val formats = DefaultFormats
+case class Search(
+  query: Query,
+  size: Integer,
+  sort: Map[String, SortOrder],
+  search_after: Option[List[String]]
+)
+
+trait ElasticClient extends Logging with KoutaJsonFormats {
 
   lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
   lazy val username = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.username")
@@ -37,42 +40,51 @@ object ElasticClient {
     .build()
   val httpClient = asyncHttpClient()
 
-  def getJson(urlSuffix: String): Future[JValue] = {
+  def getJson(urlSuffix: String): JValue = {
     val req = get(s"${elasticUrl}/${urlSuffix}").setRealm(realm).build()
-    toScala(httpClient.executeRequest(req).toCompletableFuture)
-      .map {
-        case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-        case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
-      }
+    val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
+    resp match {
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
+    }
   }
 
-  def postJson(urlSuffix: String, body: JValue) = {
-    val req = post(s"${elasticUrl}/${urlSuffix}")
+  def postJson[T <: AnyRef](urlSuffix: String, body: T): JValue = {
+    val req: Request = post(s"${elasticUrl}/${urlSuffix}")
       .setRealm(realm)
       .setHeader("Content-type", "application/json")
-      .setBody(compact(render(body)))
+      .setBody(write(body))
       .build()
-    toScala(httpClient.executeRequest(req).toCompletableFuture)
-      .map {
-        case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-        case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix with "
-          ++ s"body $body failed: ${r.getResponseBody()}")
-      }
+    val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
+    resp match {
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix with "
+        ++ s"body $body failed: ${r.getResponseBody()}")
+    }
   }
 
-  def getToteutus(oid: String): Future[JValue] =
-    getJson(s"toteutus-kouta/_doc/$oid").map{_ \ "_source"}
+  def getToteutus(oid: String): ToteutusIndexed =
+    (getJson(s"toteutus-kouta/_doc/$oid") \ "_source").extract[ToteutusIndexed]
 
-  def listPublished(after: Option[String]): Future[Stream[JValue]] =
-    postJson("toteutus-kouta/_search", ElasticQueries.toteutusSearch(after))
-      .flatMap{result: JValue => {
-        val hits: List[JValue] = (result \ "hits" \ "hits").children
-        hits match {
-          case Nil => Future(Stream.empty)
-          case _ =>
-            listPublished(Some((hits.last \ "sort")(0).extract[String]))
-              .map{rest: Stream[JValue] =>
-                  Stream.concat(hits.map(_ \ "_source").toStream, rest)}
-        }
-      }}
+  def toteutusSearch(after: Option[String]) : Search =
+    Search(
+      query = MatchQuery("tila" -> "julkaistu"),
+      size = 1000,
+      sort = Map("oid.keyword" -> Asc),
+      search_after = after.map(List(_))
+    )
+
+  def listPublished(after: Option[String]): Stream[ToteutusIndexed] = {
+    logger.info(s"listPublished: querying page after $after")
+    val result = postJson("toteutus-kouta/_search", toteutusSearch(after))
+    val hits: List[JValue] = (result \ "hits" \ "hits").children
+    hits match {
+      case Nil => Stream.empty
+      // Stream.concat is eager in its second argument, #::: is truly lazy
+      case _ => hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream #:::
+        listPublished(Some((hits.last \ "sort")(0).extract[String]))
+    }
+  }
 }
+
+object ElasticClient extends ElasticClient

@@ -74,6 +74,13 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
       search_after = after.map(List(_))
     )
 
+  def intoToteutusIndexedIfPossible(source: JValue): Option[ToteutusIndexed] =
+    try {
+      Some(source.extract[ToteutusIndexed])
+    } catch {
+      case e: MappingException => None
+    }
+
   def listPublished(after: Option[String]): Stream[ToteutusIndexed] = {
     logger.info(s"listPublished: querying page after $after")
     val result = postJson("toteutus-kouta/_search", toteutusSearch(after))
@@ -81,7 +88,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     hits match {
       case Nil => Stream.empty
       // Stream.concat is eager in its second argument, #::: is truly lazy
-      case _ => hits.map(_ \ "_source").map(_.extract[ToteutusIndexed]).toStream #:::
+      case _ => hits.map(_ \ "_source").flatMap(intoToteutusIndexedIfPossible).toStream #:::
         listPublished(Some((hits.last \ "sort")(0).extract[String]))
     }
   }

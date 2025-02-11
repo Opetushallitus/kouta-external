@@ -51,7 +51,7 @@ object EuropassPublisherApp extends Logging {
   def main(args : Array[String]) {
     lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
     logger.info(s"Querying toteutukset from $elasticUrl")
-    val fileName = Publisher.publishedToteutuksetAsFile()
+    val fileName = Publisher.koulutustarjontaAsFile()
     logger.info(s"Toteutukset dumped in $fileName")
     val result = dokumenttipalvelu.putObject(
       s3Key, fileName, "application/xml", new BufferedInputStream(new FileInputStream(fileName))

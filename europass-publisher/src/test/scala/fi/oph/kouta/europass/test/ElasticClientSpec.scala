@@ -39,6 +39,12 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
       == "1.2.246.562.13.00000000000000000001")
   }
 
+  "example koulutus" should "be loadable" in {
+    val kou = ElasticClient.getKoulutus("1.2.246.562.13.00000000000000000006")
+    assert(kou.koulutukset(0).koodiUri == "koulutus_371101#1")
+    assert(kou.tila.name == "julkaistu")
+  }
+
   "published toteutukset" should "have both toteutukset" in {
     val result = ElasticClient.listPublished(None)
     assert(result.toArray.length == 2)  // testidatan molemmat toteutukset ovat julkaistuja

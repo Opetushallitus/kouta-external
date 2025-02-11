@@ -12,6 +12,7 @@ case class KoulutusIndexed(
     johtaaTutkintoon: Boolean,
     koulutustyyppi: Koulutustyyppi,
     koulutukset: Seq[KoodiUri],
+    koulutuskoodienAlatJaAsteet: Seq[KoulutuksenKoodiYhteydet],
     tila: Julkaisutila,
     esikatselu: Option[Boolean],
     tarjoajat: List[Organisaatio],
@@ -47,6 +48,11 @@ case class KoulutusIndexed(
     modified = modified
   )
 }
+
+case class KoulutuksenKoodiYhteydet(
+  koulutusKoodiUri: String,
+  koulutusalaKoodiUrit: Seq[String]
+)
 
 sealed trait KoulutusMetadataIndexed {
   val tyyppi: Koulutustyyppi

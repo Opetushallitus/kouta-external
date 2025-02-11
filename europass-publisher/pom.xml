@@ -34,7 +34,7 @@
 	<dependency>
 	    <groupId>fi.oph.kouta</groupId>
 	    <artifactId>kouta-external</artifactId>
-	    <version>0.2-SNAPSHOT</version>
+	    <version>0.3-SNAPSHOT</version>
 	    <exclusions>
 		<exclusion>
 		    <groupId>fi.vm.sade</groupId>

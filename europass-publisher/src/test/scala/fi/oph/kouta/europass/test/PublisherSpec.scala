@@ -8,6 +8,7 @@ import java.io._
 
 import fi.oph.kouta.europass.Publisher
 import fi.oph.kouta.europass.ElasticClient
+import fi.oph.kouta.domain.Amm
 
 class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
 
@@ -45,6 +46,14 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<loq:title language=\"sv\">nimi sv</loq:title>"))
+  }
+
+  "koulutusDependentsOfToteutukset" should "have all koulutukset" in {
+    val toteutukset = ElasticClient.listPublished(None)
+    val koulutukset = Publisher.koulutusDependentsOfToteutukset(toteutukset)
+    assert(koulutukset.length == 1)  // both toteutukset in example data have same koulutus
+    assert(koulutukset(0).oid.map(_.toString) == Some("1.2.246.562.13.00000000000000000001"))
+    assert(koulutukset(0).koulutustyyppi == Amm)
   }
 
 }

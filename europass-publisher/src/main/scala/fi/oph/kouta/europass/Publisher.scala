@@ -35,6 +35,25 @@ object Publisher extends Logging {
     }
   }
 
+  def koulutuksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
+    dest.write("<loq:learningAchievementSpecificationReferences>\n")
+    foreachWithLogging(
+      koulutusStream.map(EuropassConversion.koulutusAsElmXml),
+      "koulutukset",
+      {koulutus => dest.write(koulutus.toString)}
+    )
+    dest.write("</loq:learningAchievementSpecificationReferences>\n")
+  }
+
+  def koulutusDependentsOfToteutukset(
+    toteutusStream: Stream[ToteutusIndexed]
+  ): Stream[KoulutusIndexed] =
+    toteutusStream
+      .flatMap(EuropassConversion.toteutusToKoulutusDependents)
+      .toSet
+      .toStream
+      .map(ElasticClient.getKoulutus)
+
   def toteutuksetToFile(dest: BufferedWriter, toteutusStream: Stream[ToteutusIndexed]) = {
     val toteutusXmlStream = toteutusStream.map(EuropassConversion.toteutusAsElmXml)
     dest.write("<loq:learningOpportunityReferences>\n")

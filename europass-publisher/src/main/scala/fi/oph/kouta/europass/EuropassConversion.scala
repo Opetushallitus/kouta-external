@@ -81,4 +81,7 @@ object EuropassConversion {
     </loq:learningAchievementSpecification>
   }
 
+  def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
+    toteutus.koulutusOid.map(_.toString)
+
 }

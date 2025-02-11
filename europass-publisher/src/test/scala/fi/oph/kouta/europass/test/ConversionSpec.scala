@@ -25,19 +25,25 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   )
 
   "example_koulutus" should "have correct fields" in {
-    assert(example_koulutus.oid.getOrElse("").toString == "1.2.246.562.13.00000000000000000006")
-    assert(example_koulutus.nimi(Sv) == "nimi sv")
+    assert(example_koulutus.oid.getOrElse("").toString
+      == "1.2.246.562.13.00000000000000000006")
+    assert(example_koulutus.nimi(Sv)
+      == "nimi sv")
   }
 
   it should "contain required elements" in {
     val koulutusXml: Elem = EuropassConversion.koulutusAsElmXml(example_koulutus)
-    assert(koulutusXml \@ "id" == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
-    assert((koulutusXml \ "title")(0).text == "nimi fi")
-    assert((koulutusXml \ "ISCEDFCode")(1) \@ "uri" == "http://data.europa.eu/snb/isced-f/02")
+    assert(koulutusXml \@ "id"
+      == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
+    assert((koulutusXml \ "title")(0).text
+      == "nimi fi")
+    assert((koulutusXml \ "ISCEDFCode")(1) \@ "uri"
+      == "http://data.europa.eu/snb/isced-f/02")
   }
 
   "example_toteutus" should "have correct fields" in {
-    assert(example_toteutus.koulutusOid.getOrElse("").toString == "1.2.246.562.13.00000000000000000001")
+    assert(example_toteutus.koulutusOid.getOrElse("").toString
+      == "1.2.246.562.13.00000000000000000001")
     assert(example_toteutus.nimi(Sv) == "Glusiska haren 2022")
   }
 
@@ -53,12 +59,20 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 
   it should "contain all required elements" in {
     val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
-    assert(toteutusXml \@ "id" == "https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002")
-    assert(((toteutusXml \ "homepage")(0) \ "contentUrl").text == "https://opintopolku.fi/konfo/en/toteutus/1.2.246.562.17.00000000000000000002")
-    assert((toteutusXml \ "homepage")(1) \ "language" \@ "uri" == "http://publications.europa.eu/resource/authority/language/FIN")
-    assert(toteutusXml \ "learningAchievementSpecification" \@ "idref" == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001")
-    assert(toteutusXml \ "providedBy" \@ "idref" == "https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871")
-    assert((toteutusXml \ "title")(0).text == "Teppana jänis 2022")
-    assert((toteutusXml \ "title")(1) \@ "language" == "sv")
+    assert(toteutusXml \@ "id"
+      == "https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002")
+    assert(((toteutusXml \ "homepage")(0) \ "contentUrl").text
+      == "https://opintopolku.fi/konfo/en/toteutus/1.2.246.562.17.00000000000000000002")
+    assert((toteutusXml \ "homepage")(1) \ "language" \@ "uri"
+      == "http://publications.europa.eu/resource/authority/language/FIN")
+    assert(toteutusXml \ "learningAchievementSpecification" \@ "idref"
+      == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001")
+    assert(toteutusXml \ "providedBy" \@ "idref"
+      == "https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871")
+    assert((toteutusXml \ "title")(0).text
+      == "Teppana jänis 2022")
+    assert((toteutusXml \ "title")(1) \@ "language"
+      == "sv")
   }
+
 }

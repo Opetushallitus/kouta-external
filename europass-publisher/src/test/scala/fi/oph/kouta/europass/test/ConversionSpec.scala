@@ -33,6 +33,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     val koulutusXml: Elem = EuropassConversion.koulutusAsElmXml(example_koulutus)
     assert(koulutusXml \@ "id" == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
     assert((koulutusXml \ "title")(0).text == "nimi fi")
+    assert((koulutusXml \ "ISCEDFCode")(1) \@ "uri" == "http://data.europa.eu/snb/isced-f/02")
   }
 
   "example_toteutus" should "have correct fields" in {

@@ -54,12 +54,27 @@ object EuropassConversion {
     </loq:learningOpportunity>
   }
 
+  def koulutusalaToIscedfCode(koulutusala: String): Option[String] = koulutusala match {
+    case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso") =>
+      // The kkl2016 and isced2013 codesets have exactly equal codes
+      Some(ka.split("_")(1))
+    case _ => None
+  }
+
+  def iscedfAsElmXml(koodi: String) =
+    <loq:ISCEDFCode uri={iscedfUrl(koodi)}
+      xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"/>
+
   def koulutusAsElmXml(koulutus: KoulutusIndexed): Elem = {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
     <loq:learningAchievementSpecification id={koulutusUrl(oid)}
         xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
       {koulutus.nimi.keys.map(lang => nimiAsElmXml(lang.name, koulutus.nimi(lang)))}
-      <loq:ISCEDFCode uri={iscedfUrl("")}/> // FIXME
+      {koulutus.koulutuskoodienAlatJaAsteet
+        .flatMap(_.koulutusalaKoodiUrit)
+        .flatMap(koulutusalaToIscedfCode)
+        .toSet
+        .map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
         <loq:language uri={langCodes.getOrElse(lang.name, "")}/>}}
       <loq:learningOutcome idref={tulosUrl(oid)}/>

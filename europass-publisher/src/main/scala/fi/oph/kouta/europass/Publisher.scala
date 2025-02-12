@@ -70,6 +70,7 @@ object Publisher extends Logging {
     dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
       "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
+    koulutuksetToFile(dest, koulutusDependentsOfToteutukset(toteutusStream))
     dest.write("\n</loq:Courses>")
     // dest.close()
   }

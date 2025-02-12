@@ -27,7 +27,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
 
   }
 
-  "toteutuksetToFile" should "create XML from ElasticSearch" in {
+  "toteutuksetToFile" should "have toteutukset" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
     Publisher.toteutuksetToFile(bwriter, ElasticClient.listPublished(None))
@@ -41,7 +41,22 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
     ))
   }
 
-  "publishedToteutuksetAsFile" should "return XML filename" in {
+  "koulutustarjontaToFile" should "have both toteutukset and koulutukset" in {
+    val writer = new StringWriter()
+    val bwriter = new BufferedWriter(writer)
+    Publisher.koulutustarjontaToFile(bwriter)
+    bwriter.close()
+    val content = writer.toString
+    assert(content.contains(
+      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\""
+    ))
+    assert(content.contains(
+      "<loq:learningAchievementSpecification id=\"https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001\""
+    ))
+    assert(content.contains("http://data.europa.eu/snb/isced-f/02"))
+  }
+
+  "koulutustarjontaAsFile" should "return XML filename" in {
     val fileName = Publisher.koulutustarjontaAsFile()
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString

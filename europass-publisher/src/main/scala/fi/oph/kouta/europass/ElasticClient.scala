@@ -81,7 +81,11 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     try {
       Some(source.extract[ToteutusIndexed])
     } catch {
-      case e: MappingException => None
+      case e: MappingException => {
+        val toteutusOid = (source \ "oid").extract[String]
+        logger.warn(s"Mapping error while processing toteutus $toteutusOid, ignoring")
+        None
+      }
     }
 
   def listPublished(after: Option[String]): Stream[ToteutusIndexed] = {

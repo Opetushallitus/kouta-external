@@ -1,16 +1,21 @@
 package fi.oph.kouta.europass.test
 
+import org.json4s.jackson.Serialization.{read, write}
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.concurrent.duration._
 import scala.concurrent.Await
 import scala.io.Source
 import java.io._
 
+import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.domain.indexed.KoulutusIndexed
 import fi.oph.kouta.europass.Publisher
 import fi.oph.kouta.europass.ElasticClient
 import fi.oph.kouta.domain.Amm
 
-class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
+class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonFormats {
+
+  def resource(filename: String) = Source.fromResource(filename).bufferedReader
 
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
@@ -41,7 +46,25 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
     ))
   }
 
-  "koulutustarjontaToFile" should "have both toteutukset and koulutukset" in {
+  "tuloksetToFile" should "have information from tutkintonimike when available" in {
+    val koulutusWithTutkintonimike =
+      read[KoulutusIndexed](resource("koulutus-1293.json"))
+    val koulutusWithoutKoulutusKoodi =
+      read[KoulutusIndexed](resource("koulutus-8162.json"))
+    val writer = new StringWriter()
+    val bwriter = new BufferedWriter(writer)
+    Publisher.tuloksetToFile(bwriter,
+      Stream(koulutusWithTutkintonimike, koulutusWithoutKoulutusKoodi))
+    bwriter.close()
+    assert(writer.toString.contains(
+      "<loq:learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_339#2\""
+    ))
+    assert(writer.toString.contains(
+      "<loq:learningOutcome id=\"https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008162\""
+    ))
+  }
+
+  "koulutustarjontaToFile" should "have all kinds of objects" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
     Publisher.koulutustarjontaToFile(bwriter)
@@ -54,6 +77,9 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture {
       "<loq:learningAchievementSpecification id=\"https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001\""
     ))
     assert(content.contains("http://data.europa.eu/snb/isced-f/02"))
+    assert(content.contains(
+      "<loq:learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikkeet_02\""
+    ))
   }
 
   "koulutustarjontaAsFile" should "return XML filename" in {

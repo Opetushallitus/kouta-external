@@ -65,12 +65,25 @@ object Publisher extends Logging {
     dest.write("</loq:learningOpportunityReferences>\n")
   }
 
+  def tuloksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
+    val tulosXmlStream = koulutusStream.flatMap(EuropassConversion.koulutusTuloksetAsElmXml)
+    dest.write("<loq:learningOutcomeReferences>\n")
+    foreachWithLogging(
+      tulosXmlStream,
+      "koulutuksen tulokset",
+      {tulos => dest.write(tulos.toString)}
+    )
+    dest.write("</loq:learningOutcomeReferences>\n")
+  }
+
   def koulutustarjontaToFile(dest: BufferedWriter) = {
     val toteutusStream = ElasticClient.listPublished(None)
+    val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
     dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
       "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
-    koulutuksetToFile(dest, koulutusDependentsOfToteutukset(toteutusStream))
+    koulutuksetToFile(dest, koulutusStream)
+    tuloksetToFile(dest, koulutusStream)
     dest.write("\n</loq:Courses>")
     // dest.close()
   }

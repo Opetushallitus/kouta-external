@@ -57,7 +57,7 @@ object EuropassConversion {
   def koulutusalaToIscedfCode(koulutusala: String): Option[String] = koulutusala match {
     case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso") =>
       // The kkl2016 and isced2013 codesets have exactly equal codes
-      Some(ka.split("_")(1))
+      Some(ka.split("_")(1).split("#")(0))
     case _ => None
   }
 
@@ -72,6 +72,7 @@ object EuropassConversion {
       {koulutus.nimi.keys.map(lang => nimiAsElmXml(lang.name, koulutus.nimi(lang)))}
       {koulutus.koulutuskoodienAlatJaAsteet
         .flatMap(_.koulutusalaKoodiUrit)
+        .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
         .flatMap(koulutusalaToIscedfCode)
         .toSet
         .map(iscedfAsElmXml)}

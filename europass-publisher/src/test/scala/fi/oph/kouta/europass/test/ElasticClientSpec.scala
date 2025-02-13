@@ -4,8 +4,6 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.io.Source
-import scala.concurrent.duration._
-import scala.concurrent.Await
 
 import fi.oph.kouta.europass.ElasticClient
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
@@ -22,7 +20,6 @@ object TestElasticClient extends ElasticClient {
 }
 
 class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val formats = DefaultFormats
 
   "elasticsearch" should "respond" in {

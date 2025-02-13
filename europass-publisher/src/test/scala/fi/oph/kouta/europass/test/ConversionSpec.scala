@@ -16,13 +16,15 @@ import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
 import fi.oph.kouta.domain.{Kieli, Sv}
 
 class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
-  lazy val example_toteutus_jvalue: JValue = parse(
-    Source.fromResource("toteutus-example-1.json").bufferedReader
-  )
-  lazy val example_toteutus: ToteutusIndexed = example_toteutus_jvalue.extract[ToteutusIndexed]
-  lazy val example_koulutus: KoulutusIndexed = read[KoulutusIndexed](
-    Source.fromResource("koulutus-example-1.json").bufferedReader
-  )
+
+  def resource(filename: String) = Source.fromResource(filename).bufferedReader
+
+  lazy val example_toteutus =
+    read[ToteutusIndexed](resource("toteutus-example-1.json"))
+  lazy val example_koulutus =
+    read[KoulutusIndexed](resource("koulutus-example-1.json"))
+  lazy val koulutusWithoutKoulutusKoodi =
+    read[KoulutusIndexed](resource("koulutus-8162.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -78,5 +80,12 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   it should "have certain koulutus as its dependent" in {
     assert(EuropassConversion.toteutusToKoulutusDependents(example_toteutus)
       == List("1.2.246.562.13.00000000000000000001"))
+  }
+
+  "koulutus 8162" should "produce koulutusala from its metadata" in {
+    val koulutusXml: Elem =
+      EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusKoodi)
+    assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
+      "http://data.europa.eu/snb/isced-f/023")
   }
 }

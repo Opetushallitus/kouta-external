@@ -99,6 +99,20 @@ object Publisher extends Logging {
     dest.write("</loq:agentReferences>\n")
   }
 
+  def suomiLocationToFile(dest: BufferedWriter) =
+    dest.write("""
+      <loq:locationReferences>
+        <loq:location id="http://rdf.oph.fi/sijainti/suomi"/>
+          <loq:geographicName language="fi">Suomi</loq:geographicName>
+          <loq:geographicName language="sv">Finland</loq:geographicName>
+          <loq:geographicName language="en">Finland</loq:geographicName>
+          <loq:address>
+            <loq:countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
+          </loq:address>
+        </loq:location>
+      </loq:locationReferences>
+    """)
+
   def koulutustarjontaToFile(dest: BufferedWriter) = {
     val toteutusStream = ElasticClient.listPublished(None)
     val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
@@ -109,6 +123,7 @@ object Publisher extends Logging {
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)
     tarjoajatToFile(dest, tarjoajaStream)
+    suomiLocationToFile(dest)
     dest.write("\n</loq:Courses>")
   }
 

@@ -115,8 +115,8 @@ object Publisher extends Logging {
 
   def koulutustarjontaToFile(dest: BufferedWriter) = {
     val toteutusStream = ElasticClient.listPublished(None)
-    val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
-    val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
+    lazy val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
+    lazy val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
     dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
       "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)

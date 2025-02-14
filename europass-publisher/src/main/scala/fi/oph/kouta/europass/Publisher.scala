@@ -1,7 +1,11 @@
 package fi.oph.kouta.europass
 
 import fi.oph.kouta.logging.Logging
-import fi.oph.kouta.external.domain.indexed.{ToteutusIndexed, KoulutusIndexed}
+import fi.oph.kouta.external.domain.indexed.{
+  ToteutusIndexed,
+  KoulutusIndexed,
+  Organisaatio
+}
 import scala.xml.Elem
 import java.io.{File, BufferedWriter, FileWriter}
 
@@ -76,16 +80,36 @@ object Publisher extends Logging {
     dest.write("</loq:learningOutcomeReferences>\n")
   }
 
+  def tarjoajaDependentsOfToteutukset(
+    toteutusStream: Stream[ToteutusIndexed]
+  ): Stream[Organisaatio] =
+    toteutusStream
+    .flatMap(EuropassConversion.toteutusToTarjoajaDependents)
+    .toSet
+    .toStream
+
+  def tarjoajatToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
+    val organisaatioXmlStream = tarjoajaStream.map(EuropassConversion.tarjoajaAsElmXml)
+    dest.write("<loq:agentReferences>\n")
+    foreachWithLogging(
+      organisaatioXmlStream,
+      "koulutuksen tarjoajat",
+      {org => dest.write(org.toString)}
+    )
+    dest.write("</loq:agentReferences>\n")
+  }
+
   def koulutustarjontaToFile(dest: BufferedWriter) = {
     val toteutusStream = ElasticClient.listPublished(None)
     val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
+    val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
     dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
       "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)
+    tarjoajatToFile(dest, tarjoajaStream)
     dest.write("\n</loq:Courses>")
-    // dest.close()
   }
 
   def koulutustarjontaAsFile(): String = {

@@ -83,7 +83,9 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 
   it should "have correct tarjoaja" in {
     val tarjoaja: Elem =
-      EuropassConversion.toteutusToTarjoajatElmXml(example_toteutus)(0)
+      EuropassConversion.toteutusToTarjoajaDependents(example_toteutus)
+      .map(EuropassConversion.tarjoajaAsElmXml)
+      .head
     assert(tarjoaja \@ "id"
       == "https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871")
     assert((tarjoaja \ "legalName")(1).text

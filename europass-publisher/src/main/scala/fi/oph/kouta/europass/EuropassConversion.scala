@@ -141,7 +141,8 @@ object EuropassConversion {
     </loq:organisation>
   }
 
-  def toteutusToTarjoajatElmXml(toteutus: ToteutusIndexed): List[Elem] =
-    toteutus.tarjoajat.map(tarjoajaAsElmXml)
+  def toteutusToTarjoajaDependents(
+    toteutus: ToteutusIndexed
+  ): List[Organisaatio] = toteutus.tarjoajat
 
 }

@@ -80,6 +80,12 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     assert(content.contains(
       "<loq:learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikkeet_02\""
     ))
+    assert(content.contains(
+      "<loq:organisation id=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871\""
+    ))
+    assert(content.contains(
+      "<loq:legalName language=\"fi\">Koulutuskeskus Salpaus</loq:legalName>"
+    ))
   }
 
   "koulutustarjontaAsFile" should "return XML filename" in {

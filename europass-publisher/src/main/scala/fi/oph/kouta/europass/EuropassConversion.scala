@@ -6,6 +6,7 @@ import fi.oph.kouta.external.domain.indexed.{
   KoulutusIndexed,
   ToteutusIndexed,
   TutkintoNimike,
+  Organisaatio,
   AmmatillinenKoulutusMetadataIndexed,
   KorkeakoulutusKoulutusMetadataIndexed,
   ErikoislaakariKoulutusMetadataIndexed
@@ -129,5 +130,18 @@ object EuropassConversion {
 
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
     toteutus.koulutusOid.map(_.toString)
+
+  def tarjoajaAsElmXml(tarjoaja: Organisaatio): Elem = {
+    val nimet = tarjoaja.nimi.getOrElse(Map())
+    <loq:organisation id={organisaatioUrl(tarjoaja.oid.toString)}
+        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+      <loq:location idref="http://rdf.oph.fi/sijainti/suomi"/>
+      {nimet.keys.map{lang =>
+        <loq:legalName language={lang.name}>{nimet(lang)}</loq:legalName>}}
+    </loq:organisation>
+  }
+
+  def toteutusToTarjoajatElmXml(toteutus: ToteutusIndexed): List[Elem] =
+    toteutus.tarjoajat.map(tarjoajaAsElmXml)
 
 }

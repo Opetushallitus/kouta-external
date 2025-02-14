@@ -102,7 +102,7 @@ object Publisher extends Logging {
   def suomiLocationToFile(dest: BufferedWriter) =
     dest.write("""
       <loq:locationReferences>
-        <loq:location id="http://rdf.oph.fi/sijainti/suomi"/>
+        <loq:location id="http://rdf.oph.fi/sijainti/suomi">
           <loq:geographicName language="fi">Suomi</loq:geographicName>
           <loq:geographicName language="sv">Finland</loq:geographicName>
           <loq:geographicName language="en">Finland</loq:geographicName>

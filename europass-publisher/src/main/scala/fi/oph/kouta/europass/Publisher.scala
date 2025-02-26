@@ -18,8 +18,7 @@ object Publisher extends Logging {
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
     val toteutusXml = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
-      <Courses xsdVersion="3.1.0"
-          xsi:schemaLocation="http://data.europa.eu/snb/model/ap/loq-constraints/loq.xsd">
+      <Courses xmlns="http://data.europa.eu/snb/model/ap/loq-constraints/">
         <learningOpportunityReferences>
           {toteutusXml}
         </learningOpportunityReferences>
@@ -117,8 +116,7 @@ object Publisher extends Logging {
     val toteutusStream = ElasticClient.listPublished(None)
     lazy val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
     lazy val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
-    dest.write("<Courses xsdVersion=\"3.1.0\"\n" +
-      "xsi:schemaLocation=\"http://data.europa.eu/snb/model/ap/loq-constraints/loq.xsd\">\n")
+    dest.write("<Courses xmlns=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)

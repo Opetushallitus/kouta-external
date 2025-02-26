@@ -65,6 +65,7 @@ object EuropassConversion {
         <loq:providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <loq:learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
+      <loq:defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
     </loq:learningOpportunity>
   }
 

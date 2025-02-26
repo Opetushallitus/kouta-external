@@ -79,6 +79,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "Teppana jänis 2022")
     assert((toteutusXml \ "title")(1) \@ "language"
       == "sv")
+    assert(toteutusXml \ "defaultLanguage" \@ "uri"
+      == "http://publications.europa.eu/resource/authority/language/FIN")
   }
 
   it should "have correct tarjoaja" in {

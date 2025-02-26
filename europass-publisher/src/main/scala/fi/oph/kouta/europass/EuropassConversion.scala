@@ -2,7 +2,15 @@ package fi.oph.kouta.europass
 
 import scala.xml._
 import org.json4s._
-import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
+import fi.oph.kouta.external.domain.indexed.{
+  KoulutusIndexed,
+  ToteutusIndexed,
+  TutkintoNimike,
+  AmmatillinenKoulutusMetadataIndexed,
+  KorkeakoulutusKoulutusMetadataIndexed,
+  ErikoislaakariKoulutusMetadataIndexed
+}
+import fi.oph.kouta.external.domain.Kielistetty
 
 object EuropassConversion {
   implicit val formats = DefaultFormats
@@ -25,6 +33,9 @@ object EuropassConversion {
   def tulosUrl(oid: String): String =
     "https://rdf.oph.fi/koulutus-tulos/" ++ oid
 
+  def tutkintoUrl(koodi: String): String =
+    "https://rdf.oph.fi/tutkintonimike/" ++ koodi
+
   def iscedfUrl(koodi: String): String =
     "http://data.europa.eu/snb/isced-f/" ++ koodi
 
@@ -39,19 +50,52 @@ object EuropassConversion {
     <loq:title xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"
         language={lang}>{nimi}</loq:title>
 
+  def nimetAsElmXml(nimet: Kielistetty): List[Elem] =
+    nimet.keys.map{lang => nimiAsElmXml(lang.name, nimet(lang))}.toList
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Elem = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
     <loq:learningOpportunity id={toteutusUrl(oid)}
         xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+      {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
       <loq:learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
       {toteutus.tarjoajat.map{t =>
         <loq:providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
-      {toteutus.nimi.keys.map{lang =>
-        nimiAsElmXml(lang.name, toteutus.nimi(lang))}}
     </loq:learningOpportunity>
+  }
+
+  def koulutusToTutkintonimikkeet(koulutus: KoulutusIndexed): Seq[TutkintoNimike] =
+    koulutus.metadata match {
+      case None => Seq.empty
+      case Some(md) => md match {
+        case m: AmmatillinenKoulutusMetadataIndexed => m.tutkintonimike
+        case m: KorkeakoulutusKoulutusMetadataIndexed => m.tutkintonimike
+        case m: ErikoislaakariKoulutusMetadataIndexed => m.tutkintonimike
+        case _ => Seq.empty
+      }
+    }
+
+  def koulutusTuloksetAsElmXml(koulutus: KoulutusIndexed): List[Elem] = {
+    val oid: String = koulutus.oid.map(_.toString).getOrElse("")
+    koulutusToTutkintonimikkeet(koulutus) match {
+      case empty if empty.isEmpty =>
+        List(
+          <loq:learningOutcome id={tulosUrl(oid)}
+              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+            {nimetAsElmXml(koulutus.nimi)}
+          </loq:learningOutcome>
+        )
+      case nonempty =>
+        nonempty.map{tutkintonimike: TutkintoNimike =>
+          <loq:learningOutcome id={tutkintoUrl(tutkintonimike.koodiUri)}
+              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+            {nimetAsElmXml(tutkintonimike.nimi)}
+          </loq:learningOutcome>
+        }.toList
+    }
   }
 
   def koulutusalaToIscedfCode(koulutusala: String): Option[String] = koulutusala match {
@@ -69,7 +113,7 @@ object EuropassConversion {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
     <loq:learningAchievementSpecification id={koulutusUrl(oid)}
         xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-      {koulutus.nimi.keys.map(lang => nimiAsElmXml(lang.name, koulutus.nimi(lang)))}
+      {nimetAsElmXml(koulutus.nimi)}
       {koulutus.koulutuskoodienAlatJaAsteet
         .flatMap(_.koulutusalaKoodiUrit)
         .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
@@ -78,7 +122,8 @@ object EuropassConversion {
         .map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
         <loq:language uri={langCodes.getOrElse(lang.name, "")}/>}}
-      <loq:learningOutcome idref={tulosUrl(oid)}/>
+      {koulutusTuloksetAsElmXml(koulutus).map{tulos =>
+        <loq:learningOutcome idref={tulos \@ "id"}/>}}
     </loq:learningAchievementSpecification>
   }
 

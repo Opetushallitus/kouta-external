@@ -25,6 +25,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
   lazy val koulutusWithoutKoulutusKoodi =
     read[KoulutusIndexed](resource("koulutus-8162.json"))
+  lazy val koulutusWithTutkintonimike =
+    read[KoulutusIndexed](resource("koulutus-1293.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -41,6 +43,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "nimi fi")
     assert((koulutusXml \ "ISCEDFCode")(1) \@ "uri"
       == "http://data.europa.eu/snb/isced-f/02")
+    assert((koulutusXml \ "learningOutcome")(0) \@ "idref"
+      == "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000000006")
   }
 
   "example_toteutus" should "have correct fields" in {
@@ -88,4 +92,15 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/023")
   }
+
+  "koulutus 1293" should "have learning outcomes from tutkintonimikkeet" in {
+    val tulosXml: List[Elem] =
+      EuropassConversion.koulutusTuloksetAsElmXml(koulutusWithTutkintonimike)
+    assert(tulosXml(0) \@ "id"
+      == "https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_339#2")
+    assert((tulosXml(0) \ "title")(0).text
+      == "Yhteiskuntatieteiden maisteri")
+    assert((tulosXml(0) \ "title")(2) \@ "language" == "sv")
+  }
+
 }

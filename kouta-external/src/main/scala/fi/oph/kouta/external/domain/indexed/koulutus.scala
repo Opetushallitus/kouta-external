@@ -54,6 +54,11 @@ case class KoulutuksenKoodiYhteydet(
   koulutusalaKoodiUrit: Seq[String]
 )
 
+case class TutkintoNimike(
+  koodiUri: String,
+  nimi: Kielistetty
+)
+
 sealed trait KoulutusMetadataIndexed {
   val tyyppi: Koulutustyyppi
   val kuvaus: Kielistetty
@@ -67,7 +72,7 @@ case class AmmatillinenKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
-    tutkintonimike: Seq[KoodiUri] = Seq.empty,
+    tutkintonimike: Seq[TutkintoNimike] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None,
     koulutusala: Seq[KoodiUri] = Seq.empty
@@ -136,7 +141,7 @@ case class AmmatillinenMuuKoulutusMetadataIndexed(
 }
 
 sealed trait KorkeakoulutusKoulutusMetadataIndexed extends KoulutusMetadataIndexed {
-  val tutkintonimike: Seq[KoodiUri]
+  val tutkintonimike: Seq[TutkintoNimike]
   val opintojenLaajuusyksikko: Option[KoodiUri]
   val opintojenLaajuusNumero: Option[Double]
   val koulutusala: Seq[KoodiUri]
@@ -147,7 +152,7 @@ case class YliopistoKoulutusMetadataIndexed(
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
-    tutkintonimike: Seq[KoodiUri],
+    tutkintonimike: Seq[TutkintoNimike],
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None
 ) extends KorkeakoulutusKoulutusMetadataIndexed {
@@ -167,7 +172,7 @@ case class AmmattikorkeakouluKoulutusMetadataIndexed(
     kuvaus: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
-    tutkintonimike: Seq[KoodiUri],
+    tutkintonimike: Seq[TutkintoNimike],
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None
 ) extends KorkeakoulutusKoulutusMetadataIndexed {
@@ -187,7 +192,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri],
-    tutkintonimike: Seq[KoodiUri],
+    tutkintonimike: Seq[TutkintoNimike],
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None
 ) extends KorkeakoulutusKoulutusMetadataIndexed {
@@ -207,7 +212,7 @@ case class OpePedagOpinnotKoulutusMetadataIndexed(
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri],
-    tutkintonimike: Seq[KoodiUri],
+    tutkintonimike: Seq[TutkintoNimike],
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None
 ) extends KorkeakoulutusKoulutusMetadataIndexed {
@@ -373,7 +378,7 @@ case class ErikoislaakariKoulutusMetadataIndexed(
     kuvaus: Kielistetty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
-    tutkintonimike: Seq[KoodiUri] = Seq.empty
+    tutkintonimike: Seq[TutkintoNimike] = Seq.empty
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: ErikoislaakariKoulutusMetadata =
     ErikoislaakariKoulutusMetadata(

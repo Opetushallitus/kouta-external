@@ -4,8 +4,6 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.io.Source
-import scala.concurrent.duration._
-import scala.concurrent.Await
 
 import fi.oph.kouta.europass.ElasticClient
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
@@ -22,7 +20,6 @@ object TestElasticClient extends ElasticClient {
 }
 
 class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
-  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
   implicit val formats = DefaultFormats
 
   "elasticsearch" should "respond" in {
@@ -37,6 +34,12 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
     assert(tot.tila.name == "julkaistu")
     assert(tot.koulutusOid.map(_.toString).getOrElse("")
       == "1.2.246.562.13.00000000000000000001")
+  }
+
+  "example koulutus" should "be loadable" in {
+    val kou = ElasticClient.getKoulutus("1.2.246.562.13.00000000000000000006")
+    assert(kou.koulutukset(0).koodiUri == "koulutus_371101#1")
+    assert(kou.tila.name == "julkaistu")
   }
 
   "published toteutukset" should "have both toteutukset" in {

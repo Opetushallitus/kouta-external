@@ -8,7 +8,7 @@ import org.asynchttpclient._
 
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
 import java.util.concurrent.CompletableFuture
 
 abstract class Query
@@ -63,6 +63,9 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     }
   }
 
+  def getKoulutus(oid: String): KoulutusIndexed =
+    (getJson(s"koulutus-kouta/_doc/$oid") \ "_source").extract[KoulutusIndexed]
+
   def getToteutus(oid: String): ToteutusIndexed =
     (getJson(s"toteutus-kouta/_doc/$oid") \ "_source").extract[ToteutusIndexed]
 
@@ -78,7 +81,11 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     try {
       Some(source.extract[ToteutusIndexed])
     } catch {
-      case e: MappingException => None
+      case e: MappingException => {
+        val toteutusOid = (source \ "oid").extract[String]
+        logger.warn(s"Mapping error while processing toteutus $toteutusOid, ignoring")
+        None
+      }
     }
 
   def listPublished(after: Option[String]): Stream[ToteutusIndexed] = {

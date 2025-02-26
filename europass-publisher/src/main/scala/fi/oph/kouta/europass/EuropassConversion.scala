@@ -61,10 +61,10 @@ object EuropassConversion {
         xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
       {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
-      <loq:learningAchievementSpecification
-          idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
       {toteutus.tarjoajat.map{t =>
         <loq:providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
+      <loq:learningAchievementSpecification
+          idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
     </loq:learningOpportunity>
   }
 
@@ -135,9 +135,9 @@ object EuropassConversion {
     val nimet = tarjoaja.nimi.getOrElse(Map())
     <loq:organisation id={organisaatioUrl(tarjoaja.oid.toString)}
         xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-      <loq:location idref="http://rdf.oph.fi/sijainti/suomi"/>
       {nimet.keys.map{lang =>
         <loq:legalName language={lang.name}>{nimet(lang)}</loq:legalName>}}
+      <loq:location idref="http://rdf.oph.fi/sijainti/suomi"/>
     </loq:organisation>
   }
 

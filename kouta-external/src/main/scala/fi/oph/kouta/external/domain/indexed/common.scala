@@ -11,7 +11,10 @@ import java.util.UUID
 
 case class Muokkaaja(oid: UserOid)
 
-case class Organisaatio(oid: OrganisaatioOid)
+case class Organisaatio(
+  oid: OrganisaatioOid,
+  nimi: Option[Kielistetty] = None
+)
 
 case class KoodiUri(koodiUri: String)
 

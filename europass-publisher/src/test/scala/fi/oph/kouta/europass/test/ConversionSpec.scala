@@ -55,12 +55,12 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 
   it should "have correct namespace when converted" in {
     val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
-    assert(toteutusXml.namespace == "http://data.europa.eu/snb/model/ap/loq-constraints/")
+    assert(toteutusXml.namespace == null)
     val serialisedOutput = new StringWriter()
     XML.write(serialisedOutput, toteutusXml, "utf-8", true, null)
     val toteutusStr = serialisedOutput.toString
     assert(toteutusStr.startsWith("<?xml"))
-    assert(toteutusStr.contains("loq:learningOpportunity"))
+    assert(toteutusStr.contains("learningOpportunity"))
   }
 
   it should "contain all required elements" in {

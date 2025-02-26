@@ -41,15 +41,13 @@ object EuropassConversion {
     "http://data.europa.eu/snb/isced-f/" ++ koodi
 
   def konfoUrl(lang: String, oid: String): Elem =
-    <loq:homepage
-        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-      <loq:language uri={langCodes.getOrElse(lang, "")}/>
-      <loq:contentUrl>{s"https://opintopolku.fi/konfo/$lang/toteutus/$oid"}</loq:contentUrl>
-    </loq:homepage>
+    <homepage>
+      <language uri={langCodes.getOrElse(lang, "")}/>
+      <contentUrl>{s"https://opintopolku.fi/konfo/$lang/toteutus/$oid"}</contentUrl>
+    </homepage>
 
   def nimiAsElmXml(lang: String, nimi: String): Elem =
-    <loq:title xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"
-        language={lang}>{nimi}</loq:title>
+    <title language={lang}>{nimi}</title>
 
   def nimetAsElmXml(nimet: Kielistetty): List[Elem] =
     nimet.keys.map{lang => nimiAsElmXml(lang.name, nimet(lang))}.toList
@@ -57,16 +55,15 @@ object EuropassConversion {
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Elem = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
-    <loq:learningOpportunity id={toteutusUrl(oid)}
-        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+    <learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
       {toteutus.tarjoajat.map{t =>
-        <loq:providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
-      <loq:learningAchievementSpecification
+        <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
+      <learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
-      <loq:defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
-    </loq:learningOpportunity>
+      <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
+    </learningOpportunity>
   }
 
   def koulutusToTutkintonimikkeet(koulutus: KoulutusIndexed): Seq[TutkintoNimike] =
@@ -85,17 +82,15 @@ object EuropassConversion {
     koulutusToTutkintonimikkeet(koulutus) match {
       case empty if empty.isEmpty =>
         List(
-          <loq:learningOutcome id={tulosUrl(oid)}
-              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+          <learningOutcome id={tulosUrl(oid)}>
             {nimetAsElmXml(koulutus.nimi)}
-          </loq:learningOutcome>
+          </learningOutcome>
         )
       case nonempty =>
         nonempty.map{tutkintonimike: TutkintoNimike =>
-          <loq:learningOutcome id={tutkintoUrl(tutkintonimike.koodiUri)}
-              xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+          <learningOutcome id={tutkintoUrl(tutkintonimike.koodiUri)}>
             {nimetAsElmXml(tutkintonimike.nimi)}
-          </loq:learningOutcome>
+          </learningOutcome>
         }.toList
     }
   }
@@ -107,14 +102,11 @@ object EuropassConversion {
     case _ => None
   }
 
-  def iscedfAsElmXml(koodi: String) =
-    <loq:ISCEDFCode uri={iscedfUrl(koodi)}
-      xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/"/>
+  def iscedfAsElmXml(koodi: String) = <ISCEDFCode uri={iscedfUrl(koodi)}/>
 
   def koulutusAsElmXml(koulutus: KoulutusIndexed): Elem = {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
-    <loq:learningAchievementSpecification id={koulutusUrl(oid)}
-        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+    <learningAchievementSpecification id={koulutusUrl(oid)}>
       {nimetAsElmXml(koulutus.nimi)}
       {koulutus.koulutuskoodienAlatJaAsteet
         .flatMap(_.koulutusalaKoodiUrit)
@@ -123,10 +115,10 @@ object EuropassConversion {
         .toSet
         .map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
-        <loq:language uri={langCodes.getOrElse(lang.name, "")}/>}}
+        <language uri={langCodes.getOrElse(lang.name, "")}/>}}
       {koulutusTuloksetAsElmXml(koulutus).map{tulos =>
-        <loq:learningOutcome idref={tulos \@ "id"}/>}}
-    </loq:learningAchievementSpecification>
+        <learningOutcome idref={tulos \@ "id"}/>}}
+    </learningAchievementSpecification>
   }
 
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
@@ -134,12 +126,11 @@ object EuropassConversion {
 
   def tarjoajaAsElmXml(tarjoaja: Organisaatio): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
-    <loq:organisation id={organisaatioUrl(tarjoaja.oid.toString)}
-        xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
+    <organisation id={organisaatioUrl(tarjoaja.oid.toString)}>
       {nimet.keys.map{lang =>
-        <loq:legalName language={lang.name}>{nimet(lang)}</loq:legalName>}}
-      <loq:location idref="http://rdf.oph.fi/sijainti/suomi"/>
-    </loq:organisation>
+        <legalName language={lang.name}>{nimet(lang)}</legalName>}}
+      <location idref="http://rdf.oph.fi/sijainti/suomi"/>
+    </organisation>
   }
 
   def toteutusToTarjoajaDependents(

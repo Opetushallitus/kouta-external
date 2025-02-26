@@ -22,8 +22,8 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     val bwriter = new BufferedWriter(writer)
     Publisher.toteutusToFile("1.2.246.562.17.00000000000000000001", bwriter)
     bwriter.close()
-    assert(writer.toString.contains("<loq:contentUrl>https://opintopolku.fi/konfo/sv/toteutus/1.2.246.562.17.00000000000000000001</loq:contentUrl>"))
-    assert(writer.toString.contains("<loq:providedBy idref=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.594252633210\"/>"))
+    assert(writer.toString.contains("<contentUrl>https://opintopolku.fi/konfo/sv/toteutus/1.2.246.562.17.00000000000000000001</contentUrl>"))
+    assert(writer.toString.contains("<providedBy idref=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.594252633210\"/>"))
 
     // Want to have the test XML as a file?  Here you go:
     // val w = new BufferedWriter(new FileWriter("test.txt"))
@@ -39,10 +39,10 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     bwriter.close()
     val content = writer.toString
     assert(content.contains(
-      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000001\""
+      "<learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000001\""
     ))
     assert(content.contains(
-      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\""
+      "<learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\""
     ))
   }
 
@@ -57,10 +57,10 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
       Stream(koulutusWithTutkintonimike, koulutusWithoutKoulutusKoodi))
     bwriter.close()
     assert(writer.toString.contains(
-      "<loq:learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_339#2\""
+      "<learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_339#2\""
     ))
     assert(writer.toString.contains(
-      "<loq:learningOutcome id=\"https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008162\""
+      "<learningOutcome id=\"https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008162\""
     ))
   }
 
@@ -71,23 +71,23 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     bwriter.close()
     val content = writer.toString
     assert(content.contains(
-      "<loq:learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\""
+      "<learningOpportunity id=\"https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002\""
     ))
     assert(content.contains(
-      "<loq:learningAchievementSpecification id=\"https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001\""
+      "<learningAchievementSpecification id=\"https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000001\""
     ))
     assert(content.contains("http://data.europa.eu/snb/isced-f/02"))
     assert(content.contains(
-      "<loq:learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikkeet_02\""
+      "<learningOutcome id=\"https://rdf.oph.fi/tutkintonimike/tutkintonimikkeet_02\""
     ))
     assert(content.contains(
-      "<loq:organisation id=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871\""
+      "<organisation id=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871\""
     ))
     assert(content.contains(
-      "<loq:legalName language=\"fi\">Koulutuskeskus Salpaus</loq:legalName>"
+      "<legalName language=\"fi\">Koulutuskeskus Salpaus</legalName>"
     ))
     assert(content.contains(
-      "<loq:geographicName language=\"sv\">Finland</loq:geographicName>"
+      "<geographicName language=\"sv\">Finland</geographicName>"
     ))
   }
 
@@ -95,7 +95,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     val fileName = Publisher.koulutustarjontaAsFile()
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
-    assert(content.contains("<loq:title language=\"sv\">nimi sv</loq:title>"))
+    assert(content.contains("<title language=\"sv\">nimi sv</title>"))
   }
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {

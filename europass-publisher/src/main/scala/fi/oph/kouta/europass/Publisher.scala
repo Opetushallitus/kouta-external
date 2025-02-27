@@ -18,12 +18,11 @@ object Publisher extends Logging {
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
     val toteutusXml = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
-      <loq:Courses xsdVersion="3.1.0"
-          xmlns:loq="http://data.europa.eu/snb/model/ap/loq-constraints/">
-        <loq:learningOpportunityReferences>
+      <Courses xmlns="http://data.europa.eu/snb/model/ap/loq-constraints/">
+        <learningOpportunityReferences>
           {toteutusXml}
-        </loq:learningOpportunityReferences>
-      </loq:Courses>.toString
+        </learningOpportunityReferences>
+      </Courses>.toString
     )
     dest.close()
   }
@@ -40,13 +39,13 @@ object Publisher extends Logging {
   }
 
   def koulutuksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
-    dest.write("<loq:learningAchievementSpecificationReferences>\n")
+    dest.write("<learningAchievementSpecificationReferences>\n")
     foreachWithLogging(
       koulutusStream.map(EuropassConversion.koulutusAsElmXml),
       "koulutukset",
       {koulutus => dest.write(koulutus.toString)}
     )
-    dest.write("</loq:learningAchievementSpecificationReferences>\n")
+    dest.write("</learningAchievementSpecificationReferences>\n")
   }
 
   def koulutusDependentsOfToteutukset(
@@ -60,24 +59,24 @@ object Publisher extends Logging {
 
   def toteutuksetToFile(dest: BufferedWriter, toteutusStream: Stream[ToteutusIndexed]) = {
     val toteutusXmlStream = toteutusStream.map(EuropassConversion.toteutusAsElmXml)
-    dest.write("<loq:learningOpportunityReferences>\n")
+    dest.write("<learningOpportunityReferences>\n")
     foreachWithLogging(
       toteutusXmlStream,
       "toteutukset",
       {toteutus => dest.write(toteutus.toString)}
     )
-    dest.write("</loq:learningOpportunityReferences>\n")
+    dest.write("</learningOpportunityReferences>\n")
   }
 
   def tuloksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
     val tulosXmlStream = koulutusStream.flatMap(EuropassConversion.koulutusTuloksetAsElmXml)
-    dest.write("<loq:learningOutcomeReferences>\n")
+    dest.write("<learningOutcomeReferences>\n")
     foreachWithLogging(
       tulosXmlStream,
       "koulutuksen tulokset",
       {tulos => dest.write(tulos.toString)}
     )
-    dest.write("</loq:learningOutcomeReferences>\n")
+    dest.write("</learningOutcomeReferences>\n")
   }
 
   def tarjoajaDependentsOfToteutukset(
@@ -90,41 +89,40 @@ object Publisher extends Logging {
 
   def tarjoajatToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
     val organisaatioXmlStream = tarjoajaStream.map(EuropassConversion.tarjoajaAsElmXml)
-    dest.write("<loq:agentReferences>\n")
+    dest.write("<agentReferences>\n")
     foreachWithLogging(
       organisaatioXmlStream,
       "koulutuksen tarjoajat",
       {org => dest.write(org.toString)}
     )
-    dest.write("</loq:agentReferences>\n")
+    dest.write("</agentReferences>\n")
   }
 
   def suomiLocationToFile(dest: BufferedWriter) =
     dest.write("""
-      <loq:locationReferences>
-        <loq:location id="http://rdf.oph.fi/sijainti/suomi"/>
-          <loq:geographicName language="fi">Suomi</loq:geographicName>
-          <loq:geographicName language="sv">Finland</loq:geographicName>
-          <loq:geographicName language="en">Finland</loq:geographicName>
-          <loq:address>
-            <loq:countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
-          </loq:address>
-        </loq:location>
-      </loq:locationReferences>
+      <locationReferences>
+        <location id="http://rdf.oph.fi/sijainti/suomi">
+          <geographicName language="fi">Suomi</geographicName>
+          <geographicName language="sv">Finland</geographicName>
+          <geographicName language="en">Finland</geographicName>
+          <address>
+            <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
+          </address>
+        </location>
+      </locationReferences>
     """)
 
   def koulutustarjontaToFile(dest: BufferedWriter) = {
     val toteutusStream = ElasticClient.listPublished(None)
-    val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
-    val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
-    dest.write("<loq:Courses xsdVersion=\"3.1.0\"\n" +
-      "xmlns:loq=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
+    lazy val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
+    lazy val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
+    dest.write("<Courses xmlns=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)
     tarjoajatToFile(dest, tarjoajaStream)
     suomiLocationToFile(dest)
-    dest.write("\n</loq:Courses>")
+    dest.write("\n</Courses>")
   }
 
   def koulutustarjontaAsFile(): String = {

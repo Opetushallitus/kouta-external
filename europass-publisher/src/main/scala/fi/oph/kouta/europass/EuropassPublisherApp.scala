@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.S3AsyncClient
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import scala.concurrent.duration._
 import scala.concurrent.Await
+import scala.sys.exit
 
 object EuropassPublisherApp extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
@@ -57,6 +58,7 @@ object EuropassPublisherApp extends Logging {
       s3Key, fileName, "application/xml", new BufferedInputStream(new FileInputStream(fileName))
     ).join()
     logger.info(s"Uploaded to S3 with result $result")
+    exit
   }
 
 }

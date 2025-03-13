@@ -191,7 +191,8 @@ case class HakukohdeJavaClient @JsonCreator() (
     @JsonProperty("opetuskieliKoodiUrit") opetuskieliKoodiUrit: Seq[String],
     @JsonProperty("koulutusasteKoodiUrit") koulutusasteKoodiUrit: Seq[String],
     @JsonProperty("hakutapaKoodiUri") hakutapaKoodiUri: Option[String],
-    @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: Option[PaateltyAlkamiskausiES]
+    @JsonProperty("paateltyAlkamiskausi") paateltyAlkamiskausi: Option[PaateltyAlkamiskausiES],
+    @JsonProperty("jarjestyspaikka") jarjestyspaikka: Option[OrganisaatioES]
 ) {
 
   def toResult(): HakukohdeIndexed = {
@@ -202,7 +203,7 @@ case class HakukohdeJavaClient @JsonCreator() (
       hakuOid = HakuOid(hakuOid),
       tila = Julkaisutila.withName(tila),
       nimi = toKielistettyMap(nimi),
-      jarjestyspaikka = Some(Organisaatio(OrganisaatioOid(organisaatio.oid))),
+      jarjestyspaikka = jarjestyspaikka.map(j => Organisaatio(OrganisaatioOid(j.oid))),
       hakulomaketyyppi = hakulomaketyyppi.map(Hakulomaketyyppi.withName),
       hakulomakeAtaruId = hakulomakeAtaruId.flatMap(id => Try(UUID.fromString(id)).toOption),
       hakulomakeKuvaus = toKielistettyMap(hakulomakeKuvaus),

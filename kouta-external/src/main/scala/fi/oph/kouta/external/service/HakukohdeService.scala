@@ -7,12 +7,7 @@ import fi.oph.kouta.external.elasticsearch.HakukohdeClient
 import fi.oph.kouta.external.kouta._
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.{
-  AuthorizationRules,
-  OrganisaatioService,
-  OrganizationAuthorizationFailedException,
-  RoleEntityAuthorizationService
-}
+import fi.oph.kouta.service.{AuthorizationRules, OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
 import fi.oph.kouta.logging.Logging
 
@@ -103,18 +98,28 @@ class HakukohdeService(
       }
   }
 
+  val HAKUKOHDERYHMIEN_HAKU_RINNAKKAISUUS = 8
+  private def haeHakukohdeRyhmat(oids: Set[HakukohdeOid]): Future[Seq[(HakukohdeOid, Seq[HakukohderyhmaOid])]] = {
+    if(oids.isEmpty)
+      Future.successful(Seq.empty)
+    else {
+      val (head, tail) = oids.splitAt(HAKUKOHDERYHMIEN_HAKU_RINNAKKAISUUS)
+      Future
+        .sequence(head.map(oid => hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map((oid, _))))
+        .flatMap(headHkrs => {
+          haeHakukohdeRyhmat(tail).map(tailHkrs => headHkrs.toSeq ++ tailHkrs)
+        })
+    }
+  }
+
   private def hakukohteetWithHakukohderyhmat(
       oids: Set[HakukohdeOid],
       hakukohteet: Future[Seq[Hakukohde]]
   ): Future[Seq[Hakukohde]] = {
-    val fetchedHakukohderyhmat: Future[Map[HakukohdeOid, Seq[HakukohderyhmaOid]]] = Future
-      .sequence(
-        oids.map(oid => hakukohderyhmaService.getHakukohderyhmatByHakukohdeOid(oid).map((oid, _)))
-      )
-      .map(_.toMap)
-
     hakukohteet.flatMap(hk =>
-      fetchedHakukohderyhmat.map(mk => hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty))))
+      haeHakukohdeRyhmat(oids)
+        .map(_.toMap)
+        .map(mk => hk.map(h => h.withHakukohderyhmat(h.oid.flatMap(mk.get).getOrElse(Seq.empty))))
     )
   }
 

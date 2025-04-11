@@ -101,7 +101,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<title language=\"sv\">nimi sv</title>"))
-    assert(validateXml(fileName, "src/test/resources/loq.xsd"))
+    assert(validateXml(fileName, "src/test/resources/xsd/loq.xsd"))
   }
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {

@@ -5,6 +5,7 @@ import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.concurrent.duration._
 import scala.concurrent.Await
 import scala.io.Source
+import scala.sys.process.Process
 import java.io._
 
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -16,6 +17,10 @@ import fi.oph.kouta.domain.Amm
 class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonFormats {
 
   def resource(filename: String) = Source.fromResource(filename).bufferedReader
+
+  def validateXml(xmlFilename: String, xsdFilename: String): Boolean = {
+    0 == Process(s"xmllint --schema ${xsdFilename} ${xmlFilename}").!
+  }
 
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
@@ -91,11 +96,12 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     ))
   }
 
-  "koulutustarjontaAsFile" should "return XML filename" in {
+  "koulutustarjontaAsFile" should "return valid XML file" in {
     val fileName = Publisher.koulutustarjontaAsFile()
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<title language=\"sv\">nimi sv</title>"))
+    assert(validateXml(fileName, "src/test/resources/loq.xsd"))
   }
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {

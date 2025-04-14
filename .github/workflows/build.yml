@@ -32,7 +32,7 @@ jobs:
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
           (cd postgresql/docker && docker build --tag koutaexternal-postgres .)
-          sudo apt install docker-compose libxml2-utils
+          sudo apt install docker-compose
 
       - name: Build with Maven
         env:

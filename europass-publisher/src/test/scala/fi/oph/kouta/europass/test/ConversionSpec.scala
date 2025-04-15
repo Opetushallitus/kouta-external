@@ -54,7 +54,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "have correct namespace when converted" in {
-    val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
     assert(toteutusXml.namespace == null)
     val serialisedOutput = new StringWriter()
     XML.write(serialisedOutput, toteutusXml, "utf-8", true, null)
@@ -64,7 +64,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "contain all required elements" in {
-    val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
     assert(toteutusXml \@ "id"
       == "https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002")
     assert(((toteutusXml \ "homepage")(0) \ "contentUrl").text

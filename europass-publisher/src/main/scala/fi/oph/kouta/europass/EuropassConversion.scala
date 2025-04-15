@@ -52,10 +52,11 @@ object EuropassConversion {
   def nimetAsElmXml(nimet: Kielistetty): List[Elem] =
     nimet.keys.map{lang => nimiAsElmXml(lang.name, nimet(lang))}.toList
 
-  def toteutusAsElmXml(toteutus: ToteutusIndexed): Elem = {
+  def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
-    <learningOpportunity id={toteutusUrl(oid)}>
+    if (toteutus.tarjoajat.isEmpty) None else
+    Some(<learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
       {toteutus.tarjoajat.map{t =>
@@ -63,7 +64,7 @@ object EuropassConversion {
       <learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
       <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
-    </learningOpportunity>
+    </learningOpportunity>)
   }
 
   def koulutusToTutkintonimikkeet(koulutus: KoulutusIndexed): Seq[TutkintoNimike] =

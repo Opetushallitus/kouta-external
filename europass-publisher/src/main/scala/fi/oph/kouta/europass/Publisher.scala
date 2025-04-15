@@ -16,7 +16,7 @@ object Publisher extends Logging {
   val subsequentLogDelayInItems = 200
 
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
-    val toteutusXml = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
       <Courses xmlns="http://data.europa.eu/snb/model/ap/loq-constraints/">
         <learningOpportunityReferences>
@@ -58,7 +58,7 @@ object Publisher extends Logging {
       .map(ElasticClient.getKoulutus)
 
   def toteutuksetToFile(dest: BufferedWriter, toteutusStream: Stream[ToteutusIndexed]) = {
-    val toteutusXmlStream = toteutusStream.map(EuropassConversion.toteutusAsElmXml)
+    val toteutusXmlStream = toteutusStream.flatMap(EuropassConversion.toteutusAsElmXml)
     dest.write("<learningOpportunityReferences>\n")
     foreachWithLogging(
       toteutusXmlStream,

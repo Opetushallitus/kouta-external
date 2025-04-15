@@ -116,15 +116,14 @@ object EuropassConversion extends Logging {
 
   def koulutusAsElmXml(koulutus: KoulutusIndexed): Option[Elem] = {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
-    val iscedfCodes = koulutus.koulutuskoodienAlatJaAsteet
-      .flatMap(_.koulutusalaKoodiUrit)
-      .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
-      .flatMap(koulutusalaToIscedfCode)
-      .toSet
-    if (iscedfCodes.isEmpty) {
-      logger.warn(s"Koulutus $oid has no koulutusala classification; not publishing")
-      None
-    } else
+    val iscedfCodes = Some(
+        koulutus.koulutuskoodienAlatJaAsteet
+        .flatMap(_.koulutusalaKoodiUrit)
+        .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
+        .flatMap(koulutusalaToIscedfCode)
+        .toSet)
+      .filter(_.nonEmpty)
+      .getOrElse(List("0099"))  // generic prog and qfic not elsewhere classified
     Some(<learningAchievementSpecification id={koulutusUrl(oid)}>
       {nimetAsElmXml(koulutus.nimi)}
       {iscedfCodes.map(iscedfAsElmXml)}

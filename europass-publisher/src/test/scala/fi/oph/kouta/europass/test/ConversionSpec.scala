@@ -36,7 +36,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "contain required elements" in {
-    val koulutusXml: Elem = EuropassConversion.koulutusAsElmXml(example_koulutus)
+    val Some(koulutusXml: Elem) = EuropassConversion.koulutusAsElmXml(example_koulutus)
     assert(koulutusXml \@ "id"
       == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
     assert((koulutusXml \ "title")(0).text
@@ -100,7 +100,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   "koulutus 8162" should "produce koulutusala from its metadata" in {
-    val koulutusXml: Elem =
+    val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusKoodi)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/023")

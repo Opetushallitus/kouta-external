@@ -12,8 +12,9 @@ import fi.oph.kouta.external.domain.indexed.{
   ErikoislaakariKoulutusMetadataIndexed
 }
 import fi.oph.kouta.external.domain.Kielistetty
+import fi.oph.kouta.logging.Logging
 
-object EuropassConversion {
+object EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
   val langCodes = Map(
@@ -55,7 +56,10 @@ object EuropassConversion {
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
-    if (toteutus.tarjoajat.isEmpty) None else
+    if (toteutus.tarjoajat.isEmpty) {
+      logger.warn(s"Toteutus $oid has no tarjoajat; not publishing")
+      None
+    } else
     Some(<learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
@@ -105,21 +109,25 @@ object EuropassConversion {
 
   def iscedfAsElmXml(koodi: String) = <ISCEDFCode uri={iscedfUrl(koodi)}/>
 
-  def koulutusAsElmXml(koulutus: KoulutusIndexed): Elem = {
+  def koulutusAsElmXml(koulutus: KoulutusIndexed): Option[Elem] = {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
-    <learningAchievementSpecification id={koulutusUrl(oid)}>
+    val iscedfCodes = koulutus.koulutuskoodienAlatJaAsteet
+      .flatMap(_.koulutusalaKoodiUrit)
+      .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
+      .flatMap(koulutusalaToIscedfCode)
+      .toSet
+    if (iscedfCodes.isEmpty) {
+      logger.warn(s"Koulutus $oid has no koulutusala classification; not publishing")
+      None
+    } else
+    Some(<learningAchievementSpecification id={koulutusUrl(oid)}>
       {nimetAsElmXml(koulutus.nimi)}
-      {koulutus.koulutuskoodienAlatJaAsteet
-        .flatMap(_.koulutusalaKoodiUrit)
-        .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
-        .flatMap(koulutusalaToIscedfCode)
-        .toSet
-        .map(iscedfAsElmXml)}
+      {iscedfCodes.map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
         <language uri={langCodes.getOrElse(lang.name, "")}/>}}
       {koulutusTuloksetAsElmXml(koulutus).map{tulos =>
         <learningOutcome idref={tulos \@ "id"}/>}}
-    </learningAchievementSpecification>
+    </learningAchievementSpecification>)
   }
 
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =

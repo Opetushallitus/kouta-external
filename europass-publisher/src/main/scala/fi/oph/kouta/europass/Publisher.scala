@@ -41,7 +41,7 @@ object Publisher extends Logging {
   def koulutuksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
     dest.write("<learningAchievementSpecificationReferences>\n")
     foreachWithLogging(
-      koulutusStream.map(EuropassConversion.koulutusAsElmXml),
+      koulutusStream.flatMap(EuropassConversion.koulutusAsElmXml),
       "koulutukset",
       {koulutus => dest.write(koulutus.toString)}
     )

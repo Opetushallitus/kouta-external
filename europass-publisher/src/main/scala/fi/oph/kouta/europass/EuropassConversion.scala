@@ -106,6 +106,9 @@ object EuropassConversion extends Logging {
     case moniala_re(level2Category) =>
       // These codes are apparently OPH "monialainen koulutus" additions to ISCED-F 2013
       Some(level2Category + "88")  // Inter-disciplinary programmes
+    case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso3_0820") =>
+      // This code is a weird OPH addition (generic forestry)
+      None
     case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso") =>
       // The kkl2016 and isced2013 codesets have exactly equal codes
       Some(ka.split("_")(1).split("#")(0))

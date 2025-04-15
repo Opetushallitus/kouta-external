@@ -100,7 +100,12 @@ object EuropassConversion extends Logging {
     }
   }
 
+  val moniala_re = "kansallinenkoulutusluokitus2016koulutusalataso3_(..)[12]8".r
+
   def koulutusalaToIscedfCode(koulutusala: String): Option[String] = koulutusala match {
+    case moniala_re(level2Category) =>
+      // These codes are apparently OPH "monialainen koulutus" additions to ISCED-F 2013
+      Some(level2Category + "88")  // Inter-disciplinary programmes
     case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso") =>
       // The kkl2016 and isced2013 codesets have exactly equal codes
       Some(ka.split("_")(1).split("#")(0))

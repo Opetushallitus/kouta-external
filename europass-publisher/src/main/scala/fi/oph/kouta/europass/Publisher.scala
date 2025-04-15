@@ -69,7 +69,9 @@ object Publisher extends Logging {
   }
 
   def tuloksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
-    val tulosXmlStream = koulutusStream.flatMap(EuropassConversion.koulutusTuloksetAsElmXml)
+    val tulosXmlStream = koulutusStream
+      .flatMap(EuropassConversion.koulutusTuloksetAsElmXml)
+      .groupBy(_ \@ "id").values.map(_(0)).toStream
     dest.write("<learningOutcomeReferences>\n")
     foreachWithLogging(
       tulosXmlStream,

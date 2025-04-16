@@ -36,7 +36,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "contain required elements" in {
-    val koulutusXml: Elem = EuropassConversion.koulutusAsElmXml(example_koulutus)
+    val Some(koulutusXml: Elem) = EuropassConversion.koulutusAsElmXml(example_koulutus)
     assert(koulutusXml \@ "id"
       == "https://rdf.oph.fi/koulutus/1.2.246.562.13.00000000000000000006")
     assert((koulutusXml \ "title")(0).text
@@ -54,7 +54,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "have correct namespace when converted" in {
-    val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
     assert(toteutusXml.namespace == null)
     val serialisedOutput = new StringWriter()
     XML.write(serialisedOutput, toteutusXml, "utf-8", true, null)
@@ -64,7 +64,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "contain all required elements" in {
-    val toteutusXml: Elem = EuropassConversion.toteutusAsElmXml(example_toteutus)
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
     assert(toteutusXml \@ "id"
       == "https://rdf.oph.fi/koulutus-toteutus/1.2.246.562.17.00000000000000000002")
     assert(((toteutusXml \ "homepage")(0) \ "contentUrl").text
@@ -100,7 +100,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   "koulutus 8162" should "produce koulutusala from its metadata" in {
-    val koulutusXml: Elem =
+    val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusKoodi)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/023")

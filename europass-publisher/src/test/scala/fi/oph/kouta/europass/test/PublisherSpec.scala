@@ -8,29 +8,14 @@ import scala.io.Source
 import scala.sys.process.Process
 import java.io._
 
-import javax.xml.XMLConstants
-import javax.xml.transform.stream.StreamSource
-import javax.xml.validation.{Schema, SchemaFactory, Validator}
-import org.xml.sax.{ErrorHandler, SAXParseException}
-
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.domain.indexed.KoulutusIndexed
-import fi.oph.kouta.europass.Publisher
-import fi.oph.kouta.europass.ElasticClient
+import fi.oph.kouta.europass.{Publisher, ElasticClient, ElmValidation}
 import fi.oph.kouta.domain.Amm
 
 class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonFormats {
 
   def resource(filename: String) = Source.fromResource(filename).bufferedReader
-
-  def validateXml(xmlFile: String): Boolean = {
-    val schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
-    val schemaURI = getClass().getClassLoader().getResource("xsd/loq.xsd")
-    val schema: Schema = schemaFactory.newSchema(schemaURI)
-    val validator: Validator = schema.newValidator()
-    validator.validate(new StreamSource(Source.fromFile(xmlFile).bufferedReader))
-    return true
-  }
 
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
@@ -111,7 +96,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<title language=\"sv\">nimi sv</title>"))
-    assert(validateXml(fileName))
+    assert(ElmValidation.validateXml(fileName))
   }
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {

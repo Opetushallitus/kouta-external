@@ -126,6 +126,13 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       "http://data.europa.eu/snb/isced-f/0099")
   }
 
+  it should "not have tutkintonimike based learning outcome" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusAla)
+    assert(koulutusXml \ "learningOutcome" \@ "idref" ==
+      "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008751")
+  }
+
   "koulutus 1806" should "translate multidisciplinary into ISCED-F" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
@@ -135,6 +142,13 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
         "http://data.europa.eu/snb/isced-f/091",
         "http://data.europa.eu/snb/isced-f/0988"
       ))
+  }
+
+  it should "have tutkintonimike based learning outcome" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
+    assert(koulutusXml \ "learningOutcome" \@ "idref" ==
+      "https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_714#2")
   }
 
   "koulutus 2032" should "not have koulutusala 0820" in {

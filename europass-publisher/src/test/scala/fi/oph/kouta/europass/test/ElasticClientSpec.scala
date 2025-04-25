@@ -22,6 +22,8 @@ object TestElasticClient extends ElasticClient {
 class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
   implicit val formats = DefaultFormats
 
+  def resource(filename: String) = Source.fromResource(filename).bufferedReader
+
   "elasticsearch" should "respond" in {
     val res1 = ElasticClient.getJson("")
     assert((res1 \ "tagline").extract[String] == "You Know, for Search")
@@ -40,6 +42,11 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
     val kou = ElasticClient.getKoulutus("1.2.246.562.13.00000000000000000006")
     assert(kou.koulutukset(0).koodiUri == "koulutus_371101#1")
     assert(kou.tila.name == "julkaistu")
+  }
+
+  "intoToteutusIndexedIfPossible" should "cope with MappingErrors" in {
+    val unmappable = parse(resource("toteutus-mappingerror.json"))
+    assert(ElasticClient.intoToteutusIndexedIfPossible(unmappable) == None)
   }
 
   "published toteutukset" should "have both toteutukset" in {

@@ -1,10 +1,11 @@
 package fi.oph.kouta.external.integration
 
 import java.util.UUID
-
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegrationSpec}
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.TestOids._
+
+import scala.concurrent.Future
 
 trait GenericGetTests[E, ID] extends KoutaIntegrationSpec with AccessControlSpec {
 
@@ -13,6 +14,13 @@ trait GenericGetTests[E, ID] extends KoutaIntegrationSpec with AccessControlSpec
   def index: String = s"$entityName-kouta"
   def existingId: ID
   def nonExistingId: ID
+  def throwingId: ID
+  def throwOrElse(id: ID)(orElse: ID => Future[E]): Future[E] = {
+    if (id == throwingId) {
+      throw new InterruptedException("test exception")
+    }
+    orElse(id)
+  }
 
   def get(id: ID, sessionId: UUID): E
   def get(id: ID, sessionId: UUID, errorStatus: Int): Unit
@@ -42,6 +50,13 @@ trait GenericGetTests[E, ID] extends KoutaIntegrationSpec with AccessControlSpec
       get(s"$entityPath/$nonExistingId") {
         status should equal(401)
         body should include("Unauthorized")
+      }
+    }
+
+    it should "return 500" in {
+      get(s"$entityPath/$throwingId", headers = Seq(defaultSessionHeader)) {
+        status should equal(500)
+        body should include("Unhandled error")
       }
     }
 

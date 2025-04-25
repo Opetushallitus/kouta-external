@@ -22,6 +22,7 @@ class HakuSpec
   override val entityName         = "haku"
   val existingId: HakuOid         = HakuOid("1.2.246.562.29.00000000000000000001")
   val nonExistingId: HakuOid      = HakuOid("1.2.246.562.29.00000000000000000000")
+  override val throwingId         = HakuOid("1.2.246.562.29.00000000000000000002")
   override val createdOid         = "1.2.246.562.29.123456789"
   override val updatedOidBase     = "1.2.246.562.29.1"
 

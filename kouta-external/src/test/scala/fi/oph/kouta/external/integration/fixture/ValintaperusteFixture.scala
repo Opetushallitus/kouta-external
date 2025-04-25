@@ -9,10 +9,13 @@ import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ValintaperusteSer
 import fi.oph.kouta.external.servlet.ValintaperusteServlet
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
 import fi.oph.kouta.external.TestData.AmmValintaperuste
+import fi.oph.kouta.external.integration.GenericGetTests
 
 import java.time.Instant
+import scala.concurrent.Future
 
 trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec {
+  this: GenericGetTests[Valintaperuste, UUID] =>
   val ValintaperustePath  = "/valintaperuste"
   val ValintaperusteIdKey = "valintaperuste"
 
@@ -20,7 +23,10 @@ trait ValintaperusteFixture extends KoutaIntegrationSpec with AccessControlSpec 
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val valintaperusteService = new ValintaperusteService(
-      new ValintaperusteClient(TempElasticClient.client, TempElasticClient.clientJava),
+      new ValintaperusteClient(TempElasticClient.client, TempElasticClient.clientJava) {
+        override def getValintaperuste(id: UUID): Future[Valintaperuste] =
+          throwOrElse(id)(super.getValintaperuste)
+      },
       new MockKoutaClient(urlProperties.get),
       organisaatioService
     )

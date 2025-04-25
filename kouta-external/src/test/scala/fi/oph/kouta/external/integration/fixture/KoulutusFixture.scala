@@ -7,13 +7,15 @@ import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
 import fi.oph.kouta.external.TestData.AmmKoulutus
+import fi.oph.kouta.external.integration.GenericGetTests
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
-import fi.oph.kouta.mocks.SpecWithMocks
+import fi.oph.kouta.servlet.Authenticated
 
 import java.time.Instant
+import scala.concurrent.Future
 
 trait KoulutusFixture extends AccessControlSpec {
-  this: KoutaIntegrationSpec =>
+  this: KoutaIntegrationSpec with GenericGetTests[Koulutus, KoulutusOid] =>
   val KoulutusPath = "/koulutus"
 
   val koulutus = AmmKoulutus
@@ -21,7 +23,10 @@ trait KoulutusFixture extends AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService) {
+      override def get(oid: KoulutusOid)(implicit authenticated: Authenticated): Future[Koulutus] =
+        throwOrElse(oid)(super.get)
+    }
     addServlet(new KoulutusServlet(koulutusService), KoulutusPath)
   }
 

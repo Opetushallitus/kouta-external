@@ -4,7 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid}
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Koulutus
-import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture}
+import fi.oph.kouta.external.integration.fixture.KoulutusFixture
 import fi.oph.kouta.security.{CasSession, Role}
 
 import java.time.Instant
@@ -22,6 +22,7 @@ class KoulutusSpec
   override val entityName                 = "koulutus"
   override val existingId: KoulutusOid    = KoulutusOid("1.2.246.562.13.00000000000000000001")
   override val nonExistingId: KoulutusOid = KoulutusOid("1.2.246.562.13.00000000000000000000")
+  override val throwingId: KoulutusOid    = KoulutusOid("1.2.246.562.13.00000000000000000008")
   override val createdOid                 = "1.2.246.562.13.123456789"
   override val updatedOidBase             = "1.2.246.562.13.1"
 

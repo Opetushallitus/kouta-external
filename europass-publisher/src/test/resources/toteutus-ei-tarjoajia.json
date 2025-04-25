@@ -1,0 +1,188 @@
+{
+    "tila": "julkaistu",
+    "kuuluuOpintokokonaisuuksiin": null,
+    "liitetytOpintojaksot": [],
+    "oppilaitokset": [],
+    "teemakuva": "https://konfo-files.opintopolku.fi/toteutus-teemakuva/1.2.246.562.17.00000000000000011735/6e48e8b4-ab3c-4ff4-a365-ee6eba531563.jpg",
+    "koulutukset": [
+      {
+        "koodiUri": "koulutus_361902#12",
+        "nimi": {
+          "sv": "Grundexamen i natur och miljö",
+          "fi": "Luonto- ja ympäristöalan perustutkinto",
+          "en": "Vocational qualification in Natural and Environmental Protection"
+        }
+      }
+    ],
+    "tarjoajat": [],
+    "liitetytOsaamismerkit": [],
+    "esikatselu": true,
+    "modified": "2023-09-22T14:19:04",
+    "koulutusOid": "1.2.246.562.13.00000000000000000030",
+    "nimi": {
+      "fi": "Luonto- ja ympäristöalan perustutkinto, Vamia"
+    },
+    "muokkaaja": {
+      "oid": "1.2.246.562.24.62220785677",
+      "nimi": "Silva Kilpinen-Testi"
+    },
+    "oid": "1.2.246.562.17.00000000000000011735",
+    "kielivalinta": [
+      "fi"
+    ],
+    "haut": [
+      "1.2.246.562.29.00000000000000021303"
+    ],
+    "koulutustyyppiPath": "amm/ammatillinen-perustutkinto",
+    "timestamp": 1745276540491,
+    "organisaatiot": [
+      "1.2.246.562.10.45306788949"
+    ],
+    "organisaatio": {
+      "oid": "1.2.246.562.10.45306788949",
+      "nimi": {
+        "fi": "Vamia",
+        "sv": "Vamia",
+        "en": "Vamia"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_905",
+        "nimi": {
+          "sv": "Vasa",
+          "fi": "Vaasa"
+        }
+      }
+    },
+    "metadata": {
+      "kuvaus": {
+        "fi": "<p>Luonto- ja ympäristöalan perustutkinto antaa sinulle tarvittavan perusosaamisen ympäristönhuoltajaksi. Luonto- ja ympäristöalan osaamisala antaa valmiudet työskennellä esimerkiksi lajittelu- tai kierrätysasemilla ja -laitoksissa, sekä ympäristöalan ja kierrätyksen neuvonnassa.</p><p></p><p>Ympäristönhuoltajana opit jätehuoltoalan kierrätyksestä ja kiertotaloudesta kestävän kehityksen mukaisesti sekä tunnistat jätteiden hyötykäyttömahdollisuuksia, käsittelymenetelmiä, keräysjärjestelmiä sekä -välineitä, -kalustoa ja -paikkoja.</p><p></p><p>Opinnot koostuvat ammatillisista ja yhteisistä opinnoista. Luonto- ja ympäristöalan osaamisalassa opiskelet mm. luonto- ja ympäristöalalla toimimista, materiaalien talteenottoa ja hyödyntämistä, jäteasemalla toimimista, kierrätyslaitoksella työskentelemistä, jäte- ja kierrätysneuvontaa sekä ilmastovastuullista toimintaa. Valmistut koulutuksessa ympäristönhuoltajaksi.</p><p></p>"
+      },
+      "osaamisalat": [
+        {
+          "koodi": {
+            "koodiUri": "osaamisala_1766",
+            "nimi": {
+              "sv": "Kompetensområdet för miljö",
+              "fi": "Ympäristöalan osaamisala",
+              "en": "Competence area of Environmental Protection"
+            }
+          },
+          "linkki": {},
+          "otsikko": {}
+        }
+      ],
+      "isMuokkaajaOphVirkailija": false,
+      "ammattinimikkeet": [],
+      "asiasanat": [],
+      "isTyovoimakoulutus": false,
+      "hasJotpaRahoitus": false,
+      "isTaydennyskoulutus": false,
+      "opetus": {
+        "maksullisuustyyppi": "maksuton",
+        "maksullisuusKuvaus": {},
+        "suunniteltuKestoKuvaus": {},
+        "suunniteltuKestoVuodet": 3,
+        "onkoApuraha": false,
+        "lisatiedot": [],
+        "suunniteltuKestoKuukaudet": 0,
+        "opetustapaKuvaus": {},
+        "opetuskieletKuvaus": {},
+        "opetustapa": [
+          {
+            "koodiUri": "opetuspaikkakk_1#1",
+            "nimi": {
+              "fi": "Lähiopetus",
+              "sv": "Närundervisning",
+              "en": "Contact teaching"
+            }
+          }
+        ],
+        "opetusaikaKuvaus": {},
+        "opetuskieli": [
+          {
+            "koodiUri": "oppilaitoksenopetuskieli_1#2",
+            "nimi": {
+              "sv": "finska",
+              "fi": "suomi",
+              "en": "Finnish"
+            }
+          }
+        ],
+        "opetusaika": [
+          {
+            "koodiUri": "opetusaikakk_1#1",
+            "nimi": {
+              "sv": "Dagundervisning",
+              "en": "Day time teaching",
+              "fi": "Päiväopetus"
+            }
+          }
+        ]
+      },
+      "yhteyshenkilot": [
+        {
+          "nimi": {
+            "fi": "VamiaGuide"
+          },
+          "titteli": {
+            "fi": "Opinto-ohjaaja"
+          },
+          "sahkoposti": {
+            "fi": "vamiaguide@vamia.fi"
+          },
+          "puhelinnumero": {
+            "fi": "040 1869396"
+          },
+          "wwwSivu": {},
+          "wwwSivuTeksti": {}
+        }
+      ],
+      "tyyppi": "amm",
+      "ammatillinenPerustutkintoErityisopetuksena": false
+    },
+    "hakutiedot": [
+      {
+        "hakuOid": "1.2.246.562.29.00000000000000021303",
+        "nimi": {
+          "en": "Joint application to upper secondary education and preparatory education 2023",
+          "fi": "Perusopetuksen jälkeisen koulutuksen yhteishaku 2023",
+          "sv": "Gemensam ansökan till utbildning efter den grundläggande utbildningen 2023"
+        },
+        "hakutapa": {
+          "koodiUri": "hakutapa_01#1",
+          "nimi": {
+            "fi": "Yhteishaku",
+            "sv": "Gemensam ansökan",
+            "en": "Joint application"
+          }
+        },
+        "koulutuksenAlkamiskausi": {
+          "alkamiskausityyppi": "alkamiskausi ja -vuosi",
+          "henkilokohtaisenSuunnitelmanLisatiedot": {},
+          "koulutuksenAlkamiskausi": {
+            "koodiUri": "kausi_s#1",
+            "nimi": {
+              "sv": "Höst",
+              "en": "Autumn",
+              "fi": "Syksy"
+            }
+          },
+          "koulutuksenAlkamisvuosi": "2023"
+        },
+        "kohdejoukko": {
+          "koodiUri": "haunkohdejoukko_11#1",
+          "nimi": {
+            "fi": "Perusopetuksen jälkeisen koulutuksen yhteishaku",
+            "sv": "Gemensam ansökan till utbildning efter grundläggande utbildning"
+          }
+        },
+        "hakukohteet": []
+      }
+    ],
+    "formatoituModified": {
+      "fi": "22.9.2023 klo 14:19",
+      "sv": "22.9.2023 kl. 14:19",
+      "en": "Sep. 22, 2023 at 02:19 PM UTC+3"
+    },
+    "koulutustyyppi": "amm"
+}

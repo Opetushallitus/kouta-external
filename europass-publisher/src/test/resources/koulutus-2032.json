@@ -1,0 +1,252 @@
+{
+  "tila": "arkistoitu",
+  "johtaaTutkintoon": true,
+  "eqf": [
+    {
+      "koodiUri": "eqf_6",
+      "nimi": {
+        "en": "Level 6",
+        "fi": "Taso 6",
+        "sv": "Nivå 6"
+      }
+    },
+    {
+      "koodiUri": "eqf_7",
+      "nimi": {
+        "fi": "Taso 7",
+        "sv": "Nivå 7",
+        "en": "Level 7"
+      }
+    }
+  ],
+  "teemakuva": "https://konfo-files.opintopolku.fi/koulutus-teemakuva/1.2.246.562.13.00000000000000002032/ce2e2f76-6e69-4f2e-9550-943d641a4e5b.png",
+  "koulutukset": [
+    {
+      "koodiUri": "koulutus_662199#12",
+      "nimi": {
+        "fi": "Maat. ja metsät. kand. (alempi), muu tai tuntematon ala",
+        "sv": "Agr. o. forstkand. (lägre), annat eller okänt specialområde",
+        "en": "Bachelor of Science (Agriculture and Forestry), Other or Unknown Field"
+      }
+    },
+    {
+      "koodiUri": "koulutus_762202#12",
+      "nimi": {
+        "fi": "Maat. ja metsät. maist., metsätalous",
+        "sv": "Agr. o. forstmag., skogsbruk",
+        "en": "Master of Science (Agriculture and Forestry), Forestry"
+      }
+    }
+  ],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.39218317368",
+      "nimi": {
+        "fi": "Helsingin yliopisto",
+        "sv": "Helsingfors universitet",
+        "en": "University of Helsinki"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_091",
+        "nimi": {
+          "fi": "Helsinki",
+          "sv": "Helsingfors"
+        }
+      }
+    }
+  ],
+  "toteutukset": [
+    {
+      "tila": "arkistoitu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.445049088710",
+          "nimi": {
+            "sv": "Agrikultur-forstvetenskapliga fakulteten",
+            "fi": "Maatalous-metsätieteellinen tiedekunta",
+            "en": "Faculty of Agriculture and Forestry"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_091",
+            "nimi": {
+              "fi": "Helsinki",
+              "sv": "Helsingfors"
+            }
+          }
+        }
+      ],
+      "modified": "2022-10-26T12:10:04",
+      "nimi": {
+        "fi": "Metsätieteiden kandiohjelma, syksy 2022",
+        "sv": "Kandidatprogrammet i skogsvetenskaper, höst 2022"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.63440862366",
+        "nimi": "Anonymisoitu Virkailija"
+      },
+      "oid": "1.2.246.562.17.00000000000000003539",
+      "organisaatiot": [
+        "1.2.246.562.10.445049088710"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.445049088710",
+        "nimi": {
+          "sv": "Agrikultur-forstvetenskapliga fakulteten",
+          "fi": "Maatalous-metsätieteellinen tiedekunta",
+          "en": "Faculty of Agriculture and Forestry"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_091",
+          "nimi": {
+            "fi": "Helsinki",
+            "sv": "Helsingfors"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "26.10.2022 klo 12:10",
+        "sv": "26.10.2022 kl. 12:10",
+        "en": "Oct. 26, 2022 at 12:10 PM UTC+3"
+      }
+    }
+  ],
+  "koulutuskoodienAlatJaAsteet": [
+    {
+      "koulutusKoodiUri": "koulutus_662199#12",
+      "koulutusalaKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusalataso1_08",
+        "kansallinenkoulutusluokitus2016koulutusalataso2_082",
+        "kansallinenkoulutusluokitus2016koulutusalataso3_0820",
+        "okmohjauksenala_9"
+      ],
+      "koulutusasteKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusastetaso1_6",
+        "kansallinenkoulutusluokitus2016koulutusastetaso2_63"
+      ]
+    },
+    {
+      "koulutusKoodiUri": "koulutus_762202#12",
+      "koulutusalaKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusalataso1_08",
+        "kansallinenkoulutusluokitus2016koulutusalataso2_082",
+        "kansallinenkoulutusluokitus2016koulutusalataso3_0821",
+        "okmohjauksenala_9"
+      ],
+      "koulutusasteKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusastetaso1_7",
+        "kansallinenkoulutusluokitus2016koulutusastetaso2_72"
+      ]
+    }
+  ],
+  "esikatselu": true,
+  "modified": "2022-12-01T15:09:35",
+  "nimi": {
+    "fi": "Metsätieteiden kandiohjelma, maatalous- ja metsätieteiden kandidaatti ja maisteri (3 v + 2 v)",
+    "sv": "Kandidatprogrammet i skogsvetenskaper, agronomie- och forstkandidat och agronomie- och forstmagister (3 år + 2 år)"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.63440862366",
+    "nimi": "Anonymisoitu Virkailija"
+  },
+  "oid": "1.2.246.562.13.00000000000000002032",
+  "nqf": [
+    {
+      "koodiUri": "nqf_6",
+      "nimi": {
+        "en": "Level 6",
+        "sv": "Nivå 6",
+        "fi": "Taso 6"
+      }
+    },
+    {
+      "koodiUri": "nqf_7",
+      "nimi": {
+        "fi": "Taso 7",
+        "en": "Level 7",
+        "sv": "Nivå 7"
+      }
+    }
+  ],
+  "kielivalinta": [
+    "fi",
+    "sv"
+  ],
+  "haut": [
+    "1.2.246.562.29.00000000000000002821",
+    "1.2.246.562.29.00000000000000002173"
+  ],
+  "koulutustyyppiPath": "kk/yo",
+  "timestamp": 1743419290255,
+  "julkinen": false,
+  "organisaatiot": [
+    "1.2.246.562.10.445049088710",
+    "1.2.246.562.10.39218317368"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.445049088710",
+    "nimi": {
+      "sv": "Agrikultur-forstvetenskapliga fakulteten",
+      "fi": "Maatalous-metsätieteellinen tiedekunta",
+      "en": "Faculty of Agriculture and Forestry"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_091",
+      "nimi": {
+        "fi": "Helsinki",
+        "sv": "Helsingfors"
+      }
+    }
+  },
+  "metadata": {
+    "tyyppi": "yo",
+    "kuvaus": {
+      "fi": "<p>Haluatko vaikuttaa siihen, miltä metsän, Suomen tärkeimmän luonnonvaran ja luonnon monimuotoisuuden kehdon, tulevaisuus näyttää? Oletko koskaan ihmetellyt, miksi metsiä kutsutaan maailman keuhkoiksi ja miten ilmastonmuutos liittyy niihin? Tai miten puut kasvatetaan ja jalostetaan taimista tuotteiksi kestävästi ja tehokkaasti? Entä miten talous ja metsäympäristö liittyvät toisiinsa?</p><p></p><p>Näihin kysymyksiin vastataan metsätieteiden opinnoissa, jotka haastavat näkemään metsät ei vain lenkkiympäristöinä tai puuvarastoina, vaan monipuolisen ja uusiutuvan raaka-aineen lähteenä sekä monimutkaisina, ympäristöönsä kytkeytyvinä ekologisina kokonaisuuksina. Ihmisen ja luonnon sekä yhteiskunnan ja luonnonvarojen suhde on opetuksessa vahvasti läsnä.</p><p></p><p>Tutustu opintoihin <a href=\"https://www.helsinki.fi/fi/koulutusohjelmat/metsatieteiden-kandiohjelma\" rel=\"noopener noreferrer\" target=\"_blank\">koulutusohjelman verkkosivuilla.</a></p>",
+      "sv": "<p>Vill du påverka skogarnas framtid, Finlands viktigaste naturresurs och källan till naturens mångfald? Har du undrat över varför skogen kallas jordens lungor eller hur klimatförändring och skog hänger ihop? Eller hur man hållbart och effektivt odlar och förädlar träd från planta till produkt? Eller hur ekonomi och skogsmiljö är kopplade till varandra?</p><p></p><p>Studier i skogsvetenskaper ger svar på många frågor och utmanar dig att inte bara se skogen som en joggingmiljö eller ett trädförråd, utan som en mångsidig och förnybar råvarukälla och komplicerad ekologisk helhet. Förhållandet mellan människa och natur och mellan samhälle och naturresurser är starkt närvarande i undervisningen.</p><p></p><p>Mera information finns på <a href=\"https://www.helsinki.fi/sv/program/skogsvetenskaper-kandidatprogram\" rel=\"noopener noreferrer\" target=\"_blank\">programmets nätsidor.</a></p>"
+    },
+    "lisatiedot": [],
+    "koulutusala": [
+      {
+        "koodiUri": "kansallinenkoulutusluokitus2016koulutusalataso2_082#1",
+        "nimi": {
+          "fi": "Metsätalous",
+          "sv": "Skogsbruk",
+          "en": "Forestry"
+        }
+      }
+    ],
+    "tutkintonimike": [
+      {
+        "koodiUri": "tutkintonimikekk_033#2",
+        "nimi": {
+          "fi": "Maatalous- ja metsätieteiden kandidaatti",
+          "sv": "Agronomie- och forstkandidat",
+          "en": "Bachelor of Science (Agriculture and Forestry)"
+        }
+      },
+      {
+        "koodiUri": "tutkintonimikekk_031#2",
+        "nimi": {
+          "sv": "Agronomie- och forstmagister",
+          "fi": "Maatalous- ja metsätieteiden maisteri",
+          "en": "Master of Science (Agriculture and Forestry)"
+        }
+      }
+    ],
+    "opintojenLaajuusNumero": 300,
+    "opintojenLaajuusyksikko": {
+      "koodiUri": "opintojenlaajuusyksikko_2#1",
+      "nimi": {
+        "en": "ECTS credits",
+        "fi": "opintopistettä",
+        "sv": "studiepoäng"
+      }
+    },
+    "isMuokkaajaOphVirkailija": false
+  },
+  "formatoituModified": {
+    "fi": "1.12.2022 klo 15:09",
+    "sv": "1.12.2022 kl. 15:09",
+    "en": "Dec. 1, 2022 at 03:09 PM UTC+2"
+  },
+  "koulutustyyppi": "yo"
+}

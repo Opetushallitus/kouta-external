@@ -27,6 +27,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-8162.json"))
   lazy val koulutusWithoutKoulutusAla =
     read[KoulutusIndexed](resource("koulutus-ilman-koulutusalaa.json"))
+  lazy val koulutusWithMultidisciplinaryKoulutusAla =
+    read[KoulutusIndexed](resource("koulutus-1806.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
   lazy val toteutus_without_tarjoajat =
@@ -120,6 +122,17 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusAla)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/0099")
+  }
+
+  "koulutus 1806" should "translate multidisciplinary into ISCED-F" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
+    assert((koulutusXml \ "ISCEDFCode").map{_ \@ "uri"} ==
+      List(
+        "http://data.europa.eu/snb/isced-f/09",
+        "http://data.europa.eu/snb/isced-f/091",
+        "http://data.europa.eu/snb/isced-f/0988"
+      ))
   }
 
   "koulutus 1293" should "have learning outcomes from tutkintonimikkeet" in {

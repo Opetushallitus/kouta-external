@@ -12,8 +12,9 @@ import fi.oph.kouta.external.domain.indexed.{
   ErikoislaakariKoulutusMetadataIndexed
 }
 import fi.oph.kouta.external.domain.Kielistetty
+import fi.oph.kouta.logging.Logging
 
-object EuropassConversion {
+object EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
   val langCodes = Map(
@@ -52,10 +53,14 @@ object EuropassConversion {
   def nimetAsElmXml(nimet: Kielistetty): List[Elem] =
     nimet.keys.map{lang => nimiAsElmXml(lang.name, nimet(lang))}.toList
 
-  def toteutusAsElmXml(toteutus: ToteutusIndexed): Elem = {
+  def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
-    <learningOpportunity id={toteutusUrl(oid)}>
+    if (toteutus.tarjoajat.isEmpty) {
+      logger.warn(s"Toteutus $oid has no tarjoajat; not publishing")
+      None
+    } else
+    Some(<learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
       {langs.map(konfoUrl(_, oid))}
       {toteutus.tarjoajat.map{t =>
@@ -63,7 +68,7 @@ object EuropassConversion {
       <learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
       <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
-    </learningOpportunity>
+    </learningOpportunity>)
   }
 
   def koulutusToTutkintonimikkeet(koulutus: KoulutusIndexed): Seq[TutkintoNimike] =
@@ -95,7 +100,15 @@ object EuropassConversion {
     }
   }
 
+  val moniala_re = "kansallinenkoulutusluokitus2016koulutusalataso3_(..)[12]8".r
+
   def koulutusalaToIscedfCode(koulutusala: String): Option[String] = koulutusala match {
+    case moniala_re(level2Category) =>
+      // These codes are apparently OPH "monialainen koulutus" additions to ISCED-F 2013
+      Some(level2Category + "88")  // Inter-disciplinary programmes
+    case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso3_0820") =>
+      // This code is a weird OPH addition (generic forestry)
+      None
     case ka if ka.startsWith("kansallinenkoulutusluokitus2016koulutusalataso") =>
       // The kkl2016 and isced2013 codesets have exactly equal codes
       Some(ka.split("_")(1).split("#")(0))
@@ -104,21 +117,24 @@ object EuropassConversion {
 
   def iscedfAsElmXml(koodi: String) = <ISCEDFCode uri={iscedfUrl(koodi)}/>
 
-  def koulutusAsElmXml(koulutus: KoulutusIndexed): Elem = {
+  def koulutusAsElmXml(koulutus: KoulutusIndexed): Option[Elem] = {
     val oid: String = koulutus.oid.map(_.toString).getOrElse("")
-    <learningAchievementSpecification id={koulutusUrl(oid)}>
-      {nimetAsElmXml(koulutus.nimi)}
-      {koulutus.koulutuskoodienAlatJaAsteet
+    val iscedfCodes = Some(
+        koulutus.koulutuskoodienAlatJaAsteet
         .flatMap(_.koulutusalaKoodiUrit)
         .union(koulutus.metadata.map(_.koulutusala).getOrElse(List()).map(_.koodiUri))
         .flatMap(koulutusalaToIscedfCode)
-        .toSet
-        .map(iscedfAsElmXml)}
+        .toSet)
+      .filter(_.nonEmpty)
+      .getOrElse(List("0099"))  // generic prog and qfic not elsewhere classified
+    Some(<learningAchievementSpecification id={koulutusUrl(oid)}>
+      {nimetAsElmXml(koulutus.nimi)}
+      {iscedfCodes.map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
         <language uri={langCodes.getOrElse(lang.name, "")}/>}}
       {koulutusTuloksetAsElmXml(koulutus).map{tulos =>
         <learningOutcome idref={tulos \@ "id"}/>}}
-    </learningAchievementSpecification>
+    </learningAchievementSpecification>)
   }
 
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =

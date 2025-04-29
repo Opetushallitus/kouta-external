@@ -21,6 +21,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 
   lazy val example_toteutus =
     read[ToteutusIndexed](resource("toteutus-example-1.json"))
+  lazy val toteutusArchived =
+    read[ToteutusIndexed](resource("toteutus-arkistoitu.json"))
   lazy val example_koulutus =
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
   lazy val koulutusWithoutKoulutusKoodi =
@@ -33,7 +35,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-2032.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
-  lazy val toteutus_without_tarjoajat =
+  lazy val toteutusWithoutTarjoajat =
     read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
 
   "example_koulutus" should "have correct fields" in {
@@ -108,8 +110,11 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   "toteutus without tarjoajat" should "not procude an ELM record" in {
-    assert(EuropassConversion.toteutusAsElmXml(toteutus_without_tarjoajat)
-      == None)
+    assert(EuropassConversion.toteutusAsElmXml(toteutusWithoutTarjoajat) == None)
+  }
+
+  "toteutus in non-julkaistu state" should "not produce ELM record" in {
+    assert(EuropassConversion.toteutusAsElmXml(toteutusArchived) == None)
   }
 
   "koulutus without koulutusalakoodit" should

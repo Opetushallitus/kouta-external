@@ -112,14 +112,16 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == None)
   }
 
-  "koulutus 8162" should "produce koulutusala from its metadata" in {
+  "koulutus without koulutusalakoodit" should
+  "produce koulutusala from its metadata" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusKoodi)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/023")
   }
 
-  "koulutus without koulutusala" should "include generic ISCED-F" in {
+  "koulutus without koulutusala and tutkintonimike" should
+  "include generic ISCED-F" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusAla)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
@@ -133,7 +135,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008751")
   }
 
-  "koulutus 1806" should "translate multidisciplinary into ISCED-F" in {
+  "koulutus with tutkintonimike and multidisciplinary koulutusala" should
+  "translate multidisciplinary into ISCED-F" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
     assert((koulutusXml \ "ISCEDFCode").map{_ \@ "uri"} ==
@@ -151,7 +154,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       "https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_714#2")
   }
 
-  "koulutus 2032" should "not have koulutusala 0820" in {
+  "koulutus with finland-only koulutusala 0820" should
+  "not have non-existent ISCED-F codes" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWith0820)
     assert((koulutusXml \ "ISCEDFCode").map{_ \@ "uri"} ==
@@ -162,7 +166,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       ))
   }
 
-  "koulutus 1293" should "have learning outcomes from tutkintonimikkeet" in {
+  "koulutus with tutkintonimike" should
+  "have learning outcomes from tutkintonimikkeet" in {
     val tulosXml: List[Elem] =
       EuropassConversion.koulutusTuloksetAsElmXml(koulutusWithTutkintonimike)
     assert(tulosXml(0) \@ "id"

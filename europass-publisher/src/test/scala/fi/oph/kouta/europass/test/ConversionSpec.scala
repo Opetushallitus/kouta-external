@@ -25,8 +25,16 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
   lazy val koulutusWithoutKoulutusKoodi =
     read[KoulutusIndexed](resource("koulutus-8162.json"))
+  lazy val koulutusWithoutKoulutusAla =
+    read[KoulutusIndexed](resource("koulutus-ilman-koulutusalaa.json"))
+  lazy val koulutusWithMultidisciplinaryKoulutusAla =
+    read[KoulutusIndexed](resource("koulutus-1806.json"))
+  lazy val koulutusWith0820 =
+    read[KoulutusIndexed](resource("koulutus-2032.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
+  lazy val toteutus_without_tarjoajat =
+    read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -99,14 +107,67 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == List("1.2.246.562.13.00000000000000000001"))
   }
 
-  "koulutus 8162" should "produce koulutusala from its metadata" in {
+  "toteutus without tarjoajat" should "not procude an ELM record" in {
+    assert(EuropassConversion.toteutusAsElmXml(toteutus_without_tarjoajat)
+      == None)
+  }
+
+  "koulutus without koulutusalakoodit" should
+  "produce koulutusala from its metadata" in {
     val Some(koulutusXml: Elem) =
       EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusKoodi)
     assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
       "http://data.europa.eu/snb/isced-f/023")
   }
 
-  "koulutus 1293" should "have learning outcomes from tutkintonimikkeet" in {
+  "koulutus without koulutusala and tutkintonimike" should
+  "include generic ISCED-F" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusAla)
+    assert(koulutusXml \ "ISCEDFCode" \@ "uri" ==
+      "http://data.europa.eu/snb/isced-f/0099")
+  }
+
+  it should "not have tutkintonimike based learning outcome" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithoutKoulutusAla)
+    assert(koulutusXml \ "learningOutcome" \@ "idref" ==
+      "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000008751")
+  }
+
+  "koulutus with tutkintonimike and multidisciplinary koulutusala" should
+  "translate multidisciplinary into ISCED-F" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
+    assert((koulutusXml \ "ISCEDFCode").map{_ \@ "uri"} ==
+      List(
+        "http://data.europa.eu/snb/isced-f/09",
+        "http://data.europa.eu/snb/isced-f/091",
+        "http://data.europa.eu/snb/isced-f/0988"
+      ))
+  }
+
+  it should "have tutkintonimike based learning outcome" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWithMultidisciplinaryKoulutusAla)
+    assert(koulutusXml \ "learningOutcome" \@ "idref" ==
+      "https://rdf.oph.fi/tutkintonimike/tutkintonimikekk_714#2")
+  }
+
+  "koulutus with finland-only koulutusala 0820" should
+  "not have non-existent ISCED-F codes" in {
+    val Some(koulutusXml: Elem) =
+      EuropassConversion.koulutusAsElmXml(koulutusWith0820)
+    assert((koulutusXml \ "ISCEDFCode").map{_ \@ "uri"} ==
+      List(
+        "http://data.europa.eu/snb/isced-f/08",
+        "http://data.europa.eu/snb/isced-f/082",
+        "http://data.europa.eu/snb/isced-f/0821"
+      ))
+  }
+
+  "koulutus with tutkintonimike" should
+  "have learning outcomes from tutkintonimikkeet" in {
     val tulosXml: List[Elem] =
       EuropassConversion.koulutusTuloksetAsElmXml(koulutusWithTutkintonimike)
     assert(tulosXml(0) \@ "id"

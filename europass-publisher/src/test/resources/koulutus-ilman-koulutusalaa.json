@@ -1,0 +1,244 @@
+{
+  "tila": "julkaistu",
+  "johtaaTutkintoon": false,
+  "eqf": [],
+  "teemakuva": "https://konfo-files.opintopolku.fi/koulutus-teemakuva/1.2.246.562.13.00000000000000008751/ee734e4a-cc4c-48c7-9607-053c35e272dc.png",
+  "koulutukset": [],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.87603128528",
+      "nimi": {
+        "fi": "Sedu",
+        "sv": "Sedu",
+        "en": "Sedu"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_743",
+        "nimi": {
+          "sv": "Seinäjoki",
+          "fi": "Seinäjoki"
+        }
+      }
+    }
+  ],
+  "toteutukset": [
+    {
+      "tila": "julkaistu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.87603128528",
+          "nimi": {
+            "fi": "Sedu",
+            "sv": "Sedu",
+            "en": "Sedu"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_743",
+            "nimi": {
+              "sv": "Seinäjoki",
+              "fi": "Seinäjoki"
+            }
+          }
+        }
+      ],
+      "modified": "2024-04-23T09:40:33",
+      "nimi": {
+        "fi": "Työpaikkaohjaajakoulutus puhtauspalvelualalle (JOTPA)"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.53493741758",
+        "nimi": "Anonymisoitu Virkailija"
+      },
+      "oid": "1.2.246.562.17.00000000000000023355",
+      "organisaatiot": [
+        "1.2.246.562.10.87603128528"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.87603128528",
+        "nimi": {
+          "fi": "Sedu",
+          "sv": "Sedu",
+          "en": "Sedu"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_743",
+          "nimi": {
+            "sv": "Seinäjoki",
+            "fi": "Seinäjoki"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "23.4.2024 klo 09:40",
+        "sv": "23.4.2024 kl. 09:40",
+        "en": "Apr. 23, 2024 at 09:40 AM UTC+3"
+      }
+    },
+    {
+      "tila": "julkaistu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.87603128528",
+          "nimi": {
+            "fi": "Sedu",
+            "sv": "Sedu",
+            "en": "Sedu"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_743",
+            "nimi": {
+              "sv": "Seinäjoki",
+              "fi": "Seinäjoki"
+            }
+          }
+        }
+      ],
+      "modified": "2024-12-03T10:31:23",
+      "nimi": {
+        "fi": "Työpaikkaohjaajakoulutus puhtauspalvelualalle (JOTPA) huhtikuu 2025"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.19662178659",
+        "nimi": "Melinda Pasanen-Testi"
+      },
+      "oid": "1.2.246.562.17.00000000000000029036",
+      "organisaatiot": [
+        "1.2.246.562.10.87603128528"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.87603128528",
+        "nimi": {
+          "fi": "Sedu",
+          "sv": "Sedu",
+          "en": "Sedu"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_743",
+          "nimi": {
+            "sv": "Seinäjoki",
+            "fi": "Seinäjoki"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "3.12.2024 klo 10:31",
+        "sv": "3.12.2024 kl. 10:31",
+        "en": "Dec. 3, 2024 at 10:31 AM UTC+2"
+      }
+    },
+    {
+      "tila": "julkaistu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.87603128528",
+          "nimi": {
+            "fi": "Sedu",
+            "sv": "Sedu",
+            "en": "Sedu"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_743",
+            "nimi": {
+              "sv": "Seinäjoki",
+              "fi": "Seinäjoki"
+            }
+          }
+        }
+      ],
+      "modified": "2024-12-03T10:51:25",
+      "nimi": {
+        "fi": "Työpaikkaohjaajakoulutus puhtauspalvelualalle (JOTPA) helmikuu 2025"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.19662178659",
+        "nimi": "Melinda Pasanen-Testi"
+      },
+      "oid": "1.2.246.562.17.00000000000000029038",
+      "organisaatiot": [
+        "1.2.246.562.10.87603128528"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.87603128528",
+        "nimi": {
+          "fi": "Sedu",
+          "sv": "Sedu",
+          "en": "Sedu"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_743",
+          "nimi": {
+            "sv": "Seinäjoki",
+            "fi": "Seinäjoki"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "3.12.2024 klo 10:51",
+        "sv": "3.12.2024 kl. 10:51",
+        "en": "Dec. 3, 2024 at 10:51 AM UTC+2"
+      }
+    }
+  ],
+  "koulutuskoodienAlatJaAsteet": [],
+  "esikatselu": true,
+  "modified": "2024-12-03T10:26:59",
+  "nimi": {
+    "fi": "Työpaikkaohjaajakoulutus puhtauspalvelualalle (JOTPA)"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.19662178659",
+    "nimi": "Melinda Pasanen-Testi"
+  },
+  "oid": "1.2.246.562.13.00000000000000008751",
+  "nqf": [],
+  "kielivalinta": [
+    "fi"
+  ],
+  "haut": [],
+  "koulutustyyppiPath": "amm-tutkintoon-johtamaton/amm-muu",
+  "timestamp": 1743418222086,
+  "julkinen": false,
+  "organisaatiot": [
+    "1.2.246.562.10.87603128528"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.87603128528",
+    "nimi": {
+      "fi": "Sedu",
+      "sv": "Sedu",
+      "en": "Sedu"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_743",
+      "nimi": {
+        "sv": "Seinäjoki",
+        "fi": "Seinäjoki"
+      }
+    }
+  },
+  "metadata": {
+    "tyyppi": "amm-muu",
+    "lisatiedot": [],
+    "kuvaus": {
+      "fi": "<p>Koulutus on tarkoitettu puhtausalan työpaikkaohjaajille, jotka haluavat vahvistaa osaamistaan opiskelijan ohjauksessa ja osaamisen arvioinnissa sekä tukea monimuotoista työllistymistä.</p><p></p><p>Koulutus soveltuu kaikkiin työympäristöihin, joissa työelämässä oppimista tapahtuu ja joissa perehdytetään ja ohjataan uusia ja vanhoja työntekijöitä työtehtäviin.</p>"
+    },
+    "koulutusala": [],
+    "opintojenLaajuusyksikko": {
+      "koodiUri": "opintojenlaajuusyksikko_5#1",
+      "nimi": {
+        "sv": "timmar",
+        "fi": "tuntia",
+        "en": "hours"
+      }
+    },
+    "opintojenLaajuusNumero": 5,
+    "isMuokkaajaOphVirkailija": false,
+    "tutkintonimike": []
+  },
+  "formatoituModified": {
+    "fi": "3.12.2024 klo 10:26",
+    "sv": "3.12.2024 kl. 10:26",
+    "en": "Dec. 3, 2024 at 10:26 AM UTC+2"
+  },
+  "koulutustyyppi": "amm-muu"
+}

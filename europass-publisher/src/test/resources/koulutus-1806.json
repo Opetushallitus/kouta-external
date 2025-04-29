@@ -1,0 +1,361 @@
+{
+  "tila": "julkaistu",
+  "johtaaTutkintoon": true,
+  "eqf": [
+    {
+      "koodiUri": "eqf_7",
+      "nimi": {
+        "fi": "Taso 7",
+        "sv": "Nivå 7",
+        "en": "Level 7"
+      }
+    }
+  ],
+  "teemakuva": "https://konfo-files.opintopolku.fi/koulutus-teemakuva/1.2.246.562.13.00000000000000001806/94bf342b-6b19-4b0d-9f2d-4ac19c9b67a6.jpg",
+  "koulutukset": [
+    {
+      "koodiUri": "koulutus_772501#12",
+      "nimi": {
+        "fi": "Terveystieteiden maisteri, terveydenhuollon kandidaatti (ylempi)",
+        "sv": "Magister i hälsovetenskaper",
+        "en": "Master of Health Sciences"
+      }
+    }
+  ],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.38515028629",
+      "nimi": {
+        "sv": "Östra Finlands Universitet",
+        "fi": "Itä-Suomen yliopisto",
+        "en": "University of Eastern Finland"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_167",
+        "nimi": {
+          "sv": "Joensuu",
+          "fi": "Joensuu"
+        }
+      }
+    }
+  ],
+  "toteutukset": [
+    {
+      "tila": "arkistoitu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.2014041814455745619200",
+          "nimi": {
+            "sv": "Kuopion kampus",
+            "fi": "Kuopion kampus",
+            "en": "Kuopio campus"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_297",
+            "nimi": {
+              "fi": "Kuopio",
+              "sv": "Kuopio"
+            }
+          }
+        }
+      ],
+      "modified": "2023-10-31T09:00:50",
+      "nimi": {
+        "fi": "Terveystaloustieteen maisteriohjelma, Kuopio, terveystieteiden maisteri (2 v), syksy 2023"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.57539233210",
+        "nimi": "Ulla Turunen"
+      },
+      "oid": "1.2.246.562.17.00000000000000009332",
+      "organisaatiot": [
+        "1.2.246.562.10.2014041814455745619200"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.2014041814455745619200",
+        "nimi": {
+          "sv": "Kuopion kampus",
+          "fi": "Kuopion kampus",
+          "en": "Kuopio campus"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_297",
+          "nimi": {
+            "fi": "Kuopio",
+            "sv": "Kuopio"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "31.10.2023 klo 09:00",
+        "sv": "31.10.2023 kl. 09:00",
+        "en": "Oct. 31, 2023 at 09:00 AM UTC+2"
+      }
+    },
+    {
+      "tila": "arkistoitu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.2014041814455745619200",
+          "nimi": {
+            "sv": "Kuopion kampus",
+            "fi": "Kuopion kampus",
+            "en": "Kuopio campus"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_297",
+            "nimi": {
+              "fi": "Kuopio",
+              "sv": "Kuopio"
+            }
+          }
+        }
+      ],
+      "modified": "2022-11-01T10:09:48",
+      "nimi": {
+        "fi": "Terveystaloustieteen maisteriohjelma, Kuopio, terveystieteiden maisteri (2 v), syksy 2022"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.46061809851",
+        "nimi": "Pirjo jonsson-fuchs"
+      },
+      "oid": "1.2.246.562.17.00000000000000003180",
+      "organisaatiot": [
+        "1.2.246.562.10.2014041814455745619200"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.2014041814455745619200",
+        "nimi": {
+          "sv": "Kuopion kampus",
+          "fi": "Kuopion kampus",
+          "en": "Kuopio campus"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_297",
+          "nimi": {
+            "fi": "Kuopio",
+            "sv": "Kuopio"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "1.11.2022 klo 10:09",
+        "sv": "1.11.2022 kl. 10:09",
+        "en": "Nov. 1, 2022 at 10:09 AM UTC+2"
+      }
+    },
+    {
+      "tila": "arkistoitu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.2014041814455745619200",
+          "nimi": {
+            "sv": "Kuopion kampus",
+            "fi": "Kuopion kampus",
+            "en": "Kuopio campus"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_297",
+            "nimi": {
+              "fi": "Kuopio",
+              "sv": "Kuopio"
+            }
+          }
+        }
+      ],
+      "modified": "2024-10-29T11:38:25",
+      "nimi": {
+        "fi": "Terveystaloustieteen maisteriohjelma, Kuopio, terveystieteiden maisteri (2 v), syksy 2024"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.46061809851",
+        "nimi": "Pirjo jonsson-fuchs"
+      },
+      "oid": "1.2.246.562.17.00000000000000020644",
+      "organisaatiot": [
+        "1.2.246.562.10.2014041814455745619200"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.2014041814455745619200",
+        "nimi": {
+          "sv": "Kuopion kampus",
+          "fi": "Kuopion kampus",
+          "en": "Kuopio campus"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_297",
+          "nimi": {
+            "fi": "Kuopio",
+            "sv": "Kuopio"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "29.10.2024 klo 11:38",
+        "sv": "29.10.2024 kl. 11:38",
+        "en": "Oct. 29, 2024 at 11:38 AM UTC+2"
+      }
+    },
+    {
+      "tila": "julkaistu",
+      "tarjoajat": [
+        {
+          "oid": "1.2.246.562.10.2014041814455745619200",
+          "nimi": {
+            "sv": "Kuopion kampus",
+            "fi": "Kuopion kampus",
+            "en": "Kuopio campus"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_297",
+            "nimi": {
+              "fi": "Kuopio",
+              "sv": "Kuopio"
+            }
+          }
+        }
+      ],
+      "modified": "2024-10-25T17:31:10",
+      "nimi": {
+        "fi": "Terveystaloustieteen maisteriohjelma, Kuopio, terveystieteiden maisteri (2 v)"
+      },
+      "muokkaaja": {
+        "oid": "1.2.246.562.24.75087927571",
+        "nimi": "Ria Kärkkäinen-Testi"
+      },
+      "oid": "1.2.246.562.17.00000000000000027998",
+      "organisaatiot": [
+        "1.2.246.562.10.2014041814455745619200"
+      ],
+      "organisaatio": {
+        "oid": "1.2.246.562.10.2014041814455745619200",
+        "nimi": {
+          "sv": "Kuopion kampus",
+          "fi": "Kuopion kampus",
+          "en": "Kuopio campus"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_297",
+          "nimi": {
+            "fi": "Kuopio",
+            "sv": "Kuopio"
+          }
+        }
+      },
+      "formatoituModified": {
+        "fi": "25.10.2024 klo 17:31",
+        "sv": "25.10.2024 kl. 17:31",
+        "en": "Oct. 25, 2024 at 05:31 PM UTC+3"
+      }
+    }
+  ],
+  "koulutuskoodienAlatJaAsteet": [
+    {
+      "koulutusKoodiUri": "koulutus_772501#12",
+      "koulutusalaKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusalataso1_09",
+        "kansallinenkoulutusluokitus2016koulutusalataso2_091",
+        "kansallinenkoulutusluokitus2016koulutusalataso3_0918",
+        "okmohjauksenala_11"
+      ],
+      "koulutusasteKoodiUrit": [
+        "kansallinenkoulutusluokitus2016koulutusastetaso1_7",
+        "kansallinenkoulutusluokitus2016koulutusastetaso2_72"
+      ]
+    }
+  ],
+  "esikatselu": true,
+  "modified": "2022-12-01T15:09:35",
+  "nimi": {
+    "fi": "Terveystaloustieteen maisteriohjelma, maisteri (2 v)"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.57539233210",
+    "nimi": "Ulla Turunen"
+  },
+  "oid": "1.2.246.562.13.00000000000000001806",
+  "nqf": [
+    {
+      "koodiUri": "nqf_7",
+      "nimi": {
+        "fi": "Taso 7",
+        "en": "Level 7",
+        "sv": "Nivå 7"
+      }
+    }
+  ],
+  "kielivalinta": [
+    "fi"
+  ],
+  "haut": [
+    "1.2.246.562.29.00000000000000054531",
+    "1.2.246.562.29.00000000000000002821",
+    "1.2.246.562.29.00000000000000017098",
+    "1.2.246.562.29.00000000000000036124"
+  ],
+  "koulutustyyppiPath": "kk/yo",
+  "timestamp": 1743418860755,
+  "julkinen": false,
+  "organisaatiot": [
+    "1.2.246.562.10.2014041814455745619200",
+    "1.2.246.562.10.38515028629"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.2014041814455745619200",
+    "nimi": {
+      "sv": "Kuopion kampus",
+      "fi": "Kuopion kampus",
+      "en": "Kuopio campus"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_297",
+      "nimi": {
+        "fi": "Kuopio",
+        "sv": "Kuopio"
+      }
+    }
+  },
+  "metadata": {
+    "tyyppi": "yo",
+    "kuvaus": {
+      "fi": "<p>Terveystaloustieteen (Health economics) maisteritutkinto antaa hyvät valmiudet arvioida sosiaali- ja terveyspalvelujen kustannuksia, vaikuttavuutta, tehokkuutta, tuottavuutta ja oikeudenmukaisuutta ja tehdä näitä koskevia analyyseja. Tutkinnon suorittanut osaa suunnitella ja johtaa projekteja, toimia verkostomaisessa ympäristössä asiantuntijana ja hallitsee hyvät tiedonhaku- ja viestintävalmiudet.</p><p>Maisteriohjelmassa opintojen keskeisiä teemoja ovat sosiaali- ja terveydenhuoltojärjestelmän taloudellinen organisointi, sosiaali- ja terveyspalvelujen  taloudellinen arviointi sekä terveyden, sosiaali- ja terveyspalvelujen käytön ja terveydenhuollon kustannusten jakauma.</p><p>Vain Itä-Suomen yliopistossa voit opiskella terveystaloustiedettä pääaineena!</p><p>Lisätietoa<a href=\"https://www.uef.fi/fi/koulutus/terveystaloustieteen-maisteriohjelma\" rel=\"noopener noreferrer\" target=\"_blank\"> verkkosivulta. </a></p>"
+    },
+    "lisatiedot": [],
+    "koulutusala": [
+      {
+        "koodiUri": "kansallinenkoulutusluokitus2016koulutusalataso2_091#1",
+        "nimi": {
+          "fi": "Terveys",
+          "en": "Health",
+          "sv": "Hälsovård"
+        }
+      }
+    ],
+    "tutkintonimike": [
+      {
+        "koodiUri": "tutkintonimikekk_714#2",
+        "nimi": {
+          "sv": "Magister i hälsovetenskaper",
+          "en": "Master of Science (Health Care)",
+          "fi": "Terveystieteiden maisteri"
+        }
+      }
+    ],
+    "opintojenLaajuusNumero": 120,
+    "opintojenLaajuusyksikko": {
+      "koodiUri": "opintojenlaajuusyksikko_2#1",
+      "nimi": {
+        "en": "ECTS credits",
+        "fi": "opintopistettä",
+        "sv": "studiepoäng"
+      }
+    },
+    "isMuokkaajaOphVirkailija": false
+  },
+  "formatoituModified": {
+    "fi": "1.12.2022 klo 15:09",
+    "sv": "1.12.2022 kl. 15:09",
+    "en": "Dec. 1, 2022 at 03:09 PM UTC+2"
+  },
+  "koulutustyyppi": "yo"
+}

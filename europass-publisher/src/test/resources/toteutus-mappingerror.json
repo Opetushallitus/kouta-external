@@ -1,0 +1,253 @@
+{
+    "tila": "julkaistu",
+    "kuuluuOpintokokonaisuuksiin": null,
+    "liitetytOpintojaksot": [],
+    "oppilaitokset": [
+      "1.2.246.562.10.71707133667"
+    ],
+    "teemakuva": "https://konfo-files.opintopolku.fi/toteutus-teemakuva/1.2.246.562.17.00000000000000021987/a5e3ed6c-18c6-4209-a25d-9a4de31fcd79.jpg",
+    "koulutukset": [],
+    "tarjoajat": [
+      {
+        "oid": "1.2.246.562.10.71707133667",
+        "nimi": {
+          "fi": "Faktia Oy",
+          "sv": "Faktia Oy",
+          "en": "Faktia Oy"
+        },
+        "paikkakunta": {
+          "koodiUri": "kunta_061",
+          "nimi": {
+            "sv": "Forssa",
+            "fi": "Forssa"
+          }
+        }
+      }
+    ],
+    "liitetytOsaamismerkit": [],
+    "esikatselu": true,
+    "modified": "2024-05-17T13:03:11",
+    "koulutusOid": "1.2.246.562.13.00000000000000008327",
+    "nimi": {
+      "fi": "Millaista ruokaa sinä söisit? – Innovaatioista kaupalliseen menestykseen (Jotpa)"
+    },
+    "muokkaaja": {
+      "oid": "1.2.246.562.24.16730090044",
+      "nimi": "Aaron Mäkelä-Testi"
+    },
+    "oid": "1.2.246.562.17.00000000000000021987",
+    "kielivalinta": [
+      "fi"
+    ],
+    "haut": [],
+    "koulutustyyppiPath": "muu",
+    "timestamp": 1745533094260,
+    "organisaatiot": [
+      "1.2.246.562.10.85570255969",
+      "1.2.246.562.10.71707133667"
+    ],
+    "organisaatio": {
+      "oid": "1.2.246.562.10.85570255969",
+      "nimi": {
+        "fi": "Faktia Oy",
+        "sv": "Faktia Oy",
+        "en": "Faktia Oy"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_061",
+        "nimi": {
+          "sv": "Forssa",
+          "fi": "Forssa"
+        }
+      }
+    },
+    "metadata": {
+      "aloituspaikat": 50,
+      "kuvaus": {
+        "fi": "<p style=\"text-align: start;\">Koulutuskokonaisuus avaa elintarvikealan ammattilaisille oven laaja-alaiseen osaamiseen. Koulutuksen myötä saat ymmärryksen tuotekehitysprosessista, tietoa uusimmista teknologioista ja ymmärrystä miten elintarvikealalla tuotekehityksen keinoin vastataan vastuullisesti alan muutoksiin ja megatrendeihin.&nbsp;&nbsp;</p><p></p><p style=\"text-align: start;\">Vahvista kykyä innovoida, kasvattaa elintarvikealan tuotteiden jalostusastetta ja monipuolistat tuoteportfoliota. Oppien avulla saat mahdollisuuden kokeilla uudenlaisten tuotteiden ja palveluiden kehittämistä ja vastaat asiakkaiden kasvaviin odotuksiin elintarvikkeiden suhteen (vastuullisuus, uudet elämykset, tarinat).&nbsp;Koulutuksen avulla kasvatat tuotekehitysosaamista, opit uusimpia teknologioita ja vahvistat yrityksen kilpailukykyä.&nbsp;</p><p></p><p>Kehität tässä koulutuksessa itseäsi oman alan ammattilaisten kanssa. Saat käytännön vinkkejä ja ideoita sekä uusia ajatuksia tulevaisuuden työelämän muutoksiin. Käytännönläheiset harjoitukset, interaktiiviset virtuaaliset työpajat ja asiantuntijapuheenvuorot tarjoavat konkreettisia työkaluja ja näkökulmia. </p><p></p>"
+      },
+      "hakutermi": "hakeutuminen",
+      "opintojenLaajuusyksikko": {
+        "koodiUri": "opintojenlaajuusyksikko_5#1",
+        "nimi": {
+          "sv": "timmar",
+          "fi": "tuntia",
+          "en": "hours"
+        }
+      },
+      "hakulomaketyyppi": "muu",
+      "aloituspaikkakuvaus": {},
+      "hakulomakeLinkki": {
+        "fi": "https://fai.inschool.fi/browsecourses?long-term=7619&school-id=2&checkout=true"
+      },
+      "isHakukohteetKaytossa": false,
+      "hakuaika": {
+        "alkaa": "2023-10-29T00:00",
+        "paattyy": "2024-10-31T00:00",
+        "formatoituPaattyy": {
+          "fi": "31.10.2024 klo 00:00",
+          "sv": "31.10.2024 kl. 00:00",
+          "en": "Oct. 31, 2024 at 12:00 AM UTC+2"
+        },
+        "formatoituAlkaa": {
+          "fi": "29.10.2023 klo 00:00",
+          "sv": "29.10.2023 kl. 00:00",
+          "en": "Oct. 29, 2023 at 12:00 AM UTC+3"
+        }
+      },
+      "isMuokkaajaOphVirkailija": false,
+      "ammattinimikkeet": [],
+      "asiasanat": [
+        {
+          "kieli": "fi",
+          "arvo": "elintarvikeala"
+        },
+        {
+          "kieli": "fi",
+          "arvo": "tuotekehitys"
+        },
+        {
+          "kieli": "fi",
+          "arvo": "teknologia"
+        },
+        {
+          "kieli": "fi",
+          "arvo": "innovointi"
+        },
+        {
+          "kieli": "fi",
+          "arvo": "jotpa"
+        }
+      ],
+      "opintojenLaajuusNumeroMin": 27,
+      "lisatietoaValintaperusteista": {
+        "fi": "<p>Koulutuksen pääasiallisena opiskelijakohderyhmänä ovat elintarviketeollisuuden alalla  työskentelevät henkilöt. Koulutukseen voivat hakeutua myös työvoiman ulkopuolella olevat henkilöt (esimerkiksi  kotivanhemmat, eläkeläiset ja osatyökykyiset). Jatkuvan oppimisen ja työllisyyden palvelukeskus päättää opiskelijaksi ottamisesta.</p>"
+      },
+      "lisatietoaHakeutumisesta": {
+        "fi": "<p>Koulutukseen hakeudutaan sähköisesti. </p>"
+      },
+      "opintojenLaajuusNumeroMax": 216,
+      "isTyovoimakoulutus": false,
+      "hasJotpaRahoitus": true,
+      "isTaydennyskoulutus": true,
+      "opetus": {
+        "maksullisuustyyppi": "maksuton",
+        "maksullisuusKuvaus": {
+          "fi": "<p>Koulutus on Jatkuvan oppimisen ja työllisyyden palvelukeskuksen rahoittama. Palvelukeskus edistää työikäisten osaamisen kehittämistä ja osaavan työvoiman saatavuutta. </p>"
+        },
+        "suunniteltuKestoKuvaus": {
+          "fi": "<p>Voit suorittaa kaikki osakokonaisuudet tai valita sinua puhuttelevat aihealueet. Koulutuksen kesto määräytyy valittujen kokonaisuuksien mukaan.</p>"
+        },
+        "koulutuksenAlkamiskausi": {
+          "alkamiskausityyppi": "henkilokohtainen suunnitelma",
+          "henkilokohtaisenSuunnitelmanLisatiedot": {
+            "fi": "<p>Koulutus käynnistyy 15.1.2024, mutta voit aloittaa milloin sinulle sopii ja edetä joustavasti oman aikataulun mukaisesti</p>"
+          }
+        },
+        "suunniteltuKestoVuodet": 0,
+        "onkoApuraha": false,
+        "lisatiedot": [
+          {
+            "otsikko": {
+              "koodiUri": "koulutuksenlisatiedot_12#1",
+              "nimi": {
+                "en": "Content",
+                "sv": "Innehåll",
+                "fi": "Sisältö"
+              }
+            },
+            "teksti": {
+              "fi": "<p style=\"text-align: start;\"><strong>Tuotekehitysosaaminen</strong><strong>&nbsp;</strong><strong>(2 x 27 opiskelijatyötuntia):</strong></p><ul><li value=\"1\">Harjoittelet ennakoivaa ja tulevaisuuspainotteista kehittämistä sekä käytännön taitoja tuotekehitysprosessissa.&nbsp;</li><li value=\"2\">Saat ymmärrystä kokonaiskustannustehokkuuden arvioinnista ja megatrendien integroinnista (ravitsemus, terveysvaikutukset, resurssitehokkuus).&nbsp;</li><li value=\"3\">Kuulet ansaintalogiikan hallinnasta ja innovoinnin rohkeuksista tuote- ja prosessiratkaisuissa.&nbsp;</li></ul><p style=\"text-align: start;\"></p><p style=\"text-align: start;\"><strong>Erilaiset tuotekehitysteknologiat (2 x 27 opiskelijatyötuntia):</strong>&nbsp;</p><ul><li value=\"1\">Saat tietoa uusien teknologioiden hyödyntämisestä tuotekehityksessä, kuten robotiikka, 3D-tulostus ja tekoäly.&nbsp;</li><li value=\"2\">Lisäät tietoisuutta megatrendeistä ja vastuullisuudesta teknologisten ratkaisujen käyttöönotossa.&nbsp;</li></ul><p style=\"text-align: start;\"></p><p style=\"text-align: start;\"><strong>Jalostusasteen nostaminen (2 x 27 opiskelijatyötuntia):</strong>&nbsp;</p><ul><li value=\"1\">Kuulet tietoa jalostusasteen käsitteestä ja sen tärkeydestä.&nbsp;</li><li value=\"2\">Saat konkreettisia menetelmiä ja keinoja tuotteen tai palvelun jalostusasteen nostamiseksi, mukaan lukien sivuvirtojen hyödyntäminen ja teknologioiden käyttö.&nbsp;</li><li value=\"3\">Pääset huomioimaan kestävän kehityksen näkökulmia ja tarkastelemaan kannattavuutta eri näkökulmista.&nbsp;</li></ul><p style=\"text-align: start;\"></p><p style=\"text-align: start;\"><strong>Tuoteportfolion monipuolistaminen (1 x 27 opiskelijatyötuntia):</strong>&nbsp;</p><ul><li value=\"1\">Tietoa tuoteportfolion monipuolistamisen keinoista ja hallinnasta.</li><li value=\"2\">Tiedon hyödyntämistä datan avulla ja megatrendien huomioimista portfoliossa.</li></ul><p style=\"text-align: start;\"></p><p style=\"text-align: start;\"><strong>Tuotteen ja palvelun yhdistäminen (1 x 27 ott):</strong></p><ul><li value=\"1\">Kerrot ja kuulet esimerkkejä yrityksissä toteutetuista tuotteen ja palvelun yhdistämisistä.&nbsp;</li><li value=\"2\">Opit huomioimaan megatrendejä, terveysvaikutuksia ja vastuullisuutta.&nbsp;</li></ul>"
+            }
+          }
+        ],
+        "suunniteltuKestoKuukaudet": 5,
+        "opetustapaKuvaus": {
+          "fi": "<p>Oppimisalustalla edetään opinnoissa omaan tahtiin. Mukana on myös live-luentoja/tapaamisia sekä jatkuvan oppimisen aikaista tukea. </p>"
+        },
+        "opetuskieletKuvaus": {},
+        "opetustapa": [
+          {
+            "koodiUri": "opetuspaikkakk_3#1",
+            "nimi": {
+              "fi": "Verkko-opetus",
+              "sv": "Nätundervisning",
+              "en": "Online teaching"
+            }
+          }
+        ],
+        "opetusaikaKuvaus": {
+          "fi": "<p>Oppimisalustalla edetään opinnoissa omaan tahtiin.</p>"
+        },
+        "opetuskieli": [
+          {
+            "koodiUri": "oppilaitoksenopetuskieli_1#2",
+            "nimi": {
+              "sv": "finska",
+              "fi": "suomi",
+              "en": "Finnish"
+            }
+          }
+        ],
+        "opetusaika": [
+          {
+            "koodiUri": "opetusaikakk_5#1",
+            "nimi": {
+              "sv": "Oberoende av klockslag",
+              "en": "Irrespective of time",
+              "fi": "Kellonajasta riippumaton"
+            }
+          }
+        ]
+      },
+      "yhteyshenkilot": [
+        {
+          "nimi": {
+            "fi": "Kristiina Paju"
+          },
+          "titteli": {
+            "fi": "hankekoordinaattori"
+          },
+          "sahkoposti": {
+            "fi": "kristiina.paju@lhkk.fi"
+          },
+          "puhelinnumero": {
+            "fi": "040 5634 965"
+          },
+          "wwwSivu": {
+            "fi": "http://www.faktia.fi"
+          },
+          "wwwSivuTeksti": {
+            "fi": "Faktia"
+          }
+        },
+        {
+          "nimi": {
+            "fi": "Minna Mäkinen"
+          },
+          "titteli": {
+            "fi": "opettaja"
+          },
+          "sahkoposti": {
+            "fi": "minna.makinen@lhkk.fi"
+          },
+          "puhelinnumero": {
+            "fi": "040 3474074"
+          },
+          "wwwSivu": {
+            "fi": "http://www.faktia.fi"
+          },
+          "wwwSivuTeksti": {
+            "fi": "Faktia"
+          }
+        }
+      ],
+      "tyyppi": "muu"
+    },
+    "formatoituModified": {
+      "fi": "17.5.2024 klo 13:03",
+      "sv": "17.5.2024 kl. 13:03",
+      "en": "May. 17, 2024 at 01:03 PM UTC+3"
+    },
+    "koulutustyyppi": "muu"
+}

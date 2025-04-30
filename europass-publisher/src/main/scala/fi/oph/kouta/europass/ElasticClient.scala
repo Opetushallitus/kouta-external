@@ -19,6 +19,12 @@ object MatchQuery {
   def apply(matchParams: (String, String)*) = new MatchQuery(matchParams.toMap)
 }
 
+case class BoolQueryFields(
+  must: Query
+)
+
+case class BoolQuery(bool: BoolQueryFields) extends Query
+
 trait SortOrder
 case object Asc extends SortOrder
 
@@ -71,7 +77,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
 
   def toteutusSearch(after: Option[String]) : Search =
     Search(
-      query = MatchQuery("tila" -> "julkaistu"),
+      query = BoolQuery(BoolQueryFields(MatchQuery("tila.keyword" -> "julkaistu"))),
       size = 1000,
       sort = Map("oid.keyword" -> Asc),
       search_after = after.map(List(_))

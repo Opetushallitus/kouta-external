@@ -5,13 +5,17 @@ import fi.oph.kouta.external.TestData.AmmToteutus
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient, TestData}
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
+import fi.oph.kouta.external.integration.GenericGetTests
 import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ToteutusService}
 import fi.oph.kouta.external.servlet.ToteutusServlet
+import fi.oph.kouta.servlet.Authenticated
 
 import java.time.Instant
 import java.util.UUID
+import scala.concurrent.Future
 
 trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
+  this: GenericGetTests[Toteutus, ToteutusOid] =>
   val ToteutusPath = "/toteutus"
 
   val toteutus = AmmToteutus
@@ -19,7 +23,10 @@ trait ToteutusFixture extends KoutaIntegrationSpec with AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService)
+    val toteutusService = new ToteutusService(new ToteutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService) {
+      override def get(oid: ToteutusOid)(implicit authenticated: Authenticated): Future[Toteutus] =
+        throwOrElse(oid)(super.get)
+    }
     addServlet(new ToteutusServlet(toteutusService), ToteutusPath)
   }
 

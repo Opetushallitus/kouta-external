@@ -8,18 +8,24 @@ import fi.oph.kouta.external.TestData.JulkaistuHaku
 import fi.oph.kouta.external._
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.elasticsearch.HakuClient
+import fi.oph.kouta.external.integration.GenericGetTests
 import fi.oph.kouta.external.service.{HakuService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.HakuServlet
 
+import scala.concurrent.Future
+
 trait HakuFixture extends KoutaIntegrationSpec with AccessControlSpec {
-  this: AccessControlSpec =>
+  this: AccessControlSpec with GenericGetTests[Haku, HakuOid] =>
   val HakuPath = "/haku"
 
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val hakuService = new HakuService(
-      new HakuClient(TempElasticClient.client, TempElasticClient.clientJava),
+      new HakuClient(TempElasticClient.client, TempElasticClient.clientJava) {
+        override def getHaku(oid: HakuOid): Future[Haku] =
+          throwOrElse(oid)(super.getHaku)
+      },
       new MockKoutaClient(urlProperties.get),
       organisaatioService
     )

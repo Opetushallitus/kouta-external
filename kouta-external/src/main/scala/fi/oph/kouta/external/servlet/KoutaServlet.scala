@@ -88,6 +88,9 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
     case NonFatal(e) =>
       logger.error(errorMsgFromRequest(), e)
       InternalServerError("error" -> "500 Internal Server Error")
+    case t: Throwable =>
+      logger.error("Unhandled error", t)
+      InternalServerError("error" -> "Unhandled error")
   }
 }
 

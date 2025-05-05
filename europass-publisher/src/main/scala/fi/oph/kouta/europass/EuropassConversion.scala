@@ -19,9 +19,17 @@ object EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
   val langCodes = Map(
-    "en" -> "http://publications.europa.eu/resource/authority/language/ENG",
-    "fi" -> "http://publications.europa.eu/resource/authority/language/FIN",
-    "sv" -> "http://publications.europa.eu/resource/authority/language/SWE"
+    "en" -> List("http://publications.europa.eu/resource/authority/language/ENG"),
+    "fi" -> List("http://publications.europa.eu/resource/authority/language/FIN"),
+    "sv" -> List("http://publications.europa.eu/resource/authority/language/SWE"),
+    "oppilaitoksenopetuskieli_1" -> List("http://publications.europa.eu/resource/authority/language/FIN"),
+    "oppilaitoksenopetuskieli_2" -> List("http://publications.europa.eu/resource/authority/language/SWE"),
+    "oppilaitoksenopetuskieli_3" -> List(
+      "http://publications.europa.eu/resource/authority/language/FIN",
+      "http://publications.europa.eu/resource/authority/language/SWE"
+    ),
+    "oppilaitoksenopetuskieli_4" -> List("http://publications.europa.eu/resource/authority/language/ENG"),
+    "oppilaitoksenopetuskieli_5" -> List("http://publications.europa.eu/resource/authority/language/SME")
   )
 
   def organisaatioUrl(oid: String): String =
@@ -44,7 +52,7 @@ object EuropassConversion extends Logging {
 
   def konfoUrl(lang: String, oid: String): Elem =
     <homepage>
-      <language uri={langCodes.getOrElse(lang, "")}/>
+      <language uri={langCodes.getOrElse(lang, List(""))(0)}/>
       <contentUrl>{s"https://opintopolku.fi/konfo/$lang/toteutus/$oid"}</contentUrl>
     </homepage>
 
@@ -71,7 +79,7 @@ object EuropassConversion extends Logging {
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
-      <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, "")}/>
+      <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, List(""))(0)}/>
     </learningOpportunity>)
   }
 
@@ -135,7 +143,7 @@ object EuropassConversion extends Logging {
       {nimetAsElmXml(koulutus.nimi)}
       {iscedfCodes.map(iscedfAsElmXml)}
       {koulutus.kielivalinta.map{lang =>
-        <language uri={langCodes.getOrElse(lang.name, "")}/>}}
+        <language uri={langCodes.getOrElse(lang.name, List(""))(0)}/>}}
       {koulutusTuloksetAsElmXml(koulutus).map{tulos =>
         <learningOutcome idref={tulos \@ "id"}/>}}
     </learningAchievementSpecification>)

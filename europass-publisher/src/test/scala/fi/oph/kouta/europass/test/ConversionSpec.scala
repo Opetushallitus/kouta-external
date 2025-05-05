@@ -37,6 +37,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-1293.json"))
   lazy val toteutusWithoutTarjoajat =
     read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
+  lazy val toteutusWithoutOpetuskieli =
+    read[ToteutusIndexed](resource("toteutus-ei-opetuskielta.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -115,6 +117,13 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 
   "toteutus in non-julkaistu state" should "not produce ELM record" in {
     assert(EuropassConversion.toteutusAsElmXml(toteutusArchived) == None)
+  }
+
+  "toteutus without opetuskieli" should "produce defaultLanguage from kielivalinta" in {
+    val Some(toteutusXml: Elem) =
+      EuropassConversion.toteutusAsElmXml(toteutusWithoutOpetuskieli)
+    assert(toteutusXml \ "defaultLanguage" \@ "uri" ==
+      "http://publications.europa.eu/resource/authority/language/ENG")
   }
 
   "koulutus without koulutusalakoodit" should

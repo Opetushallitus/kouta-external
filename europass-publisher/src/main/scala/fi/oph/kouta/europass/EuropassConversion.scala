@@ -62,6 +62,23 @@ object EuropassConversion extends Logging {
   def nimetAsElmXml(nimet: Kielistetty): List[Elem] =
     nimet.keys.map{lang => nimiAsElmXml(lang.name, nimet(lang))}.toList
 
+  def toteutusOpetuskieliAsElmCode(toteutus: ToteutusIndexed): String = {
+    val opetuskieliKoodit: Seq[String] =
+      toteutus.metadata
+        .flatMap(_.opetus)
+        .map(_.opetuskieli)
+        .getOrElse(List())
+        .map{koodi => koodi.koodiUri.split("#")(0)}
+    val kielivalintaKoodit: Seq[String] =
+      toteutus.kielivalinta.map(_.name)
+    val default = "http://publications.europa.eu/resource/authority/language/OP_DATPRO"
+    if (opetuskieliKoodit.nonEmpty)
+      langCodes.getOrElse(opetuskieliKoodit(0), List(default))(0)
+    else if (kielivalintaKoodit.nonEmpty)
+      langCodes.getOrElse(kielivalintaKoodit(0), List(default))(0)
+    else default
+  }
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
@@ -79,7 +96,7 @@ object EuropassConversion extends Logging {
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <learningAchievementSpecification
           idref={koulutusUrl((toteutus.koulutusOid.map(_.toString).getOrElse("")))}/>
-      <defaultLanguage uri={langCodes.getOrElse(toteutus.kielivalinta(0).name, List(""))(0)}/>
+      <defaultLanguage uri={toteutusOpetuskieliAsElmCode(toteutus)}/>
     </learningOpportunity>)
   }
 

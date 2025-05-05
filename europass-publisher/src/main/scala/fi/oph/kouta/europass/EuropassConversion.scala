@@ -68,14 +68,16 @@ object EuropassConversion extends Logging {
         .flatMap(_.opetus)
         .map(_.opetuskieli)
         .getOrElse(List())
-        .map{koodi => koodi.koodiUri.split("#")(0)}
+        .map{koodiobj => koodiobj.koodiUri.split("#")(0)}
+        .flatMap{koodi => langCodes.getOrElse(koodi, List())}
     val kielivalintaKoodit: Seq[String] =
       toteutus.kielivalinta.map(_.name)
+        .flatMap{koodi => langCodes.getOrElse(koodi, List())}
     val default = "http://publications.europa.eu/resource/authority/language/OP_DATPRO"
     if (opetuskieliKoodit.nonEmpty)
-      langCodes.getOrElse(opetuskieliKoodit(0), List(default))(0)
+      opetuskieliKoodit(0)
     else if (kielivalintaKoodit.nonEmpty)
-      langCodes.getOrElse(kielivalintaKoodit(0), List(default))(0)
+      kielivalintaKoodit(0)
     else default
   }
 

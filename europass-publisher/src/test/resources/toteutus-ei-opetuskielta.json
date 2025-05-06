@@ -1,0 +1,96 @@
+{
+  "tila": "julkaistu",
+  "kuuluuOpintokokonaisuuksiin": null,
+  "liitetytOpintojaksot": [],
+  "oppilaitokset": [],
+  "koulutukset": [
+    {
+      "koodiUri": "koulutus_731201#12",
+      "nimi": {
+        "fi": "Tradenomi (ylempi AMK), talous, hallinto ja markkinointi",
+        "en": "MBA (UAS), Econ., Adm., Mark.",
+        "sv": "Tradenom (högre YH), ekonomi, förvaltning och marknadsföring"
+      }
+    }
+  ],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.81934895871",
+      "nimi": {
+	"fi": "Koulutuskeskus Salpaus",
+	"sv": "Lärocenter Salpaus"
+      },
+      "paikkakunta": {
+	"koodiUri": "kunta_398",
+	"nimi": {
+	  "fi": "Lahti",
+	  "sv": "Lahti"
+	}
+      }
+    }
+  ],
+  "liitetytOsaamismerkit": [],
+  "esikatselu": false,
+  "modified": "2022-07-12T20:02:10",
+  "koulutusOid": "1.2.246.562.13.00000000000000000372",
+  "nimi": {
+    "en": "Master's Degree in Global Business Management (full time)"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.40210980158",
+    "nimi": "Viola Hyytiäinen-Testi"
+  },
+  "oid": "1.2.246.562.17.00000000000000000744",
+  "kielivalinta": [
+    "en"
+  ],
+  "haut": [],
+  "koulutustyyppiPath": "kk/amk",
+  "timestamp": 1745275054393,
+  "organisaatiot": [
+    "1.2.246.562.10.840465873610"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.840465873610",
+    "nimi": {
+      "fi": "Kajaanin ammattikorkeakoulu",
+      "sv": "Kajaanin ammattikorkeakoulu",
+      "en": "Kajaani University of Applied Sciences"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_205",
+      "nimi": {
+        "fi": "Kajaani",
+        "sv": "Kajana"
+      }
+    }
+  },
+  "metadata": {
+    "tyyppi": "amk",
+    "kuvaus": {},
+    "opetus": {
+      "maksullisuustyyppi": "maksuton",
+      "maksullisuusKuvaus": {},
+      "suunniteltuKestoKuvaus": {},
+      "onkoApuraha": false,
+      "lisatiedot": [],
+      "opetustapaKuvaus": {},
+      "opetuskieletKuvaus": {},
+      "opetustapa": [],
+      "opetusaikaKuvaus": {},
+      "opetuskieli": [],
+      "opetusaika": []
+    },
+    "asiasanat": [],
+    "ammattinimikkeet": [],
+    "yhteyshenkilot": [],
+    "isTaydennyskoulutus": false,
+    "isTyovoimakoulutus": false
+  },
+  "formatoituModified": {
+    "fi": "12.7.2022 klo 20:02",
+    "sv": "12.7.2022 kl. 20:02",
+    "en": "Jul. 12, 2022 at 08:02 PM UTC+3"
+  },
+  "koulutustyyppi": "amk"
+}

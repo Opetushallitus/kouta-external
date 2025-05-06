@@ -2,6 +2,7 @@ package fi.oph.kouta.europass
 
 import scala.xml._
 import org.json4s._
+import fi.oph.kouta.domain.{Julkaisutila, Julkaistu}
 import fi.oph.kouta.external.domain.indexed.{
   KoulutusIndexed,
   ToteutusIndexed,
@@ -56,7 +57,10 @@ object EuropassConversion extends Logging {
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
-    if (toteutus.tarjoajat.isEmpty) {
+    if (toteutus.tila != Julkaistu) {
+      logger.warn(s"Toteutus $oid is in state ${toteutus.tila}; not publishing")
+      None
+    } else if (toteutus.tarjoajat.isEmpty) {
       logger.warn(s"Toteutus $oid has no tarjoajat; not publishing")
       None
     } else

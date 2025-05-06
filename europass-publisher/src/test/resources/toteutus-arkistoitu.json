@@ -1,0 +1,219 @@
+{
+  "tila": "arkistoitu",
+  "kuuluuOpintokokonaisuuksiin": [],
+  "liitetytOpintojaksot": [],
+  "oppilaitokset": [
+    "1.2.246.562.10.95748531324"
+  ],
+  "koulutukset": [],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.95748531324",
+      "nimi": {
+        "fi": "Pohjois-Pohjanmaan kesäyliopisto",
+        "sv": "Pohjois-Pohjanmaan kesäyliopisto",
+        "en": "Pohjois-Pohjanmaan kesäyliopisto"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_564",
+        "nimi": {
+          "sv": "Uleåborg",
+          "fi": "Oulu"
+        }
+      }
+    }
+  ],
+  "liitetytOsaamismerkit": [],
+  "esikatselu": true,
+  "modified": "2024-02-12T11:07:39",
+  "koulutusOid": "1.2.246.562.13.00000000000000004518",
+  "nimi": {
+    "fi": "Avoin yo: Viron alkeiskurssi, kesä 2024"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.48151016633",
+    "nimi": "Mauritz Kesti-Testi"
+  },
+  "oid": "1.2.246.562.17.00000000000000022579",
+  "kielivalinta": [
+    "fi"
+  ],
+  "haut": [],
+  "koulutustyyppiPath": "kk-muu/kk-opintojakso-avoin",
+  "timestamp": 1745274882989,
+  "organisaatiot": [
+    "1.2.246.562.10.60598688905",
+    "1.2.246.562.10.95748531324"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.60598688905",
+    "nimi": {
+      "fi": "Pohjois-Pohjanmaan Kesäyliopistoseura r.y.",
+      "sv": "Pohjois-Pohjanmaan Kesäyliopistoseura r.y.",
+      "en": "Pohjois-Pohjanmaan Kesäyliopistoseura r.y."
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_564",
+      "nimi": {
+        "sv": "Uleåborg",
+        "fi": "Oulu"
+      }
+    }
+  },
+  "metadata": {
+    "kuvaus": {
+      "fi": "<p>Kurssilla käsitellään viron kieliopin perusteita, virolaista kulttuuria ja maantuntemuksen perusteita sekä viron ja suomen kieliopin olennaisimpia eroja.</p>"
+    },
+    "hakutermi": "ilmoittautuminen",
+    "opintojenLaajuusyksikko": {
+      "koodiUri": "opintojenlaajuusyksikko_2#1",
+      "nimi": {
+        "en": "ECTS credits",
+        "fi": "opintopistettä",
+        "sv": "studiepoäng"
+      }
+    },
+    "hakulomaketyyppi": "muu",
+    "aloituspaikkakuvaus": {},
+    "hakulomakeLinkki": {
+      "fi": "https://www.ppkyo.fi/fi/viron-alkeiskurssi-5-op-oy-ay694943a-6/"
+    },
+    "isHakukohteetKaytossa": false,
+    "hakuaika": {
+      "alkaa": "2024-02-12T00:00",
+      "paattyy": "2024-04-26T00:00",
+      "formatoituPaattyy": {
+        "fi": "26.4.2024 klo 00:00",
+        "sv": "26.4.2024 kl. 00:00",
+        "en": "Apr. 26, 2024 at 12:00 AM UTC+3"
+      },
+      "formatoituAlkaa": {
+        "fi": "12.2.2024 klo 00:00",
+        "sv": "12.2.2024 kl. 00:00",
+        "en": "Feb. 12, 2024 at 12:00 AM UTC+2"
+      }
+    },
+    "opintojenLaajuusNumero": 5,
+    "isAvoinKorkeakoulutus": true,
+    "isMuokkaajaOphVirkailija": false,
+    "ammattinimikkeet": [],
+    "asiasanat": [
+      {
+        "kieli": "fi",
+        "arvo": "viro"
+      },
+      {
+        "kieli": "fi",
+        "arvo": "viron kieli"
+      },
+      {
+        "kieli": "fi",
+        "arvo": "pohjois-pohjanmaan kesäyliopisto"
+      }
+    ],
+    "lisatietoaValintaperusteista": {},
+    "lisatietoaHakeutumisesta": {
+      "fi": "<p>Ilmoittautuminen viimeistään 26.4.2024</p>"
+    },
+    "isTyovoimakoulutus": false,
+    "hasJotpaRahoitus": false,
+    "isTaydennyskoulutus": false,
+    "tunniste": "AY694943A",
+    "opetus": {
+      "maksullisuustyyppi": "maksullinen",
+      "maksunMaara": 160,
+      "maksullisuusKuvaus": {},
+      "suunniteltuKestoKuvaus": {},
+      "koulutuksenAlkamiskausi": {
+        "alkamiskausityyppi": "tarkka alkamisajankohta",
+        "henkilokohtaisenSuunnitelmanLisatiedot": {},
+        "koulutuksenAlkamispaivamaara": "2024-05-13T00:00",
+        "koulutuksenPaattymispaivamaara": "2024-06-13T00:00",
+        "formatoituKoulutuksenalkamispaivamaara": {
+          "fi": "13.5.2024 klo 00:00",
+          "sv": "13.5.2024 kl. 00:00",
+          "en": "May. 13, 2024 at 12:00 AM UTC+3"
+        },
+        "formatoituKoulutuksenpaattymispaivamaara": {
+          "fi": "13.6.2024 klo 00:00",
+          "sv": "13.6.2024 kl. 00:00",
+          "en": "Jun. 13, 2024 at 12:00 AM UTC+3"
+        }
+      },
+      "suunniteltuKestoVuodet": 0,
+      "onkoApuraha": false,
+      "lisatiedot": [],
+      "suunniteltuKestoKuukaudet": 1,
+      "opetustapaKuvaus": {},
+      "opetuskieletKuvaus": {},
+      "opetustapa": [
+        {
+          "koodiUri": "opetuspaikkakk_2#1",
+          "nimi": {
+            "sv": "Distansundervisning",
+            "en": "Distance teaching",
+            "fi": "Etäopetus"
+          }
+        }
+      ],
+      "opetusaikaKuvaus": {},
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#2",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "opetusaika": [
+        {
+          "koodiUri": "opetusaikakk_2#1",
+          "nimi": {
+            "fi": "Iltaopetus",
+            "sv": "Kvällsundervisning",
+            "en": "Evening teaching"
+          }
+        }
+      ]
+    },
+    "yhteyshenkilot": [
+      {
+        "nimi": {
+          "fi": "Anna Nurmivuori"
+        },
+        "titteli": {
+          "fi": "Koulutussuunnittelija"
+        },
+        "sahkoposti": {
+          "fi": "anna.nurmivuori@pohjois-pohjanmaa.fi"
+        },
+        "puhelinnumero": {
+          "fi": "0400 581 593"
+        },
+        "wwwSivu": {
+          "fi": "https://www.ppkyo.fi/"
+        },
+        "wwwSivuTeksti": {
+          "fi": "Pohjois-Pohjanmaan kesäyliopisto"
+        }
+      }
+    ],
+    "tyyppi": "kk-opintojakso",
+    "opinnonTyyppi": {
+      "koodiUri": "opinnontyyppi_2#1",
+      "nimi": {
+        "fi": "Aineopinnot",
+        "en": "Intermediate studies",
+        "sv": "Ämnesstudier"
+      }
+    }
+  },
+  "formatoituModified": {
+    "fi": "12.2.2024 klo 11:07",
+    "sv": "12.2.2024 kl. 11:07",
+    "en": "Feb. 12, 2024 at 11:07 AM UTC+2"
+  },
+  "koulutustyyppi": "kk-opintojakso"
+}

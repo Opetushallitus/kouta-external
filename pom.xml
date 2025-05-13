@@ -51,7 +51,7 @@
         <scala-test.version>3.1.1</scala-test.version>
         <scalatra-scalatest.version>2.7.0</scalatra-scalatest.version>
         <spec2.version>4.2.0</spec2.version>
-        <jetty.version>9.4.46.v20220331</jetty.version>
+        <jetty.version>9.4.57.v20241219</jetty.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <mockserver-netty.version>5.5.1</mockserver-netty.version>
         <commons.io.version>2.6</commons.io.version>

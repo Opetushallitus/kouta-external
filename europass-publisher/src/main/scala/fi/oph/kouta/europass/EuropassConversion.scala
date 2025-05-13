@@ -18,6 +18,10 @@ import fi.oph.kouta.logging.Logging
 object EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
+  lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
+    "europass-publisher.publishing.toteutus-extra-fields"
+  )
+
   val langCodes = Map(
     "en" -> List("http://publications.europa.eu/resource/authority/language/ENG"),
     "fi" -> List("http://publications.europa.eu/resource/authority/language/FIN"),

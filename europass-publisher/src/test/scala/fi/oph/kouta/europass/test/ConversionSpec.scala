@@ -23,6 +23,13 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[ToteutusIndexed](resource("toteutus-example-1.json"))
   lazy val toteutusArchived =
     read[ToteutusIndexed](resource("toteutus-arkistoitu.json"))
+  lazy val toteutusWithoutTarjoajat =
+    read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
+  lazy val toteutusWithoutOpetuskieli =
+    read[ToteutusIndexed](resource("toteutus-ei-opetuskielta.json"))
+  lazy val toteutusTotallyOrdinary =
+    read[ToteutusIndexed](resource("toteutus-ihan-tavanomainen.json"))
+
   lazy val example_koulutus =
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
   lazy val koulutusWithoutKoulutusKoodi =
@@ -35,10 +42,6 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-2032.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
-  lazy val toteutusWithoutTarjoajat =
-    read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
-  lazy val toteutusWithoutOpetuskieli =
-    read[ToteutusIndexed](resource("toteutus-ei-opetuskielta.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -57,6 +60,11 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "http://data.europa.eu/snb/isced-f/02")
     assert((koulutusXml \ "learningOutcome")(0) \@ "idref"
       == "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000000006")
+  }
+
+  "totally ordinary toteutus" should "have all optional fields" in {
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
+    assert(toteutusXml \ "description" \@ "language" == "en")
   }
 
   "example_toteutus" should "have correct fields" in {

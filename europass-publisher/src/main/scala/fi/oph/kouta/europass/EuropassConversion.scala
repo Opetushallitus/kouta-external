@@ -85,6 +85,15 @@ object EuropassConversion extends Logging {
     else default
   }
 
+  def toteutuksenKuvausAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] =
+    toteutus.metadata.map(_.kuvaus) match {
+      case Some(kuvaukset: Kielistetty) if toteutusExtras =>
+        kuvaukset.keys.map{lang =>
+          <description language={lang.name}>{kuvaukset(lang)}</description>
+        }.toList
+      case _ => List()
+    }
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
@@ -97,6 +106,7 @@ object EuropassConversion extends Logging {
     } else
     Some(<learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
+      {toteutuksenKuvausAsElmXml(toteutus)}
       {langs.map(konfoUrl(_, oid))}
       {toteutus.tarjoajat.map{t =>
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}

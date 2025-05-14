@@ -7,6 +7,7 @@ import fi.oph.kouta.external.domain.indexed.{
   KoodiUri,
   KoulutusIndexed,
   ToteutusIndexed,
+  OpetusIndexed,
   TutkintoNimike,
   Organisaatio,
   AmmatillinenKoulutusMetadataIndexed,
@@ -115,6 +116,16 @@ object EuropassConversion extends Logging {
       case _ => List()
     }
 
+  def toteutuksenKestoAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
+    val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
+    val duration: String =
+      opetus.flatMap(_.suunniteltuKestoVuodet).map(_ + "Y").getOrElse("") +
+      opetus.flatMap(_.suunniteltuKestoKuukaudet).map(_ + "M").getOrElse("")
+    if (toteutusExtras && duration.nonEmpty)
+      List(<duration>{"P" + duration}</duration>)
+    else List()
+  }
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
@@ -130,6 +141,7 @@ object EuropassConversion extends Logging {
       {toteutuksenKuvausAsElmXml(toteutus)}
       {langs.map(konfoUrl(_, oid))}
       {toteutuksenAjankohtaAsElmXml(toteutus)}
+      {toteutuksenKestoAsElmXml(toteutus)}
       {toteutus.tarjoajat.map{t =>
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <learningAchievementSpecification

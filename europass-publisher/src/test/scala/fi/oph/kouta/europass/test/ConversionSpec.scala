@@ -67,6 +67,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   "totally ordinary toteutus" should "have all optional fields" in {
     val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
     assert(toteutusXml \ "description" \@ "language" == "en")
+    assert((toteutusXml \ "duration").text == "P0Y0M")
   }
 
   "example_toteutus" should "have correct fields" in {
@@ -109,6 +110,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
     assert((toteutusXml \ "temporal" \ "startDate").text == "2023-01-01T00:00:00")
     assert((toteutusXml \ "temporal" \ "endDate").toList == List())
+    assert((toteutusXml \ "duration").text == "P3Y10M")
   }
 
   it should "have correct tarjoaja" in {

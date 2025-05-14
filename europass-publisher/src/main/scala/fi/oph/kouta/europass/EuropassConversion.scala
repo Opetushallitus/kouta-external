@@ -126,6 +126,18 @@ object EuropassConversion extends Logging {
     else List()
   }
 
+  def toteutuksenAikatauluAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
+    val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
+    (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
+      opetus.map(_.opetustapaKuvaus).map(_.toList).getOrElse(List()))
+        .take(1)  // No way to express language alternatives so we just pick a random one
+        .map{case (lang, desc) =>
+          <scheduleInformation>
+            <noteLiteral language={lang.name}>{desc}</noteLiteral>
+          </scheduleInformation>
+        }.toList
+  }
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
@@ -142,6 +154,7 @@ object EuropassConversion extends Logging {
       {langs.map(konfoUrl(_, oid))}
       {toteutuksenAjankohtaAsElmXml(toteutus)}
       {toteutuksenKestoAsElmXml(toteutus)}
+      {toteutuksenAikatauluAsElmXml(toteutus)}
       {toteutus.tarjoajat.map{t =>
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <learningAchievementSpecification

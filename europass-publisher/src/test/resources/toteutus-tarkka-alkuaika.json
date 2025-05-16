@@ -1,0 +1,318 @@
+{
+  "tila": "julkaistu",
+  "kuuluuOpintokokonaisuuksiin": null,
+  "liitetytOpintojaksot": [],
+  "oppilaitokset": [
+    "1.2.246.562.10.2013110715495487451932"
+  ],
+  "teemakuva": "https://konfo-files.opintopolku.fi/toteutus-teemakuva/1.2.246.562.17.00000000000000000035/99108d9c-f138-475a-b34b-4535e98e9b21.jpg",
+  "koulutukset": [
+    {
+      "koodiUri": "koulutus_384446#7",
+      "nimi": {
+        "en": "Further vocational qualification in the Transport Sector",
+        "fi": "Kuljetusalan ammattitutkinto",
+        "sv": "Yrkesexamen inom transportbranschen"
+      }
+    }
+  ],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.2013111416014448745197",
+      "nimi": {
+        "sv": "Taivalkosken yksikkö",
+        "fi": "Taivalkosken yksikkö",
+        "en": "Taivalkosken yksikkö"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_832",
+        "nimi": {
+          "fi": "Taivalkoski",
+          "sv": "Taivalkoski"
+        }
+      }
+    }
+  ],
+  "liitetytOsaamismerkit": [],
+  "esikatselu": false,
+  "modified": "2022-07-12T20:02:10",
+  "koulutusOid": "1.2.246.562.13.00000000000000000079",
+  "nimi": {
+    "fi": "Kuljetusalan ammattitutkinto, Metsäteollisuuden kuljetusten osaamisala"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.22266136615",
+    "nimi": "Anonymisoitu Virkailija"
+  },
+  "oid": "1.2.246.562.17.00000000000000000035",
+  "kielivalinta": [
+    "fi"
+  ],
+  "haut": [
+    "1.2.246.562.29.00000000000000000091"
+  ],
+  "koulutustyyppiPath": "amm/ammattitutkinto",
+  "timestamp": 1745533252264,
+  "organisaatiot": [
+    "1.2.246.562.10.2013110715495487451932",
+    "1.2.246.562.10.2013111416014448745197"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.2013110715495487451932",
+    "nimi": {
+      "fi": "OSAO",
+      "sv": "OSAO",
+      "en": "OSAO"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_564",
+      "nimi": {
+        "sv": "Uleåborg",
+        "fi": "Oulu"
+      }
+    }
+  },
+  "metadata": {
+    "kuvaus": {},
+    "osaamisalat": [
+      {
+        "koodi": {
+          "koodiUri": "osaamisala_2317",
+          "nimi": {
+            "sv": "Kompetensområdet för skogsindustrins transporter",
+            "fi": "Metsäteollisuuden kuljetusten osaamisala"
+          }
+        },
+        "linkki": {},
+        "otsikko": {}
+      }
+    ],
+    "ammattinimikkeet": [
+      {
+        "kieli": "fi",
+        "arvo": "puutavara-autonkuljetttaja"
+      }
+    ],
+    "asiasanat": [],
+    "isTyovoimakoulutus": false,
+    "isTaydennyskoulutus": false,
+    "opetus": {
+      "maksullisuustyyppi": "maksuton",
+      "maksullisuusKuvaus": {},
+      "suunniteltuKestoKuvaus": {
+        "fi": "<p>Sinulle laaditaan opintojen alussa henkilökohtainen osaamisen kehittämissuunnitelma (HOKS), jossa tunnistetaan ja tunnustetaan aiempi osaamisesi ja todetaan millaista osaamista tutkinnon muodostumiseen tarvitset. Tämä määrittää opiskeluaikasi.</p>"
+      },
+      "koulutuksenAlkamiskausi": {
+        "alkamiskausityyppi": "tarkka alkamisajankohta",
+        "henkilokohtaisenSuunnitelmanLisatiedot": {},
+        "koulutuksenAlkamispaivamaara": "2021-08-04T12:00",
+        "koulutuksenPaattymispaivamaara": "2022-12-22T00:00",
+        "formatoituKoulutuksenalkamispaivamaara": {
+          "fi": "4.8.2021 klo 12:00",
+          "sv": "4.8.2021 kl. 12:00",
+          "en": "Aug. 4, 2021 at 12:00 PM UTC+3"
+        },
+        "formatoituKoulutuksenpaattymispaivamaara": {
+          "fi": "22.12.2022 klo 00:00",
+          "sv": "22.12.2022 kl. 00:00",
+          "en": "Dec. 22, 2022 at 12:00 AM UTC+2"
+        }
+      },
+      "suunniteltuKestoVuodet": 2,
+      "onkoApuraha": false,
+      "lisatiedot": [],
+      "suunniteltuKestoKuukaudet": 0,
+      "opetustapaKuvaus": {},
+      "opetuskieletKuvaus": {
+        "fi": "<p> </p>"
+      },
+      "opetustapa": [
+        {
+          "koodiUri": "opetuspaikkakk_1#1",
+          "nimi": {
+            "fi": "Lähiopetus",
+            "sv": "Närundervisning",
+            "en": "Contact teaching"
+          }
+        }
+      ],
+      "opetusaikaKuvaus": {
+        "fi": "<p> </p>"
+      },
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "opetusaika": [
+        {
+          "koodiUri": "opetusaikakk_1#1",
+          "nimi": {
+            "sv": "Dagundervisning",
+            "en": "Day time teaching",
+            "fi": "Päiväopetus"
+          }
+        }
+      ]
+    },
+    "yhteyshenkilot": [],
+    "tyyppi": "amm",
+    "ammatillinenPerustutkintoErityisopetuksena": false
+  },
+  "hakutiedot": [
+    {
+      "hakuOid": "1.2.246.562.29.00000000000000000091",
+      "nimi": {
+        "fi": "Kuljetusalan ammattitutkinto, metsäteollisuuden kuljetusten osaamisala"
+      },
+      "hakutapa": {
+        "koodiUri": "hakutapa_03#1",
+        "nimi": {
+          "en": "Rolling admission (upper secondary level)",
+          "fi": "Jatkuva haku",
+          "sv": "Kontinuerlig ansökan"
+        }
+      },
+      "koulutuksenAlkamiskausi": {
+        "alkamiskausityyppi": "tarkka alkamisajankohta",
+        "henkilokohtaisenSuunnitelmanLisatiedot": {},
+        "koulutuksenAlkamispaivamaara": "2021-08-04T00:00",
+        "koulutuksenPaattymispaivamaara": "2022-12-21T00:00",
+        "formatoituKoulutuksenalkamispaivamaara": {
+          "fi": "4.8.2021 klo 00:00",
+          "sv": "4.8.2021 kl. 00:00",
+          "en": "Aug. 4, 2021 at 12:00 AM UTC+3"
+        },
+        "formatoituKoulutuksenpaattymispaivamaara": {
+          "fi": "21.12.2022 klo 00:00",
+          "sv": "21.12.2022 kl. 00:00",
+          "en": "Dec. 21, 2022 at 12:00 AM UTC+2"
+        }
+      },
+      "kohdejoukko": {
+        "koodiUri": "haunkohdejoukko_23#1",
+        "nimi": {
+          "fi": "Ammatillinen koulutus",
+          "sv": "Yrkesinriktad utbildning"
+        }
+      },
+      "hakukohteet": [
+        {
+          "tila": "arkistoitu",
+          "hakulomakeKuvaus": {},
+          "pohjakoulutusvaatimusTarkenne": {},
+          "aloituspaikat": {
+            "lukumaara": 5,
+            "kuvaus": {}
+          },
+          "hakulomaketyyppi": "muu",
+          "pohjakoulutusvaatimus": [
+            {
+              "koodiUri": "pohjakoulutusvaatimuskouta_pk#1",
+              "nimi": {
+                "fi": "Peruskoulu",
+                "sv": "Grundskola",
+                "en": "Peruskoulu"
+              }
+            }
+          ],
+          "hakulomakeLinkki": {
+            "fi": "https://osao.inschool.fi/apply?school-id=21&long-term=6591&checkout=true"
+          },
+          "jarjestyspaikkaHierarkiaNimi": {
+            "sv": "OSAO, Taivalkosken yksikkö",
+            "fi": "OSAO, Taivalkosken yksikkö",
+            "en": "OSAO, Taivalkosken yksikkö"
+          },
+          "koulutuksenAlkamiskausi": {
+            "alkamiskausityyppi": "tarkka alkamisajankohta",
+            "henkilokohtaisenSuunnitelmanLisatiedot": {},
+            "koulutuksenAlkamispaivamaara": "2021-08-04T00:00",
+            "koulutuksenPaattymispaivamaara": "2022-12-21T00:00",
+            "formatoituKoulutuksenalkamispaivamaara": {
+              "fi": "4.8.2021 klo 00:00",
+              "sv": "4.8.2021 kl. 00:00",
+              "en": "Aug. 4, 2021 at 12:00 AM UTC+3"
+            },
+            "formatoituKoulutuksenpaattymispaivamaara": {
+              "fi": "21.12.2022 klo 00:00",
+              "sv": "21.12.2022 kl. 00:00",
+              "en": "Dec. 21, 2022 at 12:00 AM UTC+2"
+            }
+          },
+          "esikatselu": false,
+          "hasValintaperustekuvausData": false,
+          "modified": "2023-02-07T15:56:20",
+          "jarjestyspaikka": {
+            "oid": "1.2.246.562.10.2013111416014448745197",
+            "nimi": {
+              "sv": "Taivalkosken yksikkö",
+              "fi": "Taivalkosken yksikkö",
+              "en": "Taivalkosken yksikkö"
+            },
+            "paikkakunta": {
+              "koodiUri": "kunta_832",
+              "nimi": {
+                "fi": "Taivalkoski",
+                "sv": "Taivalkoski"
+              }
+            },
+            "jarjestaaUrheilijanAmmKoulutusta": false
+          },
+          "nimi": {
+            "fi": "Kuljetusalan ammattitutkinto, Metsäteollisuuden kuljetusten osaamisala"
+          },
+          "hakuajat": [
+            {
+              "alkaa": "2021-03-16T07:00",
+              "paattyy": "2021-05-16T23:59",
+              "formatoituPaattyy": {
+                "fi": "16.5.2021 klo 23:59",
+                "sv": "16.5.2021 kl. 23:59",
+                "en": "May. 16, 2021 at 11:59 PM UTC+3"
+              },
+              "formatoituAlkaa": {
+                "fi": "16.3.2021 klo 07:00",
+                "sv": "16.3.2021 kl. 07:00",
+                "en": "Mar. 16, 2021 at 07:00 AM UTC+2"
+              }
+            }
+          ],
+          "hakukohdeOid": "1.2.246.562.20.00000000000000000092",
+          "organisaatio": {
+            "oid": "1.2.246.562.10.2013110715495487451932",
+            "nimi": {
+              "fi": "OSAO",
+              "sv": "OSAO",
+              "en": "OSAO"
+            },
+            "paikkakunta": {
+              "koodiUri": "kunta_564",
+              "nimi": {
+                "sv": "Uleåborg",
+                "fi": "Oulu"
+              }
+            }
+          },
+          "formatoituModified": {
+            "fi": "7.2.2023 klo 15:56",
+            "sv": "7.2.2023 kl. 15:56",
+            "en": "Feb. 7, 2023 at 03:56 PM UTC+2"
+          },
+          "valintaperusteId": "e94fd3d5-bf68-4f55-a9ee-b065c355fc93"
+        }
+      ]
+    }
+  ],
+  "formatoituModified": {
+    "fi": "12.7.2022 klo 20:02",
+    "sv": "12.7.2022 kl. 20:02",
+    "en": "Jul. 12, 2022 at 08:02 PM UTC+3"
+  },
+  "koulutustyyppi": "amm"
+}

@@ -23,6 +23,15 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[ToteutusIndexed](resource("toteutus-example-1.json"))
   lazy val toteutusArchived =
     read[ToteutusIndexed](resource("toteutus-arkistoitu.json"))
+  lazy val toteutusWithoutTarjoajat =
+    read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
+  lazy val toteutusWithoutOpetuskieli =
+    read[ToteutusIndexed](resource("toteutus-ei-opetuskielta.json"))
+  lazy val toteutusTotallyOrdinary =
+    read[ToteutusIndexed](resource("toteutus-ihan-tavanomainen.json"))
+  lazy val toteutusExactStartTime =
+    read[ToteutusIndexed](resource("toteutus-tarkka-alkuaika.json"))
+
   lazy val example_koulutus =
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
   lazy val koulutusWithoutKoulutusKoodi =
@@ -35,10 +44,6 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-2032.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
-  lazy val toteutusWithoutTarjoajat =
-    read[ToteutusIndexed](resource("toteutus-ei-tarjoajia.json"))
-  lazy val toteutusWithoutOpetuskieli =
-    read[ToteutusIndexed](resource("toteutus-ei-opetuskielta.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -57,6 +62,16 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "http://data.europa.eu/snb/isced-f/02")
     assert((koulutusXml \ "learningOutcome")(0) \@ "idref"
       == "https://rdf.oph.fi/koulutus-tulos/1.2.246.562.13.00000000000000000006")
+  }
+
+  "totally ordinary toteutus" should "have all optional fields" in {
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
+    assert(toteutusXml \ "description" \@ "language" == "en")
+    assert((toteutusXml \ "duration").text == "P0Y0M")
+    // from opetustapaKuvaus, since it doesn't have opetusaikaKuvaus
+    assert(toteutusXml \ "scheduleInformation" \ "noteLiteral" \@ "language" == "en")
+    assert((toteutusXml \ "scheduleInformation" \ "noteLiteral").text
+      .startsWith("<p>Online course."))
   }
 
   "example_toteutus" should "have correct fields" in {
@@ -95,6 +110,15 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "http://publications.europa.eu/resource/authority/language/FIN")
   }
 
+  it should "have optional elements" in {
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(example_toteutus)
+    assert((toteutusXml \ "temporal" \ "startDate").text == "2023-01-01T00:00:00")
+    assert((toteutusXml \ "temporal" \ "endDate").toList == List())
+    assert((toteutusXml \ "duration").text == "P3Y10M")
+    assert((toteutusXml \ "scheduleInformation" \ "noteLiteral").text
+      == "Opetusaikakuvaus fi")
+  }
+
   it should "have correct tarjoaja" in {
     val tarjoaja: Elem =
       EuropassConversion.toteutusToTarjoajaDependents(example_toteutus)
@@ -109,6 +133,12 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   it should "have certain koulutus as its dependent" in {
     assert(EuropassConversion.toteutusToKoulutusDependents(example_toteutus)
       == List("1.2.246.562.13.00000000000000000001"))
+  }
+
+  "toteutus with exact start time" should "have exact start time" in {
+    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(toteutusExactStartTime)
+    assert((toteutusXml \ "temporal" \ "startDate").text == "2021-08-04T12:00:00")
+    assert((toteutusXml \ "temporal" \ "endDate").text == "2022-12-22T00:00:00")
   }
 
   "toteutus without tarjoajat" should "not procude an ELM record" in {

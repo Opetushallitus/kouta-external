@@ -4,19 +4,26 @@ import scala.xml._
 import org.json4s._
 import fi.oph.kouta.domain.{Julkaisutila, Julkaistu}
 import fi.oph.kouta.external.domain.indexed.{
+  KoodiUri,
   KoulutusIndexed,
   ToteutusIndexed,
+  OpetusIndexed,
   TutkintoNimike,
   Organisaatio,
   AmmatillinenKoulutusMetadataIndexed,
   KorkeakoulutusKoulutusMetadataIndexed,
-  ErikoislaakariKoulutusMetadataIndexed
+  ErikoislaakariKoulutusMetadataIndexed,
+  KoulutuksenAlkamiskausiIndexed
 }
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
 
 object EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
+
+  lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
+    "europass-publisher.publishing.toteutus-extra-fields"
+  )
 
   val langCodes = Map(
     "en" -> List("http://publications.europa.eu/resource/authority/language/ENG"),
@@ -81,6 +88,56 @@ object EuropassConversion extends Logging {
     else default
   }
 
+  def toteutuksenKuvausAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] =
+    toteutus.metadata.map(_.kuvaus) match {
+      case Some(kuvaukset: Kielistetty) if toteutusExtras =>
+        kuvaukset.keys.map{lang =>
+          <description language={lang.name}>{kuvaukset(lang)}</description>
+        }.toList
+      case _ => List()
+    }
+
+  def approximateStartDate(kausi: Option[KoodiUri], vuosi: Option[String]): Option[String] =
+    (kausi, vuosi) match {
+      case (Some(KoodiUri("kausi_s#1")), Some(vuosi)) => Some(s"$vuosi-08-01T00:00")
+      case (Some(KoodiUri("kausi_k#1")), Some(vuosi)) => Some(s"$vuosi-01-01T00:00")
+      case _ => None
+    }
+
+  def toteutuksenAjankohtaAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] =
+    toteutus.metadata.flatMap(_.opetus).flatMap(_.koulutuksenAlkamiskausi) match {
+      case Some(kausi: KoulutuksenAlkamiskausiIndexed) if toteutusExtras =>
+        List(<temporal>
+          {kausi.koulutuksenAlkamispaivamaara.orElse(
+            approximateStartDate(kausi.koulutuksenAlkamiskausi, kausi.koulutuksenAlkamisvuosi)
+          ).map{alku => <startDate>{alku}:00</startDate>}.toList}
+          {kausi.koulutuksenPaattymispaivamaara.map{loppu => <endDate>{loppu}:00</endDate>}.toList}
+        </temporal>)
+      case _ => List()
+    }
+
+  def toteutuksenKestoAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
+    val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
+    val duration: String =
+      opetus.flatMap(_.suunniteltuKestoVuodet).map(_ + "Y").getOrElse("") +
+      opetus.flatMap(_.suunniteltuKestoKuukaudet).map(_ + "M").getOrElse("")
+    if (toteutusExtras && duration.nonEmpty)
+      List(<duration>{"P" + duration}</duration>)
+    else List()
+  }
+
+  def toteutuksenAikatauluAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
+    val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
+    (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
+      opetus.map(_.opetustapaKuvaus).map(_.toList).getOrElse(List()))
+        .take(1)  // No way to express language alternatives so we just pick a random one
+        .map{case (lang, desc) =>
+          <scheduleInformation>
+            <noteLiteral language={lang.name}>{desc}</noteLiteral>
+          </scheduleInformation>
+        }.toList
+  }
+
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
     val oid: String = toteutus.oid.map(_.toString).getOrElse("")
     val langs = List("en", "fi", "sv")
@@ -93,7 +150,11 @@ object EuropassConversion extends Logging {
     } else
     Some(<learningOpportunity id={toteutusUrl(oid)}>
       {nimetAsElmXml(toteutus.nimi)}
+      {toteutuksenKuvausAsElmXml(toteutus)}
       {langs.map(konfoUrl(_, oid))}
+      {toteutuksenAjankohtaAsElmXml(toteutus)}
+      {toteutuksenKestoAsElmXml(toteutus)}
+      {toteutuksenAikatauluAsElmXml(toteutus)}
       {toteutus.tarjoajat.map{t =>
         <providedBy idref={organisaatioUrl(t.oid.toString)}/>}}
       <learningAchievementSpecification

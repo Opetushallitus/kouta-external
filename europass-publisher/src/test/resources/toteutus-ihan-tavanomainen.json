@@ -1,0 +1,240 @@
+{
+  "tila": "julkaistu",
+  "kuuluuOpintokokonaisuuksiin": [],
+  "liitetytOpintojaksot": [],
+  "oppilaitokset": [
+    "1.2.246.562.10.38417217288"
+  ],
+  "koulutukset": [],
+  "tarjoajat": [
+    {
+      "oid": "1.2.246.562.10.25798690799",
+      "nimi": {
+        "fi": "Avoin yliopisto",
+        "sv": "Avoin yliopisto",
+        "en": "Avoin yliopisto"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_564",
+        "nimi": {
+          "sv": "Uleåborg",
+          "fi": "Oulu"
+        }
+      }
+    }
+  ],
+  "liitetytOsaamismerkit": [],
+  "esikatselu": true,
+  "modified": "2023-02-16T15:58:16",
+  "koulutusOid": "1.2.246.562.13.00000000000000004330",
+  "nimi": {
+    "en": "Avoin yo: Statistics toolkit - Tilastotiedepaketti, 1 op, 2022  - 2023 (online course)"
+  },
+  "muokkaaja": {
+    "oid": "1.2.246.562.24.21010340409",
+    "nimi": "Saimi Jokelainen-Testi"
+  },
+  "oid": "1.2.246.562.17.00000000000000012960",
+  "externalId": "ay044116S",
+  "kielivalinta": [
+    "en"
+  ],
+  "haut": [
+    "1.2.246.562.29.00000000000000030509"
+  ],
+  "koulutustyyppiPath": "kk-muu/kk-opintojakso-avoin",
+  "timestamp": 1745275396580,
+  "organisaatiot": [
+    "1.2.246.562.10.25798690799"
+  ],
+  "organisaatio": {
+    "oid": "1.2.246.562.10.25798690799",
+    "nimi": {
+      "fi": "Avoin yliopisto",
+      "sv": "Avoin yliopisto",
+      "en": "Avoin yliopisto"
+    },
+    "paikkakunta": {
+      "koodiUri": "kunta_564",
+      "nimi": {
+        "sv": "Uleåborg",
+        "fi": "Oulu"
+      }
+    }
+  },
+  "metadata": {
+    "kuvaus": {
+      "en": "<p>The aim of the course is to give the students basic idea of the most  usual statistical methods that are used when practicing evidence based  medicine.</p>"
+    },
+    "hakutermi": "ilmoittautuminen",
+    "opintojenLaajuusyksikko": {
+      "koodiUri": "opintojenlaajuusyksikko_2#1",
+      "nimi": {
+        "en": "ECTS credits",
+        "fi": "opintopistettä",
+        "sv": "studiepoäng"
+      }
+    },
+    "hakulomaketyyppi": "muu",
+    "aloituspaikkakuvaus": {},
+    "hakulomakeLinkki": {
+      "en": "https://www.oulu.fi/en/joy/education-search/statistics-toolkit-open-uni-tilastotiedepaketti-avoin-yo"
+    },
+    "hakuaika": {
+      "alkaa": "2023-01-01T00:00",
+      "paattyy": "2023-05-31T23:59",
+      "formatoituPaattyy": {
+        "fi": "31.5.2023 klo 23:59",
+        "sv": "31.5.2023 kl. 23:59",
+        "en": "May. 31, 2023 at 11:59 PM UTC+3"
+      },
+      "formatoituAlkaa": {
+        "fi": "1.1.2023 klo 00:00",
+        "sv": "1.1.2023 kl. 00:00",
+        "en": "Jan. 1, 2023 at 12:00 AM UTC+2"
+      }
+    },
+    "opintojenLaajuusNumero": 1,
+    "isAvoinKorkeakoulutus": true,
+    "isMuokkaajaOphVirkailija": false,
+    "ammattinimikkeet": [],
+    "asiasanat": [
+      {
+        "kieli": "en",
+        "arvo": "evidence based medicine"
+      },
+      {
+        "kieli": "en",
+        "arvo": "Statistics toolkit"
+      },
+      {
+        "kieli": "en",
+        "arvo": "ay044116S"
+      },
+      {
+        "kieli": "en",
+        "arvo": "oulu open university"
+      }
+    ],
+    "lisatietoaValintaperusteista": {},
+    "lisatietoaHakeutumisesta": {
+      "en": "<p>&#x27;</p>"
+    },
+    "isTyovoimakoulutus": false,
+    "hasJotpaRahoitus": false,
+    "isTaydennyskoulutus": false,
+    "tunniste": "ay044116S",
+    "opetus": {
+      "maksullisuustyyppi": "maksuton",
+      "maksullisuusKuvaus": {},
+      "suunniteltuKestoKuvaus": {
+        "en": "<p>There is a continuous registration for the course until 31.5.2023.</p>"
+      },
+      "suunniteltuKestoVuodet": 0,
+      "onkoApuraha": false,
+      "lisatiedot": [
+        {
+          "otsikko": {
+            "koodiUri": "koulutuksenlisatiedot_13#1",
+            "nimi": {
+              "en": "Learning Outcomes",
+              "sv": "Mål",
+              "fi": "Osaamistavoitteet"
+            }
+          },
+          "teksti": {
+            "en": "<p>The aim of the course is to give the students basic idea of the most  usual statistical methods that are used when practicing evidence based  medicine.</p>"
+          }
+        },
+        {
+          "otsikko": {
+            "koodiUri": "koulutuksenlisatiedot_12#1",
+            "nimi": {
+              "en": "Content",
+              "sv": "Innehåll",
+              "fi": "Sisältö"
+            }
+          },
+          "teksti": {
+            "en": "<p>The book includes the basic idea of the most usual statistical methods that are used when practicing evidence based medicine.</p><p></p>"
+          }
+        }
+      ],
+      "suunniteltuKestoKuukaudet": 0,
+      "opetustapaKuvaus": {
+        "en": "<p>Online course. <br/>The students read the book Statistics Toolkit (Perera  R, Heneghan C &amp; Badenoch D, ed), BMJ Books, Blackwell Publishing  2008 (e-Book in library) and go through a question series in Moodle  learning environment. The system gives the student feedback on the  answers and tells whether she/he has passed or failed the course.</p><p>27 h of independent work including online exam in Moodle.</p>"
+      },
+      "opetuskieletKuvaus": {},
+      "opetustapa": [
+        {
+          "koodiUri": "opetuspaikkakk_5#1",
+          "nimi": {
+            "fi": "Itsenäinen opiskelu",
+            "en": "Independent learning",
+            "sv": "Självständiga studier"
+          }
+        },
+        {
+          "koodiUri": "opetuspaikkakk_3#1",
+          "nimi": {
+            "fi": "Verkko-opetus",
+            "sv": "Nätundervisning",
+            "en": "Online teaching"
+          }
+        }
+      ],
+      "opetusaikaKuvaus": {},
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_4#2",
+          "nimi": {
+            "en": "English",
+            "sv": "engelska",
+            "fi": "englanti"
+          }
+        }
+      ],
+      "opetusaika": [
+        {
+          "koodiUri": "opetusaikakk_5#1",
+          "nimi": {
+            "sv": "Oberoende av klockslag",
+            "en": "Irrespective of time",
+            "fi": "Kellonajasta riippumaton"
+          }
+        }
+      ]
+    },
+    "yhteyshenkilot": [
+      {
+        "nimi": {
+          "en": "Oulu Open University"
+        },
+        "titteli": {},
+        "sahkoposti": {
+          "en": "avoin.yliopisto@oulu.fi"
+        },
+        "puhelinnumero": {},
+        "wwwSivu": {
+          "en": "https://www.oulu.fi/en/joy/open-university"
+        },
+        "wwwSivuTeksti": {}
+      }
+    ],
+    "tyyppi": "kk-opintojakso",
+    "opinnonTyyppi": {
+      "koodiUri": "opinnontyyppi_3#1",
+      "nimi": {
+        "sv": "Fördjupade studier",
+        "fi": "Syventävät opinnot",
+        "en": "Advanced studies"
+      }
+    }
+  },
+  "formatoituModified": {
+    "fi": "16.2.2023 klo 15:58",
+    "sv": "16.2.2023 kl. 15:58",
+    "en": "Feb. 16, 2023 at 03:58 PM UTC+2"
+  },
+  "koulutustyyppi": "kk-opintojakso"
+}

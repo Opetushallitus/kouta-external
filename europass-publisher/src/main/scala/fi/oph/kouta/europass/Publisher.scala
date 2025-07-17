@@ -14,6 +14,12 @@ object Publisher extends Logging {
 
   val initialLogDelayInItems = 10
   val subsequentLogDelayInItems = 200
+  val limitToteutukset = EuropassConfiguration.config.getBoolean(
+    "europass-publisher.retrieval.use-toteutus-limit"
+  )
+  val toteutusLimit = EuropassConfiguration.config.getInt(
+    "europass-publisher.retrieval.toteutus-limit"
+  )
 
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
     val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
@@ -114,8 +120,18 @@ object Publisher extends Logging {
       </locationReferences>
     """)
 
+  def toteutukset(limitToteutukset: Boolean, toteutusLimit: Int): Stream[ToteutusIndexed] = {
+    val rawToteutusStream = ElasticClient.listPublished(None)
+    if (limitToteutukset) {
+      logger.info(s"Limiting toteutus amount to $toteutusLimit as configured")
+      rawToteutusStream.take(toteutusLimit)
+    } else {
+      rawToteutusStream
+    }
+  }
+
   def koulutustarjontaToFile(dest: BufferedWriter) = {
-    val toteutusStream = ElasticClient.listPublished(None)
+    val toteutusStream = toteutukset(limitToteutukset, toteutusLimit)
     lazy val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
     lazy val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
     dest.write("<Courses xmlns=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")

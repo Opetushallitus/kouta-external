@@ -132,6 +132,17 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
       == "Lärocenter Salpaus")
   }
 
+  it should "have correct tarjoaja location" in {
+    val sijainti: Elem =
+      TestConversion.toteutusToTarjoajaDependents(example_toteutus)
+      .map(TestConversion.tarjoajasijaintiAsElmXml)
+      .head
+    assert(sijainti \@ "id"
+      == "https://rdf.oph.fi/organisaatio-sijainti/1.2.246.562.10.81934895871")
+    assert((sijainti \ "address" \ "fullAddress" \ "noteLiteral").text
+      == "Polvivaara 865, 15110  LAHTI")
+  }
+
   it should "have certain koulutus as its dependent" in {
     assert(TestConversion.toteutusToKoulutusDependents(example_toteutus)
       == List("1.2.246.562.13.00000000000000000001"))

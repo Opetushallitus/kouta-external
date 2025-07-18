@@ -91,6 +91,9 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     assert(content.contains(
       "<geographicName language=\"sv\">Koulutuskeskus Salpaus sv</geographicName>"
     ))
+    assert(content.contains(
+      "<noteLiteral language=\"fi\">Polvivaara 865, 15110  LAHTI</noteLiteral>"
+    ))
   }
 
   "koulutustarjontaAsFile" should "return valid XML file" in {

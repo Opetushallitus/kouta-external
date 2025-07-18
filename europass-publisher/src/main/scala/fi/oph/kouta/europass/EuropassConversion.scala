@@ -18,7 +18,7 @@ import fi.oph.kouta.external.domain.indexed.{
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
 
-object EuropassConversion extends Logging {
+class EuropassConversion(orgClient: OrganisationClient) extends Logging {
   implicit val formats = DefaultFormats
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
@@ -252,7 +252,7 @@ object EuropassConversion extends Logging {
       {nimet.keys.map{lang =>
         <geographicName language={lang.name}>{nimet(lang)}</geographicName>}}
       <address>
-        {OrganisationClient.getOrganisationAddress(oid).map{addr =>
+        {orgClient.getOrganisationAddress(oid).map{addr =>
           <fullAddress><noteLiteral language="fi">{addr}</noteLiteral></fullAddress>
         }.getOrElse(List())}
         <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
@@ -265,3 +265,5 @@ object EuropassConversion extends Logging {
   ): List[Organisaatio] = toteutus.tarjoajat
 
 }
+
+object EuropassConversion extends EuropassConversion(OrganisationClient)

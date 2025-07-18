@@ -7,11 +7,6 @@ import scala.io.Source
 
 import fi.oph.kouta.europass.OrganisationClient
 
-object TestOrganisationClient extends OrganisationClient {
-  override def getOrganisation(oid: String): JValue =
-    parse(Source.fromResource(s"organisaatio-$oid.json").bufferedReader)
-}
-
 class OrganisationClientSpec extends ScalatraFlatSpec {
 
   "OrganisationClient" should "extract address correctly" in {

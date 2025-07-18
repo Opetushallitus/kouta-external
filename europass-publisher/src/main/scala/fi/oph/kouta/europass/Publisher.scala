@@ -9,7 +9,7 @@ import fi.oph.kouta.external.domain.indexed.{
 import scala.xml.Elem
 import java.io.{File, BufferedWriter, FileWriter}
 
-object Publisher extends Logging {
+class Publisher(converter: EuropassConversion) extends Logging {
   implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val initialLogDelayInItems = 10
@@ -22,7 +22,7 @@ object Publisher extends Logging {
   )
 
   def toteutusToFile(oid: String, dest: BufferedWriter) = {
-    val Some(toteutusXml: Elem) = EuropassConversion.toteutusAsElmXml(ElasticClient.getToteutus(oid))
+    val Some(toteutusXml: Elem) = converter.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
       <Courses xmlns="http://data.europa.eu/snb/model/ap/loq-constraints/">
         <learningOpportunityReferences>
@@ -47,7 +47,7 @@ object Publisher extends Logging {
   def koulutuksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
     dest.write("<learningAchievementSpecificationReferences>\n")
     foreachWithLogging(
-      koulutusStream.flatMap(EuropassConversion.koulutusAsElmXml),
+      koulutusStream.flatMap(converter.koulutusAsElmXml),
       "koulutukset",
       {koulutus => dest.write(koulutus.toString)}
     )
@@ -58,13 +58,13 @@ object Publisher extends Logging {
     toteutusStream: Stream[ToteutusIndexed]
   ): Stream[KoulutusIndexed] =
     toteutusStream
-      .flatMap(EuropassConversion.toteutusToKoulutusDependents)
+      .flatMap(converter.toteutusToKoulutusDependents)
       .toSet
       .toStream
       .map(ElasticClient.getKoulutus)
 
   def toteutuksetToFile(dest: BufferedWriter, toteutusStream: Stream[ToteutusIndexed]) = {
-    val toteutusXmlStream = toteutusStream.flatMap(EuropassConversion.toteutusAsElmXml)
+    val toteutusXmlStream = toteutusStream.flatMap(converter.toteutusAsElmXml)
     dest.write("<learningOpportunityReferences>\n")
     foreachWithLogging(
       toteutusXmlStream,
@@ -76,7 +76,7 @@ object Publisher extends Logging {
 
   def tuloksetToFile(dest: BufferedWriter, koulutusStream: Stream[KoulutusIndexed]) = {
     val tulosXmlStream = koulutusStream
-      .flatMap(EuropassConversion.koulutusTuloksetAsElmXml)
+      .flatMap(converter.koulutusTuloksetAsElmXml)
       .groupBy(_ \@ "id").values.map(_(0)).toStream
     dest.write("<learningOutcomeReferences>\n")
     foreachWithLogging(
@@ -91,12 +91,12 @@ object Publisher extends Logging {
     toteutusStream: Stream[ToteutusIndexed]
   ): Stream[Organisaatio] =
     toteutusStream
-    .flatMap(EuropassConversion.toteutusToTarjoajaDependents)
+    .flatMap(converter.toteutusToTarjoajaDependents)
     .toSet
     .toStream
 
   def tarjoajatToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
-    val organisaatioXmlStream = tarjoajaStream.map(EuropassConversion.tarjoajaAsElmXml)
+    val organisaatioXmlStream = tarjoajaStream.map(converter.tarjoajaAsElmXml)
     dest.write("<agentReferences>\n")
     foreachWithLogging(
       organisaatioXmlStream,
@@ -107,7 +107,7 @@ object Publisher extends Logging {
   }
 
   def tarjoajasijainnitToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
-    val sijaintiStream = tarjoajaStream.map(EuropassConversion.tarjoajasijaintiAsElmXml)
+    val sijaintiStream = tarjoajaStream.map(converter.tarjoajasijaintiAsElmXml)
     dest.write("<locationReferences>\n")
     foreachWithLogging(
       sijaintiStream,
@@ -151,3 +151,5 @@ object Publisher extends Logging {
   }
 
 }
+
+object Publisher extends Publisher(EuropassConversion)

@@ -106,19 +106,16 @@ object Publisher extends Logging {
     dest.write("</agentReferences>\n")
   }
 
-  def suomiLocationToFile(dest: BufferedWriter) =
-    dest.write("""
-      <locationReferences>
-        <location id="http://rdf.oph.fi/sijainti/suomi">
-          <geographicName language="fi">Suomi</geographicName>
-          <geographicName language="sv">Finland</geographicName>
-          <geographicName language="en">Finland</geographicName>
-          <address>
-            <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
-          </address>
-        </location>
-      </locationReferences>
-    """)
+  def tarjoajasijainnitToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
+    val sijaintiStream = tarjoajaStream.map(EuropassConversion.tarjoajasijaintiAsElmXml)
+    dest.write("<locationReferences>\n")
+    foreachWithLogging(
+      sijaintiStream,
+      "organisaation sijainnit",
+      {loc => dest.write(loc.toString)}
+    )
+    dest.write("</locationReferences>\n")
+  }
 
   def toteutukset(limitToteutukset: Boolean, toteutusLimit: Int): Stream[ToteutusIndexed] = {
     val rawToteutusStream = ElasticClient.listPublished(None)
@@ -139,7 +136,7 @@ object Publisher extends Logging {
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)
     tarjoajatToFile(dest, tarjoajaStream)
-    suomiLocationToFile(dest)
+    tarjoajasijainnitToFile(dest, tarjoajaStream)
     dest.write("\n</Courses>")
   }
 

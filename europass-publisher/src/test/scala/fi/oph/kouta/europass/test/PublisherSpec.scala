@@ -87,7 +87,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
       "<legalName language=\"fi\">Koulutuskeskus Salpaus</legalName>"
     ))
     assert(content.contains(
-      "<geographicName language=\"sv\">Finland</geographicName>"
+      "<geographicName language=\"sv\">Koulutuskeskus Salpaus sv</geographicName>"
     ))
   }
 

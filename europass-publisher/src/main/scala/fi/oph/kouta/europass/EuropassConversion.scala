@@ -42,6 +42,9 @@ object EuropassConversion extends Logging {
   def organisaatioUrl(oid: String): String =
     "https://rdf.oph.fi/organisaatio/" ++ oid
 
+  def sijaintiUrl(oid: String): String =
+    "https://rdf.oph.fi/organisaatio-sijainti/" ++ oid
+
   def koulutusUrl(oid: String): String =
     "https://rdf.oph.fi/koulutus/" ++ oid
 
@@ -234,11 +237,27 @@ object EuropassConversion extends Logging {
 
   def tarjoajaAsElmXml(tarjoaja: Organisaatio): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
-    <organisation id={organisaatioUrl(tarjoaja.oid.toString)}>
+    val oid = tarjoaja.oid.toString
+    <organisation id={organisaatioUrl(oid)}>
       {nimet.keys.map{lang =>
         <legalName language={lang.name}>{nimet(lang)}</legalName>}}
-      <location idref="http://rdf.oph.fi/sijainti/suomi"/>
+      <location idref={sijaintiUrl(oid)}/>
     </organisation>
+  }
+
+  def tarjoajasijaintiAsElmXml(tarjoaja: Organisaatio): Elem = {
+    val nimet = tarjoaja.nimi.getOrElse(Map())
+    val oid = tarjoaja.oid.toString
+    <location id={sijaintiUrl(oid)}>
+      {nimet.keys.map{lang =>
+        <geographicName language={lang.name}>{nimet(lang)}</geographicName>}}
+      <address>
+        {OrganisationClient.getOrganisationAddress(oid).map{addr =>
+          <fullAddress><noteLiteral language="fi">{addr}</noteLiteral></fullAddress>
+        }.getOrElse(List())}
+        <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
+      </address>
+    </location>
   }
 
   def toteutusToTarjoajaDependents(

@@ -65,7 +65,7 @@ postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
 ### 3.5. Ajaminen lokaalisti testiympäristön ElasticSearchia vasten
 
-Luo seuraavanlainen `src/test/resources/dev-vars.yml`-tiedosto ja korvaa `*YMPÄRISTÖ*` testiympäristön arvolla `testi`, `hahtuva` tai `untuva`:
+Lisää `dev-vars.yml`-tiedosto `kouta-external/kouta-external/src/test/resources`-hakemistoon ja korvaa `*YMPÄRISTÖ*` testiympäristön arvolla `testi`, `hahtuva` tai `untuva`:
 
     host_postgresql_koutaexternal: localhost
     host_postgresql_koutaexternal_port: 5435

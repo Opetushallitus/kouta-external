@@ -179,7 +179,8 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(
@@ -214,7 +215,8 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
@@ -247,7 +249,8 @@ case class AmmatillinenMuuToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    YliopistoToteutusMetadata:
@@ -546,7 +549,8 @@ case class VapaaSivistystyoMuuToteutusMetadata(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
-    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
+    liitetytOsaamismerkit: Seq[KoulutusOid] = Seq(),
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoOsaamismerkkiToteutusMetadata:
@@ -580,6 +584,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false,
     suoritetaanNayttona: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
@@ -672,7 +677,8 @@ case class KkOpintojaksoToteutusMetadata(
     opinnonTyyppiKoodiUri: Option[String] = None,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    ErikoislaakariToteutusMetadata:
@@ -755,6 +761,7 @@ case class KkOpintokokonaisuusToteutusMetadata(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false,
     liitetytOpintojaksot: Seq[ToteutusOid]
 ) extends TutkintoonJohtamatonToteutusMetadata
 
@@ -790,7 +797,8 @@ case class ErikoistumiskoulutusToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel(
@@ -901,5 +909,6 @@ case class MuuToteutusMetadata(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadata

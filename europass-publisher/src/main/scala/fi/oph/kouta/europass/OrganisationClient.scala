@@ -8,10 +8,34 @@ import org.asynchttpclient._
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
+import java.io.{File, BufferedWriter, FileWriter}
+
 class OrganisationClient extends Logging with KoutaJsonFormats {
 
   lazy val orgUrl = EuropassConfiguration.config.getString("europass-publisher.organisation.url")
+  lazy val roleArn = EuropassConfiguration.config.getString("europass-publisher.lampi-s3.role-arn")
+  lazy val externalId = EuropassConfiguration.config.getString("europass-publisher.lampi-s3.external-id")
+
   val httpClient = asyncHttpClient()
+
+  def awsConfig(): String = {
+    s"""[profile lampi-crossorganisation]
+      region = eu-west-1
+      role_session_name = lampi-read-europass
+      role_arn = $roleArn
+      external_id = $externalId
+    """
+  }
+
+  def writeAwsConfig(): String = {
+    val tempFile = File.createTempFile("aws-config", ".ini")
+    logger.info(s"writeAwsConfig: using filename $tempFile")
+    tempFile.deleteOnExit()
+    val writer = new BufferedWriter(new FileWriter(tempFile))
+    writer.write(awsConfig())
+    writer.close()
+    tempFile.getPath()
+  }
 
   def getOrganisation(oid: String): JValue = {
     val req = get(s"${orgUrl}/${oid}")

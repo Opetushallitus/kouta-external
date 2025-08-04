@@ -24,4 +24,11 @@ class OrganisationClientSpec extends ScalatraFlatSpec {
       == None)
   }
 
+  it should "write correct AWS configuration" in {
+    val configFile = OrganisationClient.writeAwsConfig()
+    assert(configFile.contains("aws-config"))
+    val content = Source.fromFile(configFile).mkString
+    assert(content.contains("role_arn = none"))
+  }
+
 }

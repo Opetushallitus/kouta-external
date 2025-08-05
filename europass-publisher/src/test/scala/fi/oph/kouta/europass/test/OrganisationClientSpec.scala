@@ -28,7 +28,14 @@ class OrganisationClientSpec extends ScalatraFlatSpec {
     val configFile = OrganisationClient.writeAwsConfig()
     assert(configFile.contains("aws-config"))
     val content = Source.fromFile(configFile).mkString
-    assert(content.contains("role_arn = none"))
+    assert(content.contains("role_arn = arn:aws:iam::123:role/fulldump-read-role-opintopolku"))
+  }
+
+  "TestOrganisationClient" should "fetch Organisation CSV from resources" in {
+    val orgFile = TestOrganisationClient.getOrganisationCsv()
+    assert(orgFile.contains("organisations"))
+    val content = Source.fromFile(orgFile).mkString
+    assert(content.contains("Lahti, Ståhlberginkatu 4 A"))
   }
 
 }

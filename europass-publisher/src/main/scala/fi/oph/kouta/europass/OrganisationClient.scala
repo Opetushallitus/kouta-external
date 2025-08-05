@@ -9,12 +9,14 @@ import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
 
 import java.io.{File, BufferedWriter, FileWriter}
+import scala.sys.process.Process
 
 class OrganisationClient extends Logging with KoutaJsonFormats {
 
   lazy val orgUrl = EuropassConfiguration.config.getString("europass-publisher.organisation.url")
   lazy val roleArn = EuropassConfiguration.config.getString("europass-publisher.lampi-s3.role-arn")
   lazy val externalId = EuropassConfiguration.config.getString("europass-publisher.lampi-s3.external-id")
+  lazy val csvBucket = EuropassConfiguration.config.getString("europass-publisher.lampi-s3.org-data-bucket")
 
   val httpClient = asyncHttpClient()
 
@@ -22,6 +24,7 @@ class OrganisationClient extends Logging with KoutaJsonFormats {
     s"""[profile lampi-crossorganisation]
       region = eu-west-1
       role_session_name = lampi-read-europass
+      credential_source = EcsContainer
       role_arn = $roleArn
       external_id = $externalId
     """
@@ -35,6 +38,24 @@ class OrganisationClient extends Logging with KoutaJsonFormats {
     writer.write(awsConfig())
     writer.close()
     tempFile.getPath()
+  }
+
+  def getOrganisationCsv(): String = {
+    val configFile = writeAwsConfig()
+    val tempFile = File.createTempFile("organisations", ".csv")
+    tempFile.deleteOnExit()
+    val tempFileName = tempFile.getPath()
+    val awsCommand = List(
+      "aws",
+      "--profile",
+      "lampi-crossorganisation",
+      "s3",
+      "cp",
+      s"${csvBucket}osoite.csv",
+      tempFileName
+    )
+    Process(awsCommand, new java.io.File("/tmp"), "AWS_CONFIG_FILE" -> configFile).!
+    tempFileName
   }
 
   def getOrganisation(oid: String): JValue = {

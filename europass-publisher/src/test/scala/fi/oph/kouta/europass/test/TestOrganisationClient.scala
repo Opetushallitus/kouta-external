@@ -4,6 +4,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import scala.io.Source
+import java.io.{File, BufferedWriter, FileWriter}
 
 import fi.oph.kouta.europass.OrganisationClient
 
@@ -14,5 +15,14 @@ object TestOrganisationClient extends OrganisationClient {
     } catch {
       case e: NullPointerException => JObject()
     }
+  }
+
+  override def getOrganisationCsv(): String = {
+    val tempFile = File.createTempFile("organisations", ".csv")
+    tempFile.deleteOnExit()
+    val writer = new BufferedWriter(new FileWriter(tempFile))
+    writer.write(Source.fromResource("organisaatio.csv").mkString)
+    writer.close()
+    tempFile.getPath()
   }
 }

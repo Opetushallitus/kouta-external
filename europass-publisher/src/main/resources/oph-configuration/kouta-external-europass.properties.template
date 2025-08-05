@@ -5,5 +5,6 @@ europass-publisher.s3.region = eu-west-1
 europass-publisher.s3.bucketname = europass-publish-{{ env("ENV_NAME") }}
 europass-publisher.s3.keyname = europass-export-1.xml
 europass-publisher.s3.endpoint = 
-europass-publisher.lampi-s3.role-arn = {{kouta_external_europass_lampi_download_role_arn}}
+europass-publisher.lampi-s3.role-arn = {{ env("europass_lampi_crossorg_role") }}
 europass-publisher.lampi-s3.external-id = {{kouta_external_europass_lampi_download_external_id}}
+europass-publisher.lampi-s3.org-data-bucket = {{kouta_external_europass_lampi_download_bucket_url}}

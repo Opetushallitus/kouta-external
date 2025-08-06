@@ -9,14 +9,6 @@ import java.io.{File, BufferedWriter, FileWriter}
 import fi.oph.kouta.europass.OrganisationClient
 
 object TestOrganisationClient extends OrganisationClient {
-  override def getOrganisation(oid: String): JValue = {
-    try {
-      parse(Source.fromResource(s"organisaatio-$oid.json").bufferedReader)
-    } catch {
-      case e: NullPointerException => JObject()
-    }
-  }
-
   override def getOrganisationCsv(): String = {
     val tempFile = File.createTempFile("organisations", ".csv")
     tempFile.deleteOnExit()

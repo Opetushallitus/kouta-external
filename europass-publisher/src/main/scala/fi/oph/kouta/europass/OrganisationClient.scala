@@ -76,33 +76,36 @@ class OrganisationClient extends Logging with KoutaJsonFormats {
 
   lazy val organisations = getOrganisationInfo()
 
-  def getOrganisation(oid: String): JValue = {
-    val req = get(s"${orgUrl}/${oid}")
-    val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
-    resp match {
-      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-      case r => throw new RuntimeException(s"Organisation query for oid $oid failed: ${r.getResponseBody()}")
+  def getOrganisation(oid: String): Option[Seq[String]] = {
+    for(tyyppi <- List("kaynti", "posti")) {
+      for(kieli <- List("fi", "sv", "en")) {
+        val key = (oid, tyyppi, kieli)
+        if (organisations.contains(key)) {
+          return Some(organisations(key))
+        }
+      }
     }
+    None
   }
 
-  def organisationAddress(org: JValue): Option[String] = {
+  def organisationAddress(org: Seq[String]): Option[String] = {
     try {
-      val yhteystiedot: Seq[JValue] = (org \ "yhteystiedot").children
-      val kayntiosoite: JValue = yhteystiedot.filter(yt => (yt \ "osoiteTyyppi") == JString("kaynti"))(0)
-      val osoite = (kayntiosoite \ "osoite").extract[String]
-      val postinro = (kayntiosoite \ "postinumeroUri").extract[String].split("_")(1)
-      val kunta = (kayntiosoite \ "postitoimipaikka").extract[String]
+      // CSV fields: organisaatio_oid,osoitetyyppi,osoite,postinumero,postitoimipaikka,kieli
+      val osoite = org(2)
+      val postinro = org(3).split("_")(1)
+      val kunta = org(4)
       Some(s"$osoite, $postinro  $kunta")
     } catch {
       case e: IndexOutOfBoundsException =>
-        val oid = org \ "oid"
+        val oid = org(0)
         logger.warn(s"No address found for organisation: $oid")
         None
     }
   }
 
   def getOrganisationAddress(oid: String): Option[String] =
-    organisationAddress(getOrganisation(oid))
+    getOrganisation(oid).flatMap(organisationAddress)
+
 }
 
 object OrganisationClient extends OrganisationClient

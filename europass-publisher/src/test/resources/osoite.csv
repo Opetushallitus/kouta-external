@@ -6,3 +6,7 @@ This line tests that malformed lines are skipped
 1.2.246.562.10.67476956288,posti,Kalmankaltionkuja 560,"","",kieli_en#1
 1.2.246.562.10.81934895871,kaynti,Polvivaara 865,posti_15110,LAHTI,kieli_fi#1
 1.2.246.562.10.81934895871,posti,Maailmannavanaukio 863,posti_15110,LAHTI,kieli_fi#1
+1.2.246.562.10.2013111415031319523704,kaynti,Halivaarankatu 676,posti_90250,OULU,kieli_fi#1
+1.2.246.562.10.2013111415031319523704,posti,Polvivaara 54,posti_90250,OULU,kieli_fi#1
+1.2.246.562.10.81934895871,kaynti,Polvivaara 865,posti_15110,LAHTI,kieli_fi#1
+1.2.246.562.10.81934895871,posti,Maailmannavanaukio 863,posti_15110,LAHTI,kieli_fi#1

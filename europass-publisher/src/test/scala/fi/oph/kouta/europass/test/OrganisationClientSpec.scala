@@ -10,10 +10,11 @@ import fi.oph.kouta.europass.OrganisationClient
 class OrganisationClientSpec extends ScalatraFlatSpec {
 
   "OrganisationClient" should "extract address correctly" in {
-    val orgJson = parse(
-      Source.fromResource("organisaatio-1.2.246.562.10.81934895871.json").bufferedReader
+    val orgLine = List(
+      "1.2.246.562.10.81934895871", "kaynti",
+      "Polvivaara 865", "posti_15110", "LAHTI", "kieli_fi#1"
     )
-    assert(OrganisationClient.organisationAddress(orgJson)
+    assert(OrganisationClient.organisationAddress(orgLine)
       == Some("Polvivaara 865, 15110  LAHTI"))
   }
 
@@ -21,6 +22,8 @@ class OrganisationClientSpec extends ScalatraFlatSpec {
     assert(TestOrganisationClient.getOrganisationAddress("1.2.246.562.10.81934895871")
       == Some("Polvivaara 865, 15110  LAHTI"))
     assert(TestOrganisationClient.getOrganisationAddress("1.2.246.562.10.2013111415031319523704")
+      == Some("Halivaarankatu 676, 90250  OULU"))
+    assert(TestOrganisationClient.getOrganisationAddress("1.2.246.562.10.123")
       == None)
   }
 

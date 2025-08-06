@@ -134,6 +134,10 @@
             <groupId>com.github.blemale</groupId>
             <artifactId>scaffeine_2.12</artifactId>
         </dependency>
+	<dependency>
+	    <groupId>com.github.tototoshi</groupId>
+	    <artifactId>scala-csv_2.12</artifactId>
+	</dependency>
 
         <!-- Jetty -->
         <dependency>

@@ -21,7 +21,7 @@ object TestOrganisationClient extends OrganisationClient {
     val tempFile = File.createTempFile("organisations", ".csv")
     tempFile.deleteOnExit()
     val writer = new BufferedWriter(new FileWriter(tempFile))
-    writer.write(Source.fromResource("organisaatio.csv").mkString)
+    writer.write(Source.fromResource("osoite.csv").mkString)
     writer.close()
     tempFile.getPath()
   }

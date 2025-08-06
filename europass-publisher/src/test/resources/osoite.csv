@@ -1,0 +1,8 @@
+This line tests that malformed lines are skipped
+1.2.246.562.10.594252633210,kaynti,Volttipelto 801,posti_15110,LAHTI,kieli_fi#1
+1.2.246.562.10.594252633210,posti,Svinhufvudinkatu 6 F,posti_15110,LAHTI,kieli_fi#1
+1.2.246.562.10.67476956288,posti,Kalmankaltionkuja 32,posti_00079,METROPOLIA,kieli_fi#1
+1.2.246.562.10.67476956288,kaynti,Polvivaara 959,posti_00920,HELSINKI,kieli_fi#1
+1.2.246.562.10.67476956288,posti,Kalmankaltionkuja 560,"","",kieli_en#1
+1.2.246.562.10.81934895871,kaynti,Polvivaara 865,posti_15110,LAHTI,kieli_fi#1
+1.2.246.562.10.81934895871,posti,Maailmannavanaukio 863,posti_15110,LAHTI,kieli_fi#1

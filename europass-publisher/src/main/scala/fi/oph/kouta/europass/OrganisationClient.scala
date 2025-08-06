@@ -4,6 +4,7 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods.parse
 import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
+import com.github.tototoshi.csv.CSVReader
 
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
@@ -57,6 +58,23 @@ class OrganisationClient extends Logging with KoutaJsonFormats {
     Process(awsCommand, new java.io.File("/tmp"), "AWS_CONFIG_FILE" -> configFile).!
     tempFileName
   }
+
+  def getOrganisationInfo(): Map[(String, String, String), Seq[String]] = {
+    val orgFile = getOrganisationCsv()
+    val reader = CSVReader.open(new File(orgFile))
+    reader.iterator.flatMap{orgLine =>
+      // CSV fields: organisaatio_oid,osoitetyyppi,osoite,postinumero,postitoimipaikka,kieli
+      // oid, osoitetyyppi, kieli
+      try {
+        Some(((orgLine(0), orgLine(1), orgLine(5).split("_")(1).split("#")(0)), orgLine))
+      } catch {
+        case e: ArrayIndexOutOfBoundsException => None
+        case e: IndexOutOfBoundsException => None
+      }
+    }.toMap
+  }
+
+  lazy val organisations = getOrganisationInfo()
 
   def getOrganisation(oid: String): JValue = {
     val req = get(s"${orgUrl}/${oid}")

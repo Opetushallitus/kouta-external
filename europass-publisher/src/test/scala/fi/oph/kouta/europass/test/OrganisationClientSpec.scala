@@ -35,7 +35,13 @@ class OrganisationClientSpec extends ScalatraFlatSpec {
     val orgFile = TestOrganisationClient.getOrganisationCsv()
     assert(orgFile.contains("organisations"))
     val content = Source.fromFile(orgFile).mkString
-    assert(content.contains("Lahti, Ståhlberginkatu 4 A"))
+    assert(content.contains("Svinhufvudinkatu 6 F"))
+  }
+
+  it should "have correct organisations from resources" in {
+    val orgs = TestOrganisationClient.organisations
+    assert(orgs(("1.2.246.562.10.67476956288","kaynti","fi"))(0) == "1.2.246.562.10.67476956288")
+    assert(orgs(("1.2.246.562.10.594252633210","kaynti","fi"))(2) == "Volttipelto 801")
   }
 
 }

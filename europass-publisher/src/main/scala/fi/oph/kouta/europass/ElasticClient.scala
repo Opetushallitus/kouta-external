@@ -8,7 +8,11 @@ import org.asynchttpclient._
 
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
+import fi.oph.kouta.external.domain.indexed.{
+  KoulutusIndexed,
+  ToteutusIndexed,
+  OppilaitosIndexed
+}
 import java.util.concurrent.CompletableFuture
 
 abstract class Query
@@ -74,6 +78,9 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
 
   def getToteutus(oid: String): ToteutusIndexed =
     (getJson(s"toteutus-kouta/_doc/$oid") \ "_source").extract[ToteutusIndexed]
+
+  def getOppilaitos(oid: String): OppilaitosIndexed =
+    (getJson(s"oppilaitos-kouta/_doc/$oid") \ "_source").extract[OppilaitosIndexed]
 
   def toteutusSearch(after: Option[String]) : Search =
     Search(

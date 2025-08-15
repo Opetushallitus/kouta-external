@@ -19,7 +19,7 @@ import fi.oph.kouta.external.domain.indexed.{
 }
 import fi.oph.kouta.domain.{Kieli, Sv}
 
-object TestConversion extends EuropassConversion(TestOrganisationClient)
+object TestConversion extends EuropassConversion
 
 class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
 

@@ -19,7 +19,7 @@ import fi.oph.kouta.external.domain.indexed.{
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
 
-class EuropassConversion(orgClient: OrganisationClient) extends Logging {
+class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
@@ -287,4 +287,4 @@ class EuropassConversion(orgClient: OrganisationClient) extends Logging {
 
 }
 
-object EuropassConversion extends EuropassConversion(OrganisationClient)
+object EuropassConversion extends EuropassConversion

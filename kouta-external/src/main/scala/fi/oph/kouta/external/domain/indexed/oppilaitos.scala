@@ -5,6 +5,7 @@ import fi.oph.kouta.external.domain._
 
 case class OppilaitosIndexed(
   oid: OrganisaatioOid,
+  nimi: Option[Kielistetty],
   oppilaitos: Option[OppilaitosOppilaitosIndexed]
 )
 

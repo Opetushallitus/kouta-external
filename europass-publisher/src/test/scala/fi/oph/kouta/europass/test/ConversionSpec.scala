@@ -12,7 +12,11 @@ import org.json4s.jackson.JsonMethods._
 import org.json4s.jackson.Serialization.{read, write}
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
-import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
+import fi.oph.kouta.external.domain.indexed.{
+  KoulutusIndexed,
+  ToteutusIndexed,
+  OppilaitosIndexed
+}
 import fi.oph.kouta.domain.{Kieli, Sv}
 
 object TestConversion extends EuropassConversion(TestOrganisationClient)
@@ -46,6 +50,9 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[KoulutusIndexed](resource("koulutus-2032.json"))
   lazy val koulutusWithTutkintonimike =
     read[KoulutusIndexed](resource("koulutus-1293.json"))
+
+  lazy val example_oppilaitos =
+    read[OppilaitosIndexed](resource("oppilaitos-example-1.json"))
 
   "example_koulutus" should "have correct fields" in {
     assert(example_koulutus.oid.getOrElse("").toString
@@ -122,25 +129,19 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   }
 
   it should "have correct tarjoaja" in {
-    val tarjoaja: Elem =
-      TestConversion.toteutusToTarjoajaDependents(example_toteutus)
-      .map(TestConversion.tarjoajaAsElmXml)
-      .head
+    val tarjoaja: Elem = TestConversion.tarjoajaAsElmXml(example_oppilaitos)
     assert(tarjoaja \@ "id"
       == "https://rdf.oph.fi/organisaatio/1.2.246.562.10.81934895871")
     assert((tarjoaja \ "legalName")(1).text
-      == "Lärocenter Salpaus")
+      == "Koulutuskeskus Salpaus")
   }
 
   it should "have correct tarjoaja location" in {
-    val sijainti: Elem =
-      TestConversion.toteutusToTarjoajaDependents(example_toteutus)
-      .map(TestConversion.tarjoajasijaintiAsElmXml)
-      .head
+    val sijainti: Elem = TestConversion.tarjoajasijaintiAsElmXml(example_oppilaitos)
     assert(sijainti \@ "id"
       == "https://rdf.oph.fi/organisaatio-sijainti/1.2.246.562.10.81934895871")
     assert((sijainti \ "address" \ "fullAddress" \ "noteLiteral").text
-      == "Polvivaara 865, 15110  LAHTI")
+      == "Polvivaara 865, 15110 Lahti")
   }
 
   it should "have certain koulutus as its dependent" in {

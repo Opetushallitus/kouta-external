@@ -9,6 +9,7 @@ import fi.oph.kouta.external.domain.indexed.{
   ToteutusIndexed,
   OpetusIndexed,
   TutkintoNimike,
+  OppilaitosIndexed,
   Organisaatio,
   AmmatillinenKoulutusMetadataIndexed,
   KorkeakoulutusKoulutusMetadataIndexed,
@@ -129,6 +130,9 @@ class EuropassConversion(orgClient: OrganisationClient) extends Logging {
     else List()
   }
 
+  // FIXME: this should use kielistettyAsNoteLiterals, but that doesn't
+  // do much good before the issue with multilanguage noteLiterals is
+  // resolved.
   def toteutuksenAikatauluAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
     val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
     (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
@@ -235,34 +239,51 @@ class EuropassConversion(orgClient: OrganisationClient) extends Logging {
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
     toteutus.koulutusOid.map(_.toString)
 
-  def tarjoajaAsElmXml(tarjoaja: Organisaatio): Elem = {
+  def kielistettyAsNoteLiterals(content: Kielistetty): Iterable[Elem] =
+    content.keys.take(1)  // No way to express language alternatives so we just pick a random one
+      .map{lang => <noteLiteral language={lang.name}>{content(lang)}</noteLiteral>}
+
+  def tarjoajaAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
     val oid = tarjoaja.oid.toString
+    val esittely = tarjoaja.oppilaitos.flatMap(_.metadata).map(_.esittely).getOrElse(Map())
     <organisation id={organisaatioUrl(oid)}>
       {nimet.keys.map{lang =>
         <legalName language={lang.name}>{nimet(lang)}</legalName>}}
+      {
+        if (esittely.isEmpty) {
+          List()
+        } else {
+          <additionalNote>{kielistettyAsNoteLiterals(esittely)}</additionalNote>
+        }
+      }
       <location idref={sijaintiUrl(oid)}/>
     </organisation>
   }
 
-  def tarjoajasijaintiAsElmXml(tarjoaja: Organisaatio): Elem = {
+  def tarjoajasijaintiAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
     val oid = tarjoaja.oid.toString
+    val osoite = tarjoaja.oppilaitos.flatMap(_.metadata)
+      .map(_.yhteystiedot.kayntiosoiteStr).getOrElse(Map())
     <location id={sijaintiUrl(oid)}>
       {nimet.keys.map{lang =>
         <geographicName language={lang.name}>{nimet(lang)}</geographicName>}}
       <address>
-        {orgClient.getOrganisationAddress(oid).map{addr =>
-          <fullAddress><noteLiteral language="fi">{addr}</noteLiteral></fullAddress>
-        }.getOrElse(List())}
+        {
+          if (osoite.isEmpty) {
+            List()
+          } else {
+            <fullAddress>{kielistettyAsNoteLiterals(osoite)}</fullAddress>
+          }
+        }
         <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
       </address>
     </location>
   }
 
-  def toteutusToTarjoajaDependents(
-    toteutus: ToteutusIndexed
-  ): List[Organisaatio] = toteutus.tarjoajat
+  def toteutusToTarjoajaDependents(toteutus: ToteutusIndexed): Iterable[Organisaatio] =
+    toteutus.tarjoajat
 
 }
 

@@ -4,7 +4,7 @@ import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.domain.indexed.{
   ToteutusIndexed,
   KoulutusIndexed,
-  Organisaatio
+  OppilaitosIndexed
 }
 import scala.xml.Elem
 import java.io.{File, BufferedWriter, FileWriter}
@@ -89,13 +89,14 @@ class Publisher(converter: EuropassConversion) extends Logging {
 
   def tarjoajaDependentsOfToteutukset(
     toteutusStream: Stream[ToteutusIndexed]
-  ): Stream[Organisaatio] =
+  ): Stream[OppilaitosIndexed] =
     toteutusStream
     .flatMap(converter.toteutusToTarjoajaDependents)
     .toSet
     .toStream
+    .map(ElasticClient.getOppilaitosFromOrganisaatio)
 
-  def tarjoajatToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
+  def tarjoajatToFile(dest: BufferedWriter, tarjoajaStream: Stream[OppilaitosIndexed]) = {
     val organisaatioXmlStream = tarjoajaStream.map(converter.tarjoajaAsElmXml)
     dest.write("<agentReferences>\n")
     foreachWithLogging(
@@ -106,7 +107,7 @@ class Publisher(converter: EuropassConversion) extends Logging {
     dest.write("</agentReferences>\n")
   }
 
-  def tarjoajasijainnitToFile(dest: BufferedWriter, tarjoajaStream: Stream[Organisaatio]) = {
+  def tarjoajasijainnitToFile(dest: BufferedWriter, tarjoajaStream: Stream[OppilaitosIndexed]) = {
     val sijaintiStream = tarjoajaStream.map(converter.tarjoajasijaintiAsElmXml)
     dest.write("<locationReferences>\n")
     foreachWithLogging(

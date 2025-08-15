@@ -11,7 +11,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.domain.indexed.{
   KoulutusIndexed,
   ToteutusIndexed,
-  OppilaitosIndexed
+  OppilaitosIndexed,
+  Organisaatio
 }
 import java.util.concurrent.CompletableFuture
 
@@ -81,6 +82,15 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
 
   def getOppilaitos(oid: String): OppilaitosIndexed =
     (getJson(s"oppilaitos-kouta/_doc/$oid") \ "_source").extract[OppilaitosIndexed]
+
+  def getOppilaitosFromOrganisaatio(org: Organisaatio): OppilaitosIndexed =
+    try {
+      getOppilaitos(org.oid.toString)
+    } catch {
+      case e: RuntimeException =>
+        logger.warn(s"Oppilaitos ${org.oid} not found, using info from toteutus/koulutus")
+        OppilaitosIndexed(org.oid, org.nimi, None)
+    }
 
   def toteutusSearch(after: Option[String]) : Search =
     Search(

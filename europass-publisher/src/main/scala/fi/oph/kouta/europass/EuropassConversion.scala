@@ -246,7 +246,8 @@ class EuropassConversion extends Logging {
   def tarjoajaAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
     val oid = tarjoaja.oid.toString
-    val esittely = tarjoaja.oppilaitos.flatMap(_.metadata).map(_.esittely).getOrElse(Map())
+    val esittely = tarjoaja.oppilaitos.flatMap(_.metadata)
+      .flatMap(_.esittely).getOrElse(Map())
     <organisation id={organisaatioUrl(oid)}>
       {nimet.keys.map{lang =>
         <legalName language={lang.name}>{nimet(lang)}</legalName>}}
@@ -265,7 +266,7 @@ class EuropassConversion extends Logging {
     val nimet = tarjoaja.nimi.getOrElse(Map())
     val oid = tarjoaja.oid.toString
     val osoite = tarjoaja.oppilaitos.flatMap(_.metadata)
-      .map(_.yhteystiedot.kayntiosoiteStr).getOrElse(Map())
+      .flatMap(_.yhteystiedot).flatMap(_.kayntiosoiteStr).getOrElse(Map())
     <location id={sijaintiUrl(oid)}>
       {nimet.keys.map{lang =>
         <geographicName language={lang.name}>{nimet(lang)}</geographicName>}}

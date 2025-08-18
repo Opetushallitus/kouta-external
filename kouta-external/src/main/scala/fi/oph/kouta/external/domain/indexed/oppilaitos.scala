@@ -14,11 +14,11 @@ case class OppilaitosOppilaitosIndexed(
 )
 
 case class OppilaitosMetadataIndexed(
-  esittely: Kielistetty,
-  yhteystiedot: OppilaitosYhteystiedotIndexed
+  esittely: Option[Kielistetty],
+  yhteystiedot: Option[OppilaitosYhteystiedotIndexed]
 )
 
 case class OppilaitosYhteystiedotIndexed(
-  postiosoiteStr: Kielistetty,
-  kayntiosoiteStr: Kielistetty
+  postiosoiteStr: Option[Kielistetty],
+  kayntiosoiteStr: Option[Kielistetty]
 )

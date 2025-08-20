@@ -1,0 +1,1022 @@
+{
+  "organisaatiotyyppi": [
+    {
+      "koodiUri": "organisaatiotyyppi_02",
+      "nimi": {
+        "sv": "Läroanstalt",
+        "fi": "Oppilaitos"
+      }
+    }
+  ],
+  "osat": [
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Lahti, Vipusenkatu",
+        "sv": "Koulutuskeskus Salpaus, Lahti, Vipusenkatu",
+        "en": "Koulutuskeskus Salpaus, Lahti, Vipusenkatu"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.19460928302",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#2",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "teemakuva": "https://konfo-files.opintopolku.fi/oppilaitoksen-osa-teemakuva/1.2.246.562.10.19460928302/2b16fa38-6155-469a-b7f1-a01502ad729c.jpg",
+        "esikatselu": true,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.29853335725",
+          "nimi": "Jimmy Holopainen-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.19460928302",
+          "nimi": {
+            "sv": "Lahti, Vipusenkatu",
+            "fi": "Lahti, Vipusenkatu",
+            "en": "Lahti, Vipusenkatu"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_398",
+            "nimi": {
+              "sv": "Lahtis",
+              "fi": "Lahti"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Vipusenkadun kampus"
+            },
+            "url": {
+              "fi": "https://www.salpaus.fi/info/kampukset/vipusenkatu/"
+            }
+          },
+          "kampus": {},
+          "esittely": {
+            "fi": "<p>Vipusenkadun kampuksen Teknologiakampus on nykyaikainen ja innostava oppimisympäristö tekniikan alojen opiskelijoille ja työelämälle. Kampuksen toteutuksessa on otettu huomioon tekniikan alojen yhteistyön lisääminen opetuksen toteutuksessa.</p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Lahti, Vipusenkatu"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Ketunperänpolku 623"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15141",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Hyväneulankatu 770"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15230",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 2026381"
+            },
+            "sahkoposti": {
+              "fi": "hakija-28297854@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Ketunperänpolku 623, 15141 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Hyväneulankatu 770, 15230 Lahti"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Lahti, Villähde",
+        "sv": "Koulutuskeskus Salpaus, Lahti, Villähde",
+        "en": "Koulutuskeskus Salpaus, Lahti, Villähde"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.76662434703",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#2",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "esikatselu": true,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.29853335725",
+          "nimi": "Jimmy Holopainen-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.76662434703",
+          "nimi": {
+            "sv": "Lahti, Villähde",
+            "fi": "Lahti, Villähde",
+            "en": "Lahti, Villähde"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_398",
+            "nimi": {
+              "sv": "Lahtis",
+              "fi": "Lahti"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Kaarisilta Ry"
+            },
+            "url": {
+              "fi": "https://www.kaarisilta.fi/kaarisilta-ry/"
+            }
+          },
+          "kampus": {},
+          "esittely": {
+            "fi": "<p>Kaarisilta ry on vuonna 1986 perustettu valtakunnallinen yhdistys. Yhdistys on järjestänyt vuodesta 1987 lähtien toimintaa erityistä tukea tarvitseville henkilöille. Vuodesta 2003 alkaen Kaarisilta on ensimmäisenä Suomessa järjestänyt ammatillista koulutusta erityisopetuksena kuvataiteen ja musiikin aloilla.</p><p></p><p>Kaarisilta tarjoaa päiväaikaista toimintaa, musiikin ja kuvallisen ilmaisun ammatillista koulutusta ja ammatilliseen koulutukseen sekä työhön ja itsenäiseen elämään valmentavaa koulutusta erityisopetuksena. Ammatillinen koulutus järjestetään yhteistyössä Koulutuskeskus Salpauksen kanssa. Keskeisiä toimintamuotoja ovat kuvataide, käsityö, keramiikka, musiikki ja liikunta.</p><p></p><p>Kaarisillan toiminta-ajatuksen perustana ovat eettiset ja esteettiset arvot, elämän ja yksilön kunnioittaminen.</p><p></p><p>Kulttuuri- ja taidetapahtumien järjestäminen on merkittävä osa yhdistyksen toimintaa. Konsertteja, taidenäyttelyitä ja näytelmiä järjestetään kotimaassa ja ulkomailla.</p><p></p><p>Kaarisillan taide- ja toimintakeskus sijaitsee kulttuurihistoriallisessa Erstan kartanossa Villähteellä, Lahdessa. Kartanon kaunis ja viihtyisä luontoympäristö luo toiminnalle harmonisen oppimisympäristön.</p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Lahti, Villähde"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Kakadunkatu 861"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15540",
+                  "nimi": "VILLÄHDE"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Käpälämäki 281"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15540",
+                  "nimi": "VILLÄHDE"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 82489251"
+            },
+            "sahkoposti": {
+              "fi": "hakija-49280018@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.kaarisilta.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Kakadunkatu 861, 15540 Villähde"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Käpälämäki 281, 15540 Villähde"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Lahti, keskustakampus",
+        "sv": "Koulutuskeskus Salpaus, Lahti, keskustakampus",
+        "en": "Koulutuskeskus Salpaus, Lahti, keskustakampus"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.43328767116",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "esikatselu": true,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.29853335725",
+          "nimi": "Jimmy Holopainen-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.43328767116",
+          "nimi": {
+            "sv": "Lahti, keskustakampus",
+            "fi": "Lahti, keskustakampus",
+            "en": "Lahti, keskustakampus"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_398",
+            "nimi": {
+              "sv": "Lahtis",
+              "fi": "Lahti"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Lahden keskustakampus"
+            },
+            "url": {
+              "fi": "https://www.salpaus.fi/info/kampukset/lahti/"
+            }
+          },
+          "kampus": {
+            "fi": ""
+          },
+          "esittely": {
+            "fi": "<p>Lahden keskustakampuksen palvelut/ tiedot näet parhaiten <a href=\"https://www.salpaus.fi/info/kampukset/lahti/\" rel=\"noopener noreferrer\" target=\"_blank\">Salpauksen nettisivuilta</a>.</p><p></p><p></p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Lahti, keskustakampus"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Risteysaukio 99"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15141",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Muhkuripolku 925"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15110",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 55661661"
+            },
+            "sahkoposti": {
+              "fi": "hakija-23747922@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Risteysaukio 99, 15141 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Muhkuripolku 925, 15110 Lahti"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Lahti, Svinhufvudinkatu",
+        "sv": "Koulutuskeskus Salpaus, Lahti, Svinhufvudinkatu",
+        "en": "Koulutuskeskus Salpaus, Lahti, Svinhufvudinkatu"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.60871080721",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "tallennettu",
+        "esikatselu": false,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.29853335725",
+          "nimi": "Jimmy Holopainen-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.60871080721",
+          "nimi": {
+            "sv": "Lahti, Svinhufvudinkatu",
+            "fi": "Lahti, Svinhufvudinkatu",
+            "en": "Lahti, Svinhufvudinkatu"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_398",
+            "nimi": {
+              "sv": "Lahtis",
+              "fi": "Lahti"
+            }
+          }
+        },
+        "metadata": {
+          "kampus": {},
+          "esittely": {},
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Lahti, Svinhufvudinkatu"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Hankalankuja 641"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15110",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Risteysaukio 606"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15110",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 19363611"
+            },
+            "sahkoposti": {
+              "fi": "hakija-5439198@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Hankalankuja 641, 15110 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Risteysaukio 606, 15110 Lahti"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Heinola",
+        "sv": "Koulutuskeskus Salpaus, Heinola",
+        "en": "Koulutuskeskus Salpaus, Heinola"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.94620157316",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_111",
+        "nimi": {
+          "sv": "Heinola",
+          "fi": "Heinola"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "esikatselu": false,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.22838481989",
+          "nimi": "Matleena Tuomela-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.94620157316",
+          "nimi": {
+            "fi": "Heinola",
+            "sv": "Heinola",
+            "en": "Heinola"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_111",
+            "nimi": {
+              "sv": "Heinola",
+              "fi": "Heinola"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Heinolan kampus"
+            },
+            "url": {
+              "fi": "https://www.salpaus.fi/info/kampukset/heinola/"
+            }
+          },
+          "kampus": {},
+          "esittely": {
+            "fi": "<p>Heinolassa on moderni ja dynaaminen monialainen ammatillisen koulutuksen kampus, jossa voit opiskella ammattiin usealla eri alalla:</p><ul><li>auto- ja logistiikka-ala, kauppa ja hallinto, kone- ja tuotantotekniikka, media-ala, rakennusala, ravintola- ja catering-ala, sähköala ja turvallisuusala</li><li>lisäksi voit hakea tutkintokoulutukseen valmentavaan koulutukseen (TUVA, jota järjestetään myös Heinolassa.</li></ul><p>Heinolan kampuksella opiskellessasi voit tehdä yhdistelmätutkinnon yhteistyössä Heinolan lukion kanssa.</p><p></p><p>Kampuksella 11 000 m2 nykyaikaisia ja moderneja tiloja - kaikki palvelut saman katon alla.</p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Heinola"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Kumiakatu 964"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15141",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Ketunperänpolku 915"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_18200",
+                  "nimi": "HEINOLA"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 74750081"
+            },
+            "sahkoposti": {
+              "fi": "hakija-9774765@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Kumiakatu 964, 15141 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Ketunperänpolku 915, 18200 Heinola"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Lahti, Jokimaa",
+        "sv": "Koulutuskeskus Salpaus, Lahti, Jokimaa",
+        "en": "Koulutuskeskus Salpaus, Lahti, Jokimaa"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.67603619189",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "teemakuva": "https://konfo-files.opintopolku.fi/oppilaitoksen-osa-teemakuva/1.2.246.562.10.67603619189/371b359b-4d89-4f87-8106-6b1d4513113b.jpg",
+        "esikatselu": true,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.80402455118",
+          "nimi": "Anonymisoitu Virkailija"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.67603619189",
+          "nimi": {
+            "sv": "Lahti, Jokimaa",
+            "fi": "Lahti, Jokimaa",
+            "en": "Lahti, Jokimaa"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_398",
+            "nimi": {
+              "sv": "Lahtis",
+              "fi": "Lahti"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Jokimaa, Lahti"
+            },
+            "url": {
+              "fi": "https://www.salpaus.fi/info/kampukset/jokimaa/"
+            }
+          },
+          "kampus": {},
+          "esittely": {
+            "fi": "<p>Koulutuskeskus Salpauksen hevosalan opetus ja ratsu- ja ravitallit sekä maneesi sijaitsevat Lahden Jokimaalla. Opettajien rautainen ammattitaito ja nykyaikaiset tilat antavat opiskelulle hyvän pohjan.</p><p>Teemme yhteistyötä Jokimaan ravikeskuksen sekä alueen ammattitaitoisten hevosyrittäjien kanssa. Tämä mahdollistaa monipuolisen ja laadukkaan opetuksen Salpauksen hevosalan opiskelijoille.</p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": false,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Lahti, Jokimaa"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Junttilantie 890"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15141",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Onpahanvaanlammensammal 722"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15700",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 42858051"
+            },
+            "sahkoposti": {
+              "fi": "hakija-42213630@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Junttilantie 890, 15141 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Onpahanvaanlammensammal 722, 15700 Lahti"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    },
+    {
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus, Asikkala",
+        "sv": "Koulutuskeskus Salpaus, Asikkala",
+        "en": "Koulutuskeskus Salpaus, Asikkala"
+      },
+      "status": "AKTIIVINEN",
+      "oid": "1.2.246.562.10.74534804344",
+      "opetuskieli": [
+        {
+          "koodiUri": "oppilaitoksenopetuskieli_1#1",
+          "nimi": {
+            "sv": "finska",
+            "fi": "suomi",
+            "en": "Finnish"
+          }
+        }
+      ],
+      "kotipaikka": {
+        "koodiUri": "kunta_016",
+        "nimi": {
+          "fi": "Asikkala",
+          "sv": "Asikkala"
+        }
+      },
+      "organisaatiotyyppi": [
+        {
+          "koodiUri": "organisaatiotyyppi_03",
+          "nimi": {
+            "sv": "Verksamhetsställe",
+            "fi": "Toimipiste"
+          }
+        }
+      ],
+      "oppilaitoksenOsa": {
+        "tila": "julkaistu",
+        "teemakuva": "https://konfo-files.opintopolku.fi/oppilaitoksen-osa-teemakuva/1.2.246.562.10.74534804344/15a0f0b8-c64c-4115-8ab2-89f37569b12e.jpg",
+        "esikatselu": true,
+        "modified": "2022-01-20T16:42:30",
+        "muokkaaja": {
+          "oid": "1.2.246.562.24.22838481989",
+          "nimi": "Matleena Tuomela-Testi"
+        },
+        "status": "AKTIIVINEN",
+        "kielivalinta": [
+          "fi"
+        ],
+        "organisaatio": {
+          "oid": "1.2.246.562.10.74534804344",
+          "nimi": {
+            "sv": "Asikkala",
+            "fi": "Asikkala",
+            "en": "Asikkala"
+          },
+          "paikkakunta": {
+            "koodiUri": "kunta_016",
+            "nimi": {
+              "fi": "Asikkala",
+              "sv": "Asikkala"
+            }
+          }
+        },
+        "metadata": {
+          "wwwSivu": {
+            "nimi": {
+              "fi": "Asikkalan kampus"
+            },
+            "url": {
+              "fi": "https://www.salpaus.fi/info/kampukset/asikkala/"
+            }
+          },
+          "kampus": {},
+          "esittely": {
+            "fi": "<p>Koulutuskeskus Salpaus on monialainen oppilaitos, jonka luonnonvara-alan toimipiste sijaitsee Päijänteen rannalla Asikkalassa, noin 30 kilometriä Lahdesta ja noin 145 kilometriä Jyväskylästä.</p>"
+          },
+          "jarjestaaUrheilijanAmmKoulutusta": true,
+          "yhteystiedot": {
+            "nimi": {
+              "fi": "Koulutuskeskus Salpaus, Asikkala"
+            },
+            "postiosoite": {
+              "osoite": {
+                "fi": "Sveitsinpyhtää 339"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_15141",
+                  "nimi": "LAHTI"
+                }
+              }
+            },
+            "kayntiosoite": {
+              "osoite": {
+                "fi": "Punkkapolku 714"
+              },
+              "postinumero": {
+                "fi": {
+                  "koodiUri": "posti_17320",
+                  "nimi": "ASIKKALA"
+                }
+              }
+            },
+            "puhelinnumero": {
+              "fi": "050 83080741"
+            },
+            "sahkoposti": {
+              "fi": "hakija-24481351@oph.fi"
+            },
+            "www": {
+              "fi": "http://www.salpaus.fi"
+            },
+            "postiosoiteStr": {
+              "fi": "Sveitsinpyhtää 339, 15141 Lahti"
+            },
+            "kayntiosoiteStr": {
+              "fi": "Punkkapolku 714, 17320 Asikkala"
+            }
+          },
+          "hakijapalveluidenYhteystiedot": null
+        }
+      }
+    }
+  ],
+  "oppilaitos": {
+    "tila": "julkaistu",
+    "teemakuva": "https://konfo-files.opintopolku.fi/oppilaitos-teemakuva/1.2.246.562.10.81934895871/7a5ee262-4f2b-4ea4-bd0e-7c17ec5b3384.jpg",
+    "logo": "https://konfo-files.opintopolku.fi/oppilaitos-logo/1.2.246.562.10.81934895871/8389cfa1-b193-4160-9f3a-24ef450b791f.png",
+    "esikatselu": true,
+    "modified": "2024-06-05T16:16:33",
+    "muokkaaja": {
+      "oid": "1.2.246.562.24.80402455118",
+      "nimi": "Anonymisoitu Virkailija"
+    },
+    "kielivalinta": [
+      "fi"
+    ],
+    "organisaatio": {
+      "oid": "1.2.246.562.10.81934895871",
+      "nimi": {
+        "fi": "Koulutuskeskus Salpaus",
+        "sv": "Koulutuskeskus Salpaus",
+        "en": "Koulutuskeskus Salpaus"
+      },
+      "paikkakunta": {
+        "koodiUri": "kunta_398",
+        "nimi": {
+          "sv": "Lahtis",
+          "fi": "Lahti"
+        }
+      }
+    },
+    "metadata": {
+      "tietoaOpiskelusta": [],
+      "wwwSivu": {
+        "nimi": {
+          "fi": "Koulutuskeskus Salpaus - Ole hyvä."
+        },
+        "url": {
+          "fi": "http://www.salpaus.fi"
+        }
+      },
+      "some": {},
+      "hakijapalveluidenYhteystiedot": {
+        "nimi": {
+          "fi": "Hakutoimisto"
+        },
+        "postiosoite": {
+          "osoite": {
+            "fi": "Opiskelijavalinta PL 170"
+          },
+          "postinumero": {
+            "fi": {
+              "koodiUri": "posti_15141#2",
+              "nimi": "LAHTI"
+            }
+          }
+        },
+        "kayntiosoite": {
+          "osoite": {
+            "fi": "Svinhufvudinkatu 10"
+          },
+          "postinumero": {
+            "fi": {
+              "koodiUri": "posti_15110#2",
+              "nimi": "LAHTI"
+            }
+          }
+        },
+        "puhelinnumero": {
+          "fi": "044 708 1886"
+        },
+        "sahkoposti": {
+          "fi": "hakutoimisto@salpaus.fi"
+        },
+        "www": {},
+        "postiosoiteStr": {
+          "fi": "Opiskelijavalinta PL 170, 15141 Lahti"
+        },
+        "kayntiosoiteStr": {
+          "fi": "Svinhufvudinkatu 10, 15110 Lahti"
+        }
+      },
+      "esittely": {
+        "fi": "<p>Koulutuskeskus Salpaus on monipuolinen, nuoria ja aikuisia opiskelijoita sekä työelämää palveleva toisen asteen oppilaitos. Salpauksessa voi suorittaa ammatillisia perus-, ammatti- ja erikoisammattitutkintoja.</p><p></p><p>Salpaus toimii Päijät-Hämeen alueella kolmella paikkakunnalla, Lahdessa, Asikkalassa ja Heinolassa viidellä kampuksella. </p><p></p><p>Opettajia ja muuta henkilöstöä on noin 640.</p>"
+      },
+      "kampuksia": 5,
+      "jarjestaaUrheilijanAmmKoulutusta": true,
+      "yhteystiedot": {
+        "nimi": {
+          "fi": "Koulutuskeskus Salpaus"
+        },
+        "postiosoite": {
+          "osoite": {
+            "fi": "Maailmannavanaukio 863"
+          },
+          "postinumero": {
+            "fi": {
+              "koodiUri": "posti_15110",
+              "nimi": "LAHTI"
+            }
+          }
+        },
+        "kayntiosoite": {
+          "osoite": {
+            "fi": "Polvivaara 865"
+          },
+          "postinumero": {
+            "fi": {
+              "koodiUri": "posti_15110",
+              "nimi": "LAHTI"
+            }
+          }
+        },
+        "puhelinnumero": {
+          "fi": "050 14960821"
+        },
+        "sahkoposti": {
+          "fi": "hakija-9307006@oph.fi"
+        },
+        "www": {
+          "fi": "http://www.salpaus.fi"
+        },
+        "postiosoiteStr": {
+          "fi": "Maailmannavanaukio 863, 15110 Lahti"
+        },
+        "kayntiosoiteStr": {
+          "fi": "Polvivaara 865, 15110 Lahti"
+        }
+      }
+    }
+  },
+  "nimi": {
+    "fi": "Koulutuskeskus Salpaus",
+    "sv": "Koulutuskeskus Salpaus",
+    "en": "Koulutuskeskus Salpaus"
+  },
+  "oid": "1.2.246.562.10.81934895871",
+  "oppilaitostyyppi": {
+    "koodiUri": "oppilaitostyyppi_21",
+    "nimi": {
+      "en": "Vocational institutions",
+      "sv": "Yrkesläroanstalter",
+      "fi": "Ammatilliset oppilaitokset"
+    }
+  },
+  "status": "AKTIIVINEN",
+  "koulutusohjelmatLkm": {
+    "kaikki": 347,
+    "tutkintoonJohtavat": 190,
+    "eiTutkintoonJohtavat": 157
+  },
+  "timestamp": 1754946098618,
+  "jarjestaaUrheilijanAmmKoulutusta": true,
+  "opetuskieli": [
+    {
+      "koodiUri": "oppilaitoksenopetuskieli_1#1",
+      "nimi": {
+        "sv": "finska",
+        "fi": "suomi",
+        "en": "Finnish"
+      }
+    }
+  ],
+  "kotipaikka": {
+    "koodiUri": "kunta_398",
+    "nimi": {
+      "sv": "Lahtis",
+      "fi": "Lahti"
+    }
+  }
+}

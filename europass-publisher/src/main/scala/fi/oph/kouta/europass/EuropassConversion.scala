@@ -9,6 +9,7 @@ import fi.oph.kouta.external.domain.indexed.{
   ToteutusIndexed,
   OpetusIndexed,
   TutkintoNimike,
+  OppilaitosIndexed,
   Organisaatio,
   AmmatillinenKoulutusMetadataIndexed,
   KorkeakoulutusKoulutusMetadataIndexed,
@@ -18,7 +19,7 @@ import fi.oph.kouta.external.domain.indexed.{
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
 
-object EuropassConversion extends Logging {
+class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
@@ -41,6 +42,9 @@ object EuropassConversion extends Logging {
 
   def organisaatioUrl(oid: String): String =
     "https://rdf.oph.fi/organisaatio/" ++ oid
+
+  def sijaintiUrl(oid: String): String =
+    "https://rdf.oph.fi/organisaatio-sijainti/" ++ oid
 
   def koulutusUrl(oid: String): String =
     "https://rdf.oph.fi/koulutus/" ++ oid
@@ -126,6 +130,9 @@ object EuropassConversion extends Logging {
     else List()
   }
 
+  // FIXME: this should use kielistettyAsNoteLiterals, but that doesn't
+  // do much good before the issue with multilanguage noteLiterals is
+  // resolved.
   def toteutuksenAikatauluAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] = {
     val opetus: Option[OpetusIndexed] = toteutus.metadata.flatMap(_.opetus)
     (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
@@ -232,17 +239,53 @@ object EuropassConversion extends Logging {
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
     toteutus.koulutusOid.map(_.toString)
 
-  def tarjoajaAsElmXml(tarjoaja: Organisaatio): Elem = {
+  def kielistettyAsNoteLiterals(content: Kielistetty): Iterable[Elem] =
+    content.keys.take(1)  // No way to express language alternatives so we just pick a random one
+      .map{lang => <noteLiteral language={lang.name}>{content(lang)}</noteLiteral>}
+
+  def tarjoajaAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
-    <organisation id={organisaatioUrl(tarjoaja.oid.toString)}>
+    val oid = tarjoaja.oid.toString
+    val esittely = tarjoaja.oppilaitos.flatMap(_.metadata)
+      .flatMap(_.esittely).getOrElse(Map())
+    <organisation id={organisaatioUrl(oid)}>
       {nimet.keys.map{lang =>
         <legalName language={lang.name}>{nimet(lang)}</legalName>}}
-      <location idref="http://rdf.oph.fi/sijainti/suomi"/>
+      {
+        if (esittely.isEmpty) {
+          List()
+        } else {
+          <additionalNote>{kielistettyAsNoteLiterals(esittely)}</additionalNote>
+        }
+      }
+      <location idref={sijaintiUrl(oid)}/>
     </organisation>
   }
 
-  def toteutusToTarjoajaDependents(
-    toteutus: ToteutusIndexed
-  ): List[Organisaatio] = toteutus.tarjoajat
+  def tarjoajasijaintiAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
+    val nimet = tarjoaja.nimi.getOrElse(Map())
+    val oid = tarjoaja.oid.toString
+    val osoite = tarjoaja.oppilaitos.flatMap(_.metadata)
+      .flatMap(_.yhteystiedot).flatMap(_.kayntiosoiteStr).getOrElse(Map())
+    <location id={sijaintiUrl(oid)}>
+      {nimet.keys.map{lang =>
+        <geographicName language={lang.name}>{nimet(lang)}</geographicName>}}
+      <address>
+        {
+          if (osoite.isEmpty) {
+            List()
+          } else {
+            <fullAddress>{kielistettyAsNoteLiterals(osoite)}</fullAddress>
+          }
+        }
+        <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
+      </address>
+    </location>
+  }
+
+  def toteutusToTarjoajaDependents(toteutus: ToteutusIndexed): Iterable[Organisaatio] =
+    toteutus.tarjoajat
 
 }
+
+object EuropassConversion extends EuropassConversion

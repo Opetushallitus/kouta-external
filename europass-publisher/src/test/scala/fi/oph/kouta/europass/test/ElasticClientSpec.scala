@@ -7,6 +7,7 @@ import scala.io.Source
 
 import fi.oph.kouta.europass.ElasticClient
 import fi.oph.kouta.external.domain.indexed.ToteutusIndexed
+import fi.oph.kouta.domain.{Fi, En}
 
 object TestElasticClient extends ElasticClient {
   var elasticCallCount = 0;
@@ -42,6 +43,13 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
     val kou = ElasticClient.getKoulutus("1.2.246.562.13.00000000000000000006")
     assert(kou.koulutukset(0).koodiUri == "koulutus_371101#1")
     assert(kou.tila.name == "julkaistu")
+  }
+
+  "example oppilaitos" should "be loadable" in {
+    val opp = ElasticClient.getOppilaitos("1.2.246.562.10.67476956288")
+    assert(opp.oid.toString == "1.2.246.562.10.67476956288")
+    assert(opp.oppilaitos.flatMap(_.metadata).flatMap(_.yhteystiedot).flatMap(_.postiosoiteStr)
+      == Some(Map(Fi -> "Kalmankaltionkuja 32, 00079 Metropolia", En -> "Kalmankaltionkuja 560")))
   }
 
   "intoToteutusIndexedIfPossible" should "cope with MappingErrors" in {

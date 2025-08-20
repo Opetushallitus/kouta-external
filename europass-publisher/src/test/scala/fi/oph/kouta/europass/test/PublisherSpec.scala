@@ -13,6 +13,8 @@ import fi.oph.kouta.external.domain.indexed.KoulutusIndexed
 import fi.oph.kouta.europass.{Publisher, ElasticClient, ElmValidation}
 import fi.oph.kouta.domain.Amm
 
+object TestPublisher extends Publisher(TestConversion)
+
 class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonFormats {
 
   def resource(filename: String) = Source.fromResource(filename).bufferedReader
@@ -20,7 +22,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
   "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
-    Publisher.toteutusToFile("1.2.246.562.17.00000000000000000001", bwriter)
+    TestPublisher.toteutusToFile("1.2.246.562.17.00000000000000000001", bwriter)
     bwriter.close()
     assert(writer.toString.contains("<contentUrl>https://opintopolku.fi/konfo/sv/toteutus/1.2.246.562.17.00000000000000000001</contentUrl>"))
     assert(writer.toString.contains("<providedBy idref=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.594252633210\"/>"))
@@ -35,7 +37,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
   "toteutuksetToFile" should "have toteutukset" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
-    Publisher.toteutuksetToFile(bwriter, ElasticClient.listPublished(None))
+    TestPublisher.toteutuksetToFile(bwriter, ElasticClient.listPublished(None))
     bwriter.close()
     val content = writer.toString
     assert(content.contains(
@@ -53,7 +55,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
       read[KoulutusIndexed](resource("koulutus-8162.json"))
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
-    Publisher.tuloksetToFile(bwriter,
+    TestPublisher.tuloksetToFile(bwriter,
       Stream(koulutusWithTutkintonimike, koulutusWithoutKoulutusKoodi))
     bwriter.close()
     assert(writer.toString.contains(
@@ -67,7 +69,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
   "koulutustarjontaToFile" should "have all kinds of objects" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
-    Publisher.koulutustarjontaToFile(bwriter)
+    TestPublisher.koulutustarjontaToFile(bwriter)
     bwriter.close()
     val content = writer.toString
     assert(content.contains(
@@ -87,12 +89,15 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
       "<legalName language=\"fi\">Koulutuskeskus Salpaus</legalName>"
     ))
     assert(content.contains(
-      "<geographicName language=\"sv\">Finland</geographicName>"
+      "<geographicName language=\"sv\">Koulutuskeskus Salpaus -kuntayhtymä sv</geographicName>"
+    ))
+    assert(content.contains(
+      "<noteLiteral language=\"fi\">Polvivaara 865, 15110 Lahti</noteLiteral>"
     ))
   }
 
   "koulutustarjontaAsFile" should "return valid XML file" in {
-    val fileName = Publisher.koulutustarjontaAsFile()
+    val fileName = TestPublisher.koulutustarjontaAsFile()
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<title language=\"sv\">nimi sv</title>"))
@@ -101,7 +106,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {
     val toteutukset = ElasticClient.listPublished(None)
-    val koulutukset = Publisher.koulutusDependentsOfToteutukset(toteutukset)
+    val koulutukset = TestPublisher.koulutusDependentsOfToteutukset(toteutukset)
     assert(koulutukset.length == 1)  // both toteutukset in example data have same koulutus
     assert(koulutukset(0).oid.map(_.toString) == Some("1.2.246.562.13.00000000000000000001"))
     assert(koulutukset(0).koulutustyyppi == Amm)

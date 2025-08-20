@@ -11,6 +11,10 @@ import java.util.UUID
 
 case class Muokkaaja(oid: UserOid)
 
+// This overlaps with OppilaitosIndexed, but is it the same?
+// OppilaitosIndexed comes from oppilaitos-kouta index while this is
+// part of KoulutusIndexed, ToteutusIndexed, HakuIndexed,
+// HakukohdeIndexed etc.
 case class Organisaatio(
   oid: OrganisaatioOid,
   nimi: Option[Kielistetty] = None

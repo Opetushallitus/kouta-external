@@ -8,7 +8,12 @@ import org.asynchttpclient._
 
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, ToteutusIndexed}
+import fi.oph.kouta.external.domain.indexed.{
+  KoulutusIndexed,
+  ToteutusIndexed,
+  OppilaitosIndexed,
+  Organisaatio
+}
 import java.util.concurrent.CompletableFuture
 
 abstract class Query
@@ -35,6 +40,9 @@ case class Search(
   search_after: Option[List[String]]
 )
 
+class NoSuchDocumentException(msg: String) extends RuntimeException(msg)
+class ElasticQueryException(msg: String) extends RuntimeException(msg)
+
 trait ElasticClient extends Logging with KoutaJsonFormats {
 
   lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
@@ -51,7 +59,8 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
       case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
+      case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content at $urlSuffix")
+      case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
     }
   }
 
@@ -64,7 +73,8 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
       case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix with "
+      case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content for $body at $urlSuffix")
+      case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix with "
         ++ s"body $body failed: ${r.getResponseBody()}")
     }
   }
@@ -74,6 +84,18 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
 
   def getToteutus(oid: String): ToteutusIndexed =
     (getJson(s"toteutus-kouta/_doc/$oid") \ "_source").extract[ToteutusIndexed]
+
+  def getOppilaitos(oid: String): OppilaitosIndexed =
+    (getJson(s"oppilaitos-kouta/_doc/$oid") \ "_source").extract[OppilaitosIndexed]
+
+  def getOppilaitosFromOrganisaatio(org: Organisaatio): OppilaitosIndexed =
+    try {
+      getOppilaitos(org.oid.toString)
+    } catch {
+      case e: NoSuchDocumentException =>
+        logger.warn(s"Oppilaitos ${org.oid} not found, using info from toteutus/koulutus")
+        OppilaitosIndexed(org.oid, org.nimi, None)
+    }
 
   def toteutusSearch(after: Option[String]) : Search =
     Search(

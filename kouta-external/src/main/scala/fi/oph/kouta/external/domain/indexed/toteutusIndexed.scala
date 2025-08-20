@@ -136,6 +136,7 @@ trait TutkintoonJohtamatonToteutusMetadataIndexed extends ToteutusMetadataIndexe
   val hakuaika: Option[Ajanjakso]
   val aloituspaikat: Option[Int]
   val aloituspaikkakuvaus: Kielistetty
+  val isPieniOsaamiskokonaisuus: Boolean
 }
 
 case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
@@ -156,7 +157,8 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   def toToteutusMetadata: AmmatillinenTutkinnonOsaToteutusMetadata =
     AmmatillinenTutkinnonOsaToteutusMetadata(
@@ -177,7 +179,8 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
 }
 
@@ -199,7 +202,8 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   def toToteutusMetadata: AmmatillinenOsaamisalaToteutusMetadata =
     AmmatillinenOsaamisalaToteutusMetadata(
@@ -220,7 +224,8 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
 }
 
@@ -242,7 +247,8 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   def toToteutusMetadata: AmmatillinenMuuToteutusMetadata =
     AmmatillinenMuuToteutusMetadata(
@@ -263,7 +269,8 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
 }
 
@@ -533,6 +540,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false,
     liitetytOsaamismerkit: Seq[KoulutusOid] = Seq()
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: VapaaSivistystyoMuuToteutusMetadata = {
@@ -555,6 +563,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus,
       liitetytOsaamismerkit = liitetytOsaamismerkit
     )
   }
@@ -579,6 +588,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false,
     suoritetaanNayttona: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: VapaaSivistystyoOsaamismerkkiToteutusMetadata = {
@@ -601,6 +611,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus,
       suoritetaanNayttona = suoritetaanNayttona
     )
   }
@@ -624,7 +635,8 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: AikuistenPerusopetusToteutusMetadata = {
     AikuistenPerusopetusToteutusMetadata(
@@ -670,7 +682,8 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     opinnonTyyppi: Option[KoodiUri] = None,
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: KkOpintojaksoToteutusMetadata = {
     KkOpintojaksoToteutusMetadata(
@@ -694,7 +707,8 @@ case class KkOpintojaksoToteutusMetadataIndexed(
       opinnonTyyppiKoodiUri = opinnonTyyppi.map(_.koodiUri),
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
   }
 }
@@ -749,6 +763,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
     isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false,
     liitetytOpintojaksot: Seq[ToteutusOid] = Seq()
 ) extends ToteutusMetadataIndexed {
   override def toToteutusMetadata: KkOpintokokonaisuusToteutusMetadata = {
@@ -776,6 +791,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
       isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus,
       liitetytOpintojaksot = liitetytOpintojaksot
     )
   }
@@ -799,7 +815,8 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: ErikoistumiskoulutusToteutusMetadata = {
     ErikoistumiskoulutusToteutusMetadata(
@@ -820,7 +837,8 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
   }
 }
@@ -847,7 +865,8 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: TaiteenPerusopetusToteutusMetadata =
     TaiteenPerusopetusToteutusMetadata(
@@ -898,7 +917,8 @@ case class MuuToteutusMetadataIndexed(
     aloituspaikkakuvaus: Kielistetty = Map(),
     hasJotpaRahoitus: Option[Boolean] = None,
     isTaydennyskoulutus: Boolean = false,
-    isTyovoimakoulutus: Boolean = false
+    isTyovoimakoulutus: Boolean = false,
+    isPieniOsaamiskokonaisuus: Boolean = false
 ) extends TutkintoonJohtamatonToteutusMetadataIndexed {
   override def toToteutusMetadata: MuuToteutusMetadata =
     MuuToteutusMetadata(
@@ -922,6 +942,7 @@ case class MuuToteutusMetadataIndexed(
       aloituspaikkakuvaus = aloituspaikkakuvaus,
       hasJotpaRahoitus = hasJotpaRahoitus,
       isTaydennyskoulutus = isTaydennyskoulutus,
-      isTyovoimakoulutus = isTyovoimakoulutus
+      isTyovoimakoulutus = isTyovoimakoulutus,
+      isPieniOsaamiskokonaisuus = isPieniOsaamiskokonaisuus
     )
 }

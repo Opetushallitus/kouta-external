@@ -73,4 +73,4 @@ tools/*.json
 embedded-jetty-vars.yml
 kouta-temp-db/
 
-src/test/resources/dev-vars.yml
+kouta-external/src/test/resources/dev-vars.yml

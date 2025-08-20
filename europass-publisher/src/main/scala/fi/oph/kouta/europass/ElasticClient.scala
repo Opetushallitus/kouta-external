@@ -40,6 +40,9 @@ case class Search(
   search_after: Option[List[String]]
 )
 
+class NoSuchDocumentException(msg: String) extends RuntimeException(msg)
+class ElasticQueryException(msg: String) extends RuntimeException(msg)
+
 trait ElasticClient extends Logging with KoutaJsonFormats {
 
   lazy val elasticUrl = EuropassConfiguration.config.getString("europass-publisher.elasticsearch.url")
@@ -56,7 +59,8 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
       case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
+      case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content at $urlSuffix")
+      case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
     }
   }
 
@@ -69,7 +73,8 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
       case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
-      case r => throw new RuntimeException(s"Elasticsearch query $urlSuffix with "
+      case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content for $body at $urlSuffix")
+      case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix with "
         ++ s"body $body failed: ${r.getResponseBody()}")
     }
   }
@@ -87,7 +92,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     try {
       getOppilaitos(org.oid.toString)
     } catch {
-      case e: RuntimeException =>
+      case e: NoSuchDocumentException =>
         logger.warn(s"Oppilaitos ${org.oid} not found, using info from toteutus/koulutus")
         OppilaitosIndexed(org.oid, org.nimi, None)
     }

@@ -101,6 +101,16 @@
 	<dependency>
 	    <groupId>org.slf4j</groupId>
 	    <artifactId>slf4j-log4j12</artifactId>
+	    <exclusions>
+		    <exclusion>
+			    <groupId>log4j</groupId>
+			    <artifactId>log4j</artifactId>
+		    </exclusion>
+	    </exclusions>
+	</dependency>
+	<dependency>
+		<groupId>ch.qos.reload4j</groupId>
+		<artifactId>reload4j</artifactId>
 	</dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

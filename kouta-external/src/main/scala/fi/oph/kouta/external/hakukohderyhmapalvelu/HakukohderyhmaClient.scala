@@ -9,7 +9,6 @@ import fi.oph.kouta.logging.Logging
 import org.http4s.client.Client
 import org.http4s.client.blaze.{BlazeClientConfig, SimpleHttp1Client}
 import org.http4s.{Headers, Method}
-import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods.parse
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -19,8 +18,6 @@ import scala.concurrent.duration.{Duration, SECONDS}
 object HakukohderyhmaClient
 
 class HakukohderyhmaClient extends CasKoutaClient with CallerId with KoutaJsonFormats with Logging {
-
-  private implicit val formats = DefaultFormats
 
   private def params = {
     val config = KoutaConfigurationFactory.configuration.clientConfiguration

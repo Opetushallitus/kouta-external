@@ -161,9 +161,14 @@
             <!-- Cas related dependencies -->
             <dependency>
                 <groupId>fi.vm.sade</groupId>
-                <artifactId>scala-cas_2.12</artifactId>
+		<artifactId>scala-cas_2.12</artifactId>  <!-- todo remove this -->
                 <version>${scala-cas.version}</version>
             </dependency>
+	    <dependency>
+		    <groupId>fi.vm.sade.java-utils</groupId>
+		    <artifactId>java-cas</artifactId>
+		    <version>1.2.3-SNAPSHOT</version>
+	    </dependency>
             <dependency>
                 <groupId>org.http4s</groupId>
                 <artifactId>http4s-json4s-jackson_2.12</artifactId>

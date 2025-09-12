@@ -2,80 +2,78 @@ package fi.oph.kouta.external.hakukohderyhmapalvelu
 
 import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
 import fi.oph.kouta.external.KoutaConfigurationFactory
-import fi.oph.kouta.external.kouta.{CallerId, CasKoutaClient, KoutaClient}
+import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
 import fi.oph.kouta.logging.Logging
-import org.http4s.client.Client
-import org.http4s.client.blaze.{BlazeClientConfig, SimpleHttp1Client}
-import org.http4s.{Headers, Method}
+import fi.vm.sade.properties.OphProperties
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
+import org.asynchttpclient.RequestBuilder
 import org.json4s.jackson.JsonMethods.parse
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.Future
+
 import scala.concurrent.duration.{Duration, SECONDS}
 
 object HakukohderyhmaClient
 
-class HakukohderyhmaClient extends CasKoutaClient with CallerId with KoutaJsonFormats with Logging {
+class HakukohderyhmaClient extends KoutaJsonFormats with CallerId with Logging {
 
-  private def params = {
-    val config = KoutaConfigurationFactory.configuration.clientConfiguration
+  def config = KoutaConfigurationFactory.configuration
+  def urlProperties: OphProperties = config.urlProperties
 
-    CasParams(
+  private val casConfig: CasConfig =
+    new CasConfig.CasConfigBuilder(
+      config.clientConfiguration.username,
+      config.clientConfiguration.password,
+      config.securityConfiguration.casUrl,
       urlProperties.url("hakukohderyhmapalvelu.service"),
-      "auth/cas",
-      config.username,
-      config.password
-    )
-  }
+      callerId,
+      callerId,
+      "auth/cas"
+    ).setJsessionName("ring-session").build()
 
-  private def blazeClientConfig: BlazeClientConfig = BlazeClientConfig.defaultConfig.copy(
-    responseHeaderTimeout = Duration(120, SECONDS),
-    idleTimeout = Duration(120, SECONDS),
-    requestTimeout = Duration(120, SECONDS)
-  )
+  protected lazy val client: CasClient = CasClientBuilder.build(casConfig)
 
-  override lazy protected val client: Client = {
-    CasAuthenticatingClient(
-      new CasClient(
-        KoutaConfigurationFactory.configuration.securityConfiguration.casUrl,
-        SimpleHttp1Client(blazeClientConfig),
-        callerId
-      ),
-      casParams = params,
-      serviceClient = SimpleHttp1Client(blazeClientConfig),
-      clientCallerId = callerId,
-      sessionCookieName = "ring-session"
-    )
+  def getHakukohderyhmatWithoutRetry(oid: HakukohdeOid): Future[Seq[HakukohderyhmaOid]] = {
+    val request = new RequestBuilder()
+      .setMethod("GET")
+      .setUrl(urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat", oid))
+      .build()
+    toScala(client.execute(request)).map {
+      case r if r.getStatusCode() == 200 =>
+        parse(r.getResponseBodyAsStream()).extract[Seq[String]].map(HakukohderyhmaOid)
+      case r =>
+        val body = r.getResponseBody()
+        val status = r.getStatusCode()
+        val error = s"Hakukohderyhmät fetch failed for hakukohdeoid: $oid with status $status, body: $body"
+        throw new RuntimeException(error)
+    }
   }
 
   def getHakukohderyhmat(oid: HakukohdeOid): Future[Seq[HakukohderyhmaOid]] = {
-    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat", oid), None, Headers.empty).flatMap {
-      case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohderyhmaOid(s)))
-      case (status, body) =>
-        val errorString = s"Hakukohderyhmät fetch failed for hakukohdeoid: $oid with status $status, body: $body"
-        logger.warn(errorString)
-        fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohderyhmat", oid), None, Headers.empty).flatMap {
-          case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohderyhmaOid(s)))
-          case (status, body) =>
-            val errorString = s"Hakukohderyhmät fetch failed for hakukohdeoid: $oid with status $status, body: $body"
-            logger.error(errorString)
-            Future.failed(
-              new RuntimeException(errorString)
-            )
-        }
+    getHakukohderyhmatWithoutRetry(oid).recoverWith {
+      case e: RuntimeException =>
+        logger.warn(e.getMessage() ++ ", retrying")
+        getHakukohderyhmatWithoutRetry(oid)
     }
   }
+
   def getHakukohteet(oid: HakukohderyhmaOid): Future[Seq[HakukohdeOid]] = {
-    fetch(Method.GET, urlProperties.url("hakukohderyhmapalvelu.hakukohteet", oid), None, Headers.empty).flatMap {
-      case (200, body) => Future.successful(parse(body).values.asInstanceOf[Seq[String]].map(s => HakukohdeOid(s)))
-      case (status, body) =>
-        val errorString = s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body"
-        logger.error(errorString)
-        Future.failed(
-          new RuntimeException(errorString)
-        )
+    val request = new RequestBuilder()
+      .setMethod("GET")
+      .setUrl(urlProperties.url("hakukohderyhmapalvelu.hakukohteet", oid))
+      .build()
+    toScala(client.execute(request)).map {
+      case r if r.getStatusCode() == 200 =>
+        parse(r.getResponseBodyAsStream()).extract[Seq[String]].map(HakukohdeOid)
+      case r =>
+        val body = r.getResponseBody()
+        val status = r.getStatusCode()
+        val error = s"Hakukohteet fetch failed for hakukohderyhmäoid: $oid with status $status, body: $body"
+        throw new RuntimeException(error)
     }
   }
+
 }

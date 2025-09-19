@@ -7,7 +7,7 @@ class SwaggerServletSpec extends SwaggerFixture {
     get("/swagger/swagger.yaml") {
       val result  = new OpenAPIV3Parser().readContents(body, null, null)
       val openApi = result.getOpenAPI()
-      openApi should not equal (null)     // Parsimisen pitää onnistua (on validia YML:ää)
+      openApi.getInfo().getTitle() shouldBe "kouta-external"  // varmistetaan että jäsennys onnistui
       result.getMessages() shouldBe empty // Ei virheitä tai varoituksia swaggerin parsinnasta
     }
   }

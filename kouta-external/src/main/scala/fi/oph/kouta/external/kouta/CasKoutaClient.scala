@@ -7,144 +7,99 @@ import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.{KoutaBackendJsonAdapter, KoutaJsonFormats}
 import fi.oph.kouta.util.TimeUtils
 import fi.vm.sade.properties.OphProperties
-import fi.vm.sade.utils.cas.{CasAuthenticatingClient, CasClient, CasParams}
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
+import org.asynchttpclient.{RequestBuilder, Response}
+import io.netty.handler.codec.http.HttpHeaders
+import org.json4s.Extraction.decompose
+import org.json4s.jackson.JsonMethods.{parse, render, compact}
+import org.json4s.jackson.Serialization.{read, write}
 import fi.oph.kouta.logging.Logging
-import org.http4s._
-import org.http4s.client.Client
-import org.http4s.client.blaze.defaultClient
-import org.http4s.json4s.jackson.jsonEncoderOf
 import org.json4s.JsonAST.{JNothing, JObject}
-import org.json4s.jackson.JsonMethods.parse
-import org.json4s.{Extraction, Writer}
-import scalaz.concurrent.Task
 
+import scalaz.concurrent.Task
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.{Future, Promise}
 
 object CasKoutaClient extends CasKoutaClient
 
-class CasKoutaClient extends KoutaClient with CallerId {
+class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging with CallerId {
 
-  private def params = {
-    val config = KoutaConfigurationFactory.configuration.clientConfiguration
+  def config = KoutaConfigurationFactory.configuration
+  def clientConfig = config.clientConfiguration
+  def urlProperties: OphProperties = config.urlProperties
 
-    CasParams(
+  private val casConfig: CasConfig =
+    new CasConfig.CasConfigBuilder(
+      clientConfig.username,
+      clientConfig.password,
+      config.securityConfiguration.casUrl,
       urlProperties.url("kouta-backend.service"),
-      "auth/login",
-      config.username,
-      config.password
-    )
-  }
+      callerId,
+      callerId,
+      "auth/login"
+    ).setJsessionName("session").build()
 
-  protected lazy val client: Client = {
-    CasAuthenticatingClient(
-      new CasClient(KoutaConfigurationFactory.configuration.securityConfiguration.casUrl, defaultClient, callerId),
-      casParams = params,
-      serviceClient = defaultClient,
-      clientCallerId = callerId,
-      sessionCookieName = "session"
-    )
-  }
-}
-abstract class KoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging {
-
-  def urlProperties: OphProperties = KoutaConfigurationFactory.configuration.urlProperties
-
-  protected def client: Client
+  protected lazy val client: CasClient = CasClientBuilder.build(casConfig)
 
   def session(): Boolean = {
     val url = urlProperties.url("kouta-backend.session")
-
-    Uri
-      .fromString(url)
-      .fold(
-        Task.fail,
-        url => {
-          client.fetch(Request(Method.GET, url)) {
-            case r if r.status.code == 200 =>
-              Task.now(true)
-            case r =>
-              readStringBody(r).flatMap { body =>
-                Task.fail(new RuntimeException(s"Url $url returned status code ${r.status} $body"))
-              }
-          }
-        }
-      )
-      .unsafePerformSyncAttemptFor(Duration(5, TimeUnit.SECONDS))
-      .fold(throw _, x => x)
-  }
-
-  def create[T](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] = {
-    val url = urlProperties.url(urlKey)
-    fetch(Method.PUT, url, body, Headers.empty).map {
-      case (200, body) =>
-        Right(parse(body) match {
-          case obj: JObject if (obj \ "oid") != JNothing =>
-            obj.extract[OidResponse]
-          case obj: JObject if (obj \ "id") != JNothing =>
-            obj.extract[UuidResponse]
-        })
-      case (code, body) =>
-        Left(code, body)
+    val request = new RequestBuilder()
+      .setMethod("GET")
+      .setUrl(url)
+      .build()
+    val result = toScala(client.execute(request)).map {
+      case r if r.getStatusCode() == 200 => true
+      case r =>
+        val body = r.getResponseBody()
+        val status = r.getStatusCode()
+        throw new RuntimeException(s"Url $url returned status $status with $body")
     }
+    Await.result(result, 5.seconds)
   }
+
+  def create[T](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] =
+    toScala(client.execute(
+      new RequestBuilder().setMethod("PUT").setUrl(urlProperties.url(urlKey)).build()
+    )).map {
+      case r if r.getStatusCode() == 200 =>
+        Right(parse(r.getResponseBodyAsStream()) match {
+          case obj: JObject if (obj \ "oid") != JNothing => obj.extract[OidResponse]
+          case obj: JObject if (obj \ "id") != JNothing => obj.extract[UuidResponse]
+        })
+      case r => Left(r.getStatusCode(), r.getResponseBody())
+    }
 
   def update[T](
       urlKey: String,
       body: T,
       ifUnmodifiedSince: Instant
-  ): Future[Either[(Int, String), UpdateResponse]] = {
-    val url = urlProperties.url(urlKey)
-    val headers = Headers(
-      Header(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince)),
-      Header("Content-Type", "application/json")
-    )
-    fetch(Method.POST, url, body, headers).map {
-      case (200, body) =>
-        Right(parse(body).extract[UpdateResponse])
-      case (code, body) =>
-        Left(code, body)
+  ): Future[Either[(Int, String), UpdateResponse]] =
+    toScala(client.execute(
+      new RequestBuilder()
+        .setMethod("POST")
+        .setUrl(urlProperties.url(urlKey))
+        .setHeader(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince))
+        .setHeader("Content-Type", "application/json")
+        .build()
+    )).map {
+      case r if r.getStatusCode() == 200 =>
+        Right(parse(r.getResponseBodyAsStream()).extract[UpdateResponse])
+      case r => Left(r.getStatusCode(), r.getResponseBody())
     }
-  }
 
-  private def readStringBody(r: Response) = readBody[String](r)(s => s)
-
-  private def readBody[A](r: Response)(handler: String => A) =
-    r.bodyAsText.runLog
-      .map(a => a.mkString)
-      .map(
-        response => handler(response)
-      )
-
-  protected def fetch[T](method: Method, url: String, body: T, headers: Headers): Future[(Int, String)] =
-      Uri
-      .fromString(url)
-      .fold(
-        Task.fail,
-        url => {
-          implicit val writer: Writer[T] = (obj: T) => adaptToKoutaBackendJson(obj, Extraction.decompose(obj))
-          client.fetch(Request(method, url, headers = headers).withBody(body)(jsonEncoderOf[T])) { r =>
-            readBody[(Int, String)](r)(body => (r.status.code, body))
-          }
-        }
-      )
-      .runFuture()
-
-  implicit class TaskExtensionOps[A](x: => Task[A]) {
-
-    import scalaz.{-\/, \/-}
-
-    def runFuture(): Future[A] = {
-      val p: Promise[A] = Promise()
-      x.unsafePerformAsync {
-        case -\/(ex) =>
-            p.failure(ex); ()
-        case \/-(r) =>
-          p.success(r); ()
-      }
-      p.future
+  protected def fetch[T](method: String, url: String, body: T, headers: HttpHeaders): Future[(Int, String)] =
+    toScala(client.execute(
+      new RequestBuilder()
+        .setMethod(method)
+        .setUrl(url)
+        .setBody(compact(render(adaptToKoutaBackendJson(body, decompose(body)))))
+        .setHeaders(headers)
+        .build()
+    )).map {
+      r: Response => (r.getStatusCode(), r.getResponseBody())
     }
-  }
 
 }

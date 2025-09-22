@@ -2,18 +2,21 @@ package fi.oph.kouta.external.service
 
 import com.github.blemale.scaffeine.Scaffeine
 import fi.oph.kouta.domain.oid.{HakukohdeOid, HakukohderyhmaOid}
+import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.hakukohderyhmapalvelu.HakukohderyhmaClient
-import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.{OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
-import fi.oph.kouta.servlet.Authenticated
 import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.security.{Role, RoleEntity}
+import fi.oph.kouta.service.{
+  OrganisaatioService,
+  OrganizationAuthorizationFailedException,
+  RoleEntityAuthorizationService
+}
+import fi.oph.kouta.servlet.Authenticated
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
-import fi.oph.kouta.external.KoutaConfigurationFactory
-
 import scala.concurrent.duration.DurationLong
+import scala.concurrent.{ExecutionContext, Future}
 
 object HakukohderyhmaService extends HakukohderyhmaService(new HakukohderyhmaClient, OrganisaatioServiceImpl)
 

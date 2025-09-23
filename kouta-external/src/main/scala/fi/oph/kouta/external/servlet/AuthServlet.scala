@@ -5,12 +5,15 @@ import java.util.UUID
 import fi.oph.kouta.external.security.CasSessionService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.security.ServiceTicket
-import fi.vm.sade.utils.cas.CasLogout
+import fi.vm.sade.javautils.nio.cas.CasLogout
+import scala.compat.java8.OptionConverters._
 import org.scalatra._
 
 class AuthServlet(casSessionService: CasSessionService) extends KoutaServlet {
 
   def this() = this(CasSessionService)
+
+  val casLogout = new CasLogout()
 
   override implicit val cookieOptions: CookieOptions = CookieOptions(
     path = "/kouta-external",
@@ -109,8 +112,8 @@ class AuthServlet(casSessionService: CasSessionService) extends KoutaServlet {
       .get("logoutRequest")
       .getOrElse(throw new IllegalArgumentException("Not 'logoutRequest' parameter given"))
 
-    val ticket = CasLogout
-      .parseTicketFromLogoutRequest(logoutRequest)
+    val ticket =
+      toScala(casLogout.parseTicketFromLogoutRequest(logoutRequest))
       .getOrElse(throw new RuntimeException(s"Failed to parse CAS logout request $request"))
 
     casSessionService.deleteSession(ServiceTicket(ticket))

@@ -572,6 +572,16 @@
     </dependencyManagement>
 
     <repositories>
+	<repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Opetushallitus/packages</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>oph-sade-artifactory-snapshots</id>
             <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>

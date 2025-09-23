@@ -10,7 +10,6 @@ import fi.oph.kouta.external.database.SessionDAO
 import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.oph.kouta.security.{CasSession, ServiceTicket, Session}
 import fi.oph.kouta.logging.Logging
-import scalaz.concurrent.Task
 
 import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.duration.Duration

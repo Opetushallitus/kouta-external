@@ -16,7 +16,6 @@ import org.json4s.jackson.Serialization.{read, write}
 import fi.oph.kouta.logging.Logging
 import org.json4s.JsonAST.{JNothing, JObject}
 
-import scalaz.concurrent.Task
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
 import scala.concurrent.duration._

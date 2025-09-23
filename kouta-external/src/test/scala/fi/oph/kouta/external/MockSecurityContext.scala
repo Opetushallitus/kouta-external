@@ -6,7 +6,6 @@ import fi.oph.kouta.security.Authority
 import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.vm.sade.javautils.nio.cas.impl.{CasClientImpl, CasSessionFetcher}
 import org.asynchttpclient.Dsl.asyncHttpClient
-import scalaz.concurrent.Task
 import java.util.concurrent.{CompletableFuture, TimeUnit}
 import scala.concurrent.duration.{Duration, SECONDS}
 

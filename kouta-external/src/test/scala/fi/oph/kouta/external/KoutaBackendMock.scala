@@ -6,6 +6,7 @@ import fi.oph.kouta.mocks.{ServiceMockBase, SpecWithMocks}
 import fi.oph.kouta.security.CasSession
 import fi.oph.kouta.util.TimeUtils
 import org.mockserver.matchers.MatchType
+import org.mockserver.model.HttpRequest.request
 
 import java.time.Instant
 import java.util.UUID
@@ -24,7 +25,8 @@ trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJson
       responseString: String,
       session: Option[(UUID, CasSession)] = None,
       responseStatus: Int = 200
-  ): Unit =
+  ): Unit = {
+    clearMock(request().withMethod("PUT").withPath(getMockPath(pathKey)))
     mockPut(
       path = getMockPath(pathKey),
       body = session.map { case (sessionId, session) =>
@@ -34,6 +36,7 @@ trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJson
       responseString = responseString,
       matchType = MatchType.ONLY_MATCHING_FIELDS
     )
+  }
 
   protected def addUpdateMock(
       entityName: String,
@@ -48,6 +51,7 @@ trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJson
       .map(i => KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(i))
       .toMap + ("Content-Type" -> "application/json")
 
+    clearMock(request().withMethod("POST").withPath(getMockPath(pathKey)))
     mockPost(
       path = getMockPath(pathKey),
       body = session.map { case (sessionId, session) =>

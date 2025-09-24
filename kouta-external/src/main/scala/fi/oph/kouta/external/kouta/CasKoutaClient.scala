@@ -59,9 +59,14 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
     Await.result(result, 5.seconds)
   }
 
-  def create[T](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] =
+  def create[T <: AnyRef](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] =
     toScala(client.execute(
-      new RequestBuilder().setMethod("PUT").setUrl(urlProperties.url(urlKey)).build()
+      new RequestBuilder()
+        .setMethod("PUT")
+        .setUrl(urlProperties.url(urlKey))
+        .setBody(compact(render(adaptToKoutaBackendJson(body, decompose(body)))))
+        .setHeader("Content-type", "application/json")
+        .build()
     )).map {
       case r if r.getStatusCode() == 200 =>
         Right(parse(r.getResponseBodyAsStream()) match {
@@ -71,7 +76,7 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
       case r => Left(r.getStatusCode(), r.getResponseBody())
     }
 
-  def update[T](
+  def update[T <: AnyRef](
       urlKey: String,
       body: T,
       ifUnmodifiedSince: Instant
@@ -80,6 +85,7 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
       new RequestBuilder()
         .setMethod("POST")
         .setUrl(urlProperties.url(urlKey))
+        .setBody(compact(render(adaptToKoutaBackendJson(body, decompose(body)))))
         .setHeader(KoutaServlet.IfUnmodifiedSinceHeader, TimeUtils.renderHttpDate(ifUnmodifiedSince))
         .setHeader("Content-Type", "application/json")
         .build()
@@ -87,18 +93,6 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
       case r if r.getStatusCode() == 200 =>
         Right(parse(r.getResponseBodyAsStream()).extract[UpdateResponse])
       case r => Left(r.getStatusCode(), r.getResponseBody())
-    }
-
-  protected def fetch[T](method: String, url: String, body: T, headers: HttpHeaders): Future[(Int, String)] =
-    toScala(client.execute(
-      new RequestBuilder()
-        .setMethod(method)
-        .setUrl(url)
-        .setBody(compact(render(adaptToKoutaBackendJson(body, decompose(body)))))
-        .setHeaders(headers)
-        .build()
-    )).map {
-      r: Response => (r.getStatusCode(), r.getResponseBody())
     }
 
 }

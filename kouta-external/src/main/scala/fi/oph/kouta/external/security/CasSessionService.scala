@@ -4,14 +4,16 @@ import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.client.KayttooikeusClient
 import fi.oph.kouta.external.database.SessionDAO
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
 import fi.oph.kouta.security.{CasSession, ServiceTicket, Session}
-import fi.vm.sade.utils.cas.CasClient.Username
 import fi.oph.kouta.logging.Logging
-import scalaz.concurrent.Task
 
+import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.duration.Duration
+import scala.concurrent.Await
 import scala.util.control.NonFatal
 
 object CasSessionService
@@ -21,25 +23,28 @@ object CasSessionService
     )
 
 abstract class CasSessionService(val securityContext: SecurityContext, val userDetailsService: KayttooikeusClient)
-    extends Logging {
+    extends Logging with CallerId {
   logger.info(s"Using security context ${securityContext.getClass.getSimpleName}")
+
+  implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
   val serviceIdentifier: String = securityContext.casServiceIdentifier
   val casUrl: String            = securityContext.casUrl
 
   private val casClient = securityContext.casClient
 
-  private def validateServiceTicket(ticket: ServiceTicket): Either[Throwable, Username] = {
+  private def validateServiceTicket(ticket: ServiceTicket): Either[Throwable, String] = {
     val ServiceTicket(s) = ticket
-    casClient
-      .validateServiceTicketWithVirkailijaUsername(securityContext.casServiceIdentifier)(s)
-      .handleWith {
-        case NonFatal(t) =>
-          logger.debug("Ticket validation error", t)
-          Task.fail(AuthenticationFailedException(s"Failed to validate service ticket $s", t))
-      }
-      .unsafePerformSyncAttemptFor(Duration(30, TimeUnit.SECONDS))
-      .toEither
+    val result = toScala(casClient.validateServiceTicketWithVirkailijaUsername(securityContext.casServiceIdentifier, s))
+    try {
+      Right(Await.result(result, Duration(30, TimeUnit.SECONDS)))
+    } catch {
+      case NonFatal(t) =>
+        logger.debug("Ticket validation error", t)
+        Left(new AuthenticationFailedException(s"Failed to validate service ticket $s", t))
+      case t: Throwable =>
+        Left(t)
+    }
   }
 
   private def storeSession(ticket: ServiceTicket, user: KayttooikeusUserDetails): (UUID, CasSession) = {

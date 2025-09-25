@@ -3,9 +3,11 @@ package fi.oph.kouta.external
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.security.Authority
-import fi.vm.sade.utils.cas.CasClient.{SessionCookie, Username}
-import fi.vm.sade.utils.cas.{CasClient, CasParams}
-import scalaz.concurrent.Task
+import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig}
+import fi.vm.sade.javautils.nio.cas.impl.{CasClientImpl, CasSessionFetcher}
+import org.asynchttpclient.Dsl.asyncHttpClient
+import java.util.concurrent.{CompletableFuture, TimeUnit}
+import scala.concurrent.duration.{Duration, SECONDS}
 
 class MockSecurityContext(
     val casUrl: String,
@@ -13,17 +15,27 @@ class MockSecurityContext(
     users: Map[String, KayttooikeusUserDetails]
 ) extends SecurityContext with CallerId {
 
-  val casClient: CasClient = new CasClient("", null, "mockCallerId") {
-    override def validateServiceTicketWithVirkailijaUsername(service: String)(serviceTicket: String): Task[Username] =
+  val casConfig: CasConfig = new CasConfig.CasConfigBuilder("", "", "", "", callerId, callerId, "").build()
+  val httpClient = asyncHttpClient()
+
+  val casClient = new CasClientImpl(
+    casConfig, httpClient,
+    new CasSessionFetcher(
+      casConfig, httpClient, Duration(20, TimeUnit.MINUTES).toMillis, Duration(2, TimeUnit.SECONDS).toMillis
+    ) {
+
+      override def fetchSessionToken(): CompletableFuture[String] =
+        CompletableFuture.completedFuture("jsessionidFromMockSecurityContext")
+
+  }) {
+    override def validateServiceTicketWithVirkailijaUsername(service: String, serviceTicket: String): CompletableFuture[String] = {
       if (serviceTicket.startsWith(MockSecurityContext.ticketPrefix(service))) {
         val username = serviceTicket.stripPrefix(MockSecurityContext.ticketPrefix(service))
-        Task.now(username)
+        CompletableFuture.completedFuture(username)
       } else {
-        Task.fail(new RuntimeException("unrecognized ticket: " + serviceTicket))
+        CompletableFuture.failedFuture(new RuntimeException("unrecognized ticket: " + serviceTicket))
       }
-
-    override def fetchCasSession(params: CasParams, sessionCookieName: String): Task[SessionCookie] =
-      Task.now("jsessionidFromMockSecurityContext")
+    }
   }
 }
 
@@ -35,7 +47,7 @@ object MockSecurityContext {
     new MockSecurityContext(casUrl, casServiceIdentifier, users)
   }
 
-  def ticketFor(service: String, username: String): SessionCookie = ticketPrefix(service) + username
+  def ticketFor(service: String, username: String): String = ticketPrefix(service) + username
 
-  private def ticketPrefix(service: String): SessionCookie = "mock-ticket-" + service + "-"
+  private def ticketPrefix(service: String): String = "mock-ticket-" + service + "-"
 }

@@ -24,19 +24,17 @@
         <maven.compiler.target>11</maven.compiler.target>
         <scala.compat.version>2.12</scala.compat.version>
 
-        <kouta-common.version>2.22.0-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>2.23.1-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
         <json4s.version>3.6.11</json4s.version>
-        <jackson.version>2.13.4</jackson.version>
-        <logback-access.version>1.2.9</logback-access.version>
-
-        <!-- Cas properties -->
-        <scala-cas.version>2.2.2.1-SNAPSHOT</scala-cas.version>
+        <jackson.version>2.15.0</jackson.version>
+        <logback-access.version>1.2.13</logback-access.version>
 
         <!-- Http related properties -->
         <scalatra.version>2.7.0</scalatra.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+	<netty.version>4.1.124.Final</netty.version>
 
         <!-- Elasticsearch properties -->
         <elastic4sVersion>8.5.0</elastic4sVersion>
@@ -45,7 +43,7 @@
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>
         <slick.version>3.4.1</slick.version>
-        <jdbc.version>42.7.4</jdbc.version>
+        <jdbc.version>42.7.7</jdbc.version>
 
         <!-- Test properties -->
         <scala-test.version>3.1.1</scala-test.version>
@@ -54,7 +52,7 @@
         <jetty.version>9.4.57.v20241219</jetty.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <mockserver-netty.version>5.5.1</mockserver-netty.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.14.0</commons.io.version>
         <scalactic.version>3.1.1</scalactic.version>
 
         <!-- Plugin properties -->
@@ -158,16 +156,11 @@
             </dependency>
 
             <!-- Cas related dependencies -->
-            <dependency>
-                <groupId>fi.vm.sade</groupId>
-                <artifactId>scala-cas_2.12</artifactId>
-                <version>${scala-cas.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.http4s</groupId>
-                <artifactId>http4s-json4s-jackson_2.12</artifactId>
-                <version>0.16.6a</version>
-            </dependency>
+	    <dependency>
+		    <groupId>opiskelijavalinnat-utils</groupId>
+		    <artifactId>java-cas</artifactId>
+		    <version>1.2.4-SNAPSHOT</version>
+	    </dependency>
 
             <!-- Elasticsearch dependencies -->
             <dependency>
@@ -201,6 +194,17 @@
                 <artifactId>elastic4s-json-json4s_2.12</artifactId>
                 <version>${elastic4sVersion}</version>
             </dependency>
+	    <!-- these transitive versions are pinned because parsson 1.0.0 has a crit vuln -->
+	    <dependency>
+		    <groupId>org.eclipse.parsson</groupId>
+		    <artifactId>parsson</artifactId>
+		    <version>1.0.4</version>
+	    </dependency>
+	    <dependency>
+		    <groupId>jakarta.json</groupId>
+		    <artifactId>jakarta.json-api</artifactId>
+		    <version>2.0.2</version>
+	    </dependency>
 
             <!-- Database related properties -->
             <dependency>
@@ -279,58 +283,94 @@
                 <artifactId>mockserver-netty</artifactId>
                 <version>${mockserver-netty.version}</version>
                 <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-codec-http</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-common</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-codec</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-codec-socks</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-buffer</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-handler-proxy</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-handler</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>io.netty</groupId>
-                        <artifactId>netty-transport</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>io.swagger.parser.v3</groupId>
                 <artifactId>swagger-parser</artifactId>
                 <scope>test</scope>
-                <version>2.0.33</version>
+                <version>2.1.32</version>
             </dependency>
 
 
             <dependency>
                 <groupId>org.asynchttpclient</groupId>
                 <artifactId>async-http-client</artifactId>
-                <version>2.12.3</version>
+                <version>2.12.4</version>
+		<exclusions>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport-native-epoll</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>io.netty</groupId>
+                        <artifactId>netty-transport-native-kqueue</artifactId>
+                    </exclusion>
+		</exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http2</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-socks</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-resolver</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-epoll</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-native-kqueue</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport-classes-epoll</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler-proxy</artifactId>
+		<version>${netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-handler</artifactId>
-                <version>4.1.60.Final</version>
+		<version>${netty.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
@@ -406,16 +446,6 @@
                 <groupId>org.scala-lang.modules</groupId>
                 <artifactId>scala-collection-compat_2.12</artifactId>
                 <version>2.1.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.scalaz</groupId>
-                <artifactId>scalaz-core_2.12</artifactId>
-                <version>7.2.30</version>
-            </dependency>
-            <dependency>
-                <groupId>org.scalaz</groupId>
-                <artifactId>scalaz-concurrent_2.12</artifactId>
-                <version>7.2.30</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -542,6 +572,16 @@
     </dependencyManagement>
 
     <repositories>
+	<repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Opetushallitus/packages</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
         <repository>
             <id>oph-sade-artifactory-snapshots</id>
             <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>

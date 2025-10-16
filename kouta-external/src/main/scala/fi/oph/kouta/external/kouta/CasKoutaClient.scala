@@ -38,7 +38,7 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
       urlProperties.url("kouta-backend.service"),
       callerId,
       callerId,
-      "auth/login"
+      "/auth/login"
     ).setJsessionName("session").build()
 
   protected lazy val client: CasClient = CasClientBuilder.build(casConfig)

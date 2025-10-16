@@ -24,9 +24,7 @@ class SwaggerServlet extends ScalatraServlet {
         |    <p><strong>Uuden koulutustarjonnan Opintopolun ulkopuolisille palveluille tarkoitetut rajapinnat.</strong></p>
         |    <p>Ohjeita rajapintojen kutsujalle:
         |    <ul>
-        |    <li><a href="https://wiki.eduuni.fi/x/L95cCw" target="_blank">Autentikaatio</a></li>
-        |    <li><a href="https://wiki.eduuni.fi/x/0MeKCg" target="_blank">Kutsujan tunniste (caller-id)</a></li>
-        |    <li><a href="https://wiki.eduuni.fi/x/EL_hCw" target="_blank">CSRF-suojaus</a></li>
+        |    <li><a href="https://wiki.eduuni.fi/x/c16iDw" target="_blank">Rajapintojen käyttöohje</a></li>
         |    </ul>
         |    </p>
         |    <p>Helpoin tapa kirjautua sisään Swagger-ui:n käyttäjälle on avata

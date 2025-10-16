@@ -31,7 +31,7 @@ class HakukohderyhmaClient extends KoutaJsonFormats with CallerId with Logging {
       urlProperties.url("hakukohderyhmapalvelu.service"),
       callerId,
       callerId,
-      "auth/cas"
+      "/auth/cas"
     ).setJsessionName("ring-session").build()
 
   protected lazy val client: CasClient = CasClientBuilder.build(casConfig)

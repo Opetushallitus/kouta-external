@@ -350,6 +350,7 @@ object TestData {
     metadata = Some(
       AmmatillinenKoulutusMetadata(
         kuvaus = Map(Fi -> "kuvaus", Sv -> "kuvaus sv"),
+        osaamistavoitteet = Map(),
         lisatiedot = Seq(
           Lisatieto(
             otsikkoKoodiUri = "koulutuksenlisatiedot_03#1",
@@ -378,6 +379,7 @@ object TestData {
     metadata = Some(
       AmmatillinenToteutusMetadata(
         kuvaus = Map(Fi -> "kuvaus", Sv -> "kuvaus sv"),
+        osaamistavoitteet = Map(),
         osaamisalat = List(
           AmmatillinenOsaamisala(
             "osaamisala_0001#1",

@@ -1,0 +1,5 @@
+<<<<<<<< HEAD:kouta-external/src/test/resources/elastic_dump/valintaperuste-kouta-12-02-2026-at-11.13.13.401.alias.json
+"{\"valintaperuste-kouta-12-02-2026-at-11.13.13.401\":{\"aliases\":{\"valintaperuste-kouta\":{\"is_write_index\":false},\"valintaperuste-kouta-virkailija\":{\"is_write_index\":true}}}}"
+========
+"{\"valintaperuste-kouta-03-11-2025-at-12.25.27.083\":{\"aliases\":{\"valintaperuste-kouta\":{\"is_write_index\":false},\"valintaperuste-kouta-virkailija\":{\"is_write_index\":true}}}}"
+>>>>>>>> 82122a1 (OPHJOD-1486: Lisätään osaamistavoitteet koulutukselle ja toteutukselle):kouta-external/src/test/resources/elastic_dump/valintaperuste-kouta-03-11-2025-at-12.25.27.083.alias.json

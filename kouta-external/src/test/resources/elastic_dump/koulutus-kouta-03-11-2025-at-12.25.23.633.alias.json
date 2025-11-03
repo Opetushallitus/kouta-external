@@ -1,0 +1,5 @@
+<<<<<<<< HEAD:kouta-external/src/test/resources/elastic_dump/koulutus-kouta-12-02-2026-at-11.13.12.512.alias.json
+"{\"koulutus-kouta-12-02-2026-at-11.13.12.512\":{\"aliases\":{\"koulutus-kouta\":{\"is_write_index\":false},\"koulutus-kouta-virkailija\":{\"is_write_index\":true}}}}"
+========
+"{\"koulutus-kouta-03-11-2025-at-12.25.23.633\":{\"aliases\":{\"koulutus-kouta\":{\"is_write_index\":false},\"koulutus-kouta-virkailija\":{\"is_write_index\":true}}}}"
+>>>>>>>> 82122a1 (OPHJOD-1486: Lisätään osaamistavoitteet koulutukselle ja toteutukselle):kouta-external/src/test/resources/elastic_dump/koulutus-kouta-03-11-2025-at-12.25.23.633.alias.json

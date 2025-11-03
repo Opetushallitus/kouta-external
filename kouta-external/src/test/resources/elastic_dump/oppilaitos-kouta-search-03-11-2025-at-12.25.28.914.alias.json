@@ -1,0 +1,5 @@
+<<<<<<<< HEAD:kouta-external/src/test/resources/elastic_dump/oppilaitos-kouta-search-12-02-2026-at-11.13.13.883.alias.json
+"{\"oppilaitos-kouta-search-12-02-2026-at-11.13.13.883\":{\"aliases\":{\"oppilaitos-kouta-search\":{\"is_write_index\":false},\"oppilaitos-kouta-search-virkailija\":{\"is_write_index\":true}}}}"
+========
+"{\"oppilaitos-kouta-search-03-11-2025-at-12.25.28.914\":{\"aliases\":{\"oppilaitos-kouta-search\":{\"is_write_index\":false},\"oppilaitos-kouta-search-virkailija\":{\"is_write_index\":true}}}}"
+>>>>>>>> 82122a1 (OPHJOD-1486: Lisätään osaamistavoitteet koulutukselle ja toteutukselle):kouta-external/src/test/resources/elastic_dump/oppilaitos-kouta-search-03-11-2025-at-12.25.28.914.alias.json

@@ -62,6 +62,7 @@ case class TutkintoNimike(
 sealed trait KoulutusMetadataIndexed {
   val tyyppi: Koulutustyyppi
   val kuvaus: Kielistetty
+  val osaamistavoitteet: Kielistetty
   val lisatiedot: Seq[LisatietoIndexed]
   val koulutusala: Seq[KoodiUri]
 
@@ -71,6 +72,7 @@ sealed trait KoulutusMetadataIndexed {
 case class AmmatillinenKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     tutkintonimike: Seq[TutkintoNimike] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
@@ -81,6 +83,7 @@ case class AmmatillinenKoulutusMetadataIndexed(
     AmmatillinenKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -92,6 +95,7 @@ case class AmmatillinenKoulutusMetadataIndexed(
 case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     tutkinnonOsat: Seq[TutkinnonOsaIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty
@@ -100,6 +104,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
     AmmatillinenTutkinnonOsaKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       tutkinnonOsat = tutkinnonOsat.map(_.toTutkinnonOsa)
     )
@@ -108,6 +113,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
 case class AmmatillinenOsaamisalaKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmOsaamisala,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     osaamisala: Option[KoodiUri]
@@ -116,6 +122,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadataIndexed(
     AmmatillinenOsaamisalaKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       osaamisalaKoodiUri = osaamisala.map(_.koodiUri)
     )
@@ -124,6 +131,7 @@ case class AmmatillinenOsaamisalaKoulutusMetadataIndexed(
 case class AmmatillinenMuuKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmMuu,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri],
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
@@ -133,6 +141,7 @@ case class AmmatillinenMuuKoulutusMetadataIndexed(
     AmmatillinenMuuKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -150,6 +159,7 @@ sealed trait KorkeakoulutusKoulutusMetadataIndexed extends KoulutusMetadataIndex
 case class YliopistoKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Yo,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     tutkintonimike: Seq[TutkintoNimike],
@@ -159,6 +169,7 @@ case class YliopistoKoulutusMetadataIndexed(
   override def toKoulutusMetadata: YliopistoKoulutusMetadata = YliopistoKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
@@ -170,6 +181,7 @@ case class YliopistoKoulutusMetadataIndexed(
 case class AmmattikorkeakouluKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amk,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     tutkintonimike: Seq[TutkintoNimike],
@@ -179,6 +191,7 @@ case class AmmattikorkeakouluKoulutusMetadataIndexed(
   override def toKoulutusMetadata: AmmattikorkeakouluKoulutusMetadata = AmmattikorkeakouluKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
@@ -190,6 +203,7 @@ case class AmmattikorkeakouluKoulutusMetadataIndexed(
 case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri],
     tutkintonimike: Seq[TutkintoNimike],
@@ -199,6 +213,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
   override def toKoulutusMetadata: AmmOpeErityisopeJaOpoKoulutusMetadata = AmmOpeErityisopeJaOpoKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
@@ -210,6 +225,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadataIndexed(
 case class OpePedagOpinnotKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = OpePedagOpinnot,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri],
     tutkintonimike: Seq[TutkintoNimike],
@@ -219,6 +235,7 @@ case class OpePedagOpinnotKoulutusMetadataIndexed(
   override def toKoulutusMetadata: OpePedagOpinnotKoulutusMetadata = OpePedagOpinnotKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
     tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri),
@@ -230,6 +247,7 @@ case class OpePedagOpinnotKoulutusMetadataIndexed(
 case class LukioKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
     opintojenLaajuusNumero: Option[Double] = None,
@@ -238,6 +256,7 @@ case class LukioKoulutusMetadataIndexed(
   override def toKoulutusMetadata: LukioKoulutusMetadata = LukioKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
     opintojenLaajuusNumero = opintojenLaajuusNumero,
@@ -248,6 +267,7 @@ case class LukioKoulutusMetadataIndexed(
 case class TuvaKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Tuva,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty = Map.empty,
@@ -257,6 +277,7 @@ case class TuvaKoulutusMetadataIndexed(
   override def toKoulutusMetadata: TuvaKoulutusMetadata = TuvaKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     linkkiEPerusteisiin = linkkiEPerusteisiin,
     opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -267,6 +288,7 @@ case class TuvaKoulutusMetadataIndexed(
 case class TelmaKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Telma,
     kuvaus: Kielistetty = Map.empty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty = Map.empty,
@@ -276,6 +298,7 @@ case class TelmaKoulutusMetadataIndexed(
   override def toKoulutusMetadata: TelmaKoulutusMetadata = TelmaKoulutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     lisatiedot = lisatiedot.map(_.toLisatieto),
     linkkiEPerusteisiin = linkkiEPerusteisiin,
     opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -286,6 +309,7 @@ case class TelmaKoulutusMetadataIndexed(
 case class VapaaSivistystyoKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty,
@@ -296,6 +320,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
     VapaaSivistystyoKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -306,6 +331,7 @@ case class VapaaSivistystyoKoulutusMetadataIndexed(
 case class VapaaSivistystyoOsaamismerkkiKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq(),
     linkkiEPerusteisiin: Kielistetty = Map(),
     opintojenLaajuusyksikko: Option[KoodiUri],
@@ -317,6 +343,7 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadataIndexed(
     VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -329,6 +356,7 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadataIndexed(
 case class AikuistenPerusopetusKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty,
@@ -339,6 +367,7 @@ case class AikuistenPerusopetusKoulutusMetadataIndexed(
     AikuistenPerusopetusKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -349,6 +378,7 @@ case class AikuistenPerusopetusKoulutusMetadataIndexed(
 case class KkOpintojaksoKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri] = None,
@@ -362,6 +392,7 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
     KkOpintojaksoKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
@@ -376,6 +407,7 @@ case class KkOpintojaksoKoulutusMetadataIndexed(
 case class ErikoislaakariKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Erikoislaakari,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty,
     tutkintonimike: Seq[TutkintoNimike] = Seq.empty
@@ -384,6 +416,7 @@ case class ErikoislaakariKoulutusMetadataIndexed(
     ErikoislaakariKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       tutkintonimikeKoodiUrit = tutkintonimike.map(_.koodiUri)
@@ -393,6 +426,7 @@ case class ErikoislaakariKoulutusMetadataIndexed(
 case class KkOpintokokonaisuusKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri],
     opintojenLaajuusNumeroMin: Option[Double],
@@ -406,6 +440,7 @@ case class KkOpintokokonaisuusKoulutusMetadataIndexed(
     KkOpintokokonaisuusKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
@@ -420,6 +455,7 @@ case class KkOpintokokonaisuusKoulutusMetadataIndexed(
 case class ErikoistumiskoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Erikoistumiskoulutus,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     erikoistumiskoulutus: Option[KoodiUri],
     koulutusala: Seq[KoodiUri] = Seq.empty,
@@ -432,6 +468,7 @@ case class ErikoistumiskoulutusMetadataIndexed(
     ErikoistumiskoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       erikoistumiskoulutusKoodiUri = erikoistumiskoulutus.map(_.koodiUri),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
@@ -445,6 +482,7 @@ case class ErikoistumiskoulutusMetadataIndexed(
 case class TaiteenPerusopetusKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri] = Seq.empty,
     linkkiEPerusteisiin: Kielistetty
@@ -453,6 +491,7 @@ case class TaiteenPerusopetusKoulutusMetadataIndexed(
     TaiteenPerusopetusKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       linkkiEPerusteisiin = linkkiEPerusteisiin
     )
@@ -461,6 +500,7 @@ case class TaiteenPerusopetusKoulutusMetadataIndexed(
 case class MuuKoulutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Muu,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed],
     koulutusala: Seq[KoodiUri] = Seq.empty,
     opintojenLaajuusyksikko: Option[KoodiUri],
@@ -471,6 +511,7 @@ case class MuuKoulutusMetadataIndexed(
     MuuKoulutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
       koulutusalaKoodiUrit = koulutusala.map(_.koodiUri),
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),

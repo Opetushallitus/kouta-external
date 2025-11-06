@@ -6,7 +6,7 @@
 
     <groupId>fi.oph.kouta</groupId>
     <artifactId>kouta-external</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.10-SNAPSHOT</version>
     <name>kouta-external</name>
 
     <parent>
@@ -199,8 +199,8 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

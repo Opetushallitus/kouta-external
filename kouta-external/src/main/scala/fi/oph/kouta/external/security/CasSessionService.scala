@@ -1,7 +1,6 @@
 package fi.oph.kouta.external.security
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
-import fi.oph.kouta.external.client.KayttooikeusClient
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.logging.Logging

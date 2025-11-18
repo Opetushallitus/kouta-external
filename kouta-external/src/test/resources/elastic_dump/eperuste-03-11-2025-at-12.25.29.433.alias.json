@@ -1,5 +1,0 @@
-<<<<<<<< HEAD:kouta-external/src/test/resources/elastic_dump/eperuste-12-02-2026-at-11.13.14.017.alias.json
-"{\"eperuste-12-02-2026-at-11.13.14.017\":{\"aliases\":{\"eperuste\":{\"is_write_index\":false},\"eperuste-virkailija\":{\"is_write_index\":true}}}}"
-========
-"{\"eperuste-03-11-2025-at-12.25.29.433\":{\"aliases\":{\"eperuste\":{\"is_write_index\":false},\"eperuste-virkailija\":{\"is_write_index\":true}}}}"
->>>>>>>> 82122a1 (OPHJOD-1486: Lisätään osaamistavoitteet koulutukselle ja toteutukselle):kouta-external/src/test/resources/elastic_dump/eperuste-03-11-2025-at-12.25.29.433.alias.json

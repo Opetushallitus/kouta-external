@@ -1,17 +1,17 @@
 package fi.oph.kouta.external.integration.fixture
 
-import java.util.UUID
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid}
+import fi.oph.kouta.external.TestData.AmmKoulutus
 import fi.oph.kouta.external.domain.Koulutus
-import fi.oph.kouta.external.elasticsearch.KoulutusClient
+import fi.oph.kouta.external.elasticsearch.{EPerusteClient, KoulutusClient}
+import fi.oph.kouta.external.integration.GenericGetTests
 import fi.oph.kouta.external.service.{KoulutusService, OrganisaatioServiceImpl}
 import fi.oph.kouta.external.servlet.KoulutusServlet
-import fi.oph.kouta.external.TestData.AmmKoulutus
-import fi.oph.kouta.external.integration.GenericGetTests
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
 import fi.oph.kouta.servlet.Authenticated
 
 import java.time.Instant
+import java.util.UUID
 import scala.concurrent.Future
 
 trait KoulutusFixture extends AccessControlSpec {
@@ -23,7 +23,12 @@ trait KoulutusFixture extends AccessControlSpec {
   override def beforeAll(): Unit = {
     super.beforeAll()
     val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
-    val koulutusService     = new KoulutusService(new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava), new MockKoutaClient(urlProperties.get), organisaatioService) {
+    val koulutusService = new KoulutusService(
+      new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava),
+      new EPerusteClient(TempElasticClient.client, TempElasticClient.clientJava),
+      new MockKoutaClient(urlProperties.get),
+      organisaatioService
+    ) {
       override def get(oid: KoulutusOid)(implicit authenticated: Authenticated): Future[Koulutus] =
         throwOrElse(oid)(super.get)
     }
@@ -63,7 +68,8 @@ trait KoulutusFixture extends AccessControlSpec {
 
   def update(oid: String, ifUnmodifiedSince: Option[Instant], expectedStatus: Int, expectedBody: String): Unit =
     ifUnmodifiedSince match {
-      case Some(ifUnmodifiedSinceVal) => update(KoulutusPath, koulutus(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
+      case Some(ifUnmodifiedSinceVal) =>
+        update(KoulutusPath, koulutus(oid), ifUnmodifiedSinceVal, defaultSessionId, expectedStatus, expectedBody)
       case _ => update(KoulutusPath, koulutus(oid), defaultSessionId, expectedStatus, expectedBody)
     }
 

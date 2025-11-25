@@ -85,7 +85,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <!-- Jinjava 2.8.1 causes a Dependency convergence error for this. -->
                 <groupId>com.hubspot.immutables</groupId>
                 <artifactId>immutables-exceptions</artifactId>
                 <version>1.9</version>

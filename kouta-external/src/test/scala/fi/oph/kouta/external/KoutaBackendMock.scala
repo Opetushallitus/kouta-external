@@ -5,8 +5,6 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.mocks.{ServiceMockBase, SpecWithMocks}
 import fi.oph.kouta.security.CasSession
 import fi.oph.kouta.util.TimeUtils
-import org.mockserver.matchers.MatchType
-import org.mockserver.model.HttpRequest.request
 
 import java.time.Instant
 import java.util.UUID
@@ -26,15 +24,17 @@ trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJson
       session: Option[(UUID, CasSession)] = None,
       responseStatus: Int = 200
   ): Unit = {
-    clearMock(request().withMethod("PUT").withPath(getMockPath(pathKey)))
+    val path = getMockPath(pathKey)
+    clearMock(path, "PUT")
     mockPut(
-      path = getMockPath(pathKey),
+      path = path,
       body = session.map { case (sessionId, session) =>
         Seq("authenticated" -> authenticated(sessionId, session))
       }.getOrElse(Seq()).toMap + (entityName -> entity),
       statusCode = responseStatus,
       responseString = responseString,
-      matchType = MatchType.ONLY_MATCHING_FIELDS
+      ignoreExtraElements = true,
+      ignoreArrayOrder = true
     )
   }
 
@@ -51,16 +51,18 @@ trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJson
       .map(i => KoutaServlet.IfUnmodifiedSinceHeader -> TimeUtils.renderHttpDate(i))
       .toMap + ("Content-Type" -> "application/json")
 
-    clearMock(request().withMethod("POST").withPath(getMockPath(pathKey)))
+    val path = getMockPath(pathKey)
+    clearMock(path, "POST")
     mockPost(
-      path = getMockPath(pathKey),
+      path = path,
       body = session.map { case (sessionId, session) =>
         Seq("authenticated" -> authenticated(sessionId, session))
       }.getOrElse(Seq()).toMap + (entityName -> entity),
       headers = headers,
       statusCode = responseStatus,
       responseString = responseString,
-      matchType = MatchType.ONLY_MATCHING_FIELDS
+      ignoreExtraElements = true,
+      ignoreArrayOrder = true
     )
   }
 }

@@ -83,6 +83,7 @@ case class ApurahaIndexed(min: Option[Int], max: Option[Int], yksikko: Option[Ap
 trait ToteutusMetadataIndexed {
   val tyyppi: Koulutustyyppi
   val kuvaus: Kielistetty
+  val osaamistavoitteet: Kielistetty
   val opetus: Option[OpetusIndexed]
   val asiasanat: List[Keyword]
   val yhteyshenkilot: Seq[Yhteyshenkilo]
@@ -96,6 +97,7 @@ trait ToteutusMetadataIndexed {
 case class AmmatillinenToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amm,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     osaamisalat: List[AmmatillinenOsaamisalaIndexed],
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
@@ -109,6 +111,7 @@ case class AmmatillinenToteutusMetadataIndexed(
   def toToteutusMetadata: AmmatillinenToteutusMetadata = AmmatillinenToteutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     osaamisalat = osaamisalat.map(_.toAmmatillinenOsaamisala),
     opetus = opetus.map(_.toOpetus),
     asiasanat = asiasanat,
@@ -142,6 +145,7 @@ trait TutkintoonJohtamatonToteutusMetadataIndexed extends ToteutusMetadataIndexe
 case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -164,6 +168,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
     AmmatillinenTutkinnonOsaToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -187,6 +192,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadataIndexed(
 case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmOsaamisala,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -209,6 +215,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
     AmmatillinenOsaamisalaToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -232,6 +239,7 @@ case class AmmatillinenOsaamisalaToteutusMetadataIndexed(
 case class AmmatillinenMuuToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmMuu,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -254,6 +262,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
     AmmatillinenMuuToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -277,6 +286,7 @@ case class AmmatillinenMuuToteutusMetadataIndexed(
 case class AmmattikorkeakouluToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Amk,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -288,6 +298,7 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
   def toToteutusMetadata: AmmattikorkeakouluToteutusMetadata = AmmattikorkeakouluToteutusMetadata(
     tyyppi = tyyppi,
     kuvaus = kuvaus,
+    osaamistavoitteet = osaamistavoitteet,
     opetus = opetus.map(_.toOpetus),
     asiasanat = asiasanat,
     ammattinimikkeet = ammattinimikkeet,
@@ -301,6 +312,7 @@ case class AmmattikorkeakouluToteutusMetadataIndexed(
 case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -313,6 +325,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
     AmmOpeErityisopeJaOpoToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -327,6 +340,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadataIndexed(
 case class OpePedagOpinnotToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = OpePedagOpinnot,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -339,6 +353,7 @@ case class OpePedagOpinnotToteutusMetadataIndexed(
     OpePedagOpinnotToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -353,6 +368,7 @@ case class OpePedagOpinnotToteutusMetadataIndexed(
 case class YliopistoToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Yo,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -365,6 +381,7 @@ case class YliopistoToteutusMetadataIndexed(
     YliopistoToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -407,6 +424,7 @@ case class LukiodiplomiTietoIndexed(koodi: KoodiUri, linkki: Kielistetty, linkin
 case class LukioToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = Lk,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -424,6 +442,7 @@ case class LukioToteutusMetadataIndexed(
     LukioToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -442,6 +461,7 @@ case class LukioToteutusMetadataIndexed(
 case class TuvaToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -455,6 +475,7 @@ case class TuvaToteutusMetadataIndexed(
     TuvaToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -470,6 +491,7 @@ case class TuvaToteutusMetadataIndexed(
 case class TelmaToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -482,6 +504,7 @@ case class TelmaToteutusMetadataIndexed(
     TelmaToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -496,6 +519,7 @@ case class TelmaToteutusMetadataIndexed(
 case class VapaaSivistystyoOpistovuosiToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -509,6 +533,7 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadataIndexed(
     VapaaSivistystyoOpistovuosiToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -524,6 +549,7 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadataIndexed(
 case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -547,6 +573,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
     VapaaSivistystyoMuuToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -572,6 +599,7 @@ case class VapaaSivistystyoMuuToteutusMetadataIndexed(
 case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -595,6 +623,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
     VapaaSivistystyoOsaamismerkkiToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -620,6 +649,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadataIndexed(
 case class AikuistenPerusopetusToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = AikuistenPerusopetus,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -642,6 +672,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
     AikuistenPerusopetusToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -665,6 +696,7 @@ case class AikuistenPerusopetusToteutusMetadataIndexed(
 case class KkOpintojaksoToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = KkOpintojakso,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     yhteyshenkilot: Seq[Yhteyshenkilo],
@@ -689,6 +721,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
     KkOpintojaksoToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = List.empty,
@@ -716,6 +749,7 @@ case class KkOpintojaksoToteutusMetadataIndexed(
 case class ErikoislaakariToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -728,6 +762,7 @@ case class ErikoislaakariToteutusMetadataIndexed(
     ErikoislaakariToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -742,6 +777,7 @@ case class ErikoislaakariToteutusMetadataIndexed(
 case class KkOpintokokonaisuusToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi = KkOpintokokonaisuus,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opintojenLaajuusyksikko: Option[KoodiUri],
     opintojenLaajuusNumero: Option[Double],
     opetus: Option[OpetusIndexed],
@@ -770,6 +806,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
     KkOpintokokonaisuusToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -800,6 +837,7 @@ case class KkOpintokokonaisuusToteutusMetadataIndexed(
 case class ErikoistumiskoulutusToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],
@@ -822,6 +860,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
     ErikoistumiskoulutusToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opetus = opetus.map(_.toOpetus),
       asiasanat = asiasanat,
       ammattinimikkeet = ammattinimikkeet,
@@ -846,6 +885,7 @@ case class ErikoistumiskoulutusToteutusMetadataIndexed(
 case class TaiteenPerusopetusToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opintojenLaajuusyksikko: Option[KoodiUri],
     opintojenLaajuusNumeroMin: Option[Double],
     opintojenLaajuusNumeroMax: Option[Double],
@@ -872,6 +912,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
     TaiteenPerusopetusToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
       opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,
@@ -898,6 +939,7 @@ case class TaiteenPerusopetusToteutusMetadataIndexed(
 case class MuuToteutusMetadataIndexed(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
+    osaamistavoitteet: Kielistetty,
     opintojenLaajuusyksikko: Option[KoodiUri],
     opintojenLaajuusNumeroMin: Option[Double],
     opintojenLaajuusNumeroMax: Option[Double],
@@ -924,6 +966,7 @@ case class MuuToteutusMetadataIndexed(
     MuuToteutusMetadata(
       tyyppi = tyyppi,
       kuvaus = kuvaus,
+      osaamistavoitteet = osaamistavoitteet,
       opintojenLaajuusyksikkoKoodiUri = opintojenLaajuusyksikko.map(_.koodiUri),
       opintojenLaajuusNumeroMin = opintojenLaajuusNumeroMin,
       opintojenLaajuusNumeroMax = opintojenLaajuusNumeroMax,

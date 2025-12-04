@@ -37,6 +37,8 @@ case class CasClientConfiguration(username: String, password: String)
 
 case class HakukohderyhmaConfiguration(cacheTtlMinutes: Long)
 
+case class MassOperationConfiguration(numThreds: Int)
+
 case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperties)
     extends KoutaBaseConfig(config, urlProperties) {
 
@@ -75,6 +77,10 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
   val clientConfiguration = CasClientConfiguration(
     username = config.getString("kouta-external.cas.username"),
     password = config.getString("kouta-external.cas.password")
+  )
+
+  val massOperationConfiguration = MassOperationConfiguration(
+    numThreds = config.getInt("kouta-external.massoperation.numThreads")
   )
 }
 

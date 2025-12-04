@@ -5,6 +5,8 @@ kouta-external.cas.password={{kouta_external_cas_password}}
 
 kouta-external.hakukohderyhma.cacheTtlMinutes={{kouta_external_hakukohderyhma_cache_ttl_minutes | default('30')}}
 
+kouta-external.massoperation.numThreads={{kouta_external_massoperation_num_threads | default('3')}}
+
 kouta-external.db.url=jdbc:postgresql://{{host_postgresql_koutaexternal}}:{{host_postgresql_koutaexternal_port}}/koutaexternal
 kouta-external.db.port={{host_postgresql_koutaexternal_port}}
 kouta-external.db.user={{postgres_app_user}}

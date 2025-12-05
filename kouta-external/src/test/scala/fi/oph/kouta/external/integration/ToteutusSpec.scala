@@ -4,7 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{KoulutusOid, OrganisaatioOid, ToteutusOid}
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Toteutus
-import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoulutusFixture, ToteutusFixture}
+import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, ToteutusFixture}
 import fi.oph.kouta.security.{CasSession, Role}
 
 import java.time.Instant

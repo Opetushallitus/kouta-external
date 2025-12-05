@@ -3,6 +3,7 @@ package fi.oph.kouta.external.util
 import fi.oph.kouta.domain._
 import fi.oph.kouta.domain.oid.HakuOid
 import fi.oph.kouta.external.domain._
+import fi.oph.kouta.external.domain.enums.Operation
 import fi.oph.kouta.external.domain.indexed._
 import fi.oph.kouta.util.{GenericKoutaFormats, GenericKoutaJsonFormats}
 import org.json4s.JsonAST.{JObject, JString}
@@ -24,7 +25,8 @@ sealed trait DefaultKoutaJsonFormats extends GenericKoutaFormats {
     valintatapaSisaltoSerializer,
     valintaperusteMetadataSerializer,
     valintaperusteMetadataIndexedSerializer,
-    stringSerializer(HakuOid)
+    stringSerializer(HakuOid),
+    stringSerializer(Operation.apply),
   )
 
   private def serializer[A: Manifest](deserializer: PartialFunction[JValue, A])(

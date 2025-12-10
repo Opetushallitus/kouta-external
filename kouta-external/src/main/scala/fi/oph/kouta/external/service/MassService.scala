@@ -31,6 +31,7 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
     if (duplicateOids.nonEmpty) {
       return Future.failed(DuplicateOidException(duplicateOids))
     }
+
     implicit val executor: ExecutionContextExecutor = MassOperations.executor
     Future.traverse(entities)(k => Future(handleEntityInMass(k)))
   }
@@ -86,3 +87,4 @@ object MassService {
 
 case class DuplicateOidException(duplicates: Iterable[Oid])
     extends IllegalArgumentException(s"Pyynnössä oli monta kohdetta, joilla oli sama OID: ${duplicates.mkString(", ")}")
+

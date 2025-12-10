@@ -2,13 +2,18 @@ package fi.oph.kouta.external.service
 
 import fi.oph.kouta.domain.Amm
 import fi.oph.kouta.domain.oid.{GenericOid, KoulutusOid}
-import fi.oph.kouta.external.domain.{AmmatillinenKoulutusMetadata, AmmatillinenOsaamisalaKoulutusMetadata, Koulutus}
+import fi.oph.kouta.external.domain.{AmmatillinenKoulutusMetadata, Koulutus}
 import fi.oph.kouta.external.elasticsearch.{EPerusteClient, KoulutusClient}
 import fi.oph.kouta.external.kouta._
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
-import fi.oph.kouta.service.{AuthorizationRuleForReadJulkinen, AuthorizationRules, OrganisaatioService, RoleEntityAuthorizationService}
+import fi.oph.kouta.service.{
+  AuthorizationRuleForReadJulkinen,
+  AuthorizationRules,
+  OrganisaatioService,
+  RoleEntityAuthorizationService
+}
 import fi.oph.kouta.servlet.Authenticated
 
 import java.time.Instant
@@ -39,22 +44,14 @@ class KoulutusService(
         )
       )
 
-      authorizedKoulutus.ePerusteId match {
-        case Some(ePerusteId) if authorizedKoulutus.koulutustyyppi == Amm =>
+      (authorizedKoulutus.ePerusteId, authorizedKoulutus.metadata) match {
+        case (Some(ePerusteId), Some(m: AmmatillinenKoulutusMetadata)) =>
           ePerusteClient.getEPeruste(GenericOid(ePerusteId.toString)).map { eperuste =>
             val tyotehtavatJoissaVoiToimia = eperuste.tyotehtavatJoissaVoiToimia
             val suorittaneenOsaaminen      = eperuste.suorittaneenOsaaminen
-
-            authorizedKoulutus.metadata match {
-              case Some(metadata) =>
-                metadata match {
-                  case m: AmmatillinenKoulutusMetadata =>
-                    authorizedKoulutus.copy(metadata =
-                      Some(m.copy(kuvaus = tyotehtavatJoissaVoiToimia, osaamistavoitteet = suorittaneenOsaaminen))
-                    )
-                }
-              case None => authorizedKoulutus
-            }
+            authorizedKoulutus.copy(metadata =
+              Some(m.copy(kuvaus = tyotehtavatJoissaVoiToimia, osaamistavoitteet = suorittaneenOsaaminen))
+            )
           }
         case _ => Future(authorizedKoulutus)
       }

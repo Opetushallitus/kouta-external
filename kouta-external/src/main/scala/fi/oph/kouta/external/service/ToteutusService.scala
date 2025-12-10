@@ -12,13 +12,21 @@ import fi.oph.kouta.logging.Logging
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, Future}
 
 object ToteutusService extends ToteutusService(ToteutusClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class ToteutusService(toteutusClient: ToteutusClient, val koutaClient: CasKoutaClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Toteutus] with Logging {
+class ToteutusService(
+    toteutusClient: ToteutusClient,
+    val koutaClient: CasKoutaClient,
+    val organisaatioService: OrganisaatioService
+) extends RoleEntityAuthorizationService[Toteutus]
+    with MassService[ToteutusOid, Toteutus]
+    with Logging {
 
   override val roleEntity: RoleEntity = Role.Toteutus
+  override val entityName: String     = "toteutus"
 
   def get(oid: ToteutusOid)(implicit authenticated: Authenticated): Future[Toteutus] =
     toteutusClient
@@ -47,4 +55,13 @@ class ToteutusService(toteutusClient: ToteutusClient, val koutaClient: CasKoutaC
     implicit authenticated: Authenticated
   ): Future[KoutaResponse[UpdateResponse]] =
     koutaClient.update("kouta-backend.toteutus", KoutaToteutusRequest(authenticated, toteutus), ifUnmodifiedSince)
+
+  override def createBlocking(toteutus: Toteutus)(implicit authenticated: Authenticated): KoutaResponse[ToteutusOid] =
+    Await.result(create(toteutus), 60.seconds)
+
+  override def updateBlocking(toteutus: Toteutus, ifUnmodifiedSince: Instant)(implicit
+      authenticated: Authenticated
+  ): KoutaResponse[UpdateResponse] =
+    Await.result(update(toteutus, ifUnmodifiedSince), 60.seconds)
+
 }

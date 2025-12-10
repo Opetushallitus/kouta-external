@@ -20,6 +20,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(HakuServlet, "/haku", "haku")
     context.mount(HakukohdeServlet, "/hakukohde", "hakukohde")
     context.mount(ToteutusServlet, "/toteutus", "toteutus")
+    context.mount(MassToteutusServlet, "/toteutukset", "toteutukset")
     context.mount(SorakuvausServlet, "/sorakuvaus", "sorakuvaus")
 
     context.mount(HealthcheckServlet, "/healthcheck", "healthcheck")

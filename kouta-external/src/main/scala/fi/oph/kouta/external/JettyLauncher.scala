@@ -27,10 +27,6 @@ class JettyLauncher(val port: Int) {
 
   server.setRequestLog(requestLog(KoutaConfigurationFactory.configuration.urlProperties))
 
-  server.getConnectors.foreach { c =>
-    c.asInstanceOf[ServerConnector].setIdleTimeout(5*60*1000)
-  }
-
   def start(): Server = {
     server.start()
     server

@@ -5,11 +5,12 @@ import fi.oph.kouta.external.service.KoulutusService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.external.{KoutaConfiguration, KoutaConfigurationFactory}
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{ActionResult, FutureSupport}
+import org.scalatra.{ActionResult, AsyncResult, FutureSupport}
 
 import java.util.concurrent.Executors
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
+import scala.concurrent.duration.{Duration, DurationInt}
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 
 object MassOperations {
   private val config: KoutaConfiguration = KoutaConfigurationFactory.configuration
@@ -122,7 +123,10 @@ class MassKoulutusServlet(koulutusService: KoulutusService)
     logger.error("PUT /koulutukset")
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
-      koulutusService.massImport(parsedBody.extract[List[Koulutus]])
+      new AsyncResult {
+        override def timeout: Duration = 15.minutes
+        override val is: Future[_] = koulutusService.massImport(parsedBody.extract[List[Koulutus]])
+      }
     } else {
       ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)
     }

@@ -3,7 +3,7 @@ package fi.oph.kouta.external
 import ch.qos.logback.access.jetty.RequestLogImpl
 import fi.vm.sade.properties.OphProperties
 import fi.oph.kouta.logging.Logging
-import org.eclipse.jetty.server.{RequestLog, Server, ServerConnector}
+import org.eclipse.jetty.server.{RequestLog, Server}
 import org.eclipse.jetty.util.resource.Resource
 import org.eclipse.jetty.webapp.WebAppContext
 

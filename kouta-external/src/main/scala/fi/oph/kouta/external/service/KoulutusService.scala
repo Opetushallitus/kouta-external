@@ -12,8 +12,7 @@ import fi.oph.kouta.servlet.Authenticated
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.global
-import scala.concurrent.duration.DurationInt
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object KoulutusService extends KoulutusService(KoulutusClient, CasKoutaClient, OrganisaatioServiceImpl)
 
@@ -56,11 +55,4 @@ class KoulutusService(
   ): Future[KoutaResponse[UpdateResponse]] =
     koutaClient.update("kouta-backend.koulutus", KoutaKoulutusRequest(authenticated, koulutus), ifUnmodifiedSince)
 
-  override def createBlocking(koulutus: Koulutus)(implicit authenticated: Authenticated): KoutaResponse[KoulutusOid] =
-    Await.result(create(koulutus), 60.seconds)
-
-  override def updateBlocking(koulutus: Koulutus, ifUnmodifiedSince: Instant)(implicit
-      authenticated: Authenticated
-  ): KoutaResponse[UpdateResponse] =
-    Await.result(update(koulutus, ifUnmodifiedSince), 60.seconds)
 }

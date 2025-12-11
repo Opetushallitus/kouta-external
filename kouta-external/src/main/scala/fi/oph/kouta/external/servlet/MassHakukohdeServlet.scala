@@ -1,7 +1,8 @@
 package fi.oph.kouta.external.servlet
 
-import fi.oph.kouta.external.domain.Toteutus
-import fi.oph.kouta.external.service.ToteutusService
+import fi.oph.kouta.domain.oid.HakukohdeOid
+import fi.oph.kouta.external.domain.Hakukohde
+import fi.oph.kouta.external.service.{HakukohdeService, MassService}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{ActionResult, AsyncResult, FutureSupport}
@@ -10,10 +11,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, DurationInt}
 import scala.concurrent.{ExecutionContext, Future}
 
-object MassToteutusServlet extends MassToteutusServlet(ToteutusService)
+object MassHakukohdeServlet extends MassHakukohdeServlet(HakukohdeService)
 
-class MassToteutusServlet(
-    toteutusService: ToteutusService
+class MassHakukohdeServlet(
+    hakukohdeService: HakukohdeService
 ) extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
@@ -21,30 +22,30 @@ class MassToteutusServlet(
   override def executor: ExecutionContext = global
 
   registerPath(
-    "/toteutukset/",
+    "/hakukohteet/",
     """    put:
-      |      summary: Tallenna toteutukset
-      |      operationId: Tallenna toteutukset
-      |      description: Tallenna annettujen toteutusten tiedot.
-      |        Päivittää aiemmin lisätyt toteutukset ja lisää puuttuvat. Jos toteutuksella on oid-kenttä,
+      |      summary: Tallenna hakukohteet
+      |      operationId: Tallenna hakukohteet
+      |      description: Tallenna annettujen hakukohteiden tiedot.
+      |        Päivittää aiemmin lisätyt hakukohteet ja lisää puuttuvat. Jos hakukohteella on oid-kenttä,
       |        sitä yritetään päivittää, muuten lisätä.
       |
       |        Rajapinta palauttaa lisäyksille tiedon sille annetusta oidista ja muutoksille tiedon,
-      |        päivitettiinkö toteutusta. Vastaukset ovat samassa järjestyksessä kuin pyynnön toteutukset.
+      |        päivitettiinkö hakukohdetta. Vastaukset ovat samassa järjestyksessä kuin pyynnön hakukohteet.
       |
       |        Huom! Rajapinnassa ei ole samanaikaisten muokkausten suojaa, eli jos joku on muokannut tietoja esim.
       |        opintopolun käyttöliittymässä, nämä muutokset jyrätään.
       |      tags:
-      |        - Toteutus
+      |        - Hakukohde
       |      requestBody:
-      |        description: Tallennettava toteutus
+      |        description: Tallennettava hakukohde
       |        required: true
       |        content:
       |          application/json:
       |            schema:
       |              type: array
       |              items:
-      |                $ref: '#/components/schemas/Toteutus'
+      |                $ref: '#/components/schemas/Hakukohde'
       |      responses:
       |        '200':
       |          description: Ok
@@ -59,7 +60,7 @@ class MassToteutusServlet(
       implicit val authenticated: Authenticated = authenticate
       new AsyncResult {
         override def timeout: Duration = 15.minutes
-        override val is: Future[_]     = toteutusService.massImport(parsedBody.extract[List[Toteutus]])
+        override val is: Future[_]     = hakukohdeService.massImport(parsedBody.extract[List[Hakukohde]])
       }
     } else {
       ActionResult(403, "Rajapinnan käyttö estetty tässä ympäristössä", Map.empty)

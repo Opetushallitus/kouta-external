@@ -63,7 +63,6 @@ class MassKoulutusServlet(koulutusService: KoulutusService)
       |""".stripMargin
   )
   put("/") {
-    logger.error("PUT /koulutukset")
     if (externalModifyEnabled) {
       implicit val authenticated: Authenticated = authenticate
       new AsyncResult {

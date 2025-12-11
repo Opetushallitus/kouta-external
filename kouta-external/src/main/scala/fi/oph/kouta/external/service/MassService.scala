@@ -10,15 +10,17 @@ import fi.oph.kouta.servlet.Authenticated
 import fi.oph.kouta.util.Timer
 
 import java.time.Instant
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success, Try}
 
-trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] extends  Logging {
+trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
+  this: Logging =>
 
-  def createBlocking(entity: T)(implicit authenticated: Authenticated): KoutaResponse[ID]
+  def create(entity: T)(implicit authenticated: Authenticated): Future[KoutaResponse[ID]]
 
-  def updateBlocking(entity: T, ifUnmodifiedSince: Instant)
-                            (implicit authenticated: Authenticated): KoutaResponse[UpdateResponse]
+  def update(entity: T, ifUnmodifiedSince: Instant)
+            (implicit authenticated: Authenticated): Future[KoutaResponse[UpdateResponse]]
 
   def entityName: String
 
@@ -56,5 +58,13 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] extends  Logging {
         }
       }
     }
+
+  private def createBlocking(entity: T)(implicit authenticated: Authenticated): KoutaResponse[ID] =
+    Await.result(create(entity), 60.seconds)
+
+  private def updateBlocking(entity: T, ifUnmodifiedSince: Instant)(implicit
+                                                                              authenticated: Authenticated
+  ): KoutaResponse[UpdateResponse] =
+    Await.result(update(entity, ifUnmodifiedSince), 60.seconds)
 
 }

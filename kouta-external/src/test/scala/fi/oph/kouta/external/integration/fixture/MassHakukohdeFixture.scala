@@ -55,5 +55,4 @@ trait MassHakukohdeFixture extends AccessControlSpec {
 
   def put(hakukohteet: List[Hakukohde], expectedStatus: Int, expectedBody: String): Unit =
     create(Path, hakukohteet, defaultSessionId, expectedStatus, expectedBody)
-
 }

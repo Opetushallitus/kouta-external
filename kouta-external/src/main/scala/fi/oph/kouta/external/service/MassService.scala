@@ -31,7 +31,6 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
     if (duplicateOids.nonEmpty) {
       return Future.failed(DuplicateOidException(duplicateOids))
     }
-
     implicit val executor: ExecutionContextExecutor = MassOperations.executor
     Future.traverse(entities)(k => Future(handleEntityInMass(k)))
   }

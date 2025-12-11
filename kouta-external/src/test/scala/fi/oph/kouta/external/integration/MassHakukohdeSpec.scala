@@ -58,7 +58,7 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
 
     val result = put(List(hakukohde))
 
-    result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}"}]""")
+    result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde"}]""")
   }
 
   it should "update an existing hakukohde when called with an oid" in {
@@ -66,7 +66,7 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
 
     val result = put(List(hakukohde(hakukohdeOid)))
 
-    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "updated": true}]""")
+    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "updated": true}]""")
   }
 
   it should "create and update when called with both" in {
@@ -76,8 +76,8 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
     val result = put(List(hakukohde, hakukohde(hakukohdeOid)))
 
     result shouldEqual parse(s"""[
-                                |  {"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}"},
-                                |  {"operation": "UPDATE", "success": true, "updated": true}
+                                |  {"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde"},
+                                |  {"operation": "UPDATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "updated": true}
                                 |]""".stripMargin)
   }
 
@@ -88,8 +88,8 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
     val result = put(List(hakukohde(hakukohdeOid), hakukohde))
 
     result shouldEqual parse(s"""[
-                                |  {"operation": "UPDATE", "success": true, "updated": true},
-                                |  {"operation": "CREATE", "success": false, "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
+                                |  {"operation": "UPDATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "updated": true},
+                                |  {"operation": "CREATE", "success": false, "externalId": "extHakukohde", "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
                                 |]""".stripMargin)
   }
 
@@ -100,8 +100,8 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
     val result = put(List(hakukohde, hakukohde(hakukohdeOid)))
 
     result shouldEqual parse(s"""[
-                                |  {"operation": "CREATE", "success": false, "exception": "scala.MatchError"},
-                                |  {"operation": "UPDATE", "success": true, "updated": true}
+                                |  {"operation": "CREATE", "success": false, "externalId": "extHakukohde", "exception": "scala.MatchError"},
+                                |  {"operation": "UPDATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "updated": true}
                                 |]""".stripMargin)
   }
 
@@ -112,8 +112,8 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
     val result = put(List(hakukohde, hakukohde(hakukohdeOid)))
 
     result shouldEqual parse(s"""[
-                                |  {"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}"},
-                                |  {"operation": "UPDATE", "success": false, "exception": "org.json4s.package.MappingException"}
+                                |  {"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde"},
+                                |  {"operation": "UPDATE", "success": false, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "exception": "org.json4s.package.MappingException"}
                                 |]""".stripMargin)
   }
 }

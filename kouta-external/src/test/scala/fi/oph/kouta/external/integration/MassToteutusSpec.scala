@@ -58,7 +58,7 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     val result = put(List(toteutus))
 
-    result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}"}]""")
+    result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1"}]""")
   }
 
   it should "update an existing toteutus when called with an oid" in {
@@ -66,7 +66,7 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     val result = put(List(toteutus(toteutusOid)))
 
-    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "updated": true}]""")
+    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "updated": true}]""")
   }
 
   it should "create and update when called with both" in {
@@ -77,8 +77,8 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}"},
-         |  {"operation": "UPDATE", "success": true, "updated": true}
+         |  {"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1"},
+         |  {"operation": "UPDATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "updated": true}
          |]""".stripMargin)
   }
 
@@ -90,8 +90,8 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "UPDATE", "success": true, "updated": true},
-         |  {"operation": "CREATE", "success": false, "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
+         |  {"operation": "UPDATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "updated": true},
+         |  {"operation": "CREATE", "success": false, "externalId": "extToteutus1", "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
          |]""".stripMargin)
   }
 
@@ -103,8 +103,8 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": false, "exception": "scala.MatchError"},
-         |  {"operation": "UPDATE", "success": true, "updated": true}
+         |  {"operation": "CREATE", "success": false, "externalId": "extToteutus1", "exception": "scala.MatchError"},
+         |  {"operation": "UPDATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "updated": true}
          |]""".stripMargin)
   }
 
@@ -116,8 +116,8 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}"},
-         |  {"operation": "UPDATE", "success": false, "exception": "org.json4s.package.MappingException"}
+         |  {"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1"},
+         |  {"operation": "UPDATE", "success": false, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "exception": "org.json4s.package.MappingException"}
          |]""".stripMargin)
   }
 }

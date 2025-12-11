@@ -2,6 +2,7 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.KoutaBackendMock
+import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.integration.fixture.{KoutaIntegrationSpec, MassKoulutusFixture}
 import fi.oph.kouta.security.CasSession
 import org.json4s.jackson.JsonMethods.parse
@@ -16,7 +17,8 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
   def mockCreate(
       responseString: String,
       responseStatus: Int = 200,
-      session: Option[(UUID, CasSession)] = None
+      session: Option[(UUID, CasSession)] = None,
+      koulutus: Koulutus = koulutus
   ): Unit =
     addCreateMock(
       "koulutus",
@@ -58,6 +60,17 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     val result = put(List(koulutus))
 
+    result shouldEqual parse(
+      s"""[{"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1"}]"""
+    )
+  }
+
+  it should "create a new koulutus when called without an oid and without external ID" in {
+    val koulutusWithoutExternalId = koulutus.copy(externalId = None)
+    mockCreate(responseStringWithOid(koulutusOid.s), koulutus = koulutusWithoutExternalId)
+
+    val result = put(List(koulutusWithoutExternalId))
+
     result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}"}]""")
   }
 
@@ -66,7 +79,7 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     val result = put(List(koulutus(koulutusOid)))
 
-    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "updated": true}]""")
+    result shouldEqual parse(s"""[{"operation": "UPDATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "updated": true}]""")
   }
 
   it should "create and update when called with both" in {
@@ -77,8 +90,8 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}"},
-         |  {"operation": "UPDATE", "success": true, "updated": true}
+         |  {"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1"},
+         |  {"operation": "UPDATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "updated": true}
          |]""".stripMargin)
   }
 
@@ -90,8 +103,8 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "UPDATE", "success": true, "updated": true},
-         |  {"operation": "CREATE", "success": false, "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
+         |  {"operation": "UPDATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "updated": true},
+         |  {"operation": "CREATE", "success": false, "externalId": "extKoulutus1", "status": 403, "message": "{\\"error\\": \\"Test error\\"}"}
          |]""".stripMargin)
   }
 
@@ -103,8 +116,8 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": false, "exception": "scala.MatchError"},
-         |  {"operation": "UPDATE", "success": true, "updated": true}
+         |  {"operation": "CREATE", "success": false, "externalId": "extKoulutus1", "exception": "scala.MatchError"},
+         |  {"operation": "UPDATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "updated": true}
          |]""".stripMargin)
   }
 
@@ -116,8 +129,8 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
 
     result shouldEqual parse(
       s"""[
-         |  {"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}"},
-         |  {"operation": "UPDATE", "success": false, "exception": "org.json4s.package.MappingException"}
+         |  {"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1"},
+         |  {"operation": "UPDATE", "success": false, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "exception": "org.json4s.package.MappingException"}
          |]""".stripMargin)
   }
 }

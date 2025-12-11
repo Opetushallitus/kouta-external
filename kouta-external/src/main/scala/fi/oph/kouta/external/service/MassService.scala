@@ -19,12 +19,17 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
 
   def create(entity: T)(implicit authenticated: Authenticated): Future[KoutaResponse[ID]]
 
-  def update(entity: T, ifUnmodifiedSince: Instant)
-            (implicit authenticated: Authenticated): Future[KoutaResponse[UpdateResponse]]
+  def update(entity: T, ifUnmodifiedSince: Instant)(implicit
+      authenticated: Authenticated
+  ): Future[KoutaResponse[UpdateResponse]]
 
   def entityName: String
 
   def massImport(entities: List[T])(implicit authenticated: Authenticated): Future[List[MassResult]] = {
+    val duplicateOids = entities.flatMap(_.oid).groupBy(identity).collect { case (x, List(_, _, _*)) => x }
+    if (duplicateOids.nonEmpty) {
+      return Future.failed(DuplicateOidException(duplicateOids))
+    }
     implicit val executor: ExecutionContextExecutor = MassOperations.executor
     Future.traverse(entities)(k => Future(handleEntityInMass(k)))
   }
@@ -73,3 +78,6 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
     Await.result(update(entity, ifUnmodifiedSince), 60.seconds)
 
 }
+
+case class DuplicateOidException(duplicates: Iterable[Oid])
+    extends IllegalArgumentException(s"Pyynnössä oli monta kohdetta, joilla oli sama OID: ${duplicates.mkString(", ")}")

@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.oid.ToteutusOid
 import fi.oph.kouta.external.TestData.AmmToteutus
 import fi.oph.kouta.external.domain.Toteutus
 import fi.oph.kouta.external.elasticsearch.ToteutusClient
-import fi.oph.kouta.external.service.{ToteutusService, OrganisaatioServiceImpl}
+import fi.oph.kouta.external.service.{OrganisaatioServiceImpl, ToteutusService}
 import fi.oph.kouta.external.servlet.MassToteutusServlet
 import fi.oph.kouta.external.{MockKoutaClient, TempElasticClient}
 import org.json4s.JValue
@@ -43,4 +43,6 @@ trait MassToteutusFixture extends AccessControlSpec {
   def put(toteutukset: List[Toteutus]): JValue =
     create(Path, toteutukset, defaultSessionId, parseResult)
 
+  def put(toteutukset: List[Toteutus], expectedStatus: Int, expectedBody: String): Unit =
+    create(Path, toteutukset, defaultSessionId, expectedStatus, expectedBody)
 }

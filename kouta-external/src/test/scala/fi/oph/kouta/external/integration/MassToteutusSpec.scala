@@ -53,6 +53,10 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
     put(nonExistingSessionId, 401, """{"error":"Unauthorized"}""")
   }
 
+  it should "return 400 when called with duplicate oids" in {
+    put(List(toteutus(toteutusOid), toteutus(toteutusOid)), 400, s"""{"error":"Pyynnössä oli monta kohdetta, joilla oli sama OID: $toteutusOid"}""")
+  }
+
   it should "create a new toteutus when called without an oid" in {
     mockCreate(responseStringWithOid(toteutusOid.s))
 

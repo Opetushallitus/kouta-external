@@ -53,6 +53,10 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
     put(nonExistingSessionId, 401, """{"error":"Unauthorized"}""")
   }
 
+  it should "return 400 when called with duplicate oids" in {
+    put(List(hakukohde(hakukohdeOid), hakukohde(hakukohdeOid)), 400, s"""{"error":"Pyynnössä oli monta kohdetta, joilla oli sama OID: $hakukohdeOid"}""")
+  }
+
   it should "create a new hakukohde when called without an oid" in {
     mockCreate(responseStringWithOid(hakukohdeOid.s))
 

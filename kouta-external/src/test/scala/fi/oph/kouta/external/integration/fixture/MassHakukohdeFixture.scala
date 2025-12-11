@@ -17,7 +17,7 @@ trait MassHakukohdeFixture extends AccessControlSpec {
 
   val Path = "/hakukohteet"
 
-  val hakukohde: Hakukohde = JulkaistuHakukohde
+  val hakukohde: Hakukohde       = JulkaistuHakukohde
   val hakukohdeOid: HakukohdeOid = HakukohdeOid("1.2.246.562.17.0000111")
 
   def hakukohde(oid: HakukohdeOid): Hakukohde =
@@ -52,5 +52,8 @@ trait MassHakukohdeFixture extends AccessControlSpec {
 
   def put(hakukohteet: List[Hakukohde]): JValue =
     create(Path, hakukohteet, defaultSessionId, parseResult)
+
+  def put(hakukohteet: List[Hakukohde], expectedStatus: Int, expectedBody: String): Unit =
+    create(Path, hakukohteet, defaultSessionId, expectedStatus, expectedBody)
 
 }

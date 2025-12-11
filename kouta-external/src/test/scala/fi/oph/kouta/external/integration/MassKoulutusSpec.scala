@@ -55,6 +55,10 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
     put(nonExistingSessionId, 401, """{"error":"Unauthorized"}""")
   }
 
+  it should "return 400 when called with duplicate oids" in {
+    put(List(koulutus(koulutusOid), koulutus(koulutusOid)), 400, s"""{"error":"Pyynnössä oli monta kohdetta, joilla oli sama OID: $koulutusOid"}""")
+  }
+
   it should "create a new koulutus when called without an oid" in {
     mockCreate(responseStringWithOid(koulutusOid.s))
 

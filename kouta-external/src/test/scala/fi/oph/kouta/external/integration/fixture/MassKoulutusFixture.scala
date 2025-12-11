@@ -43,4 +43,7 @@ trait MassKoulutusFixture extends AccessControlSpec {
   def put(koulutukset: List[Koulutus]): JValue =
     create(Path, koulutukset, defaultSessionId, parseResult)
 
+  def put(koulutukset: List[Koulutus], expectedStatus: Int, expectedBody: String): Unit =
+    create(Path, koulutukset, defaultSessionId, expectedStatus, expectedBody)
+
 }

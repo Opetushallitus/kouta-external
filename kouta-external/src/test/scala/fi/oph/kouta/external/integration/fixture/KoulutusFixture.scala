@@ -22,12 +22,11 @@ trait KoulutusFixture extends AccessControlSpec {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val koulutusService = new KoulutusService(
       new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava),
       new EPerusteClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
-      organisaatioService
+      new OrganisaatioServiceImpl(urlProperties.get)
     ) {
       override def get(oid: KoulutusOid)(implicit authenticated: Authenticated): Future[Koulutus] =
         throwOrElse(oid)(super.get)

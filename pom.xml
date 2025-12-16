@@ -55,7 +55,7 @@
         <scalactic.version>3.1.1</scalactic.version>
 
         <!-- Plugin properties -->
-        <enforce.java.version>[11,)</enforce.java.version>
+        <enforce.java.version>[21,)</enforce.java.version>
 
         <plugin.scala-maven-plugin.version>4.8.0</plugin.scala-maven-plugin.version>
         <plugin.maven-enforcer-plugin.version>3.2.1</plugin.maven-enforcer-plugin.version>

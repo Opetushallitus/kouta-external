@@ -1,10 +1,16 @@
 package fi.oph.kouta.external.service
 
-import fi.oph.kouta.domain.Amm
 import fi.oph.kouta.domain.oid.{GenericOid, KoulutusOid}
 import fi.oph.kouta.external.domain.{AmmatillinenKoulutusMetadata, Koulutus}
 import fi.oph.kouta.external.elasticsearch.{EPerusteClient, KoulutusClient}
-import fi.oph.kouta.external.kouta._
+import fi.oph.kouta.external.kouta.{
+  CasKoutaClient,
+  KoutaKoulutusRequest,
+  KoutaResponse,
+  OidResponse,
+  UpdateResponse,
+  UuidResponse
+}
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
@@ -28,9 +34,11 @@ class KoulutusService(
     val koutaClient: CasKoutaClient,
     val organisaatioService: OrganisaatioService
 ) extends RoleEntityAuthorizationService[Koulutus]
+   with MassService[KoulutusOid, Koulutus]
     with Logging {
 
   override val roleEntity: RoleEntity = Role.Koulutus
+  override val entityName: String     = "koulutus"
 
   def get(oid: KoulutusOid)(implicit authenticated: Authenticated): Future[Koulutus] = {
     koulutusClient.getKoulutus(oid).flatMap { koulutus =>

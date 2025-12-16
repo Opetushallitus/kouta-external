@@ -3,10 +3,10 @@ package fi.oph.kouta.external.integration
 import fi.oph.kouta.domain.oid.HakukohdeOid
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.integration.fixture.{KoutaIntegrationSpec, MassHakukohdeFixture}
+import fi.oph.kouta.external.service.MassService
 import fi.oph.kouta.security.CasSession
 import org.json4s.jackson.JsonMethods.parse
 
-import java.time.Instant
 import java.util.UUID
 
 class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with KoutaIntegrationSpec {
@@ -37,7 +37,7 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
       "hakukohde",
       KoutaBackendConverters.convertHakukohde(hakukohde(oid)),
       "kouta-backend.hakukohde",
-      Some(Instant.now()),
+      Some(MassService.tomorrowNoon()),
       session,
       responseString,
       responseStatus

@@ -25,11 +25,10 @@ trait MassToteutusFixture extends AccessControlSpec {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val toteutusService = new ToteutusService(
       new ToteutusClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
-      organisaatioService
+      new OrganisaatioServiceImpl(urlProperties.get)
     )
     addServlet(new MassToteutusServlet(toteutusService), Path)
   }

@@ -3,10 +3,10 @@ package fi.oph.kouta.external.integration
 import fi.oph.kouta.domain.oid.ToteutusOid
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.integration.fixture.{KoutaIntegrationSpec, MassToteutusFixture}
+import fi.oph.kouta.external.service.MassService
 import fi.oph.kouta.security.CasSession
 import org.json4s.jackson.JsonMethods.parse
 
-import java.time.Instant
 import java.util.UUID
 
 class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with KoutaIntegrationSpec {
@@ -37,7 +37,7 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
       "toteutus",
       KoutaBackendConverters.convertToteutus(toteutus(oid)),
       "kouta-backend.toteutus",
-      Some(Instant.now()),
+      Some(MassService.tomorrowNoon()),
       session,
       responseString,
       responseStatus

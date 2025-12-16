@@ -25,11 +25,10 @@ trait MassKoulutusFixture extends AccessControlSpec {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val koulutusService = new KoulutusService(
       new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
-      organisaatioService
+      new OrganisaatioServiceImpl(urlProperties.get)
     )
     addServlet(new MassKoulutusServlet(koulutusService), Path)
   }

@@ -4,12 +4,13 @@ import fi.oph.kouta.domain.oid.Oid
 import fi.oph.kouta.external.domain.PerustiedotWithOid
 import fi.oph.kouta.external.domain.enums.{MassResult, Operation}
 import fi.oph.kouta.external.kouta.{KoutaResponse, UpdateResponse}
+import fi.oph.kouta.external.service.MassService.tomorrowNoon
 import fi.oph.kouta.external.servlet.MassOperations
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.servlet.Authenticated
 import fi.oph.kouta.util.Timer
 
-import java.time.Instant
+import java.time.{Instant, LocalDateTime, LocalTime, ZoneOffset}
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContextExecutor, Future}
 import scala.util.{Failure, Success, Try}
@@ -57,7 +58,7 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
     }
 
   private def handleUpdate(oid: ID, entity: T)(implicit authenticated: Authenticated) =
-    Try(updateBlocking(entity, Instant.now())) match {
+    Try(updateBlocking(entity, tomorrowNoon())) match {
       case Failure(e) =>
         logger.error(s"Mass update on $entityName threw an exception. Entity = $entity", e)
         MassResult.Error(Operation.Update, entity.oid, entity.externalId, e)
@@ -76,7 +77,11 @@ trait MassService[ID <: Oid, T <: PerustiedotWithOid[ID, T]] {
       authenticated: Authenticated
   ): KoutaResponse[UpdateResponse] =
     Await.result(update(entity, ifUnmodifiedSince), 60.seconds)
+}
 
+object MassService {
+  def tomorrowNoon(): Instant =
+    LocalDateTime.now().plusDays(1).`with`(LocalTime.of(12, 0, 0)).toInstant(ZoneOffset.UTC)
 }
 
 case class DuplicateOidException(duplicates: Iterable[Oid])

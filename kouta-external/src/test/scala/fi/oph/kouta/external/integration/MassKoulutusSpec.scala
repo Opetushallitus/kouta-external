@@ -4,10 +4,10 @@ import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.KoutaBackendMock
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.integration.fixture.{KoutaIntegrationSpec, MassKoulutusFixture}
+import fi.oph.kouta.external.service.MassService
 import fi.oph.kouta.security.CasSession
 import org.json4s.jackson.JsonMethods.parse
 
-import java.time.Instant
 import java.util.UUID
 
 class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with KoutaIntegrationSpec {
@@ -39,7 +39,7 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
       "koulutus",
       KoutaBackendConverters.convertKoulutus(koulutus(oid)),
       "kouta-backend.koulutus",
-      Some(Instant.now()),
+      Some(MassService.tomorrowNoon()),
       session,
       responseString,
       responseStatus

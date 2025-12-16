@@ -25,11 +25,10 @@ trait MassKoulutusFixture extends AccessControlSpec {
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val organisaatioService = new OrganisaatioServiceImpl(urlProperties.get)
     val koulutusService = new KoulutusService(
       new KoulutusClient(TempElasticClient.client, TempElasticClient.clientJava),
       new MockKoutaClient(urlProperties.get),
-      organisaatioService
+      new OrganisaatioServiceImpl(urlProperties.get)
     )
     addServlet(new MassKoulutusServlet(koulutusService), Path)
   }
@@ -42,5 +41,8 @@ trait MassKoulutusFixture extends AccessControlSpec {
 
   def put(koulutukset: List[Koulutus]): JValue =
     create(Path, koulutukset, defaultSessionId, parseResult)
+
+  def put(koulutukset: List[Koulutus], expectedStatus: Int, expectedBody: String): Unit =
+    create(Path, koulutukset, defaultSessionId, expectedStatus, expectedBody)
 
 }

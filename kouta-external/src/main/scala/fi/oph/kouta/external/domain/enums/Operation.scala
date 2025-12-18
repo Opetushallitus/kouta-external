@@ -7,5 +7,7 @@ object Operation extends BasicTypeCompanion[Operation] {
 
   case object Create extends Operation("CREATE")
 
-  override def all: List[Operation] = List(Update, Create)
+  case object Upsert extends Operation("CREATE OR UPDATE")
+
+  override def all: List[Operation] = List(Update, Create, Upsert)
 }

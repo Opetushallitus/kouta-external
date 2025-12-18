@@ -3,8 +3,7 @@ package fi.oph.kouta.external.domain.enums
 import fi.oph.kouta.domain.oid.Oid
 import fi.oph.kouta.external.swagger.SwaggerModel
 
-@SwaggerModel(
-  """    MassResult:
+@SwaggerModel("""    MassResult:
     |      type: array
     |      items:
     |        oneOf:
@@ -140,12 +139,23 @@ object MassResult {
   ) extends MassResult(operation, success)
 
   object Failure {
-    def apply(operation: Operation, oid: Option[Oid], externalId: Option[String], status: Int, message: String): Failure =
+    def apply(
+        operation: Operation,
+        oid: Option[Oid],
+        externalId: Option[String],
+        status: Int,
+        message: String
+    ): Failure =
       Failure(operation, success = false, oid, externalId, status, message)
   }
 
-  case class Error(operation: Operation, success: Boolean, oid: Option[Oid], externalId: Option[String], exception: String)
-      extends MassResult(operation, success)
+  case class Error(
+      operation: Operation,
+      success: Boolean,
+      oid: Option[Oid],
+      externalId: Option[String],
+      exception: String
+  ) extends MassResult(operation, success)
 
   object Error {
     def apply(operation: Operation, oid: Option[Oid], externalId: Option[String], exception: Throwable): Error =

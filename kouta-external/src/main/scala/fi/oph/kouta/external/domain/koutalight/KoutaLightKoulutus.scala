@@ -72,6 +72,14 @@ trait KoutaLightKoulutusBase {
     |          type: object
     |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
     |          $ref: '#/components/schemas/Linkki'
+    |        isTyovoimakoulutus:
+    |          type: boolean
+    |          description: Onko kyseessä työvoimakoulutus
+    |          example: false
+    |        johtaaTutkintoon:
+    |          type: boolean
+    |          description: Onko kyseessä tutkintoon johtava koulutus
+    |          example: true
     |      required:
     |        - externalId
     |        - kielivalinta
@@ -91,7 +99,9 @@ case class KoutaLightKoulutus(
     hakuaikaAlkaa: Option[LocalDateTime] = None,
     hakuaikaPaattyy: Option[LocalDateTime] = None,
     aloituspaikatLukumaara: Option[Int] = None,
-    hakulomakeLinkki: Kielistetty = Map()
+    hakulomakeLinkki: Kielistetty = Map(),
+    isTyovoimakoulutus: Boolean = false,
+    johtaaTutkintoon: Boolean = false
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
@@ -101,7 +111,9 @@ case class KoutaLightKoulutusMetadata(
     hakuaikaAlkaa: Option[LocalDateTime],
     hakuaikaPaattyy: Option[LocalDateTime],
     aloituspaikatLukumaara: Option[Int],
-    hakulomakeLinkki: Kielistetty
+    hakulomakeLinkki: Kielistetty,
+    isTyovoimakoulutus: Boolean,
+    johtaaTutkintoon: Boolean
 )
 object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
@@ -115,7 +127,9 @@ object KoutaLightKoulutusMetadata {
       koulutus.hakuaikaAlkaa,
       koulutus.hakuaikaPaattyy,
       koulutus.aloituspaikatLukumaara,
-      koulutus.hakulomakeLinkki
+      koulutus.hakulomakeLinkki,
+      koulutus.isTyovoimakoulutus,
+      koulutus.johtaaTutkintoon
     )
   }
 }

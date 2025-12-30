@@ -68,6 +68,10 @@ trait KoutaLightKoulutusBase {
     |          type: integer
     |          description: Koulutuksen aloituspaikkojen lukumäärä
     |          example: 10
+    |        hakulomakeLinkki:
+    |          type: object
+    |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |          $ref: '#/components/schemas/Linkki'
     |      required:
     |        - externalId
     |        - kielivalinta
@@ -86,7 +90,8 @@ case class KoutaLightKoulutus(
     asiasanat: List[Kielistetty] = List(),
     hakuaikaAlkaa: Option[LocalDateTime] = None,
     hakuaikaPaattyy: Option[LocalDateTime] = None,
-    aloituspaikatLukumaara: Option[Int] = None
+    aloituspaikatLukumaara: Option[Int] = None,
+    hakulomakeLinkki: Kielistetty = Map()
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
@@ -95,7 +100,8 @@ case class KoutaLightKoulutusMetadata(
     asiasanat: List[Keyword],
     hakuaikaAlkaa: Option[LocalDateTime],
     hakuaikaPaattyy: Option[LocalDateTime],
-    aloituspaikatLukumaara: Option[Int]
+    aloituspaikatLukumaara: Option[Int],
+    hakulomakeLinkki: Kielistetty
 )
 object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
@@ -108,7 +114,8 @@ object KoutaLightKoulutusMetadata {
       koulutus.asiasanat.flatMap(kielistettyToKeyword),
       koulutus.hakuaikaAlkaa,
       koulutus.hakuaikaPaattyy,
-      koulutus.aloituspaikatLukumaara
+      koulutus.aloituspaikatLukumaara,
+      koulutus.hakulomakeLinkki
     )
   }
 }

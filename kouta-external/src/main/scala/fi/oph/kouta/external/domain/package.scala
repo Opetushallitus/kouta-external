@@ -131,6 +131,36 @@ package object domain {
       |          type: string
       |          example: "posti_04230#2"
       |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
+      |    KielistettyAmmattinimike:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: insinööri
+      |          description: "Suomenkielinen ammattinimike"
+      |        sv:
+      |          type: string
+      |          example: ingenjör
+      |          description: "Ruotsinkielinen ammattinimike"
+      |        en:
+      |          type: string
+      |          example: engineer
+      |          description: "Englanninkielinen ammattinimike"
+      |    KielistettyAsiasana:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: insinööri
+      |          description: "Suomenkielinen asiasana"
+      |        sv:
+      |          type: string
+      |          example: ingenjör
+      |          description: "Ruotsinkielinen asiasana"
+      |        en:
+      |          type: string
+      |          example: engineer
+      |          description: "Englanninkielinen asiasana"
       |""")
   abstract class KielistettySwagger
 

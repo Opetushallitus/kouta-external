@@ -2,7 +2,7 @@ package fi.oph.kouta.external.domain.koutalight
 
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.domain.Kielistetty
+import fi.oph.kouta.external.domain.{Keyword, Kielistetty}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 trait KoutaLightKoulutusBase {
@@ -42,6 +42,16 @@ trait KoutaLightKoulutusBase {
     |          description: Koulutuksen yleinen kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
+    |        ammattinimikkeet:
+    |          type: array
+    |          description: Kokoelma ammattinimikkeitä, voi olla yksi tai useampi
+    |          items:
+    |            $ref: '#/components/schemas/KielistettyAmmattinimike'
+    |        asiasanat:
+    |          type: array
+    |          description: Kokoelma asiasanoja, voi olla yksi tai useampi
+    |          items:
+    |            $ref: '#/components/schemas/KielistettyAsiasana'
     |      required:
     |        - externalId
     |        - kielivalinta
@@ -55,16 +65,25 @@ case class KoutaLightKoulutus(
     kielivalinta: Seq[Kieli],
     tila: String,
     nimi: Kielistetty,
-    kuvaus: Kielistetty
+    kuvaus: Kielistetty,
+    ammattinimikkeet: List[Kielistetty] = List(),
+    asiasanat: List[Kielistetty] = List(),
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
-    kuvaus: Kielistetty
+    kuvaus: Kielistetty,
+    ammattinimikkeet: List[Keyword],
+    asiasanat: List[Keyword]
 )
 object KoutaLightKoulutusMetadata {
+  private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
+    yield Keyword(kieli, value)
+
   def apply(koulutus: KoutaLightKoulutus): KoutaLightKoulutusMetadata = {
-    KoutaLightKoulutusMetadata(
-      koulutus.kuvaus
+    new KoutaLightKoulutusMetadata(
+      koulutus.kuvaus,
+      koulutus.ammattinimikkeet.flatMap(kielistettyToKeyword),
+      koulutus.asiasanat.flatMap(kielistettyToKeyword)
     )
   }
 }

@@ -62,12 +62,18 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
           if (isOphPaakayttaja) {
             Ok(koutaLightService.put(parsedBody.extract[List[KoutaLightKoulutus]], ownerOrg))
           } else {
-            Forbidden(errorMessage("Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+            val errorMsg = errorMessage("Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta")
+            logger.warn(errorMsg.toString())
+            Forbidden(errorMsg)
           }
         case Success(orgs) if orgs.size > 1 =>
-          Forbidden(errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota"))
+          val errorMsg = errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota")
+          logger.warn(errorMsg.toString())
+          Forbidden(errorMsg)
         case Success(orgs) if orgs.isEmpty =>
-          Forbidden(errorMessage("Käyttäjän oikeuksissa ei ole määritelty organisaatiota"))
+          val errorMsg = errorMessage("Käyttäjän oikeuksissa ei ole määritelty organisaatiota")
+          logger.warn(errorMsg.toString())
+          Forbidden(errorMsg)
         case Failure(e) =>
           logger.warn(e.toString)
           Forbidden(errorMessage("Käyttäjän oikeuksissa puutteita"))

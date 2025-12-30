@@ -16,10 +16,13 @@ class KoutaLightService extends Logging {
       val externalId = koulutus.externalId
       KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
         case Success(null) =>
+          logger.info(s"Created koulutus ${koulutus.externalId}")
           KoutaLightMassResult.CreateSuccess(externalId = Some(externalId))
         case Success(_) =>
+          logger.info(s"Updated koulutus ${koulutus.externalId}")
           KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId))
         case Failure(e) =>
+          logger.error(s"Create or update failed on koulutus with externalId ${koulutus.externalId}", e)
           KoutaLightMassResult.Error(operation = Operation.Upsert, externalId = Some(externalId), exception = e)
       }
     })

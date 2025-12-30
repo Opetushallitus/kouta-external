@@ -64,6 +64,10 @@ trait KoutaLightKoulutusBase {
     |          format: date-time
     |          description: Haun päättymisajankohta
     |          example: 2025-08-30T15:00
+    |        aloituspaikatLukumaara:
+    |          type: integer
+    |          description: Koulutuksen aloituspaikkojen lukumäärä
+    |          example: 10
     |      required:
     |        - externalId
     |        - kielivalinta
@@ -81,7 +85,8 @@ case class KoutaLightKoulutus(
     ammattinimikkeet: List[Kielistetty] = List(),
     asiasanat: List[Kielistetty] = List(),
     hakuaikaAlkaa: Option[LocalDateTime] = None,
-    hakuaikaPaattyy: Option[LocalDateTime] = None
+    hakuaikaPaattyy: Option[LocalDateTime] = None,
+    aloituspaikatLukumaara: Option[Int] = None
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
@@ -89,7 +94,8 @@ case class KoutaLightKoulutusMetadata(
     ammattinimikkeet: List[Keyword],
     asiasanat: List[Keyword],
     hakuaikaAlkaa: Option[LocalDateTime],
-    hakuaikaPaattyy: Option[LocalDateTime]
+    hakuaikaPaattyy: Option[LocalDateTime],
+    aloituspaikatLukumaara: Option[Int]
 )
 object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
@@ -101,7 +107,8 @@ object KoutaLightKoulutusMetadata {
       koulutus.ammattinimikkeet.flatMap(kielistettyToKeyword),
       koulutus.asiasanat.flatMap(kielistettyToKeyword),
       koulutus.hakuaikaAlkaa,
-      koulutus.hakuaikaPaattyy
+      koulutus.hakuaikaPaattyy,
+      koulutus.aloituspaikatLukumaara
     )
   }
 }

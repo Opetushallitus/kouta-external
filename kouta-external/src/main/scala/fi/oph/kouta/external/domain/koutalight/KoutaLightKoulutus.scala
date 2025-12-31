@@ -39,8 +39,7 @@ trait KoutaLightKoulutusBase {
     |        nimi:
     |          type: object
     |          description: Koulutuksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Nimi'
+    |          $ref: '#/components/schemas/Nimi'
     |        tarjoajat:
     |          type: array
     |          description: Koulutusta tarjoavan organisaation nimi
@@ -49,8 +48,7 @@ trait KoutaLightKoulutusBase {
     |        kuvaus:
     |          type: object
     |          description: Koulutuksen yleinen kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        ammattinimikkeet:
     |          type: array
     |          description: Kokoelma ammattinimikkeitä, voi olla yksi tai useampi
@@ -87,6 +85,14 @@ trait KoutaLightKoulutusBase {
     |          type: boolean
     |          description: Onko kyseessä tutkintoon johtava koulutus
     |          example: true
+    |        maksullinen:
+    |          type: boolean
+    |          description: Onko koulutus maksullista
+    |          example: true
+    |        maksullisuuskuvaus:
+    |          type: object
+    |          description: Tarkempi kuvaus maksullisuudesta
+    |          $ref: '#/components/schemas/Kuvaus'
     |        osaaminenUrit:
     |          type: array
     |          description: Koulutuksen tuottaman osaamisen ESCO-urit
@@ -115,6 +121,8 @@ case class KoutaLightKoulutus(
     hakulomakeLinkki: KielistettyLinkki = Map(),
     isTyovoimakoulutus: Boolean = false,
     johtaaTutkintoon: Boolean = false,
+    maksullinen: Boolean = false,
+    maksullisuuskuvaus: Kielistetty,
     osaaminenUrit: Seq[URL] = List()
 ) extends KoutaLightKoulutusBase
 
@@ -128,6 +136,8 @@ case class KoutaLightKoulutusMetadata(
     hakulomakeLinkki: KielistettyLinkki,
     isTyovoimakoulutus: Boolean,
     johtaaTutkintoon: Boolean,
+    maksullinen: Boolean,
+    maksullisuuskuvaus: Kielistetty,
     osaaminenUrit: Seq[URL]
 )
 object KoutaLightKoulutusMetadata {
@@ -145,6 +155,8 @@ object KoutaLightKoulutusMetadata {
       koulutus.hakulomakeLinkki,
       koulutus.isTyovoimakoulutus,
       koulutus.johtaaTutkintoon,
+      koulutus.maksullinen,
+      koulutus.maksullisuuskuvaus,
       koulutus.osaaminenUrit
     )
   }

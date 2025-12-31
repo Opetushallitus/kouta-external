@@ -5,6 +5,7 @@ import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.swagger.SwaggerModel
 
+import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -161,10 +162,27 @@ package object domain {
       |          type: string
       |          example: engineer
       |          description: "Englanninkielinen asiasana"
+      |    KielistettyLinkki:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: https://opintopolku.fi/konfo/fi/
+      |          description: "Linkki suomenkieliselle sivulle, jos kielivalinnassa on 'fi'"
+      |        sv:
+      |          type: string
+      |          example: https://opintopolku.fi/konfo/sv/
+      |          description: "Linkki ruotsinkieliselle sivulle, jos kielivalinnassa on 'sv'"
+      |        en:
+      |          type: string
+      |          example: https://opintopolku.fi/konfo/en/
+      |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
       |""")
   abstract class KielistettySwagger
 
   type Kielistetty = Map[Kieli, String]
+
+  type KielistettyLinkki = Map[String, URL]
 
   type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
 

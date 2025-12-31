@@ -167,14 +167,17 @@ package object domain {
       |      properties:
       |        fi:
       |          type: string
+      |          format: url
       |          example: https://opintopolku.fi/konfo/fi/
       |          description: "Linkki suomenkieliselle sivulle, jos kielivalinnassa on 'fi'"
       |        sv:
       |          type: string
+      |          format: url
       |          example: https://opintopolku.fi/konfo/sv/
       |          description: "Linkki ruotsinkieliselle sivulle, jos kielivalinnassa on 'sv'"
       |        en:
       |          type: string
+      |          format: url
       |          example: https://opintopolku.fi/konfo/en/
       |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
       |""")

@@ -96,7 +96,24 @@ trait KoutaLightKoulutusBase {
     |        osaaminenUrit:
     |          type: array
     |          description: Koulutuksen tuottaman osaamisen ESCO-urit
+    |          items:
+    |            type: string
+    |            format: uri
     |          example: [http://data.europa.eu/esco/skill/c1f4e64a-9bc7-4c75-b2eb-d982d7148cef]
+    |        opetuskielet:
+    |          type: array
+    |          description: Kielikoodit, jolla opetus toteutetaan
+    |          items:
+    |            type: string
+    |            minLength: 2
+    |            maxLength: 3
+    |          example: ["fi", "sv"]
+    |        opetustavat:
+    |          type: array
+    |          description: Miten opetus toteutetaan
+    |          items:
+    |            type: string
+    |          example: [Monimuoto]
     |      required:
     |        - externalId
     |        - kielivalinta
@@ -123,7 +140,8 @@ case class KoutaLightKoulutus(
     johtaaTutkintoon: Boolean = false,
     maksullinen: Boolean = false,
     maksullisuuskuvaus: Kielistetty,
-    osaaminenUrit: Seq[URL] = List()
+    osaaminenUrit: Seq[URL] = List(),
+    opetuskielet: Seq[String] = List()
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
@@ -138,7 +156,8 @@ case class KoutaLightKoulutusMetadata(
     johtaaTutkintoon: Boolean,
     maksullinen: Boolean,
     maksullisuuskuvaus: Kielistetty,
-    osaaminenUrit: Seq[URL]
+    osaaminenUrit: Seq[URL],
+    opetuskielet: Seq[String]
 )
 object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
@@ -157,7 +176,8 @@ object KoutaLightKoulutusMetadata {
       koulutus.johtaaTutkintoon,
       koulutus.maksullinen,
       koulutus.maksullisuuskuvaus,
-      koulutus.osaaminenUrit
+      koulutus.osaaminenUrit,
+      koulutus.opetuskielet
     )
   }
 }

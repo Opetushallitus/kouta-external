@@ -12,6 +12,7 @@ trait KoutaLightKoulutusBase {
   val kielivalinta: Seq[Kieli]
   val tila: String
   val nimi: Kielistetty
+  val tarjoajat: List[Kielistetty]
 }
 
 @SwaggerModel(
@@ -39,6 +40,11 @@ trait KoutaLightKoulutusBase {
     |          description: Koulutuksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
+    |        tarjoajat:
+    |          type: array
+    |          description: Koulutusta tarjoavan organisaation nimi
+    |          items:
+    |            $ref: '#/components/schemas/Nimi'
     |        kuvaus:
     |          type: object
     |          description: Koulutuksen yleinen kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -86,6 +92,7 @@ trait KoutaLightKoulutusBase {
     |        - tila
     |        - nimi
     |        - kuvaus
+    |        - tarjoajat
     |"""
 )
 case class KoutaLightKoulutus(
@@ -93,6 +100,7 @@ case class KoutaLightKoulutus(
     kielivalinta: Seq[Kieli],
     tila: String,
     nimi: Kielistetty,
+    tarjoajat: List[Kielistetty],
     kuvaus: Kielistetty,
     ammattinimikkeet: List[Kielistetty] = List(),
     asiasanat: List[Kielistetty] = List(),
@@ -139,6 +147,7 @@ case class KoutaLightKoulutusWithMetadata(
     kielivalinta: Seq[Kieli],
     tila: String,
     nimi: Kielistetty,
+    tarjoajat: List[Kielistetty],
     metadata: KoutaLightKoulutusMetadata,
     ownerOrg: OrganisaatioOid
 ) extends KoutaLightKoulutusBase
@@ -151,6 +160,7 @@ object KoutaLightKoulutusWithMetadata {
       koulutus.kielivalinta,
       koulutus.tila,
       koulutus.nimi,
+      koulutus.tarjoajat,
       metadata,
       organisaatioOid
     )

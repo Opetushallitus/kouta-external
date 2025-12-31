@@ -22,6 +22,7 @@ sealed trait KoutaLightSQL extends SQLHelpers {
       kielivalinta,
       tila,
       nimi,
+      tarjoajat,
       metadata,
       owner_org
     ) values (
@@ -29,6 +30,7 @@ sealed trait KoutaLightSQL extends SQLHelpers {
       ${toJsonParam(koulutus.kielivalinta)}::jsonb,
       ${koulutus.tila},
       ${toJsonParam(koulutus.nimi)}::jsonb,
+      ${toJsonParam(koulutus.tarjoajat)}::jsonb,
       ${toJsonParam(koulutus.metadata)}::jsonb,
       ${koulutus.ownerOrg}
     )
@@ -37,6 +39,7 @@ sealed trait KoutaLightSQL extends SQLHelpers {
       kielivalinta = EXCLUDED.kielivalinta,
       tila = EXCLUDED.tila,
       nimi = EXCLUDED.nimi,
+      tarjoajat = EXCLUDED.tarjoajat,
       metadata = EXCLUDED.metadata,
       updated_at = now()
     returning updated_at""".as[String].head

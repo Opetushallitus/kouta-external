@@ -18,8 +18,8 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
   registerPath(
     "/koutan-tietomallista-poikkeavat-koulutukset",
     """    put:
-      |      summary: Tallenna koulutukset
-      |      operationId: Tallenna koulutukset
+      |      summary: Tallenna koutan tietomallista poikkeavat koulutukset
+      |      operationId: Tallenna koutan tietomallista poikkeavat koulutukset
       |      description: "Tallenna annettujen koulutusten tiedot. Päivittää aiemmin lisätyt koulutukset ja lisää puuttuvat.
       |        Päivitys tapahtuu koulutuksen externalId-kentän perusteella: jos tietokannasta löytyy koulutusta lisäävän organisaation koulutus samalla externalId:llä,
       |        koulutusta yritetään päivittää, muuten sellainen lisätään."

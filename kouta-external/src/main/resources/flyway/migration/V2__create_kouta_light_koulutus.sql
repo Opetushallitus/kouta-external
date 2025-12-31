@@ -4,6 +4,7 @@ create table koulutus (
   kielivalinta jsonb not null,
   tila text not null,
   nimi jsonb not null,
+  tarjoajat jsonb not null,
   metadata jsonb,
   owner_org text not null,
   created_at timestamptz not null default now(),

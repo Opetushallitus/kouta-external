@@ -213,3 +213,39 @@ sealed trait DatabaseSpec {
     r => LocalDateTime.ofInstant(r.nextTimestamp().toInstant, ZoneId.of("Europe/Helsinki")).withNano(0).withSecond(0)
   )
 }
+
+
+trait KoutaLightIntegrationSpec extends ScalatraFlatSpec
+  with SpecWithMocks
+  with UrlProperties
+  with HttpSpec
+  with DatabaseSpec {
+
+  System.setProperty("kouta-backend.useSecureCookies", "false")
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  setUrlProperties(KoutaConfigurationFactory.configuration.urlProperties)
+  TestSetups.setupPostgres()
+
+  val defaultAuthorities: Set[Authority] = KoutaLightIntegrationSpec.defaultAuthorities
+
+  val testUser = TestUser("test-user-oid", "testuser", defaultSessionId)
+
+  def addDefaultSession(): Unit = {
+    SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
+  }
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    addDefaultSession()
+  }
+
+  override def afterAll(): Unit = {
+    super.afterAll()
+    truncateDatabase()
+  }
+}
+
+object KoutaLightIntegrationSpec {
+  val rootOrganisaatio: OrganisaatioOid  = OrganisaatioOid("1.2.246.562.10.00000000001")
+  val defaultAuthorities: Set[Authority] = RoleEntity.all.map(re => Authority(re.Crud, rootOrganisaatio)).toSet
+}

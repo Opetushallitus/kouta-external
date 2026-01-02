@@ -4,6 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.domain._
 import fi.oph.kouta.external.domain._
+import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime, LocalTime}
@@ -463,4 +464,13 @@ object TestData {
     modified = None
   )
 
+  val MinKoutaLightKoulutus: KoutaLightKoulutus = KoutaLightKoulutus(
+    externalId = "8929jwl2",
+    kielivalinta = List(Fi, Sv),
+    tila = "julkaistu",
+    nimi = Map(Fi -> "KoutaLight-koulutus fi", Sv -> "KoutaLight-koulutus sv"),
+    tarjoajat = List(Map(Fi -> "Tarjoaja fi", Sv -> "Tarjoaja sv")),
+    kuvaus = Map(Fi -> "Kuvaus fi", Sv -> "Kuvaus sv"),
+    maksullisuuskuvaus = Map()
+  )
 }

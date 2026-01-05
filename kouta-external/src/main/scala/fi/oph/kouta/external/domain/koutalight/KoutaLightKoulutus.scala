@@ -85,7 +85,7 @@ trait KoutaLightKoulutusBase {
     |          type: boolean
     |          description: Onko kyseessä tutkintoon johtava koulutus
     |          example: true
-    |        maksullinen:
+    |        isMaksullinen:
     |          type: boolean
     |          description: Onko koulutus maksullista
     |          example: true
@@ -138,7 +138,7 @@ case class KoutaLightKoulutus(
     hakulomakeLinkki: KielistettyLinkki = Map(),
     isTyovoimakoulutus: Boolean = false,
     johtaaTutkintoon: Boolean = false,
-    maksullinen: Boolean = false,
+    isMaksullinen: Boolean = false,
     maksullisuuskuvaus: Kielistetty,
     osaaminenUrit: Seq[URL] = List(),
     opetuskielet: Seq[String] = List()
@@ -154,7 +154,7 @@ case class KoutaLightKoulutusMetadata(
     hakulomakeLinkki: KielistettyLinkki,
     isTyovoimakoulutus: Boolean,
     johtaaTutkintoon: Boolean,
-    maksullinen: Boolean,
+    isMaksullinen: Boolean,
     maksullisuuskuvaus: Kielistetty,
     osaaminenUrit: Seq[URL],
     opetuskielet: Seq[String]
@@ -174,7 +174,7 @@ object KoutaLightKoulutusMetadata {
       koulutus.hakulomakeLinkki,
       koulutus.isTyovoimakoulutus,
       koulutus.johtaaTutkintoon,
-      koulutus.maksullinen,
+      koulutus.isMaksullinen,
       koulutus.maksullisuuskuvaus,
       koulutus.osaaminenUrit,
       koulutus.opetuskielet

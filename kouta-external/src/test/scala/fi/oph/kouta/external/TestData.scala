@@ -1,11 +1,12 @@
 package fi.oph.kouta.external
 
 import fi.oph.kouta.TestOids._
-import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.domain._
+import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain._
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 
+import java.net.URI
 import java.time.temporal.ChronoUnit
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 import java.util.UUID
@@ -470,7 +471,18 @@ object TestData {
     tila = "julkaistu",
     nimi = Map(Fi -> "KoutaLight-koulutus fi", Sv -> "KoutaLight-koulutus sv"),
     tarjoajat = List(Map(Fi -> "Tarjoaja fi", Sv -> "Tarjoaja sv")),
-    kuvaus = Map(Fi -> "Kuvaus fi", Sv -> "Kuvaus sv"),
-    maksullisuuskuvaus = Map()
+    kuvaus = Map(Fi -> "Kuvaus fi", Sv -> "Kuvaus sv")
+  )
+
+  val KoutaLightKoulutusWithOptionalData: KoutaLightKoulutus = MinKoutaLightKoulutus.copy(
+    hakuaikaAlkaa = Some(LocalDateTime.parse("2025-08-23T09:00")),
+    hakuaikaPaattyy = Some(LocalDateTime.parse("2025-08-23T09:00")),
+    aloituspaikatLukumaara = Some(10),
+    hakulomakeLinkki = Map(Fi -> new URI("https://opintopolku.fi/konfo/fi/").toURL, Sv -> new URI("https://opintopolku.fi/konfo/sv/").toURL),
+    isTyovoimakoulutus = true,
+    johtaaTutkintoon = true,
+    isMaksullinen = true,
+    maksullisuuskuvaus = Map(Fi -> "maksullisuuskuvaus fi", Sv -> "maksullisuuskuvaus sv"),
+    opetuskielet = List("sv", "kr", "eng")
   )
 }

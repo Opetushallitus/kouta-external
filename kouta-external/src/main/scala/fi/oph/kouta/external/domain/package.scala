@@ -185,7 +185,7 @@ package object domain {
 
   type Kielistetty = Map[Kieli, String]
 
-  type KielistettyLinkki = Map[String, URL]
+  type KielistettyLinkki = Map[Kieli, URL]
 
   type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
 

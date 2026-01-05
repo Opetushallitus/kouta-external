@@ -1,11 +1,12 @@
 package fi.oph.kouta.external.integration.fixture
 
-import java.time.Instant
-import java.util.UUID
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
+import fi.oph.kouta.domain.{En, Fi, Kieli, Sv}
 import fi.oph.kouta.external.database.SessionDAO
+import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutus, KoutaLightKoulutusMetadata}
+import fi.oph.kouta.external.domain.{Keyword, Kielistetty}
 import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
@@ -15,14 +16,20 @@ import org.json4s.{JBool, JObject}
 import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
+import slick.jdbc.PostgresProfile.api._
 
-trait KoutaIntegrationSpec extends ScalatraFlatSpec
-  with SpecWithMocks
-  with UrlProperties
-  with HttpSpec
-  with OrganisaatioServiceMock
-  with DatabaseSpec
-  with ElasticDumpFixture {
+import java.time.Instant
+import java.util.UUID
+import scala.collection.immutable
+
+trait KoutaIntegrationSpec
+    extends ScalatraFlatSpec
+    with SpecWithMocks
+    with UrlProperties
+    with HttpSpec
+    with OrganisaatioServiceMock
+    with DatabaseSpec
+    with ElasticDumpFixture {
 
   System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()
@@ -198,13 +205,12 @@ sealed trait DatabaseSpec {
   TestSetups.setupPostgres()
   import fi.oph.kouta.external.database.KoutaDatabase
 
-  private lazy val db = KoutaDatabase
+  lazy val db: KoutaDatabase.type = KoutaDatabase
 
   def truncateDatabase() = {
-    import slick.jdbc.PostgresProfile.api._
-
     db.runBlocking(sqlu"""delete from authorities""")
     db.runBlocking(sqlu"""delete from sessions""")
+    db.runBlocking(sqlu"""delete from koulutus""")
   }
 
   import java.time._
@@ -214,12 +220,12 @@ sealed trait DatabaseSpec {
   )
 }
 
-
-trait KoutaLightIntegrationSpec extends ScalatraFlatSpec
-  with SpecWithMocks
-  with UrlProperties
-  with HttpSpec
-  with DatabaseSpec {
+trait KoutaLightIntegrationSpec
+    extends ScalatraFlatSpec
+    with SpecWithMocks
+    with UrlProperties
+    with HttpSpec
+    with DatabaseSpec {
 
   System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()
@@ -242,6 +248,99 @@ trait KoutaLightIntegrationSpec extends ScalatraFlatSpec
   override def afterAll(): Unit = {
     super.afterAll()
     truncateDatabase()
+  }
+
+  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): immutable.Seq[KoutaLightKoulutus] = {
+    def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
+    def extractKielistetty(json: Option[String]): Kielistetty = json.map(read[Map[Kieli, String]]).getOrElse(Map())
+
+    def toKieli(keyword: Keyword): Kielistetty = {
+      val arvo = keyword.arvo
+      keyword.kieli match {
+        case Fi => Map(Fi -> arvo)
+        case Sv => Map(Sv -> arvo)
+        case En => Map(En -> arvo)
+        case _  => Map[Kieli, String]()
+      }
+    }
+
+    def keywordsToKielistetty(keywords: List[Keyword]): List[Kielistetty] = keywords.map(keyword => toKieli(keyword))
+
+    implicit val getKoutaLightKoulutusResult: GetResult[KoutaLightKoulutus] =
+      GetResult(r => {
+        val externalId   = r.nextString()
+        val kielivalinta = extractKielivalinta(r.nextStringOption())
+        val tila         = r.nextString()
+        val nimi         = extractKielistetty(r.nextStringOption())
+        val tarjoajat    = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List())
+
+        val (
+          kuvaus,
+          ammattinimikkeet,
+          asiasanat,
+          hakuaikaAlkaa,
+          hakuaikaPaattyy,
+          aloituspaikatLkm,
+          hakulomakeLinkki,
+          isTyovoimakoulutus,
+          johtaaTutkintoon,
+          isMaksullinen,
+          maksullisuuskuvaus,
+          osaaminenUrit,
+          opetuskielet
+        ) =
+          r.nextStringOption().map(read[KoutaLightKoulutusMetadata]) match {
+            case Some(m) =>
+              (
+                m.kuvaus,
+                keywordsToKielistetty(m.ammattinimikkeet),
+                keywordsToKielistetty(m.asiasanat),
+                m.hakuaikaAlkaa,
+                m.hakuaikaPaattyy,
+                m.aloituspaikatLukumaara,
+                m.hakulomakeLinkki,
+                m.isTyovoimakoulutus,
+                m.johtaaTutkintoon,
+                m.isMaksullinen,
+                m.maksullisuuskuvaus,
+                m.osaaminenUrit,
+                m.opetuskielet
+              )
+          }
+
+        KoutaLightKoulutus(
+          externalId = externalId,
+          kielivalinta = kielivalinta,
+          tila = tila,
+          nimi = nimi,
+          tarjoajat = tarjoajat,
+          kuvaus = kuvaus,
+          ammattinimikkeet = ammattinimikkeet,
+          asiasanat = asiasanat,
+          hakuaikaAlkaa = hakuaikaAlkaa,
+          hakuaikaPaattyy = hakuaikaPaattyy,
+          aloituspaikatLukumaara = aloituspaikatLkm,
+          hakulomakeLinkki = hakulomakeLinkki,
+          isTyovoimakoulutus = isTyovoimakoulutus,
+          johtaaTutkintoon = johtaaTutkintoon,
+          isMaksullinen = isMaksullinen,
+          maksullisuuskuvaus = maksullisuuskuvaus,
+          osaaminenUrit = osaaminenUrit,
+          opetuskielet = opetuskielet
+        )
+      })
+
+    db.runBlocking(
+      sql"""select external_id,
+                   kielivalinta,
+                   tila,
+                   nimi,
+                   tarjoajat,
+                   metadata,
+                   owner_org from koulutus where external_id = $externalId and owner_org = ${organisaatioOid
+        .toString()}"""
+        .as[KoutaLightKoulutus]
+    )
   }
 }
 

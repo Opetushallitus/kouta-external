@@ -139,7 +139,7 @@ case class KoutaLightKoulutus(
     isTyovoimakoulutus: Boolean = false,
     johtaaTutkintoon: Boolean = false,
     isMaksullinen: Boolean = false,
-    maksullisuuskuvaus: Kielistetty,
+    maksullisuuskuvaus: Kielistetty = Map(),
     osaaminenUrit: Seq[URL] = List(),
     opetuskielet: Seq[String] = List()
 ) extends KoutaLightKoulutusBase

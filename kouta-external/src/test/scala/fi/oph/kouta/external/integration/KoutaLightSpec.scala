@@ -149,9 +149,61 @@ class KoutaLightSpec extends KoutaLightFixture {
         message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv, en]"""
       )
     )
+  }
+
+  "validate" should "return validation error when kuvaus has only Finnish translation even though kielivalinta has Finnish and Swedish defined" in {
+    val externalId = "externalId321"
+    val koulutus = MinKoutaLightKoulutus.copy(externalId = externalId, kielivalinta = List(Fi, Sv), kuvaus = Map(Fi -> "kuvaus fi"))
+    KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
       ValidationError(
         koulutusExternalId = externalId,
         message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv]"""
+      )
+    )
+  }
+
+  it should "return validation errors for all kielistetty fields as they have only Finnish translation even though kielivalinta has Finnish and Swedish defined" in {
+    val externalId = "externalId321"
+    val koulutus =
+      MinKoutaLightKoulutus.copy(
+        externalId = externalId,
+        kielivalinta = List(Fi, Sv),
+        nimi = Map(Fi -> "nimi fi"),
+        tarjoajat = List(Map(Fi -> "tarjoajan nimi fi"), Map(En -> "toisen tarjoajan nimi en")),
+        kuvaus = Map(Fi -> "kuvaus fi"),
+        ammattinimikkeet =
+          List(Map(Fi -> "ammattinimike 1 fi", Sv -> "ammattinimike 1 sv"), Map(Sv -> "ammattinimike 2 sv")),
+        asiasanat = List(Map(Fi -> "asiasana 1 fi"), Map(Fi -> "asiasana 2 fi", Sv -> "asiasana 2 sv")),
+        maksullisuuskuvaus = Map(Fi -> "maksullisuuskuvaus 1 fi")
+      )
+    KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "nimi" puuttuu arvo kielillä [sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "tarjoajat[0]" puuttuu arvo kielillä [sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "tarjoajat[1]" puuttuu arvo kielillä [fi, sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "ammattinimikkeet[1]" puuttuu arvo kielillä [fi]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "asiasanat[0]" puuttuu arvo kielillä [sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "maksullisuuskuvaus" puuttuu arvo kielillä [sv]"""
       )
     )
   }

@@ -13,6 +13,8 @@ import scala.util.{Failure, Success}
 case class ValidationError(koulutusExternalId: String, message: String)
 
 object Validations {
+  def and(validations: Seq[ValidationError]*): Seq[ValidationError] = validations.flatten.distinct
+
   def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Kielistetty): Seq[Kieli] =
     for {
       kieli <- kielivalinta
@@ -20,7 +22,7 @@ object Validations {
     } yield kieli
 
   def validateKielistetty(
-      kielivalinta: List[Kieli],
+      kielivalinta: Seq[Kieli],
       kielistetty: Kielistetty,
       koulutusExternalId: String,
       propertyName: String
@@ -32,13 +34,54 @@ object Validations {
     }
   }
 
-  def invalidKielistetty(values: Seq[Kieli], propertyName: String) =
-    s"Kielistetystä kentästä ${'"'}$propertyName${'"'} puuttuu arvo kielillä [${values.mkString(",")}]"
+  def validateOptionalKielistetty(
+      kielivalinta: Seq[Kieli],
+      koulutusExternalId: String,
+      property: Kielistetty,
+      propertyName: String
+  ): Seq[ValidationError] = {
+    if (property.nonEmpty)
+      Validations
+        .validateKielistetty(kielivalinta, property, koulutusExternalId, propertyName)
+    else List()
+  }
+
+  private def invalidKielistetty(values: Seq[Kieli], propertyName: String) =
+    s"Kielistetystä kentästä ${'"'}$propertyName${'"'} puuttuu arvo kielillä [${values.mkString(", ")}]"
 }
 
 object KoutaLightService extends KoutaLightService
 
 class KoutaLightService extends Logging {
+  def validate(koulutus: KoutaLightKoulutus): Seq[ValidationError] = {
+    val kielivalinta       = koulutus.kielivalinta
+    val koulutusExternalId = koulutus.externalId
+    Validations.and(
+      Validations.validateKielistetty(kielivalinta, koulutus.nimi, koulutusExternalId, "nimi"),
+      Validations.validateKielistetty(kielivalinta, koulutus.kuvaus, koulutusExternalId, "kuvaus"),
+      koulutus.tarjoajat.zipWithIndex.flatMap(tarjoaja =>
+        Validations.validateKielistetty(kielivalinta, tarjoaja._1, koulutusExternalId, s"tarjoajat[${tarjoaja._2}]")
+      ),
+      koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimike =>
+        Validations.validateKielistetty(
+          kielivalinta,
+          ammattinimike._1,
+          koulutusExternalId,
+          s"ammattinimikkeet[${ammattinimike._2}]"
+        )
+      ),
+      koulutus.asiasanat.zipWithIndex.flatMap(asiasana =>
+        Validations.validateKielistetty(kielivalinta, asiasana._1, koulutusExternalId, s"asiasanat[${asiasana._2}]")
+      ),
+      Validations.validateOptionalKielistetty(
+        kielivalinta,
+        koulutusExternalId,
+        koulutus.maksullisuuskuvaus,
+        "maksullisuuskuvaus"
+      )
+    )
+  }
+
   def put(koulutukset: List[KoutaLightKoulutus], organisaatioOid: OrganisaatioOid): Seq[KoutaLightMassResult] = {
     koulutukset.map(koulutus => {
       val externalId = koulutus.externalId

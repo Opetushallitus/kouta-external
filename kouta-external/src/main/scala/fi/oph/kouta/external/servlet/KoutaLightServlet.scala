@@ -8,8 +8,6 @@ import fi.oph.kouta.security.Role.Paakayttaja
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 
-import scala.util.{Failure, Success, Try}
-
 object KoutaLightTallentajaRole extends Role.UnknownRole("APP_KOUTA_EXTERNAL_KOUTA_LIGHT_TALLENTAJA")
 
 object KoutaLightServlet extends KoutaLightServlet(KoutaLightService)

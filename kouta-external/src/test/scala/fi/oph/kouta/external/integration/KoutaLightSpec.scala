@@ -1,9 +1,10 @@
 package fi.oph.kouta.external.integration
 
-import fi.oph.kouta.domain.{Fi, Sv}
+import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
+import fi.oph.kouta.external.service.{KoulutusService, KoutaLightService, ValidationError, Validations}
 import org.json4s.jackson.JsonMethods.parse
 
 import java.util.UUID
@@ -113,5 +114,17 @@ class KoutaLightSpec extends KoutaLightFixture {
          | {"operation": "UPDATE", "success": true, "externalId": "externalId1111"},
          | {"operation": "CREATE", "success": true, "externalId": "externalId3333"}]""".stripMargin
     )
+  }
+
+  "findMissingKielet" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
+   Validations.findMissingLanguages(
+      List(Fi, Sv, En),
+      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")
+    ) shouldEqual List()
+  }
+
+  it should "return a list with Sv and En as missing languages when they do not exist in Kielistetty field even though they are defined in kielivalinta" in {
+    Validations.findMissingLanguages(List(Fi, Sv, En), Map(Fi -> "kuvaus fi")) shouldEqual List(Sv, En)
+  }
   }
 }

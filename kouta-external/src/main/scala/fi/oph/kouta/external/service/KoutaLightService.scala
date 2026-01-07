@@ -1,12 +1,26 @@
 package fi.oph.kouta.external.service
 
+import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
+import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.external.domain.enums.{KoutaLightMassResult, Operation}
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}
+
+case class ValidationError(koulutusExternalId: String, message: String)
+
+object Validations {
+  def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Kielistetty): Seq[Kieli] =
+    for {
+      kieli <- kielivalinta
+      if !kielistetty.keys.toSeq.contains(kieli)
+    } yield kieli
+
+  def invalidKielistetty(values: Seq[Kieli]) = s"Kielistetystä kentästä puuttuu arvo kielillä [${values.mkString(",")}]"
+}
 
 object KoutaLightService extends KoutaLightService
 

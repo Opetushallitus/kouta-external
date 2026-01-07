@@ -19,7 +19,21 @@ object Validations {
       if !kielistetty.keys.toSeq.contains(kieli)
     } yield kieli
 
-  def invalidKielistetty(values: Seq[Kieli]) = s"Kielistetystä kentästä puuttuu arvo kielillä [${values.mkString(",")}]"
+  def validateKielistetty(
+      kielivalinta: List[Kieli],
+      kielistetty: Kielistetty,
+      koulutusExternalId: String,
+      propertyName: String
+  ): Seq[ValidationError] = {
+    Validations.findMissingLanguages(kielivalinta, kielistetty) match {
+      case missingLanguages if missingLanguages.nonEmpty =>
+        List(ValidationError(koulutusExternalId, Validations.invalidKielistetty(missingLanguages, propertyName)))
+      case _ => List()
+    }
+  }
+
+  def invalidKielistetty(values: Seq[Kieli], propertyName: String) =
+    s"Kielistetystä kentästä ${'"'}$propertyName${'"'} puuttuu arvo kielillä [${values.mkString(",")}]"
 }
 
 object KoutaLightService extends KoutaLightService

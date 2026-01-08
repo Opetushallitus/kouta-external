@@ -154,7 +154,8 @@ class KoutaLightSpec extends KoutaLightFixture {
 
   "validate" should "return validation error when kuvaus has only Finnish translation even though kielivalinta has Finnish and Swedish defined" in {
     val externalId = "externalId321"
-    val koulutus = MinKoutaLightKoulutus.copy(externalId = externalId, kielivalinta = List(Fi, Sv), kuvaus = Map(Fi -> "kuvaus fi"))
+    val koulutus =
+      MinKoutaLightKoulutus.copy(externalId = externalId, kielivalinta = List(Fi, Sv), kuvaus = Map(Fi -> "kuvaus fi"))
     KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
       ValidationError(
         koulutusExternalId = externalId,
@@ -210,6 +211,17 @@ class KoutaLightSpec extends KoutaLightFixture {
       ValidationError(
         koulutusExternalId = externalId,
         message = """Kielistetystä kentästä "maksullisuuskuvaus" puuttuu arvo kielillä [sv]"""
+      )
+    )
+  }
+
+  it should """return validation error for opetuskielet that has "suomi" and "r" as values can only be 2-3 chars long language codes""" in {
+    val externalId = "externalId321"
+    val koulutus   = MinKoutaLightKoulutus.copy(externalId = externalId, opetuskielet = List("et", "suomi", "en", "r"))
+    KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Virheellinen arvo [suomi, r] kentässä "opetuskielet""""
       )
     )
   }

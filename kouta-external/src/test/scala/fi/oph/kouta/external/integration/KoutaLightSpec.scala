@@ -4,10 +4,11 @@ import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
-import fi.oph.kouta.external.service.{KoulutusService, KoutaLightService, ValidationError, Validations}
+import fi.oph.kouta.external.service.{KoutaLightService, ValidationError, Validations}
 import org.json4s.jackson.JsonMethods.parse
 
 import java.util.UUID
+import java.net.URI
 
 class KoutaLightSpec extends KoutaLightFixture {
   val nonExistingSessionId: UUID             = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
@@ -119,18 +120,18 @@ class KoutaLightSpec extends KoutaLightFixture {
   "findMissingKielet" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
     Validations.findMissingLanguages(
       List(Fi, Sv, En),
-      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")
+      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"))
     ) shouldEqual List()
   }
 
   it should "return a list with Sv and En as missing languages when they do not exist in Kielistetty field even though they are defined in kielivalinta" in {
-    Validations.findMissingLanguages(List(Fi, Sv, En), Map(Fi -> "kuvaus fi")) shouldEqual List(Sv, En)
+    Validations.findMissingLanguages(List(Fi, Sv, En), Left(Map(Fi -> "kuvaus fi"))) shouldEqual List(Sv, En)
   }
 
   "validateKielistetty" should "return empty list of validation errors when kielistetty kuvaus has value for all languages defined in kielivalinta" in {
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"),
+      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")),
       "externalId6357",
       "kuvaus"
     ) shouldEqual List()
@@ -140,7 +141,7 @@ class KoutaLightSpec extends KoutaLightFixture {
     val externalId = "externalId6357"
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Map(Fi -> "kuvaus fi"),
+      Left(Map(Fi -> "kuvaus fi")),
       externalId,
       "kuvaus"
     ) shouldEqual List(
@@ -174,6 +175,7 @@ class KoutaLightSpec extends KoutaLightFixture {
         ammattinimikkeet =
           List(Map(Fi -> "ammattinimike 1 fi", Sv -> "ammattinimike 1 sv"), Map(Sv -> "ammattinimike 2 sv")),
         asiasanat = List(Map(Fi -> "asiasana 1 fi"), Map(Fi -> "asiasana 2 fi", Sv -> "asiasana 2 sv")),
+        hakulomakeLinkki = Map(Fi -> new URI("https://opintopolku.fi").toURL),
         maksullisuuskuvaus = Map(Fi -> "maksullisuuskuvaus 1 fi")
       )
     KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
@@ -200,6 +202,10 @@ class KoutaLightSpec extends KoutaLightFixture {
       ValidationError(
         koulutusExternalId = externalId,
         message = """Kielistetystä kentästä "asiasanat[0]" puuttuu arvo kielillä [sv]"""
+      ),
+      ValidationError(
+        koulutusExternalId = externalId,
+        message = """Kielistetystä kentästä "hakulomakeLinkki" puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,

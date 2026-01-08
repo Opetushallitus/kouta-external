@@ -3,7 +3,7 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
-import fi.oph.kouta.external.domain.Kielistetty
+import fi.oph.kouta.external.domain.{Kielistetty, KielistettyLinkki}
 import fi.oph.kouta.external.domain.enums.{KoutaLightMassResult, Operation}
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.logging.Logging
@@ -15,15 +15,15 @@ case class ValidationError(koulutusExternalId: String, message: String)
 object Validations {
   def and(validations: Seq[ValidationError]*): Seq[ValidationError] = validations.flatten.distinct
 
-  def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Kielistetty): Seq[Kieli] =
+  def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Either[Kielistetty, KielistettyLinkki]): Seq[Kieli] =
     for {
       kieli <- kielivalinta
-      if !kielistetty.keys.toSeq.contains(kieli)
+      if !kielistetty.merge.keys.toSeq.contains(kieli)
     } yield kieli
 
   def validateKielistetty(
       kielivalinta: Seq[Kieli],
-      kielistetty: Kielistetty,
+      kielistetty: Either[Kielistetty, KielistettyLinkki],
       koulutusExternalId: String,
       propertyName: String
   ): Seq[ValidationError] = {
@@ -37,10 +37,10 @@ object Validations {
   def validateOptionalKielistetty(
       kielivalinta: Seq[Kieli],
       koulutusExternalId: String,
-      property: Kielistetty,
+      property: Either[Kielistetty, KielistettyLinkki],
       propertyName: String
   ): Seq[ValidationError] = {
-    if (property.nonEmpty)
+    if (property.merge.nonEmpty)
       Validations
         .validateKielistetty(kielivalinta, property, koulutusExternalId, propertyName)
     else List()
@@ -57,27 +57,35 @@ class KoutaLightService extends Logging {
     val kielivalinta       = koulutus.kielivalinta
     val koulutusExternalId = koulutus.externalId
     Validations.and(
-      Validations.validateKielistetty(kielivalinta, koulutus.nimi, koulutusExternalId, "nimi"),
-      Validations.validateKielistetty(kielivalinta, koulutus.kuvaus, koulutusExternalId, "kuvaus"),
+      Validations.validateKielistetty(kielivalinta, Left(koulutus.nimi), koulutusExternalId, "nimi"),
+      Validations.validateKielistetty(kielivalinta, Left(koulutus.kuvaus), koulutusExternalId, "kuvaus"),
       koulutus.tarjoajat.zipWithIndex.flatMap(tarjoaja =>
-        Validations.validateKielistetty(kielivalinta, tarjoaja._1, koulutusExternalId, s"tarjoajat[${tarjoaja._2}]")
+        Validations
+          .validateKielistetty(kielivalinta, Left(tarjoaja._1), koulutusExternalId, s"tarjoajat[${tarjoaja._2}]")
       ),
       koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimike =>
         Validations.validateKielistetty(
           kielivalinta,
-          ammattinimike._1,
+          Left(ammattinimike._1),
           koulutusExternalId,
           s"ammattinimikkeet[${ammattinimike._2}]"
         )
       ),
       koulutus.asiasanat.zipWithIndex.flatMap(asiasana =>
-        Validations.validateKielistetty(kielivalinta, asiasana._1, koulutusExternalId, s"asiasanat[${asiasana._2}]")
+        Validations
+          .validateKielistetty(kielivalinta, Left(asiasana._1), koulutusExternalId, s"asiasanat[${asiasana._2}]")
       ),
       Validations.validateOptionalKielistetty(
         kielivalinta,
         koulutusExternalId,
-        koulutus.maksullisuuskuvaus,
+        Left(koulutus.maksullisuuskuvaus),
         "maksullisuuskuvaus"
+      ),
+      Validations.validateOptionalKielistetty(
+        kielivalinta,
+        koulutusExternalId,
+        Right(koulutus.hakulomakeLinkki),
+        "hakulomakeLinkki"
       )
     )
   }

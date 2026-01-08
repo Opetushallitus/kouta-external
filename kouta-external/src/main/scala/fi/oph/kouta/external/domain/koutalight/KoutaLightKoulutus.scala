@@ -102,7 +102,7 @@ trait KoutaLightKoulutusBase {
     |          example: [http://data.europa.eu/esco/skill/c1f4e64a-9bc7-4c75-b2eb-d982d7148cef]
     |        opetuskielet:
     |          type: array
-    |          description: Kielikoodit, jolla opetus toteutetaan
+    |          description: Kieli, jolla opetus toteutetaan. Kieli annetaan 2 tai 3 merkin mittaisena kielikoodina.
     |          items:
     |            type: string
     |            minLength: 2

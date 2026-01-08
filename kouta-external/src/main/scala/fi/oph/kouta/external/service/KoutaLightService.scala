@@ -41,13 +41,27 @@ object Validations {
       propertyName: String
   ): Seq[ValidationError] = {
     if (property.merge.nonEmpty)
-      Validations
-        .validateKielistetty(kielivalinta, property, koulutusExternalId, propertyName)
+      Validations.validateKielistetty(kielivalinta, property, koulutusExternalId, propertyName)
     else List()
+  }
+
+  def validateOpetuskielet(koulutusExternalId: String, opetuskielet: Seq[String]): Seq[ValidationError] = {
+    val invalidKielikoodit = opetuskielet.flatMap {
+      case kieli: String if kieli.length < 2 || kieli.length > 3 => Some(kieli)
+      case _ => None
+    }
+
+    if (invalidKielikoodit.nonEmpty)
+      List(ValidationError(koulutusExternalId, invalidOpetuskielet(invalidKielikoodit)))
+    else
+      List()
   }
 
   private def invalidKielistetty(values: Seq[Kieli], propertyName: String) =
     s"Kielistetystä kentästä ${'"'}$propertyName${'"'} puuttuu arvo kielillä [${values.mkString(", ")}]"
+
+  private def invalidOpetuskielet(values: Seq[String]) =
+    s"Virheellinen arvo [${values.mkString(", ")}] kentässä ${'"'}opetuskielet${'"'}"
 }
 
 object KoutaLightService extends KoutaLightService
@@ -86,7 +100,8 @@ class KoutaLightService extends Logging {
         koulutusExternalId,
         Right(koulutus.hakulomakeLinkki),
         "hakulomakeLinkki"
-      )
+      ),
+      Validations.validateOpetuskielet(koulutusExternalId, koulutus.opetuskielet)
     )
   }
 

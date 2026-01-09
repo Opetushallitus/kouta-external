@@ -3,9 +3,10 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
-import fi.oph.kouta.external.domain.{Kielistetty, KielistettyLinkki}
-import fi.oph.kouta.external.domain.enums.{KoutaLightMassResult, Operation}
+import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
+import fi.oph.kouta.external.domain.enums.Operation.Upsert
 import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
+import fi.oph.kouta.external.domain.{Kielistetty, KielistettyLinkki}
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}
@@ -48,7 +49,7 @@ object Validations {
   def validateOpetuskielet(koulutusExternalId: String, opetuskielet: Seq[String]): Seq[ValidationError] = {
     val invalidKielikoodit = opetuskielet.flatMap {
       case kieli: String if kieli.length < 2 || kieli.length > 3 => Some(kieli)
-      case _ => None
+      case _                                                     => None
     }
 
     if (invalidKielikoodit.nonEmpty)
@@ -58,10 +59,10 @@ object Validations {
   }
 
   private def invalidKielistetty(values: Seq[Kieli], propertyName: String) =
-    s"Kielistetystä kentästä ${'"'}$propertyName${'"'} puuttuu arvo kielillä [${values.mkString(", ")}]"
+    s"Kielistetystä kentästä '$propertyName' puuttuu arvo kielillä [${values.mkString(", ")}]"
 
   private def invalidOpetuskielet(values: Seq[String]) =
-    s"Virheellinen arvo [${values.mkString(", ")}] kentässä ${'"'}opetuskielet${'"'}"
+    s"Virheellinen arvo [${values.mkString(", ")}] kentässä 'opetuskielet'"
 }
 
 object KoutaLightService extends KoutaLightService
@@ -105,19 +106,37 @@ class KoutaLightService extends Logging {
     )
   }
 
+  private def validationErrorsToKoutaLightMassResultError(
+      validationErrors: Seq[ValidationError]
+  ): Seq[KoutaLightMassResult] =
+    validationErrors.map(error =>
+      KoutaLightMassResult.Error(Upsert, Option(error.koulutusExternalId), exception = error.message)
+    )
+
   def put(koulutukset: List[KoutaLightKoulutus], organisaatioOid: OrganisaatioOid): Seq[KoutaLightMassResult] = {
-    koulutukset.map(koulutus => {
-      val externalId = koulutus.externalId
-      KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
-        case Success(null) =>
-          logger.info(s"Created koulutus ${koulutus.externalId}")
-          KoutaLightMassResult.CreateSuccess(externalId = Some(externalId))
-        case Success(_) =>
-          logger.info(s"Updated koulutus ${koulutus.externalId}")
-          KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId))
-        case Failure(e) =>
-          logger.error(s"Create or update failed on koulutus with externalId ${koulutus.externalId}", e)
-          KoutaLightMassResult.Error(operation = Operation.Upsert, externalId = Some(externalId), exception = e)
+    koulutukset.flatMap(koulutus => {
+      val externalId       = koulutus.externalId
+      val validationErrors = validate(koulutus)
+      if (validationErrors.isEmpty) {
+        KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
+          case Success(null) =>
+            logger.info(s"Created koulutus ${koulutus.externalId}")
+            List(KoutaLightMassResult.CreateSuccess(externalId = Some(externalId)))
+          case Success(_) =>
+            logger.info(s"Updated koulutus ${koulutus.externalId}")
+            List(KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId)))
+          case Failure(e) =>
+            logger.error(s"Create or update failed on koulutus with externalId ${koulutus.externalId}", e)
+            List(
+              KoutaLightMassResult.Error(
+                operation = Upsert,
+                externalId = Some(externalId),
+                exception = e.toString
+              )
+            )
+        }
+      } else {
+        validationErrorsToKoutaLightMassResultError(validationErrors)
       }
     })
   }

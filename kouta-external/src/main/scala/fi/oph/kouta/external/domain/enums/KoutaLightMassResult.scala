@@ -87,7 +87,7 @@ object KoutaLightMassResult {
   ) extends KoutaLightMassResult(operation, success)
 
   object Error {
-    def apply(operation: Operation, externalId: Option[String], exception: Throwable): Error =
-      Error(operation, success = false, externalId, exception.toString)
+    def apply(operation: Operation, externalId: Option[String], exception: String): Error =
+      Error(operation, success = false, externalId, exception)
   }
 }

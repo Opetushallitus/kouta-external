@@ -90,12 +90,8 @@ class KoutaLightSpec extends KoutaLightFixture {
   }
 
   it should "try to create or update several koulutus and return message for each operation" in {
-    val externalId1 = "externalId1111"
-    val externalId2 = "externalId2222"
-    val externalId3 = "externalId3333"
-
     val koulutus1 = koutaLightKoulutus.copy(
-      externalId = externalId1,
+      externalId = "externalId1111",
       nimi = Map(Fi -> "Koulutus1 nimi fi", Sv -> "Koulutus1 nimi sv")
     )
     put(List(koulutus1), koutaLightSessionId1) shouldEqual parse(
@@ -103,11 +99,11 @@ class KoutaLightSpec extends KoutaLightFixture {
     )
 
     val koulutus2 = koutaLightKoulutus.copy(
-      externalId = externalId2,
+      externalId = "externalId2222",
       nimi = Map(Fi -> "Koulutus2 nimi fi", Sv -> "Koulutus2 nimi sv")
     )
     val koulutus3 = koutaLightKoulutus.copy(
-      externalId = externalId3,
+      externalId = "externalId3333",
       nimi = Map(Fi -> "Koulutus3 nimi fi", Sv -> "Koulutus3 nimi sv")
     )
     put(List(koulutus2, koulutus1, koulutus3), koutaLightSessionId1) shouldEqual parse(
@@ -117,7 +113,32 @@ class KoutaLightSpec extends KoutaLightFixture {
     )
   }
 
-  "findMissingKielet" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
+  it should "return validation error messages for one koulutus that fails nimi and kuvaus validation" in {
+    val koulutus1 = koutaLightKoulutus.copy(
+      externalId = "externalId21",
+      nimi = Map(Fi -> "Koulutus1 nimi fi", Sv -> "Koulutus1 nimi sv")
+    )
+
+    val koulutus2 = koutaLightKoulutus.copy(
+      externalId = "externalId22",
+      nimi = Map(Fi -> "Koulutus2 nimi fi"),
+      kuvaus = Map(Fi -> "Koulutus2 kuvaus fi")
+    )
+
+    put(List(koulutus1, koulutus2), koutaLightSessionId1) shouldEqual parse(
+      s"""[{"operation": "CREATE", "success": true, "externalId": "externalId21"},
+         | {"operation": "CREATE OR UPDATE",
+         | "success": false,
+         | "externalId": "externalId22",
+         | "exception": "Kielistetystä kentästä 'nimi' puuttuu arvo kielillä [sv]"},
+         | {"operation": "CREATE OR UPDATE",
+         | "success": false,
+         | "externalId": "externalId22",
+         | "exception": "Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv]"}]""".stripMargin
+    )
+  }
+
+  "findMissingLanguages" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
     Validations.findMissingLanguages(
       List(Fi, Sv, En),
       Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"))
@@ -147,7 +168,7 @@ class KoutaLightSpec extends KoutaLightFixture {
     ) shouldEqual List(
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv, en]"""
+        message = """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv, en]"""
       )
     )
   }
@@ -159,7 +180,7 @@ class KoutaLightSpec extends KoutaLightFixture {
     KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv]"""
       )
     )
   }
@@ -182,35 +203,35 @@ class KoutaLightSpec extends KoutaLightFixture {
     KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "nimi" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'nimi' puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "tarjoajat[0]" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'tarjoajat[0]' puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "tarjoajat[1]" puuttuu arvo kielillä [fi, sv]"""
+        message = """Kielistetystä kentästä 'tarjoajat[1]' puuttuu arvo kielillä [fi, sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "kuvaus" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "ammattinimikkeet[1]" puuttuu arvo kielillä [fi]"""
+        message = """Kielistetystä kentästä 'ammattinimikkeet[1]' puuttuu arvo kielillä [fi]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "asiasanat[0]" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'asiasanat[0]' puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "hakulomakeLinkki" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'hakulomakeLinkki' puuttuu arvo kielillä [sv]"""
       ),
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä "maksullisuuskuvaus" puuttuu arvo kielillä [sv]"""
+        message = """Kielistetystä kentästä 'maksullisuuskuvaus' puuttuu arvo kielillä [sv]"""
       )
     )
   }
@@ -221,7 +242,7 @@ class KoutaLightSpec extends KoutaLightFixture {
     KoutaLightService.validate(koulutus) should contain theSameElementsAs List(
       ValidationError(
         koulutusExternalId = externalId,
-        message = """Virheellinen arvo [suomi, r] kentässä "opetuskielet""""
+        message = """Virheellinen arvo [suomi, r] kentässä 'opetuskielet'"""
       )
     )
   }

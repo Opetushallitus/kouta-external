@@ -17,7 +17,7 @@ object KoutaLightDAO extends KoutaLightSQL {
 
 sealed trait KoutaLightSQL extends SQLHelpers {
   def upsert(koulutus: KoutaLightKoulutusWithMetadata): DBIO[String] = {
-    sql"""insert into koulutus (
+    sql"""insert into kouta_light_koulutus (
       external_id,
       kielivalinta,
       tila,

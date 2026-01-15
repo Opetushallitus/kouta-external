@@ -12,6 +12,7 @@
     <modules>
         <module>kouta-external</module>
         <module>europass-publisher</module>
+        <module>ovara-kouta-light</module>
     </modules>
 
     <properties>

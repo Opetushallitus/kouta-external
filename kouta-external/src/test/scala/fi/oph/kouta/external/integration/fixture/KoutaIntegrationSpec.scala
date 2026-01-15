@@ -210,7 +210,7 @@ sealed trait DatabaseSpec {
   def truncateDatabase() = {
     db.runBlocking(sqlu"""delete from authorities""")
     db.runBlocking(sqlu"""delete from sessions""")
-    db.runBlocking(sqlu"""delete from koulutus""")
+    db.runBlocking(sqlu"""delete from kouta_light_koulutus""")
   }
 
   import java.time._
@@ -337,7 +337,7 @@ trait KoutaLightIntegrationSpec
                    nimi,
                    tarjoajat,
                    metadata,
-                   owner_org from koulutus where external_id = $externalId and owner_org = ${organisaatioOid
+                   owner_org from kouta_light_koulutus where external_id = $externalId and owner_org = ${organisaatioOid
         .toString()}"""
         .as[KoutaLightKoulutus]
     )

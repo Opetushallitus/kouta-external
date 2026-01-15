@@ -1,4 +1,4 @@
-create table koulutus (
+create table kouta_light_koulutus (
   uuid uuid primary key default gen_random_uuid(),
   external_id text not null,
   kielivalinta jsonb not null,

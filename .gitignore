@@ -74,3 +74,4 @@ embedded-jetty-vars.yml
 kouta-temp-db/
 
 kouta-external/src/test/resources/dev-vars.yml
+ovara-kouta-light/ovara-kouta-light.properties

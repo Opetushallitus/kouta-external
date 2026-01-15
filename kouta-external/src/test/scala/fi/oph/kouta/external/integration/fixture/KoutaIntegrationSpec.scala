@@ -250,7 +250,7 @@ trait KoutaLightIntegrationSpec
     truncateDatabase()
   }
 
-  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): immutable.Seq[KoutaLightKoulutus] = {
+  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutus] = {
     def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
     def extractKielistetty(json: Option[String]): Kielistetty = json.map(read[Map[Kieli, String]]).getOrElse(Map())
 

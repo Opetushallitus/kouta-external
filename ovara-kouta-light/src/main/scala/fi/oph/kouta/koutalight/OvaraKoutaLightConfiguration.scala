@@ -24,7 +24,7 @@ case class S3Configuration(
 )
 
 object OvaraKoutaLightConfiguration extends Logging {
-  val koutaLightS3Configuration = S3Configuration(
+  val s3Configuration = S3Configuration(
     config.getString("ovara-kouta-light.s3.transferFileBucket"),
     config.getString("ovara-kouta-light.s3.transferFileTargetRoleArn"),
     Try(config.getString("ovara-kouta-light.s3.region")).filter(_.trim.nonEmpty).toOption,

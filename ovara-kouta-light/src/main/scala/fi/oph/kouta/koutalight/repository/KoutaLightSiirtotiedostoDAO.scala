@@ -2,9 +2,10 @@ package fi.oph.kouta.koutalight.repository
 
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.database.{KoutaDatabase, SQLHelpers}
+import fi.oph.kouta.external.database.SQLHelpers
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutusMetadata, KoutaLightKoulutusWithMetadata}
+import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
 import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
 import org.json4s.jackson.Serialization.read
 import slick.dbio.DBIO
@@ -18,13 +19,20 @@ import java.util.UUID
 object KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoDAO
 
 class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
-  def getKoulutukset(lastOperationWindowEndTime: Option[LocalDateTime]): Seq[KoutaLightKoulutusWithMetadata] = {
-    KoutaDatabaseConnection.runBlocking(selectKoulutukset(lastOperationWindowEndTime))
+  def getKoulutukset(
+      operationWindowStartTime: Option[LocalDateTime],
+      operationWindowEndTime: LocalDateTime,
+      lastFetchedKoulutusId: Option[UUID]
+  ): Seq[KoutaLightKoulutusWithMetadata] = {
+    KoutaDatabaseConnection.runBlocking(
+      selectKoulutukset(operationWindowStartTime, operationWindowEndTime, lastFetchedKoulutusId)
+    )
   }
 
   def getLatestSiirtotiedostoOperationData: Option[SiirtotiedostoOperation] = {
     KoutaDatabaseConnection.runBlocking(selectLatestSiirtotiedostoOperation()) match {
-      case existingSiirtotiedostoOperation if existingSiirtotiedostoOperation.nonEmpty => Option(existingSiirtotiedostoOperation.head)
+      case existingSiirtotiedostoOperation if existingSiirtotiedostoOperation.nonEmpty =>
+        Option(existingSiirtotiedostoOperation.head)
       case _ => None
     }
   }
@@ -35,7 +43,8 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
 }
 
 sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
-  val SiirtotiedostoDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+  private val SiirtotiedostoDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+  private val maxNumberOfItemsInFile       = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
 
   private def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
   private def extractKielistetty(json: Option[String]): Kielistetty =
@@ -43,14 +52,31 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
 
   implicit val getKoutaLightKoulutusResult: GetResult[KoutaLightKoulutusWithMetadata] =
     GetResult(r => {
+      val id           = Some(UUID.fromString(r.nextString()))
+      val externalId   = r.nextString()
+      val kielivalinta = extractKielivalinta(r.nextStringOption())
+      val tila         = r.nextString()
+      val nimi         = extractKielistetty(r.nextStringOption())
+      val tarjoajat    = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List())
+      val metadata     = r.nextStringOption().map(read[KoutaLightKoulutusMetadata]).get
+      val ownerOrg     = OrganisaatioOid(r.nextString())
+      val createdAt    = r.nextTimestampOption().map(_.toLocalDateTime)
+      val updatedAt = r.nextTimestampOption().map(_.toLocalDateTime) match {
+        case Some(updatedAt) => Some(updatedAt)
+        case None            => createdAt
+      }
+
       KoutaLightKoulutusWithMetadata(
-        externalId = r.nextString(),
-        kielivalinta = extractKielivalinta(r.nextStringOption()),
-        tila = r.nextString(),
-        nimi = extractKielistetty(r.nextStringOption()),
-        tarjoajat = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List()),
-        metadata = r.nextStringOption().map(read[KoutaLightKoulutusMetadata]).get,
-        ownerOrg = OrganisaatioOid(r.nextString())
+        id = id,
+        externalId = externalId,
+        kielivalinta = kielivalinta,
+        tila = tila,
+        nimi = nimi,
+        tarjoajat = tarjoajat,
+        metadata = metadata,
+        ownerOrg = ownerOrg,
+        createdAt = createdAt,
+        updatedAt = updatedAt
       )
     })
 
@@ -65,15 +91,26 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
       )
     })
 
-  def selectKoulutukset(lastModified: Option[LocalDateTime]): DBIO[Seq[KoutaLightKoulutusWithMetadata]] = {
-    // kokeile lastModified tilalle skripti tms.
-    val lastModifiedFilter = lastModified match {
-      case Some(lastModified) => s"where created_at > '$lastModified' or updated_at > '$lastModified'"
-      case None => ""
+  def selectKoulutukset(
+      windowStartTime: Option[LocalDateTime],
+      windowEndTime: LocalDateTime,
+      lastFetchedKoulutusId: Option[UUID]
+  ): DBIO[Seq[KoutaLightKoulutusWithMetadata]] = {
+    val windowEndTimeClause = s"(created_at < '$windowEndTime' OR updated_at < '$windowEndTime')"
+
+    val lastFetchedKoulutusClause = lastFetchedKoulutusId match {
+      case Some(id) => s"AND id > '$id'"
+      case None     => ""
     }
 
-    println(lastModifiedFilter)
-    sql"""select external_id,
+    val whereClause = windowStartTime match {
+      case Some(startTime) =>
+        s"WHERE ((created_at > '$startTime' OR updated_at > '$startTime') AND $windowEndTimeClause) $lastFetchedKoulutusClause"
+      case None => s"WHERE $windowEndTimeClause $lastFetchedKoulutusClause"
+    }
+
+    sql"""select id,
+                 external_id,
                  kielivalinta,
                  tila,
                  nimi,
@@ -82,7 +119,11 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
                  owner_org,
                  created_at,
                  updated_at
-          from kouta_light_koulutus #$lastModifiedFilter"""
+          from kouta_light_koulutus
+          #$whereClause
+          order by id
+          limit $maxNumberOfItemsInFile
+          """
       .as[KoutaLightKoulutusWithMetadata]
   }
 

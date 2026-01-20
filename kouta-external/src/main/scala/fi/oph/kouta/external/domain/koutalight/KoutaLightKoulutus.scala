@@ -7,6 +7,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.net.URL
 import java.time.LocalDateTime
+import java.util.UUID
 
 trait KoutaLightKoulutusBase {
   val externalId: String
@@ -183,26 +184,32 @@ object KoutaLightKoulutusMetadata {
 }
 
 case class KoutaLightKoulutusWithMetadata(
+    id: Option[UUID],
     externalId: String,
     kielivalinta: Seq[Kieli],
     tila: String,
     nimi: Kielistetty,
     tarjoajat: List[Kielistetty],
     metadata: KoutaLightKoulutusMetadata,
-    ownerOrg: OrganisaatioOid
+    ownerOrg: OrganisaatioOid,
+    createdAt: Option[LocalDateTime],
+    updatedAt: Option[LocalDateTime]
 ) extends KoutaLightKoulutusBase
 
 object KoutaLightKoulutusWithMetadata {
   def apply(organisaatioOid: OrganisaatioOid, koulutus: KoutaLightKoulutus): KoutaLightKoulutusWithMetadata = {
     val metadata = KoutaLightKoulutusMetadata(koulutus)
     new KoutaLightKoulutusWithMetadata(
+      None,
       koulutus.externalId,
       koulutus.kielivalinta,
       koulutus.tila,
       koulutus.nimi,
       koulutus.tarjoajat,
       metadata,
-      organisaatioOid
+      organisaatioOid,
+      None,
+      None
     )
   }
 }

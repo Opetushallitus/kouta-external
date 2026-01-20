@@ -12,7 +12,7 @@ import java.util.UUID
 object SiirtotiedostoPalveluClient extends SiirtotiedostoPalveluClient
 
 class SiirtotiedostoPalveluClient extends KoutaJsonFormats {
-  val config: S3Configuration = OvaraKoutaLightConfiguration.koutaLightS3Configuration
+  val config: S3Configuration = OvaraKoutaLightConfiguration.s3Configuration
   private val siirtotiedostoPalvelu = new SiirtotiedostoPalvelu(
     config.region.getOrElse("eu-west-1"),
     config.transferFileBucket,

@@ -30,14 +30,14 @@ object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
         val currentOperation = SiirtotiedostoOperation(
           id = opId,
           windowStart = latestOpWindowEnd,
-          windowEnd = LocalDateTime.now(),
+          windowEnd = runStartTime,
           runStart = runStartTime,
           runEnd = runEndTime
         )
-        logger.info("Siirtiedostojen tallentaminen onnistui {}", writePretty(currentOperation))
+        logger.info("Siirtotiedosto-operaatio onnistui {}", writePretty(currentOperation))
 
         KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
-      case Failure(e) => logger.error(s"Siirtiedostojen tallentaminen epäonnistui: ${e.toString}")
+      case Failure(e) => logger.error(s"Siirtotiedostojen tallentaminen epäonnistui: ${e.toString}")
     }
 
     KoutaDatabaseConnection.destroy()

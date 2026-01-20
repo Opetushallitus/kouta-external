@@ -96,35 +96,39 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
       windowEndTime: LocalDateTime,
       lastFetchedKoulutusId: Option[UUID]
   ): DBIO[Seq[KoutaLightKoulutusWithMetadata]] = {
-    val windowEndTimeClause = s"(created_at < '$windowEndTime' OR updated_at < '$windowEndTime')"
+    val selectKoulutusSql =
+      """SELECT id,
+                external_id,
+                kielivalinta,
+                tila,
+                nimi,
+                tarjoajat,
+                metadata,
+                owner_org,
+                created_at,
+                updated_at
+         FROM kouta_light_koulutus"""
 
     val lastFetchedKoulutusClause = lastFetchedKoulutusId match {
       case Some(id) => s"AND id > '$id'"
       case None     => ""
     }
 
-    val whereClause = windowStartTime match {
-      case Some(startTime) =>
-        s"WHERE ((created_at > '$startTime' OR updated_at > '$startTime') AND $windowEndTimeClause) $lastFetchedKoulutusClause"
-      case None => s"WHERE $windowEndTimeClause $lastFetchedKoulutusClause"
-    }
+    val orderByAndLimitClause = s"""ORDER BY id
+                                    LIMIT $maxNumberOfItemsInFile"""
 
-    sql"""select id,
-                 external_id,
-                 kielivalinta,
-                 tila,
-                 nimi,
-                 tarjoajat,
-                 metadata,
-                 owner_org,
-                 created_at,
-                 updated_at
-          from kouta_light_koulutus
-          #$whereClause
-          order by id
-          limit $maxNumberOfItemsInFile
-          """
-      .as[KoutaLightKoulutusWithMetadata]
+    (windowStartTime, windowEndTime) match {
+      case (Some(startTime), endTime) =>
+        sql"""#$selectKoulutusSql
+              WHERE ((created_at > $startTime OR updated_at > $startTime) AND (created_at < $endTime OR updated_at < $endTime))
+              #$lastFetchedKoulutusClause
+              #$orderByAndLimitClause""".as[KoutaLightKoulutusWithMetadata]
+      case (None, endTime) =>
+        sql"""#$selectKoulutusSql
+              WHERE (created_at < $endTime OR updated_at < $endTime)
+              #$lastFetchedKoulutusClause
+              #$orderByAndLimitClause""".as[KoutaLightKoulutusWithMetadata]
+    }
   }
 
   def selectLatestSiirtotiedostoOperation(): DBIO[Seq[SiirtotiedostoOperation]] = {
@@ -135,14 +139,16 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
   }
 
   def persistSiirtoOperationData(siirtotiedostoOperation: SiirtotiedostoOperation): DBIO[Int] = {
+    def formatTimeStamp(value: Option[LocalDateTime]) = value.map(SiirtotiedostoDateTimeFormat.format).orNull
+
     sqlu"""insert into siirtotiedosto_operaatio
           (id, window_start, window_end, run_start, run_end)
           values
             (${siirtotiedostoOperation.id.toString}::uuid,
-            ${siirtotiedostoOperation.windowStart.map(SiirtotiedostoDateTimeFormat.format)}::timestamp,
-            ${SiirtotiedostoDateTimeFormat.format(siirtotiedostoOperation.windowEnd)}::timestamp,
-            ${formatTimestampParam(Some(siirtotiedostoOperation.runStart))}::timestamp,
-            ${formatTimestampParam(Some(siirtotiedostoOperation.runEnd))}::timestamp
+            ${formatTimeStamp(siirtotiedostoOperation.windowStart)}::timestamp,
+            ${formatTimeStamp(Some(siirtotiedostoOperation.windowEnd))}::timestamp,
+            ${formatTimeStamp(Some(siirtotiedostoOperation.runStart))}::timestamp,
+            ${formatTimeStamp(Some(siirtotiedostoOperation.runEnd))}::timestamp
           )"""
   }
 }

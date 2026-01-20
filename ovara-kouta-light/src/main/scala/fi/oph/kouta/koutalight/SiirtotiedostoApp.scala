@@ -1,16 +1,18 @@
 package fi.oph.kouta.koutalight
 
+import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
 import fi.oph.kouta.koutalight.repository.SiirtotiedostoOperation
-import fi.oph.kouta.koutalight.service.KoutaLightSiirtotiedostoService
+import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.logging.Logging
+import org.json4s.jackson.Serialization.writePretty
 
 import java.time.LocalDateTime
 import java.util.UUID
 import scala.sys.exit
 import scala.util.{Failure, Success, Try}
 
-object SiirtotiedostoApp extends Logging {
+object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
   def main(args: Array[String]): Unit = {
     val opId         = UUID.randomUUID()
     val runStartTime = LocalDateTime.now()
@@ -21,9 +23,9 @@ object SiirtotiedostoApp extends Logging {
       case None             => None
     }
 
-    Try(KoutaLightSiirtotiedostoService.storeKoulutukset(opId, latestOpWindowEnd)) match {
-      case Success(response: String) =>
-        logger.info(response)
+    Try(KoutaLightSiirtotiedostoService.storeKoulutukset(opId, latestOpWindowEnd, runStartTime)) match {
+      case Success(response: SiirtotiedostoOperationResults) =>
+        logger.info(response.toString)
         val runEndTime = LocalDateTime.now()
         val currentOperation = SiirtotiedostoOperation(
           id = opId,
@@ -32,9 +34,10 @@ object SiirtotiedostoApp extends Logging {
           runStart = runStartTime,
           runEnd = runEndTime
         )
+        logger.info("Siirtiedostojen tallentaminen onnistui {}", writePretty(currentOperation))
 
         KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
-      case Failure(e) => logger.error(e.toString)
+      case Failure(e) => logger.error(s"Siirtiedostojen tallentaminen epäonnistui: ${e.toString}")
     }
 
     KoutaDatabaseConnection.destroy()

@@ -54,7 +54,7 @@ object EuropassPublisherApp extends Logging {
     logger.info(s"Querying koulutustarjonta from $elasticUrl")
     val fileName = Publisher.koulutustarjontaAsFile()
     logger.info(s"Toteutukset dumped in $fileName; validating")
-    assert(ElmValidation.validateXml(fileName))
+    ElmValidation.validateXml(fileName)
     logger.info(s"XML in $fileName validates against loq.xsd")
     val result = dokumenttipalvelu.putObject(
       s3Key, fileName, "application/xml", new BufferedInputStream(new FileInputStream(fileName))

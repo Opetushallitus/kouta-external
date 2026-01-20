@@ -116,4 +116,11 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
       pp.setObject(v, JDBCType.BINARY.getVendorTypeNumber)
     }
   }
+
+  implicit object SetLocalDateTime extends SetParameter[LocalDateTime] {
+    private val timeZoneId = ZoneId.of("Europe/Helsinki")
+    override def apply(v: LocalDateTime, pp: PositionedParameters): Unit = {
+      SetInstant.apply(v.atZone(timeZoneId).toInstant, pp)
+    }
+  }
 }

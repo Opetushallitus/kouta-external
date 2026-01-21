@@ -21,7 +21,7 @@ class Publisher(converter: EuropassConversion) extends Logging {
     "europass-publisher.retrieval.toteutus-limit"
   )
 
-  def toteutusToFile(oid: String, dest: BufferedWriter) = {
+  def toteutusToFile(oid: String, dest: BufferedWriter): Unit = {
     val Some(toteutusXml: Elem) = converter.toteutusAsElmXml(ElasticClient.getToteutus(oid))
     dest.write(
       <Courses xmlns="http://data.europa.eu/snb/model/application-profile/loq-constraints/" >

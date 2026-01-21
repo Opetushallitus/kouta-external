@@ -2,25 +2,28 @@ package fi.oph.kouta.europass
 
 import scala.xml._
 import org.json4s._
-import fi.oph.kouta.domain.{Julkaisutila, Julkaistu}
+import fi.oph.kouta.domain.Julkaistu
 import fi.oph.kouta.external.domain.indexed.{
-  KoodiUri,
+  AmmatillinenKoulutusMetadataIndexed,
+  ErikoislaakariKoulutusMetadataIndexed,
+  KoodiUri, KorkeakoulutusKoulutusMetadataIndexed,
+  KoulutuksenAlkamiskausiIndexed,
   KoulutusIndexed,
-  ToteutusIndexed,
   OpetusIndexed,
-  TutkintoNimike,
   OppilaitosIndexed,
   Organisaatio,
-  AmmatillinenKoulutusMetadataIndexed,
-  KorkeakoulutusKoulutusMetadataIndexed,
-  ErikoislaakariKoulutusMetadataIndexed,
-  KoulutuksenAlkamiskausiIndexed
+  ToteutusIndexed,
+  TutkintoNimike
 }
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
+import org.jsoup.Jsoup
+import org.jsoup.safety.{Cleaner, Safelist}
 
 class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
+
+  val cleaner = new Cleaner(Safelist.none)
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
     "europass-publisher.publishing.toteutus-extra-fields"
@@ -95,8 +98,8 @@ class EuropassConversion extends Logging {
   def toteutuksenKuvausAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] =
     toteutus.metadata.map(_.kuvaus) match {
       case Some(kuvaukset: Kielistetty) if toteutusExtras =>
-        kuvaukset.keys.map{lang =>
-          <description language={lang.name}>{kuvaukset(lang)}</description>
+        kuvaukset.keys.map { lang =>
+          <description language={lang.name}>{cleanHtml(kuvaukset(lang))}</description>
         }.toList
       case _ => List()
     }
@@ -138,11 +141,11 @@ class EuropassConversion extends Logging {
     (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
       opetus.map(_.opetustapaKuvaus).map(_.toList).getOrElse(List()))
         .take(1)  // No way to express language alternatives so we just pick a random one
-        .map{case (lang, desc) =>
+        .map { case (lang, desc) =>
           <scheduleInformation>
-            <noteLiteral language={lang.name}>{desc}</noteLiteral>
+            <noteLiteral language={lang.name}>{cleanHtml(desc)}</noteLiteral>
           </scheduleInformation>
-        }.toList
+        }
   }
 
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
@@ -241,7 +244,7 @@ class EuropassConversion extends Logging {
 
   def kielistettyAsNoteLiterals(content: Kielistetty): Iterable[Elem] =
     content.keys.take(1)  // No way to express language alternatives so we just pick a random one
-      .map{lang => <noteLiteral language={lang.name}>{content(lang)}</noteLiteral>}
+      .map{lang => <noteLiteral language={lang.name}>{cleanHtml(content(lang))}</noteLiteral>}
 
   def tarjoajaAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
@@ -286,6 +289,10 @@ class EuropassConversion extends Logging {
   def toteutusToTarjoajaDependents(toteutus: ToteutusIndexed): Iterable[Organisaatio] =
     toteutus.tarjoajat
 
+  private def cleanHtml(s: String): String = {
+    val document: org.jsoup.nodes.Document = cleaner.clean(Jsoup.parse(s))
+    document.text
+  }
 }
 
 object EuropassConversion extends EuropassConversion

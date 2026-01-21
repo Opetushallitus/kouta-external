@@ -76,11 +76,13 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
   "totally ordinary toteutus" should "have all optional fields" in {
     val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
     assert(toteutusXml \ "description" \@ "language" == "en")
+    assert(!(toteutusXml \ "description" ).text.contains("<"))
+    assert(!(toteutusXml \ "description" ).text.contains("&lt;"))
+    assert((toteutusXml \ "description" ).text.endsWith(". Lisätietoja"))
     assert((toteutusXml \ "duration").text == "P0Y0M")
     // from opetustapaKuvaus, since it doesn't have opetusaikaKuvaus
     assert(toteutusXml \ "scheduleInformation" \ "noteLiteral" \@ "language" == "en")
-    assert((toteutusXml \ "scheduleInformation" \ "noteLiteral").text
-      .startsWith("<p>Online course."))
+    assert((toteutusXml \ "scheduleInformation" \ "noteLiteral").text.startsWith("Online course."))
   }
 
   "example_toteutus" should "have correct fields" in {

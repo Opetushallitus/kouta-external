@@ -3,7 +3,7 @@ package fi.oph.kouta.koutalight.service
 import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
 import fi.oph.kouta.koutalight.repository.{KoutaLightSiirtotiedostoDAO, SiirtotiedostoOperation}
 
-import java.time.LocalDateTime
+import java.time.Instant
 import java.util.UUID
 import scala.collection.mutable.ListBuffer
 
@@ -19,8 +19,8 @@ class KoutaLightSiirtotiedostoService(
 
   def storeKoulutukset(
       operationId: UUID,
-      operationWindowStartTime: Option[LocalDateTime],
-      operationWindowEndTime: LocalDateTime
+      operationWindowStartTime: Option[Instant],
+      operationWindowEndTime: Instant
   ): SiirtotiedostoOperationResults = {
     var koulutukset =
       koutaLightSiirtotiedostoDAO.getKoulutukset(operationWindowStartTime, operationWindowEndTime, None)

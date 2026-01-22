@@ -77,7 +77,7 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
     assert(toteutusXml \ "description" \@ "language" == "en")
     assert((toteutusXml \ "description" ).text.contains("<p>"))
-    assert((toteutusXml \ "description" ).text.endsWith("<a href=\"https: //opintopolku.fi\">Lisätietoja</a></p>"))
+    assert((toteutusXml \ "description" ).text.endsWith(" Lisätietoja</p>"))
     assert((toteutusXml \ "duration").text == "P0Y0M")
     // from opetustapaKuvaus, since it doesn't have opetusaikaKuvaus
     assert(toteutusXml \ "scheduleInformation" \ "noteLiteral" \@ "language" == "en")

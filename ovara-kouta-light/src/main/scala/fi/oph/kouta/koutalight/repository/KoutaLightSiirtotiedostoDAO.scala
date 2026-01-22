@@ -12,16 +12,15 @@ import slick.dbio.DBIO
 import slick.jdbc.GetResult
 import slick.jdbc.PostgresProfile.api._
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.time.Instant
 import java.util.UUID
 
 object KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoDAO
 
 class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
   def getKoulutukset(
-      operationWindowStartTime: Option[LocalDateTime],
-      operationWindowEndTime: LocalDateTime,
+      operationWindowStartTime: Option[Instant],
+      operationWindowEndTime: Instant,
       lastFetchedKoulutusId: Option[UUID]
   ): Seq[KoutaLightKoulutusWithMetadata] = {
     KoutaDatabaseConnection.runBlocking(
@@ -43,8 +42,7 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
 }
 
 sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
-  private val SiirtotiedostoDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-  private val maxNumberOfItemsInFile       = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
+  private val maxNumberOfItemsInFile = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
 
   private def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
   private def extractKielistetty(json: Option[String]): Kielistetty =
@@ -60,8 +58,8 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
       val tarjoajat    = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List())
       val metadata     = r.nextStringOption().map(read[KoutaLightKoulutusMetadata]).get
       val ownerOrg     = OrganisaatioOid(r.nextString())
-      val createdAt    = r.nextTimestampOption().map(_.toLocalDateTime)
-      val updatedAt = r.nextTimestampOption().map(_.toLocalDateTime) match {
+      val createdAt    = r.nextTimestampOption().map(_.toInstant)
+      val updatedAt = r.nextTimestampOption().map(_.toInstant) match {
         case Some(updatedAt) => Some(updatedAt)
         case None            => createdAt
       }
@@ -84,17 +82,17 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
     GetResult(r => {
       SiirtotiedostoOperation(
         id = UUID.fromString(r.nextString()),
-        windowStart = r.nextTimestampOption().map(_.toLocalDateTime),
-        windowEnd = r.nextTimestamp().toLocalDateTime,
-        runStart = r.nextTimestamp().toLocalDateTime,
-        runEnd = r.nextTimestamp().toLocalDateTime,
+        windowStart = r.nextTimestampOption().map(_.toInstant),
+        windowEnd = r.nextTimestamp().toInstant,
+        runStart = r.nextTimestamp().toInstant,
+        runEnd = r.nextTimestamp().toInstant,
         storedEntitiesCount = r.nextInt()
       )
     })
 
   def selectKoulutukset(
-      windowStartTime: Option[LocalDateTime],
-      windowEndTime: LocalDateTime,
+      windowStartTime: Option[Instant],
+      windowEndTime: Instant,
       lastFetchedKoulutusId: Option[UUID]
   ): DBIO[Seq[KoutaLightKoulutusWithMetadata]] = {
     val selectKoulutusSql =
@@ -140,16 +138,14 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
   }
 
   def persistSiirtoOperationData(siirtotiedostoOperation: SiirtotiedostoOperation): DBIO[Int] = {
-    def formatTimeStamp(value: Option[LocalDateTime]) = value.map(SiirtotiedostoDateTimeFormat.format).orNull
-
     sqlu"""insert into siirtotiedosto_operaatio
           (id, window_start, window_end, run_start, run_end, stored_entities_count)
           values
             (${siirtotiedostoOperation.id.toString}::uuid,
-            ${formatTimeStamp(siirtotiedostoOperation.windowStart)}::timestamp,
-            ${formatTimeStamp(Some(siirtotiedostoOperation.windowEnd))}::timestamp,
-            ${formatTimeStamp(Some(siirtotiedostoOperation.runStart))}::timestamp,
-            ${formatTimeStamp(Some(siirtotiedostoOperation.runEnd))}::timestamp,
+            ${siirtotiedostoOperation.windowStart}::timestamp,
+            ${siirtotiedostoOperation.windowEnd}::timestamp,
+            ${siirtotiedostoOperation.runStart}::timestamp,
+            ${siirtotiedostoOperation.runEnd}::timestamp,
             ${siirtotiedostoOperation.storedEntitiesCount}
           )"""
   }
@@ -157,9 +153,9 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
 
 case class SiirtotiedostoOperation(
     id: UUID,
-    windowStart: Option[LocalDateTime],
-    windowEnd: LocalDateTime,
-    runStart: LocalDateTime,
-    runEnd: LocalDateTime,
+    windowStart: Option[Instant],
+    windowEnd: Instant,
+    runStart: Instant,
+    runEnd: Instant,
     storedEntitiesCount: Int
 )

@@ -87,7 +87,8 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
         windowStart = r.nextTimestampOption().map(_.toLocalDateTime),
         windowEnd = r.nextTimestamp().toLocalDateTime,
         runStart = r.nextTimestamp().toLocalDateTime,
-        runEnd = r.nextTimestamp().toLocalDateTime
+        runEnd = r.nextTimestamp().toLocalDateTime,
+        storedEntitiesCount = r.nextInt()
       )
     })
 
@@ -132,7 +133,7 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
   }
 
   def selectLatestSiirtotiedostoOperation(): DBIO[Seq[SiirtotiedostoOperation]] = {
-    sql"""select id, window_start, window_end, run_start, run_end
+    sql"""select id, window_start, window_end, run_start, run_end, stored_entities_count
           from siirtotiedosto_operaatio
           order by run_start DESC
          """.as[SiirtotiedostoOperation]
@@ -142,13 +143,14 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
     def formatTimeStamp(value: Option[LocalDateTime]) = value.map(SiirtotiedostoDateTimeFormat.format).orNull
 
     sqlu"""insert into siirtotiedosto_operaatio
-          (id, window_start, window_end, run_start, run_end)
+          (id, window_start, window_end, run_start, run_end, stored_entities_count)
           values
             (${siirtotiedostoOperation.id.toString}::uuid,
             ${formatTimeStamp(siirtotiedostoOperation.windowStart)}::timestamp,
             ${formatTimeStamp(Some(siirtotiedostoOperation.windowEnd))}::timestamp,
             ${formatTimeStamp(Some(siirtotiedostoOperation.runStart))}::timestamp,
-            ${formatTimeStamp(Some(siirtotiedostoOperation.runEnd))}::timestamp
+            ${formatTimeStamp(Some(siirtotiedostoOperation.runEnd))}::timestamp,
+            ${siirtotiedostoOperation.storedEntitiesCount}
           )"""
   }
 }
@@ -158,5 +160,6 @@ case class SiirtotiedostoOperation(
     windowStart: Option[LocalDateTime],
     windowEnd: LocalDateTime,
     runStart: LocalDateTime,
-    runEnd: LocalDateTime
+    runEnd: LocalDateTime,
+    storedEntitiesCount: Int
 )

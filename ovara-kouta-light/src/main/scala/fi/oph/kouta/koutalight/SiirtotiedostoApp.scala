@@ -32,9 +32,11 @@ object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
           windowStart = latestOpWindowEnd,
           windowEnd = runStartTime,
           runStart = runStartTime,
-          runEnd = runEndTime
+          runEnd = runEndTime,
+          storedEntitiesCount = response.count
         )
-        logger.info("Siirtotiedosto-operaatio onnistui {}", writePretty(currentOperation))
+        logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(response)}")
+        logger.info(s"Tallennetaan siirtotiedosto-operaation tiedot kantaan: ${writePretty(currentOperation)}")
 
         KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
       case Failure(e) => logger.error(s"Siirtotiedostojen tallentaminen epäonnistui: ${e.toString}")

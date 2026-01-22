@@ -4,6 +4,7 @@ create table if not exists siirtotiedosto_operaatio (
     window_end varchar,
     run_start timestamp with time zone not null default now(),
     run_end timestamp with time zone,
+    stored_entities_count int,
     PRIMARY KEY (id)
 );
 COMMENT ON column siirtotiedosto_operaatio.run_start IS 'Siirtotiedosto-operaation suorituksen alkuaika';

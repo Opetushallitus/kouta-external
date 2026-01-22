@@ -33,6 +33,16 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
     }
   }
 
+  implicit object SetInstantOption extends SetParameter[Option[Instant]] {
+    def apply(v: Option[Instant], pp: PositionedParameters): Unit = {
+      v match {
+        case Some(i) => SetInstant.apply(i, pp)
+        case None => pp.setNull(java.sql.Types.NULL)
+      }
+    }
+  }
+
+
   implicit object SetHakuOid extends SetParameter[HakuOid] {
     def apply(o: HakuOid, pp: PositionedParameters) {
       pp.setString(o.toString)
@@ -114,13 +124,6 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
   implicit object SetUUID extends SetParameter[UUID] {
     def apply(v: UUID, pp: PositionedParameters) {
       pp.setObject(v, JDBCType.BINARY.getVendorTypeNumber)
-    }
-  }
-
-  implicit object SetLocalDateTime extends SetParameter[LocalDateTime] {
-    private val timeZoneId = ZoneId.of("Europe/Helsinki")
-    override def apply(v: LocalDateTime, pp: PositionedParameters): Unit = {
-      SetInstant.apply(v.atZone(timeZoneId).toInstant, pp)
     }
   }
 }

@@ -6,7 +6,7 @@ import fi.oph.kouta.external.domain.{Keyword, Kielistetty, KielistettyLinkki}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.net.URL
-import java.time.LocalDateTime
+import java.time.{Instant, LocalDateTime}
 import java.util.UUID
 
 trait KoutaLightKoulutusBase {
@@ -192,8 +192,8 @@ case class KoutaLightKoulutusWithMetadata(
     tarjoajat: List[Kielistetty],
     metadata: KoutaLightKoulutusMetadata,
     ownerOrg: OrganisaatioOid,
-    createdAt: Option[LocalDateTime],
-    updatedAt: Option[LocalDateTime]
+    createdAt: Option[Instant],
+    updatedAt: Option[Instant]
 ) extends KoutaLightKoulutusBase
 
 object KoutaLightKoulutusWithMetadata {

@@ -7,15 +7,21 @@ import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, Siirtot
 import fi.oph.kouta.logging.Logging
 import org.json4s.jackson.Serialization.writePretty
 
-import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.{Instant, ZoneId}
 import java.util.UUID
 import scala.sys.exit
 import scala.util.{Failure, Success, Try}
 
 object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
+  private val SiirtotiedostoInstantFormat: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(ZoneId.of("Europe/Helsinki"))
+
+  def format(instant: Option[Instant]): String = instant.map(SiirtotiedostoInstantFormat.format).getOrElse("-")
+
   def main(args: Array[String]): Unit = {
     val opId         = UUID.randomUUID()
-    val runStartTime = LocalDateTime.now()
+    val runStartTime = Instant.now()
 
     val latestOp = KoutaLightSiirtotiedostoService.findLatestSuccessfulSiirtoOperationData()
     val latestOpWindowEnd = latestOp match {
@@ -26,7 +32,7 @@ object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
     Try(KoutaLightSiirtotiedostoService.storeKoulutukset(opId, latestOpWindowEnd, runStartTime)) match {
       case Success(response: SiirtotiedostoOperationResults) =>
         logger.info(response.toString)
-        val runEndTime = LocalDateTime.now()
+        val runEndTime = Instant.now()
         val currentOperation = SiirtotiedostoOperation(
           id = opId,
           windowStart = latestOpWindowEnd,
@@ -36,7 +42,11 @@ object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
           storedEntitiesCount = response.count
         )
         logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(response)}")
-        logger.info(s"Tallennetaan siirtotiedosto-operaation tiedot kantaan: ${writePretty(currentOperation)}")
+        logger.info(
+          s"Operaatio id: ${currentOperation.id.toString}, " +
+            s"windowStartTime: ${format(currentOperation.windowStart)}, " +
+            s"windowEndTime: ${format(Some(currentOperation.windowEnd))}"
+        )
 
         KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
       case Failure(e) => logger.error(s"Siirtotiedostojen tallentaminen epäonnistui: ${e.toString}")

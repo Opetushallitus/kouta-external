@@ -23,7 +23,7 @@ import org.jsoup.safety.{Cleaner, Safelist}
 class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
-  val cleaner = new Cleaner(Safelist.none)
+  private val cleaner = new Cleaner(Safelist.relaxed())
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
     "europass-publisher.publishing.toteutus-extra-fields"
@@ -290,8 +290,7 @@ class EuropassConversion extends Logging {
     toteutus.tarjoajat
 
   private def cleanHtml(s: String): String = {
-    val document: org.jsoup.nodes.Document = cleaner.clean(Jsoup.parse(s))
-    document.text
+    Jsoup.clean(s, Safelist.relaxed())
   }
 }
 

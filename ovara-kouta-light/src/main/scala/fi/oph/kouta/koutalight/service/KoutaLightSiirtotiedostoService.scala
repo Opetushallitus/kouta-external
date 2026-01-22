@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 import scala.collection.mutable.ListBuffer
 
-case class SiirtotiedostoOperationResults(keys: Seq[String], count: Int)
+case class SiirtotiedostoOperationResults(s3ObjectKeys: Seq[String], storedKoulutusIds: Seq[UUID], count: Int)
 
 object KoutaLightSiirtotiedostoService
     extends KoutaLightSiirtotiedostoService(KoutaLightSiirtotiedostoDAO, SiirtotiedostoPalveluClient)
@@ -26,7 +26,7 @@ class KoutaLightSiirtotiedostoService(
       koutaLightSiirtotiedostoDAO.getKoulutukset(operationWindowStartTime, operationWindowEndTime, None)
     var operationSubId              = 0
     val keyList: ListBuffer[String] = ListBuffer()
-    var count                       = koulutukset.length
+    var koulutusIds                 = koulutukset.flatMap(_.id)
 
     while (koulutukset.nonEmpty) {
       operationSubId += 1
@@ -44,10 +44,11 @@ class KoutaLightSiirtotiedostoService(
         lastKoulutusId
       )
 
-      count += koulutukset.length
+      koulutusIds = koulutusIds ++ koulutukset.flatMap(_.id)
     }
 
-    SiirtotiedostoOperationResults(keyList, count)
+    val count = koulutusIds.length
+    SiirtotiedostoOperationResults(keyList, koulutusIds, count)
   }
 
   def findLatestSuccessfulSiirtoOperationData(): Option[SiirtotiedostoOperation] = {

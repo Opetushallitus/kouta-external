@@ -119,7 +119,7 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
     (windowStartTime, windowEndTime) match {
       case (Some(startTime), endTime) =>
         sql"""#$selectKoulutusSql
-              WHERE ((created_at > $startTime OR updated_at > $startTime) AND (created_at < $endTime OR updated_at < $endTime))
+              WHERE ((created_at >= $startTime AND created_at < $endTime) OR (updated_at >= $startTime AND updated_at < $endTime))
               #$lastFetchedKoulutusClause
               #$orderByAndLimitClause""".as[KoutaLightKoulutusWithMetadata]
       case (None, endTime) =>

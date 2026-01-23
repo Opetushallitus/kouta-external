@@ -1,15 +1,11 @@
 package fi.oph.kouta.koutalight.repository
 
-import fi.oph.kouta.domain.Kieli
-import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.database.SQLHelpers
-import fi.oph.kouta.external.domain.Kielistetty
-import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutusMetadata, KoutaLightKoulutusWithMetadata}
+import fi.oph.kouta.external.database.{Extractors, SQLHelpers}
+import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutusWithMetadata
 import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
 import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
-import org.json4s.jackson.Serialization.read
+import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
 import slick.dbio.DBIO
-import slick.jdbc.GetResult
 import slick.jdbc.PostgresProfile.api._
 
 import java.time.Instant
@@ -41,54 +37,8 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
   }
 }
 
-sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
+sealed trait KoutaLightSiirtotiedostoSQL extends Extractors with SiirtotiedostoOperationExtractors with SQLHelpers {
   private val maxNumberOfItemsInFile = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
-
-  private def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
-  private def extractKielistetty(json: Option[String]): Kielistetty =
-    json.map(read[Map[Kieli, String]]).getOrElse(Map())
-
-  implicit val getKoutaLightKoulutusResult: GetResult[KoutaLightKoulutusWithMetadata] =
-    GetResult(r => {
-      val id           = Some(UUID.fromString(r.nextString()))
-      val externalId   = r.nextString()
-      val kielivalinta = extractKielivalinta(r.nextStringOption())
-      val tila         = r.nextString()
-      val nimi         = extractKielistetty(r.nextStringOption())
-      val tarjoajat    = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List())
-      val metadata     = r.nextStringOption().map(read[KoutaLightKoulutusMetadata]).get
-      val ownerOrg     = OrganisaatioOid(r.nextString())
-      val createdAt    = r.nextTimestampOption().map(_.toInstant)
-      val updatedAt = r.nextTimestampOption().map(_.toInstant) match {
-        case Some(updatedAt) => Some(updatedAt)
-        case None            => createdAt
-      }
-
-      KoutaLightKoulutusWithMetadata(
-        id = id,
-        externalId = externalId,
-        kielivalinta = kielivalinta,
-        tila = tila,
-        nimi = nimi,
-        tarjoajat = tarjoajat,
-        metadata = metadata,
-        ownerOrg = ownerOrg,
-        createdAt = createdAt,
-        updatedAt = updatedAt
-      )
-    })
-
-  implicit val getLatestSiirtotiedostoOperationResult: GetResult[SiirtotiedostoOperation] =
-    GetResult(r => {
-      SiirtotiedostoOperation(
-        id = UUID.fromString(r.nextString()),
-        windowStart = r.nextTimestampOption().map(_.toInstant),
-        windowEnd = r.nextTimestamp().toInstant,
-        runStart = r.nextTimestamp().toInstant,
-        runEnd = r.nextTimestamp().toInstant,
-        storedEntitiesCount = r.nextInt()
-      )
-    })
 
   def selectKoulutukset(
       windowStartTime: Option[Instant],
@@ -150,12 +100,3 @@ sealed trait KoutaLightSiirtotiedostoSQL extends SQLHelpers {
           )"""
   }
 }
-
-case class SiirtotiedostoOperation(
-    id: UUID,
-    windowStart: Option[Instant],
-    windowEnd: Instant,
-    runStart: Instant,
-    runEnd: Instant,
-    storedEntitiesCount: Int
-)

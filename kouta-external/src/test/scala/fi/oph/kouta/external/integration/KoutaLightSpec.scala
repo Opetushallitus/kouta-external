@@ -2,13 +2,13 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
+import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
 import fi.oph.kouta.external.service.{KoutaLightService, ValidationError, Validations}
 import org.json4s.jackson.JsonMethods.parse
 
-import java.util.UUID
 import java.net.URI
+import java.util.UUID
 
 class KoutaLightSpec extends KoutaLightFixture {
   val nonExistingSessionId: UUID             = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
@@ -57,8 +57,14 @@ class KoutaLightSpec extends KoutaLightFixture {
       s"""[{"operation": "UPDATE", "success": true, "externalId": "externalId1234"}]"""
     )
 
-    val storedKoulutus = getFromDb(externalId, orgOid)
-    storedKoulutus should contain theSameElementsAs List(koulutusWithUpdatedName)
+    val storedKoulutukset = getFromDb(externalId, orgOid)
+    val storedKoulutus    = storedKoulutukset.head
+    val storedKoulutusWithUpdatedName = KoutaLightKoulutusWithMetadata(orgOid, koulutusWithUpdatedName).copy(
+      id = storedKoulutus.id,
+      createdAt = storedKoulutus.createdAt,
+      updatedAt = storedKoulutus.updatedAt
+    )
+    storedKoulutukset should contain theSameElementsAs List(storedKoulutusWithUpdatedName)
   }
 
   it should "create new koulutus with existing id but different owner organization" in {
@@ -79,14 +85,23 @@ class KoutaLightSpec extends KoutaLightFixture {
       s"""[{"operation": "CREATE", "success": true, "externalId": "externalId4567"}]"""
     )
 
-    val storedKoulutus1 = getFromDb(externalId, orgOid1)
-    storedKoulutus1 should contain theSameElementsAs List(
-      koulutus1.copy(ammattinimikkeet =
-        List(Map(Fi -> "insinööri"), Map(Sv -> "ingenjör"), Map(Fi -> "asiantuntija"), Map(Sv -> "expert"))
-      )
+    val storedKoulutukset1 = getFromDb(externalId, orgOid1)
+    val storedKoulutus1    = storedKoulutukset1.head
+    val koulutus1WithMetadata = KoutaLightKoulutusWithMetadata(orgOid1, koulutus1).copy(
+      id = storedKoulutus1.id,
+      createdAt = storedKoulutus1.createdAt,
+      updatedAt = storedKoulutus1.updatedAt
     )
-    val storedKoulutus2 = getFromDb(externalId, orgOid2)
-    storedKoulutus2 should contain theSameElementsAs List(koulutus2)
+    storedKoulutukset1 should contain theSameElementsAs List(koulutus1WithMetadata)
+
+    val storedKoulutukset2 = getFromDb(externalId, orgOid2)
+    val storedKoulutus2    = storedKoulutukset2.head
+    val koulutus2WithMetadata = KoutaLightKoulutusWithMetadata(orgOid2, koulutus2).copy(
+      id = storedKoulutus2.id,
+      createdAt = storedKoulutus2.createdAt,
+      updatedAt = storedKoulutus2.updatedAt
+    )
+    storedKoulutukset2 should contain theSameElementsAs List(koulutus2WithMetadata)
   }
 
   it should "try to create or update several koulutus and return message for each operation" in {

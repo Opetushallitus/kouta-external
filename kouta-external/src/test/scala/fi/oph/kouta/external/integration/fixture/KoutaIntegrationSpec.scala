@@ -1,10 +1,8 @@
 package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.domain.{En, Fi, Kieli, Sv}
-import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutus, KoutaLightKoulutusMetadata}
-import fi.oph.kouta.external.domain.{Keyword, Kielistetty}
+import fi.oph.kouta.external.database.{Extractors, SessionDAO}
+import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutusWithMetadata
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
@@ -20,7 +18,6 @@ import slick.jdbc.PostgresProfile.api._
 
 import java.time.Instant
 import java.util.UUID
-import scala.collection.immutable
 
 trait KoutaIntegrationSpec
     extends ScalatraFlatSpec
@@ -207,7 +204,7 @@ sealed trait DatabaseSpec {
 
   lazy val db: KoutaDatabase.type = KoutaDatabase
 
-  def truncateDatabase() = {
+  def truncateDatabase(): Int = {
     db.runBlocking(sqlu"""delete from authorities""")
     db.runBlocking(sqlu"""delete from sessions""")
     db.runBlocking(sqlu"""delete from kouta_light_koulutus""")
@@ -225,7 +222,8 @@ trait KoutaLightIntegrationSpec
     with SpecWithMocks
     with UrlProperties
     with HttpSpec
-    with DatabaseSpec {
+    with DatabaseSpec
+    with Extractors {
 
   System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()
@@ -250,96 +248,21 @@ trait KoutaLightIntegrationSpec
     truncateDatabase()
   }
 
-  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutus] = {
-    def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
-    def extractKielistetty(json: Option[String]): Kielistetty = json.map(read[Map[Kieli, String]]).getOrElse(Map())
-
-    def toKieli(keyword: Keyword): Kielistetty = {
-      val arvo = keyword.arvo
-      keyword.kieli match {
-        case Fi => Map(Fi -> arvo)
-        case Sv => Map(Sv -> arvo)
-        case En => Map(En -> arvo)
-        case _  => Map[Kieli, String]()
-      }
-    }
-
-    def keywordsToKielistetty(keywords: List[Keyword]): List[Kielistetty] = keywords.map(keyword => toKieli(keyword))
-
-    implicit val getKoutaLightKoulutusResult: GetResult[KoutaLightKoulutus] =
-      GetResult(r => {
-        val externalId   = r.nextString()
-        val kielivalinta = extractKielivalinta(r.nextStringOption())
-        val tila         = r.nextString()
-        val nimi         = extractKielistetty(r.nextStringOption())
-        val tarjoajat    = r.nextStringOption().map(read[List[Kielistetty]]).getOrElse(List())
-
-        val (
-          kuvaus,
-          ammattinimikkeet,
-          asiasanat,
-          hakuaikaAlkaa,
-          hakuaikaPaattyy,
-          aloituspaikatLkm,
-          hakulomakeLinkki,
-          isTyovoimakoulutus,
-          johtaaTutkintoon,
-          isMaksullinen,
-          maksullisuuskuvaus,
-          osaaminenUrit,
-          opetuskielet
-        ) =
-          r.nextStringOption().map(read[KoutaLightKoulutusMetadata]) match {
-            case Some(m) =>
-              (
-                m.kuvaus,
-                keywordsToKielistetty(m.ammattinimikkeet),
-                keywordsToKielistetty(m.asiasanat),
-                m.hakuaikaAlkaa,
-                m.hakuaikaPaattyy,
-                m.aloituspaikatLukumaara,
-                m.hakulomakeLinkki,
-                m.isTyovoimakoulutus,
-                m.johtaaTutkintoon,
-                m.isMaksullinen,
-                m.maksullisuuskuvaus,
-                m.osaaminenUrit,
-                m.opetuskielet
-              )
-          }
-
-        KoutaLightKoulutus(
-          externalId = externalId,
-          kielivalinta = kielivalinta,
-          tila = tila,
-          nimi = nimi,
-          tarjoajat = tarjoajat,
-          kuvaus = kuvaus,
-          ammattinimikkeet = ammattinimikkeet,
-          asiasanat = asiasanat,
-          hakuaikaAlkaa = hakuaikaAlkaa,
-          hakuaikaPaattyy = hakuaikaPaattyy,
-          aloituspaikatLukumaara = aloituspaikatLkm,
-          hakulomakeLinkki = hakulomakeLinkki,
-          isTyovoimakoulutus = isTyovoimakoulutus,
-          johtaaTutkintoon = johtaaTutkintoon,
-          isMaksullinen = isMaksullinen,
-          maksullisuuskuvaus = maksullisuuskuvaus,
-          osaaminenUrit = osaaminenUrit,
-          opetuskielet = opetuskielet
-        )
-      })
-
+  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutusWithMetadata] = {
     db.runBlocking(
-      sql"""select external_id,
+      sql"""select id,
+                   external_id,
                    kielivalinta,
                    tila,
                    nimi,
                    tarjoajat,
                    metadata,
-                   owner_org from kouta_light_koulutus where external_id = $externalId and owner_org = ${organisaatioOid
+                   owner_org,
+                   created_at,
+                   updated_at
+                   from kouta_light_koulutus where external_id = $externalId and owner_org = ${organisaatioOid
         .toString()}"""
-        .as[KoutaLightKoulutus]
+        .as[KoutaLightKoulutusWithMetadata]
     )
   }
 }

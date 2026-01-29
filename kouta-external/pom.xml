@@ -29,21 +29,33 @@
                     <groupId>com.github.ben-manes.caffeine</groupId>
                     <artifactId>caffeine</artifactId>
                 </exclusion>
-		<exclusion>
-		    <groupId>jakarta.xml.bind</groupId>
-		    <artifactId>jakarta.xml.bind-api</artifactId>
-		</exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>ovara-kouta-light</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.json4s</groupId>
             <artifactId>json4s-xml_2.12</artifactId>
         </dependency>
-	<dependency>
-		<groupId>opiskelijavalinnat-utils</groupId>
-		<artifactId>java-cas</artifactId>
-	</dependency>
+        <dependency>
+            <groupId>opiskelijavalinnat-utils</groupId>
+            <artifactId>java-cas</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -57,6 +69,12 @@
         <dependency>
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.reactivestreams</groupId>
+                    <artifactId>reactive-streams</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
@@ -73,6 +91,10 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-access</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
 
         <!-- Jetty -->
@@ -171,13 +193,13 @@
                     <groupId>com.github.ben-manes.caffeine</groupId>
                     <artifactId>caffeine</artifactId>
                 </exclusion>
-		<exclusion>
-		    <groupId>jakarta.xml.bind</groupId>
-		    <artifactId>jakarta.xml.bind-api</artifactId>
-		</exclusion>
+                <exclusion>
+                    <groupId>jakarta.xml.bind</groupId>
+                    <artifactId>jakarta.xml.bind-api</artifactId>
+                </exclusion>
             </exclusions>
-	    <classifier>tests</classifier>
-	    <scope>test</scope>
+            <classifier>tests</classifier>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

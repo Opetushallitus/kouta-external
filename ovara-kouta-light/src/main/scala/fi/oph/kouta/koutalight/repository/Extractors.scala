@@ -1,16 +1,15 @@
-package fi.oph.kouta.external.database
+package fi.oph.kouta.koutalight.repository
 
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.domain.Kielistetty
-import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutusMetadata, KoutaLightKoulutusWithMetadata}
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.koutalight.domain.{Kielistetty, KoutaLightKoulutusMetadata, KoutaLightKoulutusWithMetadata}
+import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import org.json4s.jackson.Serialization.read
 import slick.jdbc.GetResult
 
 import java.util.UUID
 
-trait Extractors extends KoutaJsonFormats {
+trait Extractors extends KoutaLightJsonFormats {
   private def extractKielivalinta(json: Option[String]): Seq[Kieli] = json.map(read[Seq[Kieli]]).getOrElse(Seq())
   private def extractKielistetty(json: Option[String]): Kielistetty =
     json.map(read[Map[Kieli, String]]).getOrElse(Map())

@@ -33,16 +33,6 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
     }
   }
 
-  implicit object SetInstantOption extends SetParameter[Option[Instant]] {
-    def apply(v: Option[Instant], pp: PositionedParameters): Unit = {
-      v match {
-        case Some(i) => SetInstant.apply(i, pp)
-        case None => pp.setNull(java.sql.Types.NULL)
-      }
-    }
-  }
-
-
   implicit object SetHakuOid extends SetParameter[HakuOid] {
     def apply(o: HakuOid, pp: PositionedParameters) {
       pp.setString(o.toString)

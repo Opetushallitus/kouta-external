@@ -2,7 +2,7 @@ package fi.oph.kouta.external.database
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaDatabase.runBlockingTransactionally
-import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
+import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 

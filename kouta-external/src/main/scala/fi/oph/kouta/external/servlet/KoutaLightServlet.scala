@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.servlet
 
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.security.Role.Paakayttaja
 import fi.oph.kouta.servlet.Authenticated

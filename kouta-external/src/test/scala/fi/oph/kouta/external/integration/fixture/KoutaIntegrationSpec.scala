@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutusWithMetadata
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
 import fi.oph.kouta.koutalight.repository.KoutaLightExtractors
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
@@ -249,7 +249,7 @@ trait KoutaLightIntegrationSpec
     truncateDatabase()
   }
 
-  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutusWithMetadata] = {
+  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutus] = {
     db.runBlocking(
       sql"""select id,
                    external_id,
@@ -263,7 +263,7 @@ trait KoutaLightIntegrationSpec
                    updated_at
                    from kouta_light_koulutus where external_id = $externalId and owner_org = ${organisaatioOid
         .toString()}"""
-        .as[KoutaLightKoulutusWithMetadata]
+        .as[KoutaLightKoulutus]
     )
   }
 }

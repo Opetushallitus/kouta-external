@@ -2,7 +2,7 @@ package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.servlet.KoutaLightServlet
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
+import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods.parse
 
@@ -24,9 +24,9 @@ trait KoutaLightFixture extends KoutaLightIntegrationSpec with AccessControlSpec
   def put(sessionId: UUID, expectedStatus: Int, expectedBody: String): Unit =
     create(Path, List.empty, sessionId, expectedStatus, expectedBody)
 
-  def put(koulutukset: List[KoutaLightKoulutus], sessionId: UUID): JValue =
+  def put(koulutukset: List[ExternalKoutaLightKoulutus], sessionId: UUID): JValue =
     create(Path, koulutukset, sessionId, parseResult)
 
-  def put(koulutukset: List[KoutaLightKoulutus], sessionId: UUID, expectedStatus: Int, expectedBody: String): Unit =
+  def put(koulutukset: List[ExternalKoutaLightKoulutus], sessionId: UUID, expectedStatus: Int, expectedBody: String): Unit =
     create(Path, koulutukset, sessionId, expectedStatus, expectedBody)
 }

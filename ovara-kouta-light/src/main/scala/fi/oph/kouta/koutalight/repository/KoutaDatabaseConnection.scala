@@ -1,4 +1,4 @@
-package fi.oph.kouta.koutalight.database
+package fi.oph.kouta.koutalight.repository
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
 import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration

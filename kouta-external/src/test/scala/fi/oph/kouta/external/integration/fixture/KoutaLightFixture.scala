@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.integration.fixture
 
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
 import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.servlet.KoutaLightServlet
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods.parse
 

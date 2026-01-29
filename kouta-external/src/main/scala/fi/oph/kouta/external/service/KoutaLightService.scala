@@ -5,8 +5,8 @@ import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
 import fi.oph.kouta.external.domain.enums.Operation.Upsert
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
-import fi.oph.kouta.external.domain.{Kielistetty, KielistettyLinkki}
+import fi.oph.kouta.external.domain.Kielistetty
+import fi.oph.kouta.koutalight.domain.{KielistettyLinkki, KoutaLightKoulutus}
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}

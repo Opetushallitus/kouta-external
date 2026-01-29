@@ -1,10 +1,8 @@
 package fi.oph.kouta.koutalight.repository
 
-import fi.oph.kouta.external.database.{Extractors, SQLHelpers}
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutusWithMetadata
 import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
 import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
-import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
+import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutusWithMetadata, SiirtotiedostoOperation}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 

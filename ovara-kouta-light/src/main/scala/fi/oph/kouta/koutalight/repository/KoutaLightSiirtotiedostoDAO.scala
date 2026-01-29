@@ -1,7 +1,7 @@
 package fi.oph.kouta.koutalight.repository
 
 import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
-import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutusWithMetadata, SiirtotiedostoOperation}
+import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, SiirtotiedostoOperation}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 
@@ -15,7 +15,7 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
       operationWindowStartTime: Option[Instant],
       operationWindowEndTime: Instant,
       lastFetchedKoulutusId: Option[UUID]
-  ): Seq[KoutaLightKoulutusWithMetadata] = {
+  ): Seq[KoutaLightKoulutus] = {
     KoutaDatabaseConnection.runBlocking(
       selectKoulutukset(operationWindowStartTime, operationWindowEndTime, lastFetchedKoulutusId)
     )
@@ -41,7 +41,7 @@ sealed trait KoutaLightSiirtotiedostoSQL extends KoutaLightExtractors with SQLHe
       windowStartTime: Option[Instant],
       windowEndTime: Instant,
       lastFetchedKoulutusId: Option[UUID]
-  ): DBIO[Seq[KoutaLightKoulutusWithMetadata]] = {
+  ): DBIO[Seq[KoutaLightKoulutus]] = {
     val selectKoulutusSql =
       """SELECT id,
                 external_id,
@@ -68,12 +68,12 @@ sealed trait KoutaLightSiirtotiedostoSQL extends KoutaLightExtractors with SQLHe
         sql"""#$selectKoulutusSql
               WHERE ((created_at >= $startTime AND created_at < $endTime) OR (updated_at >= $startTime AND updated_at < $endTime))
               #$lastFetchedKoulutusClause
-              #$orderByAndLimitClause""".as[KoutaLightKoulutusWithMetadata]
+              #$orderByAndLimitClause""".as[KoutaLightKoulutus]
       case (None, endTime) =>
         sql"""#$selectKoulutusSql
               WHERE (created_at < $endTime OR updated_at < $endTime)
               #$lastFetchedKoulutusClause
-              #$orderByAndLimitClause""".as[KoutaLightKoulutusWithMetadata]
+              #$orderByAndLimitClause""".as[KoutaLightKoulutus]
     }
   }
 

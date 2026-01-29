@@ -1,6 +1,6 @@
 package fi.oph.kouta.koutalight.client
 
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutusWithMetadata
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
 import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.koutalight.{OvaraKoutaLightConfiguration, S3Configuration}
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu
@@ -21,10 +21,10 @@ class SiirtotiedostoPalveluClient extends KoutaLightJsonFormats {
   private val saveRetryCount = config.transferFileSaveRetryCount
 
   def saveSiirtotiedosto(
-      contentType: String,
-      content: Seq[KoutaLightKoulutusWithMetadata],
-      operationId: UUID,
-      operationSubId: Int
+                          contentType: String,
+                          content: Seq[KoutaLightKoulutus],
+                          operationId: UUID,
+                          operationSubId: Int
   ): String = {
     siirtotiedostoPalvelu
       .saveSiirtotiedosto(

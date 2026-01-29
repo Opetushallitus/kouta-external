@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
 import fi.oph.kouta.external.service.{KoutaLightService, ValidationError, Validations}
-import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
+import fi.oph.kouta.koutalight.domain.{ExternalKoutaLightKoulutus, KoutaLightKoulutus}
 import org.json4s.jackson.JsonMethods.parse
 
 import java.net.URI
@@ -12,7 +12,7 @@ import java.util.UUID
 
 class KoutaLightSpec extends KoutaLightFixture {
   val nonExistingSessionId: UUID             = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
-  val koutaLightKoulutus: KoutaLightKoulutus = KoutaLightKoulutusWithOptionalData
+  val koutaLightKoulutus: ExternalKoutaLightKoulutus = KoutaLightKoulutusWithOptionalData
 
   s"PUT /koutan-tietomallista-poikkeavat-koulutukset/" should "return 401 without a session" in {
     put(nonExistingSessionId, 401, """{"error":"Unauthorized"}""")
@@ -59,7 +59,7 @@ class KoutaLightSpec extends KoutaLightFixture {
 
     val storedKoulutukset = getFromDb(externalId, orgOid)
     val storedKoulutus    = storedKoulutukset.head
-    val storedKoulutusWithUpdatedName = KoutaLightKoulutusWithMetadata(orgOid, koulutusWithUpdatedName).copy(
+    val storedKoulutusWithUpdatedName = KoutaLightKoulutus(orgOid, koulutusWithUpdatedName).copy(
       id = storedKoulutus.id,
       createdAt = storedKoulutus.createdAt,
       updatedAt = storedKoulutus.updatedAt
@@ -87,7 +87,7 @@ class KoutaLightSpec extends KoutaLightFixture {
 
     val storedKoulutukset1 = getFromDb(externalId, orgOid1)
     val storedKoulutus1    = storedKoulutukset1.head
-    val koulutus1WithMetadata = KoutaLightKoulutusWithMetadata(orgOid1, koulutus1).copy(
+    val koulutus1WithMetadata = KoutaLightKoulutus(orgOid1, koulutus1).copy(
       id = storedKoulutus1.id,
       createdAt = storedKoulutus1.createdAt,
       updatedAt = storedKoulutus1.updatedAt
@@ -96,7 +96,7 @@ class KoutaLightSpec extends KoutaLightFixture {
 
     val storedKoulutukset2 = getFromDb(externalId, orgOid2)
     val storedKoulutus2    = storedKoulutukset2.head
-    val koulutus2WithMetadata = KoutaLightKoulutusWithMetadata(orgOid2, koulutus2).copy(
+    val koulutus2WithMetadata = KoutaLightKoulutus(orgOid2, koulutus2).copy(
       id = storedKoulutus2.id,
       createdAt = storedKoulutus2.createdAt,
       updatedAt = storedKoulutus2.updatedAt

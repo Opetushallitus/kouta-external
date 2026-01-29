@@ -15,7 +15,7 @@ trait KoutaLightKoulutusBase {
   val tarjoajat: List[Kielistetty]
 }
 
-case class KoutaLightKoulutus(
+case class ExternalKoutaLightKoulutus(
     externalId: String,
     kielivalinta: Seq[Kieli],
     tila: String,
@@ -55,7 +55,7 @@ object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
     yield Keyword(kieli, value)
 
-  def apply(koulutus: KoutaLightKoulutus): KoutaLightKoulutusMetadata = {
+  def apply(koulutus: ExternalKoutaLightKoulutus): KoutaLightKoulutusMetadata = {
     new KoutaLightKoulutusMetadata(
       koulutus.kuvaus,
       koulutus.ammattinimikkeet.flatMap(kielistettyToKeyword),
@@ -74,7 +74,7 @@ object KoutaLightKoulutusMetadata {
   }
 }
 
-case class KoutaLightKoulutusWithMetadata(
+case class KoutaLightKoulutus(
     id: Option[UUID],
     externalId: String,
     kielivalinta: Seq[Kieli],
@@ -87,10 +87,10 @@ case class KoutaLightKoulutusWithMetadata(
     updatedAt: Option[Instant]
 ) extends KoutaLightKoulutusBase
 
-object KoutaLightKoulutusWithMetadata {
-  def apply(organisaatioOid: OrganisaatioOid, koulutus: KoutaLightKoulutus): KoutaLightKoulutusWithMetadata = {
+object KoutaLightKoulutus {
+  def apply(organisaatioOid: OrganisaatioOid, koulutus: ExternalKoutaLightKoulutus): KoutaLightKoulutus = {
     val metadata = KoutaLightKoulutusMetadata(koulutus)
-    new KoutaLightKoulutusWithMetadata(
+    new KoutaLightKoulutus(
       None,
       koulutus.externalId,
       koulutus.kielivalinta,

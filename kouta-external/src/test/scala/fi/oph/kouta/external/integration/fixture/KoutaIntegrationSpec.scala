@@ -5,7 +5,7 @@ import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.koutalight.domain.KoutaLightKoulutusWithMetadata
-import fi.oph.kouta.koutalight.repository.Extractors
+import fi.oph.kouta.koutalight.repository.KoutaLightExtractors
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
@@ -224,7 +224,7 @@ trait KoutaLightIntegrationSpec
     with UrlProperties
     with HttpSpec
     with DatabaseSpec
-    with Extractors {
+    with KoutaLightExtractors {
 
   System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()

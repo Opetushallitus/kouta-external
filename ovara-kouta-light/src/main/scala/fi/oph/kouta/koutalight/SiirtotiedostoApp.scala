@@ -1,7 +1,7 @@
 package fi.oph.kouta.koutalight
 
-import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
 import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
+import fi.oph.kouta.koutalight.repository.KoutaDatabaseConnection
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.logging.Logging

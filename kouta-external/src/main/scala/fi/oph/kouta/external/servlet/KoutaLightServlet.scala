@@ -2,7 +2,7 @@ package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
+import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.security.Role.Paakayttaja
 import fi.oph.kouta.servlet.Authenticated
@@ -57,7 +57,7 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
       // koulutuksen omistajana tietokantaan tallennettaessa
       if (orgsForTheRole.size == 1) {
         val ownerOrg = orgsForTheRole.head
-        Ok(koutaLightService.put(parsedBody.extract[List[KoutaLightKoulutus]], ownerOrg))
+        Ok(koutaLightService.put(parsedBody.extract[List[ExternalKoutaLightKoulutus]], ownerOrg))
       } else if (orgsForTheRole.size > 1) {
         val errorMsg = errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota")
         logger.warn(errorMsg.toString())

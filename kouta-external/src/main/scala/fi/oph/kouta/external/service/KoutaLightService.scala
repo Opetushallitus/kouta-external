@@ -6,7 +6,7 @@ import fi.oph.kouta.external.database.KoutaLightDAO
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
 import fi.oph.kouta.external.domain.enums.Operation.Upsert
 import fi.oph.kouta.external.domain.Kielistetty
-import fi.oph.kouta.koutalight.domain.{KielistettyLinkki, KoutaLightKoulutus}
+import fi.oph.kouta.koutalight.domain.{KielistettyLinkki, ExternalKoutaLightKoulutus}
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}
@@ -68,7 +68,7 @@ object Validations {
 object KoutaLightService extends KoutaLightService
 
 class KoutaLightService extends Logging {
-  def validate(koulutus: KoutaLightKoulutus): Seq[ValidationError] = {
+  def validate(koulutus: ExternalKoutaLightKoulutus): Seq[ValidationError] = {
     val kielivalinta       = koulutus.kielivalinta
     val koulutusExternalId = koulutus.externalId
     Validations.and(
@@ -113,7 +113,7 @@ class KoutaLightService extends Logging {
       KoutaLightMassResult.Error(Upsert, Option(error.koulutusExternalId), exception = error.message)
     )
 
-  def put(koulutukset: List[KoutaLightKoulutus], organisaatioOid: OrganisaatioOid): Seq[KoutaLightMassResult] = {
+  def put(koulutukset: List[ExternalKoutaLightKoulutus], organisaatioOid: OrganisaatioOid): Seq[KoutaLightMassResult] = {
     koulutukset.flatMap(koulutus => {
       val externalId       = koulutus.externalId
       val validationErrors = validate(koulutus)

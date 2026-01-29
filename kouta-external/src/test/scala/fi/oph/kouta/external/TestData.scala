@@ -4,7 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain._
 import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
+import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 
 import java.net.URI
 import java.time.temporal.ChronoUnit
@@ -465,7 +465,7 @@ object TestData {
     modified = None
   )
 
-  val MinKoutaLightKoulutus: KoutaLightKoulutus = KoutaLightKoulutus(
+  val MinKoutaLightKoulutus: ExternalKoutaLightKoulutus = ExternalKoutaLightKoulutus(
     externalId = "8929jwl2",
     kielivalinta = List(Fi, Sv),
     tila = "julkaistu",
@@ -474,7 +474,7 @@ object TestData {
     kuvaus = Map(Fi -> "Kuvaus fi", Sv -> "Kuvaus sv")
   )
 
-  val KoutaLightKoulutusWithOptionalData: KoutaLightKoulutus = MinKoutaLightKoulutus.copy(
+  val KoutaLightKoulutusWithOptionalData: ExternalKoutaLightKoulutus = MinKoutaLightKoulutus.copy(
     hakuaikaAlkaa = Some(LocalDateTime.parse("2025-08-23T09:00")),
     hakuaikaPaattyy = Some(LocalDateTime.parse("2025-08-23T09:00")),
     aloituspaikatLukumaara = Some(10),

@@ -1,7 +1,6 @@
 package fi.oph.kouta.koutalight.repository
 
 import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
-import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
 import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutusWithMetadata, SiirtotiedostoOperation}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
@@ -35,7 +34,7 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
   }
 }
 
-sealed trait KoutaLightSiirtotiedostoSQL extends Extractors with SiirtotiedostoOperationExtractors with SQLHelpers {
+sealed trait KoutaLightSiirtotiedostoSQL extends KoutaLightExtractors with SQLHelpers {
   private val maxNumberOfItemsInFile = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
 
   def selectKoulutukset(

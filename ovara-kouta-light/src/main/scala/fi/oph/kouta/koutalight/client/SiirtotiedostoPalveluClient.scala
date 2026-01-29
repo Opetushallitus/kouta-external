@@ -1,7 +1,7 @@
 package fi.oph.kouta.koutalight.client
 
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutusWithMetadata
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutusWithMetadata
+import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.koutalight.{OvaraKoutaLightConfiguration, S3Configuration}
 import fi.vm.sade.valinta.dokumenttipalvelu.SiirtotiedostoPalvelu
 import org.json4s.jackson.Serialization.writePretty
@@ -11,7 +11,7 @@ import java.util.UUID
 
 object SiirtotiedostoPalveluClient extends SiirtotiedostoPalveluClient
 
-class SiirtotiedostoPalveluClient extends KoutaJsonFormats {
+class SiirtotiedostoPalveluClient extends KoutaLightJsonFormats {
   val config: S3Configuration = OvaraKoutaLightConfiguration.s3Configuration
   private val siirtotiedostoPalvelu = new SiirtotiedostoPalvelu(
     config.region.getOrElse("eu-west-1"),

@@ -4,7 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain._
 import fi.oph.kouta.domain.oid.{HakuOid, KoulutusOid, ToteutusOid}
 import fi.oph.kouta.external.domain._
-import fi.oph.kouta.external.domain.koutalight.KoutaLightKoulutus
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
 
 import java.net.URI
 import java.time.temporal.ChronoUnit

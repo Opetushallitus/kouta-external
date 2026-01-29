@@ -2,9 +2,9 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
-import fi.oph.kouta.external.domain.koutalight.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
 import fi.oph.kouta.external.service.{KoutaLightService, ValidationError, Validations}
+import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, KoutaLightKoulutusWithMetadata}
 import org.json4s.jackson.JsonMethods.parse
 
 import java.net.URI

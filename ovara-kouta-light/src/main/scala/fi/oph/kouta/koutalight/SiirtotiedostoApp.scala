@@ -1,9 +1,9 @@
 package fi.oph.kouta.koutalight
 
-import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.koutalight.database.KoutaDatabaseConnection
 import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
+import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.logging.Logging
 import org.json4s.jackson.Serialization.writePretty
 
@@ -13,11 +13,9 @@ import java.util.UUID
 import scala.sys.exit
 import scala.util.{Failure, Success, Try}
 
-object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
-  private val SiirtotiedostoInstantFormat: DateTimeFormatter =
+object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
+  val SiirtotiedostoInstantFormat: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(ZoneId.of("Europe/Helsinki"))
-
-  private def format(instant: Option[Instant]): String = instant.map(SiirtotiedostoInstantFormat.format).getOrElse("-")
 
   def main(args: Array[String]): Unit = {
     val opId         = UUID.randomUUID()
@@ -41,13 +39,7 @@ object SiirtotiedostoApp extends Logging with KoutaJsonFormats {
           storedEntitiesCount = response.count
         )
         logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(response)}")
-        logger.info(
-          s"Operaatio id: ${currentOperation.id.toString}, " +
-            s"windowStartTime: ${format(currentOperation.windowStart)}, " +
-            s"windowEndTime: ${format(Some(currentOperation.windowEnd))}, " +
-            s"runStartTime: ${format(Some(currentOperation.runStart))}, " +
-            s"runEndTime: ${format(Some(currentOperation.runEnd))}"
-        )
+        logger.info(s"Operaatioinfo: ${writePretty(currentOperation)}")
 
         KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
       case Failure(e) => logger.error(s"Siirtotiedostojen tallentaminen epäonnistui: ${e.toString}")

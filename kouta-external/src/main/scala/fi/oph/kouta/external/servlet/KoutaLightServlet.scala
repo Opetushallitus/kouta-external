@@ -8,7 +8,7 @@ import fi.oph.kouta.security.Role.Paakayttaja
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 
-object KoutaLightTallentajaRole extends Role.UnknownRole("APP_KOUTA_EXTERNAL_KOUTA_LIGHT_TALLENTAJA")
+object KoutaLightTallentajaRole extends Role.UnknownRole("APP_KOUTA_EXTERNAL-KOUTA-LIGHT-TALLENTAJA")
 
 object KoutaLightServlet extends KoutaLightServlet(KoutaLightService)
 
@@ -48,34 +48,27 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
       |""".stripMargin
   )
   put("/") {
-    if (externalModifyEnabled) {
-      implicit val authenticated: Authenticated = authenticate
+    implicit val authenticated: Authenticated = authenticate
+    val hasKoutaLightRole                     = authenticated.session.roles.contains(KoutaLightTallentajaRole)
 
-      // Vain OphPääkäyttäjä voi tallentaa koulutuksia rajapinnan kautta kunnes saadaan oma käyttöoikeus
-      val isOphPaakayttaja = authenticated.session.roles.contains(Role.Paakayttaja)
-      val hasKoutaLightRole = authenticated.session.roles.contains(KoutaLightTallentajaRole)
-
-      if (hasKoutaLightRole) {
-        val orgsForTheRole = authenticated.session.getOrganizationsForRoles(Seq(KoutaLightTallentajaRole))
-        // Käyttäjällä saa olla vain yksi organisaatio liitettynä käyttöoikeuteen, koska sitä käytetään
-        // koulutuksen omistajana tietokantaan talleennettaessa
-        if (orgsForTheRole.size == 1) {
-          val ownerOrg = orgsForTheRole.head
-          Ok(koutaLightService.put(parsedBody.extract[List[KoutaLightKoulutus]], ownerOrg))
-        } else if (orgsForTheRole.size > 1) {
-          val errorMsg = errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota")
-          logger.warn(errorMsg.toString())
-          Forbidden(errorMsg)
-        } else {
-          Forbidden(errorMessage("Käyttäjän oikeuksissa puutteita"))
-        }
-      } else {
-        val errorMsg = errorMessage("Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta")
+    if (hasKoutaLightRole) {
+      val orgsForTheRole = authenticated.session.getOrganizationsForRoles(Seq(KoutaLightTallentajaRole))
+      // Käyttäjällä saa olla vain yksi organisaatio liitettynä käyttöoikeuteen, koska sitä käytetään
+      // koulutuksen omistajana tietokantaan tallennettaessa
+      if (orgsForTheRole.size == 1) {
+        val ownerOrg = orgsForTheRole.head
+        Ok(koutaLightService.put(parsedBody.extract[List[KoutaLightKoulutus]], ownerOrg))
+      } else if (orgsForTheRole.size > 1) {
+        val errorMsg = errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota")
         logger.warn(errorMsg.toString())
         Forbidden(errorMsg)
+      } else {
+        Forbidden(errorMessage("Käyttäjän oikeuksissa puutteita"))
       }
     } else {
-      Forbidden(errorMessage("Rajapinnan käyttö estetty tässä ympäristössä"))
+      val errorMsg = errorMessage("Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta")
+      logger.warn(errorMsg.toString())
+      Forbidden(errorMsg)
     }
   }
 }

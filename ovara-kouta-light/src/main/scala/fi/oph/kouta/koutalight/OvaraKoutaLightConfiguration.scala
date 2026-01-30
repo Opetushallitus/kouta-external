@@ -10,7 +10,6 @@ case class KoutaExternalDatabaseConnectionConfiguration(
     username: String,
     password: String,
     maxConnections: Option[Int],
-    minConnections: Option[Int],
     registerMbeans: Option[Boolean]
 )
 
@@ -52,7 +51,6 @@ object Configuration {
         username = configuration.getString("ovara-kouta-light.db.user"),
         password = configuration.getString("ovara-kouta-light.db.password"),
         maxConnections = Option(configuration.getInt("ovara-kouta-light.db.maxConnections")),
-        minConnections = Option(configuration.getInt("ovara-kouta-light.db.minConnections")),
         registerMbeans = Option(configuration.getBoolean("ovara-kouta-light.db.registerMbeans"))
       )
     )

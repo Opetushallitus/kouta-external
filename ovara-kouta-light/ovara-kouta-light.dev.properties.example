@@ -6,6 +6,5 @@ ovara-kouta-light.s3.transferFileMaxItemCount = 1000
 ovara-kouta-light.db.url=jdbc:postgresql://localhost:5435/koutaexternal
 ovara-kouta-light.db.user=oph
 ovara-kouta-light.db.password=oph
-ovara-kouta-light.db.maxConnections=50
-ovara-kouta-light.db.minConnections=10
+ovara-kouta-light.db.maxConnections=1
 ovara-kouta-light.db.registerMbeans=true

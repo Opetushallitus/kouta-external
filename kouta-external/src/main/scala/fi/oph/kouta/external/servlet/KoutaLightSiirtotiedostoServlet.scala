@@ -6,8 +6,9 @@ import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
 import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
 import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
+import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.Ok
+import org.scalatra.{Forbidden, Ok}
 
 import java.time.{Instant, LocalDateTime}
 import java.time.format.DateTimeFormatter
@@ -104,9 +105,14 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
        |""".stripMargin
   )
   get("/kouta-light-koulutukset") {
-    implicit val _: Authenticated = authenticate
-    val (startTime, endTime)      = parseTimeRange(params.get("startTime"), params.get("endTime"))
+    implicit val authenticated: Authenticated = authenticate
+    val isOphPaakayttaja = authenticated.session.roles.contains(Role.Paakayttaja)
 
-    Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
+    if (isOphPaakayttaja) {
+      val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
+      Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
+    } else {
+      Forbidden(Map("errorMessage" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+    }
   }
 }

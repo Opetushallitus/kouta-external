@@ -1,7 +1,6 @@
 package fi.oph.kouta.koutalight
 
-import com.typesafe.config.{Config, ConfigFactory}
-import fi.oph.kouta.logging.Logging
+import com.typesafe.config.ConfigFactory
 
 import java.io.File
 import scala.util.Try
@@ -23,26 +22,13 @@ case class S3Configuration(
     transferFileMaxItemCount: Int
 )
 
-object OvaraKoutaLightConfiguration extends Logging {
-  val s3Configuration = S3Configuration(
-    config.getString("ovara-kouta-light.s3.transferFileBucket"),
-    config.getString("ovara-kouta-light.s3.transferFileTargetRoleArn"),
-    Try(config.getString("ovara-kouta-light.s3.region")).filter(_.trim.nonEmpty).toOption,
-    Try(config.getInt("ovara-kouta-light.s3.transferFileSaveRetryCount")).getOrElse(3),
-    Try(config.getInt("ovara-kouta-light.s3.transferFileMaxItemCount")).getOrElse(10000)
-  )
+case class OvaraKoutaLightConfiguration(
+    s3Configuration: S3Configuration,
+    databaseConnectionConfiguration: KoutaDatabaseConnectionConfiguration
+)
 
-  val databaseConfiguration: KoutaDatabaseConnectionConfiguration =
-    KoutaDatabaseConnectionConfiguration(
-      url = config.getString("ovara-kouta-light.db.url"),
-      username = config.getString("ovara-kouta-light.db.user"),
-      password = config.getString("ovara-kouta-light.db.password"),
-      maxConnections = Option(config.getInt("ovara-kouta-light.db.maxConnections")),
-      minConnections = Option(config.getInt("ovara-kouta-light.db.minConnections")),
-      registerMbeans = Option(config.getBoolean("ovara-kouta-light.db.registerMbeans"))
-    )
-
-  private def createConfig(): Config = {
+object Configuration {
+  def createConfig(): OvaraKoutaLightConfiguration = {
     var configFile = new File(
       System.getProperty("user.home") +
         "/oph-configuration/ovara-kouta-light.properties"
@@ -50,8 +36,25 @@ object OvaraKoutaLightConfiguration extends Logging {
     if (!configFile.exists()) {
       configFile = new File("ovara-kouta-light.properties")
     }
-    ConfigFactory.load(ConfigFactory.parseFile(configFile))
-  }
 
-  lazy val config: Config = createConfig()
+    val configuration = ConfigFactory.load(ConfigFactory.parseFile(configFile))
+
+    OvaraKoutaLightConfiguration(
+      s3Configuration = S3Configuration(
+        configuration.getString("ovara-kouta-light.s3.transferFileBucket"),
+        configuration.getString("ovara-kouta-light.s3.transferFileTargetRoleArn"),
+        Try(configuration.getString("ovara-kouta-light.s3.region")).filter(_.trim.nonEmpty).toOption,
+        Try(configuration.getInt("ovara-kouta-light.s3.transferFileSaveRetryCount")).getOrElse(3),
+        Try(configuration.getInt("ovara-kouta-light.s3.transferFileMaxItemCount")).getOrElse(10000)
+      ),
+      databaseConnectionConfiguration = KoutaDatabaseConnectionConfiguration(
+        url = configuration.getString("ovara-kouta-light.db.url"),
+        username = configuration.getString("ovara-kouta-light.db.user"),
+        password = configuration.getString("ovara-kouta-light.db.password"),
+        maxConnections = Option(configuration.getInt("ovara-kouta-light.db.maxConnections")),
+        minConnections = Option(configuration.getInt("ovara-kouta-light.db.minConnections")),
+        registerMbeans = Option(configuration.getBoolean("ovara-kouta-light.db.registerMbeans"))
+      )
+    )
+  }
 }

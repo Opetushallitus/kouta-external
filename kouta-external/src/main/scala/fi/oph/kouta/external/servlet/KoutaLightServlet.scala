@@ -4,7 +4,6 @@ import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.security.Role
-import fi.oph.kouta.security.Role.Paakayttaja
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 

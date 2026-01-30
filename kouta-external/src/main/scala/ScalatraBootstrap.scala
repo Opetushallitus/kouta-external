@@ -27,6 +27,7 @@ class ScalatraBootstrap extends LifeCycle {
     context.mount(HealthcheckServlet, "/healthcheck", "healthcheck")
 
     context.mount(KoutaLightServlet, "/koutan-tietomallista-poikkeavat-koulutukset", "koutan-tietomallista-poikkeavat-koulutukset")
+    context.mount(KoutaLightSiirtotiedostoServlet, "/siirtotiedosto", "siirtotiedosto")
     context.mount(new SwaggerServlet, "/swagger")
 
   }

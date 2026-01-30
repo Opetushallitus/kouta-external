@@ -10,9 +10,6 @@ import scala.collection.mutable.ListBuffer
 
 case class SiirtotiedostoOperationResults(s3ObjectKeys: Seq[String], storedKoulutusIds: Seq[UUID], count: Int)
 
-object KoutaLightSiirtotiedostoService
-    extends KoutaLightSiirtotiedostoService(KoutaLightSiirtotiedostoDAO, SiirtotiedostoPalveluClient)
-
 class KoutaLightSiirtotiedostoService(
     koutaLightSiirtotiedostoDAO: KoutaLightSiirtotiedostoDAO,
     siirtotiedostoPalveluClient: SiirtotiedostoPalveluClient
@@ -23,8 +20,15 @@ class KoutaLightSiirtotiedostoService(
       operationWindowStartTime: Option[Instant],
       operationWindowEndTime: Instant
   ): SiirtotiedostoOperationResults = {
+    val maxNumberOfItemsInFile = siirtotiedostoPalveluClient.config.transferFileMaxItemCount
     var koulutukset =
-      koutaLightSiirtotiedostoDAO.getKoulutukset(operationWindowStartTime, operationWindowEndTime, None)
+      koutaLightSiirtotiedostoDAO.getKoulutukset(
+        operationWindowStartTime,
+        operationWindowEndTime,
+        None,
+        maxNumberOfItemsInFile
+      )
+
     var operationSubId              = 0
     val keyList: ListBuffer[String] = ListBuffer()
     var koulutusIds                 = koulutukset.flatMap(_.id)
@@ -42,7 +46,8 @@ class KoutaLightSiirtotiedostoService(
       koulutukset = koutaLightSiirtotiedostoDAO.getKoulutukset(
         operationWindowStartTime,
         operationWindowEndTime,
-        lastKoulutusId
+        lastKoulutusId,
+        maxNumberOfItemsInFile
       )
 
       koulutusIds = koulutusIds ++ koulutukset.flatMap(_.id)

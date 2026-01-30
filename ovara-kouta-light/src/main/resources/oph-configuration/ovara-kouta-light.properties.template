@@ -1,7 +1,7 @@
-ovara-kouta-light.s3.transferFileBucket = {{siirtotiedosto_s3_bucket}}
-ovara-kouta-light.s3.transferFileTargetRoleArn = {{siirtotiedosto_s3_target_role_arn}}
-ovara-kouta-light.s3.transferFileSaveRetryCount = {{kouta_external_s3_transfer_file_save_retry_count}}
-ovara-kouta-light.s3.transferFileMaxItemCount = {{kouta_external_s3_transfer_file_max_item_count}}
+ovara-kouta-light.s3.transferFileBucket = {{ovara_siirtotiedosto_s3_bucket}}
+ovara-kouta-light.s3.transferFileTargetRoleArn = {{ovara_siirtotiedosto_s3_target_role_arn}}
+ovara-kouta-light.s3.transferFileSaveRetryCount = {{ovara_kouta_light_s3_transfer_file_save_retry_count}}
+ovara-kouta-light.s3.transferFileMaxItemCount = {{ovara_kouta_light_s3_transfer_file_max_item_count}}
 
 ovara-kouta-light.db.url=jdbc:postgresql://{{host_postgresql_koutaexternal}}:{{host_postgresql_koutaexternal_port}}/koutaexternal
 ovara-kouta-light.db.user={{postgres_app_user}}

@@ -1,6 +1,5 @@
 package fi.oph.kouta.koutalight.repository
 
-import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
 import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, SiirtotiedostoOperation}
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
@@ -8,21 +7,22 @@ import slick.jdbc.PostgresProfile.api._
 import java.time.Instant
 import java.util.UUID
 
-object KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoDAO
-
-class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
+class KoutaLightSiirtotiedostoDAO(
+    dbConnection: KoutaDatabaseConnection
+) extends KoutaLightSiirtotiedostoSQL {
   def getKoulutukset(
       operationWindowStartTime: Option[Instant],
       operationWindowEndTime: Instant,
-      lastFetchedKoulutusId: Option[UUID]
+      lastFetchedKoulutusId: Option[UUID],
+      maxNumberOfItemsInFile: Int
   ): Seq[KoutaLightKoulutus] = {
-    KoutaDatabaseConnection.runBlocking(
-      selectKoulutukset(operationWindowStartTime, operationWindowEndTime, lastFetchedKoulutusId)
+    dbConnection.runBlocking(
+      selectKoulutukset(operationWindowStartTime, operationWindowEndTime, lastFetchedKoulutusId, maxNumberOfItemsInFile)
     )
   }
 
   def getLatestSiirtotiedostoOperationData: Option[SiirtotiedostoOperation] = {
-    KoutaDatabaseConnection.runBlocking(selectLatestSiirtotiedostoOperation()) match {
+    dbConnection.runBlocking(selectLatestSiirtotiedostoOperation()) match {
       case existingSiirtotiedostoOperation if existingSiirtotiedostoOperation.nonEmpty =>
         Option(existingSiirtotiedostoOperation.head)
       case _ => None
@@ -30,17 +30,17 @@ class KoutaLightSiirtotiedostoDAO extends KoutaLightSiirtotiedostoSQL {
   }
 
   def saveSiirtotiedostoOperationData(siirtotiedostoOperation: SiirtotiedostoOperation): Int = {
-    KoutaDatabaseConnection.runBlocking(persistSiirtoOperationData(siirtotiedostoOperation))
+    dbConnection.runBlocking(persistSiirtoOperationData(siirtotiedostoOperation))
   }
 }
 
 sealed trait KoutaLightSiirtotiedostoSQL extends KoutaLightExtractors with SQLHelpers {
-  private val maxNumberOfItemsInFile = OvaraKoutaLightConfiguration.s3Configuration.transferFileMaxItemCount;
 
   def selectKoulutukset(
       windowStartTime: Option[Instant],
       windowEndTime: Instant,
-      lastFetchedKoulutusId: Option[UUID]
+      lastFetchedKoulutusId: Option[UUID],
+      maxNumberOfItemsInFile: Int
   ): DBIO[Seq[KoutaLightKoulutus]] = {
     val selectKoulutusSql =
       """SELECT id,

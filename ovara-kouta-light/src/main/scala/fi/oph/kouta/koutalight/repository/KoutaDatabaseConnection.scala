@@ -1,7 +1,7 @@
 package fi.oph.kouta.koutalight.repository
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import fi.oph.kouta.koutalight.OvaraKoutaLightConfiguration
+import fi.oph.kouta.koutalight.KoutaDatabaseConnectionConfiguration
 import fi.oph.kouta.logging.Logging
 import org.apache.commons.lang3.builder.ToStringBuilder
 import slick.dbio.DBIO
@@ -14,9 +14,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Try
 
-object KoutaDatabaseConnection extends Logging {
-  private val settings = OvaraKoutaLightConfiguration.databaseConfiguration
-
+case class KoutaDatabaseConnection(settings: KoutaDatabaseConnectionConfiguration) extends Logging {
   logger.warn(settings.username)
 
   private val db = initDb()

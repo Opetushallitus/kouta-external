@@ -1,7 +1,8 @@
 package fi.oph.kouta.koutalight
 
+import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
 import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
-import fi.oph.kouta.koutalight.repository.KoutaDatabaseConnection
+import fi.oph.kouta.koutalight.repository.{KoutaDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.logging.Logging
@@ -21,13 +22,25 @@ object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
     val opId         = UUID.randomUUID()
     val runStartTime = Instant.now()
 
-    val latestOp = KoutaLightSiirtotiedostoService.findLatestSuccessfulSiirtoOperationData()
+    val configuration = Configuration.createConfig()
+
+    val databaseConnectionConfiguration = configuration.databaseConnectionConfiguration
+    val dbConnection = KoutaDatabaseConnection(databaseConnectionConfiguration)
+    val koutaLightSiirtotiedostoDAO           = new KoutaLightSiirtotiedostoDAO(dbConnection)
+
+    val s3Configuration = configuration.s3Configuration
+    val koutaLightSiirtotiedostoPalveluClient = new SiirtotiedostoPalveluClient(s3Configuration)
+
+    val koutaLightSiirtotiedostoService =
+      new KoutaLightSiirtotiedostoService(koutaLightSiirtotiedostoDAO, koutaLightSiirtotiedostoPalveluClient)
+
+    val latestOp = koutaLightSiirtotiedostoService.findLatestSuccessfulSiirtoOperationData()
     val latestOpWindowEnd = latestOp match {
       case Some(existingOp) => Some(existingOp.windowEnd)
       case None             => None
     }
 
-    Try(KoutaLightSiirtotiedostoService.storeKoulutukset(opId, latestOpWindowEnd, runStartTime)) match {
+    Try(koutaLightSiirtotiedostoService.storeKoulutukset(opId, latestOpWindowEnd, runStartTime)) match {
       case Success(response: SiirtotiedostoOperationResults) =>
         val runEndTime = Instant.now()
         val currentOperation = SiirtotiedostoOperation(
@@ -41,11 +54,11 @@ object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
         logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(response)}")
         logger.info(s"Operaatioinfo: ${writePretty(currentOperation)}")
 
-        KoutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
+        koutaLightSiirtotiedostoService.saveSiirtoOperationData(currentOperation)
       case Failure(e) => logger.error(s"Siirtotiedostojen tallentaminen epäonnistui: ${e.toString}")
     }
 
-    KoutaDatabaseConnection.destroy()
+    dbConnection.destroy()
     exit
   }
 }

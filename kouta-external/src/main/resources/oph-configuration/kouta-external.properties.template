@@ -52,8 +52,8 @@ kouta.external-api.modify.enabled={{kouta_external_api_modify_enabled}}
 
 ovara-kouta-light.s3.transferFileBucket = {{ovara_siirtotiedosto_s3_bucket}}
 ovara-kouta-light.s3.transferFileTargetRoleArn = {{ovara_siirtotiedosto_s3_target_role_arn}}
-ovara-kouta-light.s3.transferFileSaveRetryCount = {{ovara_kouta_light_s3_transfer_file_save_retry_count}}
-ovara-kouta-light.s3.transferFileMaxItemCount = {{ovara_kouta_light_s3_transfer_file_max_item_count}}
+ovara-kouta-light.s3.transferFileSaveRetryCount = {{kouta_external_kouta_light_s3_transfer_file_save_retry_count}}
+ovara-kouta-light.s3.transferFileMaxItemCount = {{kouta_external_kouta_light_s3_transfer_file_max_item_count}}
 
-ovara-kouta-light.db.maxConnections={{ovara_kouta_light_max_connections | default('10')}}
+ovara-kouta-light.db.maxConnections={{kouta_external_ovara_kouta_light_max_connections | default('10')}}
 ovara-kouta-light.db.registerMbeans=true

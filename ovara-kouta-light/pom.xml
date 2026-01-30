@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>ovara-kouta-light</artifactId>
-    <name>${artifactId}</name>
+    <name>${project.artifactId}</name>
     <version>0.1-SNAPSHOT</version>
 
     <dependencies>

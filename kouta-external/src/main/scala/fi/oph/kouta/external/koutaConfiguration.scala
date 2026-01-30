@@ -2,7 +2,7 @@ package fi.oph.kouta.external
 
 import com.typesafe.config.{Config => TypesafeConfig}
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.koutalight.{KoutaDatabaseConnectionConfiguration, OvaraKoutaLightConfiguration, S3Configuration}
+import fi.oph.kouta.koutalight.{KoutaExternalDatabaseConnectionConfiguration, OvaraKoutaLightConfiguration, S3Configuration}
 import fi.vm.sade.properties.OphProperties
 import fi.oph.kouta.util.{KoutaBaseConfig, KoutaConfigFactory}
 
@@ -93,7 +93,7 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
       Try(config.getInt("ovara-kouta-light.s3.transferFileSaveRetryCount")).getOrElse(3),
       Try(config.getInt("ovara-kouta-light.s3.transferFileMaxItemCount")).getOrElse(10000)
     ),
-    databaseConnectionConfiguration = KoutaDatabaseConnectionConfiguration(
+    databaseConnectionConfiguration = KoutaExternalDatabaseConnectionConfiguration(
       url = config.getString("kouta-external.db.url"),
       username = config.getString("kouta-external.db.user"),
       password = config.getString("kouta-external.db.password"),

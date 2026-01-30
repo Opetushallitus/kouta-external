@@ -1,7 +1,7 @@
 package fi.oph.kouta.koutalight.repository
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import fi.oph.kouta.koutalight.KoutaDatabaseConnectionConfiguration
+import fi.oph.kouta.koutalight.KoutaExternalDatabaseConnectionConfiguration
 import fi.oph.kouta.logging.Logging
 import org.apache.commons.lang3.builder.ToStringBuilder
 import slick.dbio.DBIO
@@ -14,7 +14,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.Try
 
-case class KoutaDatabaseConnection(settings: KoutaDatabaseConnectionConfiguration) extends Logging {
+case class KoutaExternalDatabaseConnection(settings: KoutaExternalDatabaseConnectionConfiguration) extends Logging {
   logger.warn(settings.username)
 
   private val db = initDb()
@@ -26,7 +26,11 @@ case class KoutaDatabaseConnection(settings: KoutaDatabaseConnectionConfiguratio
     )
   }
 
-  def runBlockingTransactionally[R](operations: DBIO[R], timeout: Duration = Duration(20, TimeUnit.SECONDS), isolation: TransactionIsolation = Serializable): Try[R] = {
+  def runBlockingTransactionally[R](
+      operations: DBIO[R],
+      timeout: Duration = Duration(20, TimeUnit.SECONDS),
+      isolation: TransactionIsolation = Serializable
+  ): Try[R] = {
     Try(runBlocking(operations.transactionally.withTransactionIsolation(isolation), timeout))
   }
 
@@ -41,7 +45,6 @@ case class KoutaDatabaseConnection(settings: KoutaDatabaseConnectionConfiguratio
     hikariConfig.setPassword(settings.password)
     val maxPoolSize = settings.maxConnections.getOrElse(10)
     hikariConfig.setMaximumPoolSize(maxPoolSize)
-    settings.minConnections.foreach(hikariConfig.setMinimumIdle)
     settings.registerMbeans.foreach(hikariConfig.setRegisterMbeans)
     val executor = AsyncExecutor("koutaexternal", maxPoolSize, 1000)
 

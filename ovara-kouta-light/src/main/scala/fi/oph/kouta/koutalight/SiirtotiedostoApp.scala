@@ -2,7 +2,7 @@ package fi.oph.kouta.koutalight
 
 import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
 import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
-import fi.oph.kouta.koutalight.repository.{KoutaDatabaseConnection, KoutaLightSiirtotiedostoDAO}
+import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
 import fi.oph.kouta.logging.Logging
@@ -25,10 +25,10 @@ object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
     val configuration = Configuration.createConfig()
 
     val databaseConnectionConfiguration = configuration.databaseConnectionConfiguration
-    val dbConnection = KoutaDatabaseConnection(databaseConnectionConfiguration)
-    val koutaLightSiirtotiedostoDAO           = new KoutaLightSiirtotiedostoDAO(dbConnection)
+    val dbConnection                    = KoutaExternalDatabaseConnection(databaseConnectionConfiguration)
+    val koutaLightSiirtotiedostoDAO     = new KoutaLightSiirtotiedostoDAO(dbConnection)
 
-    val s3Configuration = configuration.s3Configuration
+    val s3Configuration                       = configuration.s3Configuration
     val koutaLightSiirtotiedostoPalveluClient = new SiirtotiedostoPalveluClient(s3Configuration)
 
     val koutaLightSiirtotiedostoService =

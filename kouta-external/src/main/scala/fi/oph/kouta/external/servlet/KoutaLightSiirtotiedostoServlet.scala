@@ -4,7 +4,7 @@ import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
 import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
-import fi.oph.kouta.koutalight.repository.{KoutaDatabaseConnection, KoutaLightSiirtotiedostoDAO}
+import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.Ok
@@ -20,7 +20,7 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
   private val dbConnectionConfiguration =
     KoutaConfigurationFactory.configuration.ovaraKoutaLightConfiguration.databaseConnectionConfiguration
   private val s3Configuration = KoutaConfigurationFactory.configuration.ovaraKoutaLightConfiguration.s3Configuration
-  private val dbConnection    = KoutaDatabaseConnection(dbConnectionConfiguration)
+  private val dbConnection    = KoutaExternalDatabaseConnection(dbConnectionConfiguration)
 
   private val koutaLightSiirtotiedostoDAO           = new KoutaLightSiirtotiedostoDAO(dbConnection)
   private val koutaLightSiirtotiedostoPalveluClient = new SiirtotiedostoPalveluClient(s3Configuration)

@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigFactory
 import java.io.File
 import scala.util.Try
 
-case class KoutaDatabaseConnectionConfiguration(
+case class KoutaExternalDatabaseConnectionConfiguration(
     url: String,
     username: String,
     password: String,
@@ -24,7 +24,7 @@ case class S3Configuration(
 
 case class OvaraKoutaLightConfiguration(
     s3Configuration: S3Configuration,
-    databaseConnectionConfiguration: KoutaDatabaseConnectionConfiguration
+    databaseConnectionConfiguration: KoutaExternalDatabaseConnectionConfiguration
 )
 
 object Configuration {
@@ -47,7 +47,7 @@ object Configuration {
         Try(configuration.getInt("ovara-kouta-light.s3.transferFileSaveRetryCount")).getOrElse(3),
         Try(configuration.getInt("ovara-kouta-light.s3.transferFileMaxItemCount")).getOrElse(10000)
       ),
-      databaseConnectionConfiguration = KoutaDatabaseConnectionConfiguration(
+      databaseConnectionConfiguration = KoutaExternalDatabaseConnectionConfiguration(
         url = configuration.getString("ovara-kouta-light.db.url"),
         username = configuration.getString("ovara-kouta-light.db.user"),
         password = configuration.getString("ovara-kouta-light.db.password"),

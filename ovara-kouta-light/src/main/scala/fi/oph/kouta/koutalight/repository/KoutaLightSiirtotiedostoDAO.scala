@@ -8,7 +8,7 @@ import java.time.Instant
 import java.util.UUID
 
 class KoutaLightSiirtotiedostoDAO(
-    dbConnection: KoutaDatabaseConnection
+    dbConnection: KoutaExternalDatabaseConnection
 ) extends KoutaLightSiirtotiedostoSQL {
   def getKoulutukset(
       operationWindowStartTime: Option[Instant],

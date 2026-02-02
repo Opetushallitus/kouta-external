@@ -51,6 +51,7 @@ object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
           runEnd = runEndTime,
           storedEntitiesCount = response.count
         )
+
         logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(response)}")
         logger.info(s"Operaatioinfo: ${writePretty(currentOperation)}")
 

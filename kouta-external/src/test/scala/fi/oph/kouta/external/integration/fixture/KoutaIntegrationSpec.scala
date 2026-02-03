@@ -1,11 +1,11 @@
 package fi.oph.kouta.external.integration.fixture
 
-import java.time.Instant
-import java.util.UUID
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
+import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
+import fi.oph.kouta.koutalight.repository.KoutaLightExtractors
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils
@@ -15,14 +15,19 @@ import org.json4s.{JBool, JObject}
 import org.scalactic.Equality
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 import slick.jdbc.GetResult
+import slick.jdbc.PostgresProfile.api._
 
-trait KoutaIntegrationSpec extends ScalatraFlatSpec
-  with SpecWithMocks
-  with UrlProperties
-  with HttpSpec
-  with OrganisaatioServiceMock
-  with DatabaseSpec
-  with ElasticDumpFixture {
+import java.time.Instant
+import java.util.UUID
+
+trait KoutaIntegrationSpec
+    extends ScalatraFlatSpec
+    with SpecWithMocks
+    with UrlProperties
+    with HttpSpec
+    with OrganisaatioServiceMock
+    with DatabaseSpec
+    with ElasticDumpFixture {
 
   System.setProperty("kouta-backend.useSecureCookies", "false")
   KoutaConfigurationFactory.setupWithDefaultTemplateFile()
@@ -198,13 +203,12 @@ sealed trait DatabaseSpec {
   TestSetups.setupPostgres()
   import fi.oph.kouta.external.database.KoutaDatabase
 
-  private lazy val db = KoutaDatabase
+  lazy val db: KoutaDatabase.type = KoutaDatabase
 
-  def truncateDatabase() = {
-    import slick.jdbc.PostgresProfile.api._
-
+  def truncateDatabase(): Int = {
     db.runBlocking(sqlu"""delete from authorities""")
     db.runBlocking(sqlu"""delete from sessions""")
+    db.runBlocking(sqlu"""delete from kouta_light_koulutus""")
   }
 
   import java.time._
@@ -212,4 +216,59 @@ sealed trait DatabaseSpec {
   implicit val getInstant: AnyRef with GetResult[LocalDateTime] = slick.jdbc.GetResult[LocalDateTime](
     r => LocalDateTime.ofInstant(r.nextTimestamp().toInstant, ZoneId.of("Europe/Helsinki")).withNano(0).withSecond(0)
   )
+}
+
+trait KoutaLightIntegrationSpec
+    extends ScalatraFlatSpec
+    with SpecWithMocks
+    with UrlProperties
+    with HttpSpec
+    with DatabaseSpec
+    with KoutaLightExtractors {
+
+  System.setProperty("kouta-backend.useSecureCookies", "false")
+  KoutaConfigurationFactory.setupWithDefaultTemplateFile()
+  setUrlProperties(KoutaConfigurationFactory.configuration.urlProperties)
+  TestSetups.setupPostgres()
+
+  val defaultAuthorities: Set[Authority] = KoutaLightIntegrationSpec.defaultAuthorities
+
+  val testUser = TestUser("test-user-oid", "testuser", defaultSessionId)
+
+  def addDefaultSession(): Unit = {
+    SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
+  }
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    addDefaultSession()
+  }
+
+  override def afterAll(): Unit = {
+    super.afterAll()
+    truncateDatabase()
+  }
+
+  def getFromDb(externalId: String, organisaatioOid: OrganisaatioOid): Seq[KoutaLightKoulutus] = {
+    db.runBlocking(
+      sql"""select id,
+                   external_id,
+                   kielivalinta,
+                   tila,
+                   nimi,
+                   tarjoajat,
+                   metadata,
+                   owner_org,
+                   created_at,
+                   updated_at
+                   from kouta_light_koulutus where external_id = $externalId and owner_org = ${organisaatioOid
+        .toString()}"""
+        .as[KoutaLightKoulutus]
+    )
+  }
+}
+
+object KoutaLightIntegrationSpec {
+  val rootOrganisaatio: OrganisaatioOid  = OrganisaatioOid("1.2.246.562.10.00000000001")
+  val defaultAuthorities: Set[Authority] = RoleEntity.all.map(re => Authority(re.Crud, rootOrganisaatio)).toSet
 }

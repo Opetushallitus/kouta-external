@@ -63,6 +63,8 @@ Ennen lokaalia ajoa täytyy olla elasticsearch pyörimässä. Katso ohjeet elast
 Tämän jälkeen käynnistä Ideassa embeddedJettyLauncher.scala (right-click -> Run). Tämä käynnistää samalla
 postgresql kontin. Sovellus käynnistyy porttiin 8097.
 
+Ovara-kouta-lightin SiirtotiedostoAppin ajamista varten ohje löytyy ovara-kouta-light-moduulin README:stä.
+
 ### 3.5. Ajaminen lokaalisti testiympäristön ElasticSearchia vasten
 
 Lisää `dev-vars.yml`-tiedosto `kouta-external/kouta-external/src/test/resources`-hakemistoon ja korvaa `*YMPÄRISTÖ*` testiympäristön arvolla `testi`, `hahtuva` tai `untuva`:

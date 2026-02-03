@@ -2,8 +2,14 @@ package fi.oph.kouta.external
 
 import com.typesafe.config.{Config => TypesafeConfig}
 import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.koutalight.{
+  KoutaExternalDatabaseConnectionConfiguration,
+  OvaraKoutaLightConfiguration,
+  S3Configuration
+}
 import fi.vm.sade.properties.OphProperties
 import fi.oph.kouta.util.{KoutaBaseConfig, KoutaConfigFactory}
+
 import scala.util.Try
 
 case class KoutaDatabaseConfiguration(
@@ -43,8 +49,7 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
     extends KoutaBaseConfig(config, urlProperties) {
 
   val hakukohderyhmaConfiguration: HakukohderyhmaConfiguration =
-    HakukohderyhmaConfiguration(cacheTtlMinutes =
-      config.getLong("kouta-external.hakukohderyhma.cacheTtlMinutes"))
+    HakukohderyhmaConfiguration(cacheTtlMinutes = config.getLong("kouta-external.hakukohderyhma.cacheTtlMinutes"))
 
   val databaseConfiguration: KoutaDatabaseConfiguration =
     KoutaDatabaseConfiguration(
@@ -82,8 +87,26 @@ case class KoutaConfiguration(config: TypesafeConfig, urlProperties: OphProperti
   val massOperationConfiguration = MassOperationConfiguration(
     numThreds = config.getInt("kouta-external.massoperation.numThreads")
   )
+
+  val ovaraKoutaLightConfiguration = OvaraKoutaLightConfiguration(
+    s3Configuration = S3Configuration(
+      config.getString("ovara-kouta-light.s3.transferFileBucket"),
+      config.getString("ovara-kouta-light.s3.transferFileTargetRoleArn"),
+      Try(config.getString("ovara-kouta-light.s3.region")).filter(_.trim.nonEmpty).toOption,
+      Try(config.getInt("ovara-kouta-light.s3.transferFileSaveRetryCount")).getOrElse(3),
+      Try(config.getInt("ovara-kouta-light.s3.transferFileMaxItemCount")).getOrElse(10000)
+    ),
+    databaseConnectionConfiguration = KoutaExternalDatabaseConnectionConfiguration(
+      url = config.getString("kouta-external.db.url"),
+      username = config.getString("kouta-external.db.user"),
+      password = config.getString("kouta-external.db.password"),
+      maxConnections = Option(config.getInt("ovara-kouta-light.db.maxConnections")),
+      registerMbeans = Option(config.getBoolean("ovara-kouta-light.db.registerMbeans"))
+    )
+  )
 }
 
 object KoutaConfigurationFactory extends KoutaConfigFactory[KoutaConfiguration]("kouta-external") {
-  def createConfigCaseClass(config: TypesafeConfig, urlProperties: OphProperties) = KoutaConfiguration(config, urlProperties)
+  def createConfigCaseClass(config: TypesafeConfig, urlProperties: OphProperties) =
+    KoutaConfiguration(config, urlProperties)
 }

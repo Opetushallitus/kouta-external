@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.Julkaisutila
 import fi.oph.kouta.domain.oid.{HakuOid, HakukohdeOid, HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.elasticsearch.HakukohdeClient
-import fi.oph.kouta.external.kouta._
+import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaHakukohdeRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{AuthorizationRules, OrganisaatioService, OrganizationAuthorizationFailedException, RoleEntityAuthorizationService}
@@ -13,7 +13,7 @@ import fi.oph.kouta.logging.Logging
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 case class HakukohdeSearchParams(
     hakuOid: Option[HakuOid] = None,
@@ -66,10 +66,11 @@ class HakukohdeService(
     val organisaatioService: OrganisaatioService,
     hakuService: HakuService
 ) extends RoleEntityAuthorizationService[Hakukohde]
+    with MassService[HakukohdeOid, Hakukohde]
     with Logging {
 
-  def executor: ExecutionContext      = global
   override val roleEntity: RoleEntity = Role.Hakukohde
+  override val entityName: String     = "hakukohde"
 
   def getHakukohdeAuthorizeByHakukohderyhma(
       oid: HakukohdeOid
@@ -194,5 +195,4 @@ class HakukohdeService(
       authenticated: Authenticated
   ): Future[KoutaResponse[UpdateResponse]] =
     koutaClient.update("kouta-backend.hakukohde", KoutaHakukohdeRequest(authenticated, hakukohde), ifUnmodifiedSince)
-
 }

@@ -12,7 +12,7 @@ object KoutaLightTallentajaRole extends Role.UnknownRole("APP_KOUTA_EXTERNAL-KOU
 object KoutaLightServlet extends KoutaLightServlet(KoutaLightService)
 
 class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServlet with CasAuthenticatedServlet {
-  private def errorMessage(message: String) = Map("errorMessage" -> message)
+  private def errorMessage(message: String) = Map("error" -> message)
 
   registerPath(
     "/koutan-tietomallista-poikkeavat-koulutukset/",

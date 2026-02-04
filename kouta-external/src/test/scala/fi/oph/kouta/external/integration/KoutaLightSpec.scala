@@ -23,7 +23,7 @@ class KoutaLightSpec extends KoutaLightFixture {
       List(MinKoutaLightKoulutus),
       defaultSessionId,
       403,
-      s"""{"errorMessage":"Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"}"""
+      s"""{"error":"Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"}"""
     )
   }
 
@@ -32,7 +32,7 @@ class KoutaLightSpec extends KoutaLightFixture {
       List(MinKoutaLightKoulutus),
       faultyKoutaLightSessionId,
       403,
-      s"""{"errorMessage":"Käyttäjän oikeuksissa määritelty liian monta organisaatiota"}"""
+      s"""{"error":"Käyttäjän oikeuksissa määritelty liian monta organisaatiota"}"""
     )
   }
 

@@ -112,7 +112,7 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
       val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
       Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
     } else {
-      Forbidden(Map("errorMessage" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+      Forbidden(Map("error" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
     }
   }
 }

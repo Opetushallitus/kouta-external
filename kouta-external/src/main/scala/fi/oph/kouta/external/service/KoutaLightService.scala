@@ -113,20 +113,26 @@ class KoutaLightService extends Logging {
       KoutaLightMassResult.Error(Upsert, Option(error.koulutusExternalId), exception = error.message)
     )
 
-  def put(koulutukset: List[ExternalKoutaLightKoulutus], organisaatioOid: OrganisaatioOid): Seq[KoutaLightMassResult] = {
+  def put(
+      koulutukset: List[ExternalKoutaLightKoulutus],
+      organisaatioOid: OrganisaatioOid
+  ): Seq[KoutaLightMassResult] = {
     koulutukset.flatMap(koulutus => {
       val externalId       = koulutus.externalId
       val validationErrors = validate(koulutus)
       if (validationErrors.isEmpty) {
         KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
           case Success(null) =>
-            logger.info(s"Created koulutus ${koulutus.externalId}")
+            logger.info(s"Created koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
             List(KoutaLightMassResult.CreateSuccess(externalId = Some(externalId)))
           case Success(_) =>
-            logger.info(s"Updated koulutus ${koulutus.externalId}")
+            logger.info(s"Updated koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
             List(KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId)))
           case Failure(e) =>
-            logger.error(s"Create or update failed on koulutus with externalId ${koulutus.externalId}", e)
+            logger.error(
+              s"Create or update failed on koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid",
+              e
+            )
             List(
               KoutaLightMassResult.Error(
                 operation = Upsert,

@@ -89,6 +89,11 @@ Lisää `dev-vars.yml`-tiedosto `kouta-external/kouta-external/src/test/resource
 
     kouta_external_api_modify_enabled: true
 
+    ovara_siirtotiedosto_s3_bucket: *BUCKET_NAME*
+    ovara_siirtotiedosto_s3_target_role_arn: *ROLE_ARN*
+    kouta_external_kouta_light_s3_transfer_file_save_retry_count: 3
+    kouta_external_kouta_light_s3_transfer_file_max_item_count: 2
+
 Korvaa myös `*ES_URL*` ES:n ympäristökohtaisella **julkisella** osoitteella, joka löytyy täältä: https://wiki.eduuni.fi/pages/viewpage.action?pageId=266406750
 
 Korvaa `*ES_TUNNUS*` ja `*ES_SALASANA*` oikeilla testiympäristön salasanoilla, jotka voit katsa SSM:stä AWS:n konsolin kautta tai [config.py-komentorivityökalulla](https://github.com/Opetushallitus/cloud-base/blob/master/docs/configuring-services.md#salaisuuden-hakeminen-ssmst%C3%A4-interaktiivisesti)
@@ -104,6 +109,25 @@ http://localhost:8097/kouta-external/auth/login
 Kirjaudu sisään omilla testitunnuksillasi.
 
 Lokaalin kouta-externalin pitäisi nyt ohjata kyselyt valitsemasi ympäristön ElasticSearchiin.
+
+`kouta-external`-moduulin `KoutaLightServlet`in siirtotiedostojen muodostusta pystyy ajamaan omalta koneelta, 
+kunhan lisää IDEA:n Run-konfiguraation "Environment Variables"-kenttään `AWS_PROFILE=oph-dev`, 
+kirjautuu AWS:ään sisään `aws sso login`-komennolla ja lisää kyseisen moduulin `pom.xml`:ään seuraavat riippuvuudet 
+(sekä ajaa Maven > Sync Project):
+````
+       <dependency>
+           <groupId>software.amazon.awssdk</groupId>
+           <artifactId>sso</artifactId>
+           <version>2.33.12</version>
+       </dependency>
+       <dependency>
+           <groupId>software.amazon.awssdk</groupId>
+           <artifactId>ssooidc</artifactId>
+           <version>2.33.12</version>
+       </dependency>
+````
+Samat säädöt pätevät `ovara-kouta-light`-moduulissa sijaitsevan SiirtotiedostoAppin ajamiseen. 
+Kyseisen moduulin README:ssä on tarkemmat ohjeet konfiguraation asettamiseen.
 
 ### 3.6. Swagger
 

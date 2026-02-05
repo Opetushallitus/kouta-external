@@ -106,13 +106,20 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
   )
   get("/kouta-light-koulutukset") {
     implicit val authenticated: Authenticated = authenticate
-    val isOphPaakayttaja = authenticated.session.roles.contains(Role.Paakayttaja)
+    val isOphPaakayttaja                      = authenticated.session.roles.contains(Role.Paakayttaja)
 
-    if (isOphPaakayttaja) {
-      val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
-      Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
+    val siirtotiedostoCreationEnabled =
+      KoutaConfigurationFactory.configuration.securityConfiguration.transferFileCreationEnabled
+
+    if (siirtotiedostoCreationEnabled) {
+      if (isOphPaakayttaja) {
+        val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
+        Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
+      } else {
+        Forbidden(Map("error" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+      }
     } else {
-      Forbidden(Map("error" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+      Forbidden(Map("error" -> "Rajapinta ei ole käytössä tässä ympäristössä."))
     }
   }
 }

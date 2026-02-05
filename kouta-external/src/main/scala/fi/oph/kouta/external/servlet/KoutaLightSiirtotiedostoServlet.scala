@@ -3,46 +3,19 @@ package fi.oph.kouta.external.servlet
 import fi.oph.kouta.external.KoutaConfigurationFactory
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
-import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
-import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 
-import java.time.{Instant, LocalDateTime}
 import java.time.format.DateTimeFormatter
+import java.time.{Instant, LocalDateTime}
 import java.util.UUID
 import scala.util.{Failure, Success, Try}
 
-object KoutaLightSiirtotiedostoServlet extends KoutaLightSiirtotiedostoServlet
-
-class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticatedServlet {
-  private val dbConnectionConfiguration =
-    KoutaConfigurationFactory.configuration.ovaraKoutaLightConfiguration.databaseConnectionConfiguration
-  private val s3Configuration = KoutaConfigurationFactory.configuration.ovaraKoutaLightConfiguration.s3Configuration
-  private val dbConnection    = KoutaExternalDatabaseConnection(dbConnectionConfiguration)
-
-  private val koutaLightSiirtotiedostoDAO           = new KoutaLightSiirtotiedostoDAO(dbConnection)
-  private val koutaLightSiirtotiedostoPalveluClient = new SiirtotiedostoPalveluClient(s3Configuration)
-  private val koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService =
-    new KoutaLightSiirtotiedostoService(koutaLightSiirtotiedostoDAO, koutaLightSiirtotiedostoPalveluClient)
-
-  private def parseInstant(
-      dateTime: Option[String],
-      fieldName: String
-  ): Option[Instant] = {
-    dateTime match {
-      case Some(dateTimeStr) =>
-        Try[Instant] {
-          Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))
-        } match {
-          case Success(instant) => Some(instant)
-          case Failure(_)       => throw new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'")
-        }
-      case None => None
-    }
-  }
+class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService)
+    extends KoutaServlet
+    with CasAuthenticatedServlet {
 
   private def parseTimeRange(
       startTime: Option[String],
@@ -60,6 +33,22 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
     }
   }
 
+  private def parseInstant(
+      dateTime: Option[String],
+      fieldName: String
+  ): Option[Instant] = {
+    dateTime match {
+      case Some(dateTimeStr) =>
+        Try[Instant] {
+          Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))
+        } match {
+          case Success(instant) => Some(instant)
+          case Failure(_)       => throw new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'")
+        }
+      case None => None
+    }
+  }
+
   private def resultMap(operationResults: SiirtotiedostoOperationResults) =
     Map(
       "keys"    -> operationResults.s3ObjectKeys.mkString(", "),
@@ -67,8 +56,9 @@ class KoutaLightSiirtotiedostoServlet extends KoutaServlet with CasAuthenticated
       "success" -> "true"
     )
 
-  private val SiirtotiedostoDateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-  private val DateTimeExample              = SiirtotiedostoDateTimeFormat.format(LocalDateTime.now())
+  private val SiirtotiedostoDateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+  private val DateTimeExample                                 = SiirtotiedostoDateTimeFormat.format(LocalDateTime.now())
+
   registerPath(
     "/siirtotiedosto/kouta-light-koulutukset",
     s"""    get:

@@ -49,6 +49,7 @@ hakukohderyhmapalvelu.hakukohteet=https://{{host_virkailija}}/hakukohderyhmapalv
 koodisto-service.koodisto-link=https://{{host_virkailija}}/koodisto-app/koodisto/view/$1
 
 kouta.external-api.modify.enabled={{kouta_external_api_modify_enabled}}
+kouta_external.s3.transferFileCreationEnabled = {{kouta_external_kouta_light_s3_transfer_file_creation_enabled | default('true')}}
 
 ovara-kouta-light.s3.transferFileBucket = {{ovara_siirtotiedosto_s3_bucket}}
 ovara-kouta-light.s3.transferFileTargetRoleArn = {{ovara_siirtotiedosto_s3_target_role_arn}}

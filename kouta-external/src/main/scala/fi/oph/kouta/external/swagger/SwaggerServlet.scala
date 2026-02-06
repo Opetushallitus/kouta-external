@@ -48,7 +48,13 @@ class SwaggerServlet extends ScalatraServlet {
       case (path, op) =>
         s"""  $path:
            |    parameters:
-           |      - $$ref: '#/components/parameters/callerId'
+           |      - in: header
+           |        name: Caller-Id
+           |        schema:
+           |          type: string
+           |          default: kouta-external-swagger
+           |        required: true
+           |        description: Kutsujan <a href="https://wiki.eduuni.fi/pages/viewpage.action?pageId=176867280">Caller ID</a>
            |""".stripMargin +
           op.mkString
     }.mkString
@@ -65,14 +71,6 @@ class SwaggerServlet extends ScalatraServlet {
          |        default: ${KoutaServlet.SampleHttpDate}
          |      required: true
          |      description: Vastaavan GETin ${KoutaServlet.LastModifiedHeader}
-         |    callerId:
-         |      in: header
-         |      name: Caller-Id
-         |      schema:
-         |        type: string
-         |        default: kouta-external-swagger
-         |      required: true
-         |      description: Kutsujan <a href="https://wiki.eduuni.fi/pages/viewpage.action?pageId=176867280">Caller ID</a>
          |  schemas:
          |""".stripMargin
 

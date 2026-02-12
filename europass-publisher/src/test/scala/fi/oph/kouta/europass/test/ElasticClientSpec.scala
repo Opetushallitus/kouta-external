@@ -49,7 +49,7 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
     val opp = ElasticClient.getOppilaitos("1.2.246.562.10.67476956288")
     assert(opp.oid.toString == "1.2.246.562.10.67476956288")
     assert(opp.oppilaitos.flatMap(_.metadata).flatMap(_.yhteystiedot).flatMap(_.postiosoiteStr)
-      == Some(Map(Fi -> "Kalmankaltionkuja 32, 00079 Metropolia", En -> "Kalmankaltionkuja 560")))
+      == Some(Map(Fi -> "Kalmankaltionkuja 32, 00079 Metropolia")))
   }
 
   "intoToteutusIndexedIfPossible" should "cope with MappingErrors" in {

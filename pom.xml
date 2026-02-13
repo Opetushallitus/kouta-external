@@ -24,7 +24,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <scala.compat.version>2.12</scala.compat.version>
 
-        <kouta-common.version>2.23.5-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>2.23.6-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
         <json4s.version>3.6.11</json4s.version>
@@ -85,7 +85,7 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <!-- Jinjava 2.8.1 causes a Dependency convergence error for this. -->
+                <!-- Jinjava 2.8.3 causes a Dependency convergence error for this. -->
                 <groupId>com.hubspot.immutables</groupId>
                 <artifactId>immutables-exceptions</artifactId>
                 <version>1.9</version>
@@ -487,11 +487,11 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>1.7.30</version>
             </dependency>
-	    <dependency>
-		<groupId>org.slf4j</groupId>
-		<artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.30</version>
-	    </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.36</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>

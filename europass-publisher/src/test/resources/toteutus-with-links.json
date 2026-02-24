@@ -64,7 +64,8 @@
   },
   "metadata": {
     "kuvaus": {
-      "en": "<p>The aim of the course is to give the students basic idea of the most  usual statistical methods that are used when practicing evidence based  medicine.</p>"
+      "fi": "<div> <div> <div> <div> <div> <div> <div> <p>Hyvä ruoka ja ravitsemus ovat laadukkaan elämän edellytyksiä.</p> <p>Ravitsemustieteen opinnoista saat perustiedot muun muassa ravintoaineista, elintarvikkeiden koostumuksesta, ihmisen fysiologiasta, erityisruokavalioista sekä ravinnon yhteyksistä terveyteen ja liikuntaan.</p> <p>Tieteenalana ravitsemustiede pohjautuu kemiaan ja fysiologiaan, mutta se kytkeytyy myös moniin sosiaalisiin, taloudellisiin, kulttuurisiin ja psykologisiin ruokaan liittyviin kysymyksiin.</p> <p>Tarkemmat tiedot opintojaksoista ja -kokonaisuuksista, kuten opintojen toteutuksesta, aikatauluista ja suoritustapavaihtoehdoista, löydät <a href=\"https://www.helsinki.fi/fi/hakeminen-ja-opetus/avoin-yliopisto/avoimet-opinnot-koulutusohjelmittain/ihmisen-ravitsemuksen-ja-ruokakayttaytymisen-opinnot/ravitsemustieteen-opinnot\">verkkosivuiltamme (ks. opinto-ohjelmat=kurssisivut).</a></p> </div> </div> </div> </div> </div> </div> </div>",
+      "en": "A course. <p>The aim of the course is to give the students basic idea of the most  usual statistical methods that are used when practicing evidence based  medicine. <a href=\"https://opintopolku.fi/more-information\" target=\"_blank\" rel=\"noopener noreferrer\">More information</a>. Also see: <a href=\"https://opintopolku.fi/instructions\" target=\"_blank\" rel=\"noopener noreferrer\">https://opintopolku.fi/instructions</a>.</p>"
     },
     "hakutermi": "ilmoittautuminen",
     "opintojenLaajuusyksikko": {
@@ -183,7 +184,9 @@
           }
         }
       ],
-      "opetusaikaKuvaus": {},
+      "opetusaikaKuvaus": {
+        "en": "See <a href=\"https://opintopolku.fi/opetusaikakuvaus\" target=\"_blank\" rel=\"noopener noreferrer\">here</a>."
+      },
       "opetuskieli": [
         {
           "koodiUri": "oppilaitoksenopetuskieli_4#2",

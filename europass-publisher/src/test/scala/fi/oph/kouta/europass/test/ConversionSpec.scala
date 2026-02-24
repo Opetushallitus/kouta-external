@@ -1,23 +1,16 @@
 package fi.oph.kouta.europass.test
 
-import scala.io.Source
-import scala.xml._
-import java.io.StringWriter
-import scala.reflect.{ClassTag, classTag}
-
+import fi.oph.kouta.domain.Sv
 import fi.oph.kouta.europass.EuropassConversion
+import fi.oph.kouta.external.domain.indexed.{KoulutusIndexed, OppilaitosIndexed, ToteutusIndexed}
 import fi.oph.kouta.external.util.KoutaJsonFormats
-import org.json4s._
-import org.json4s.jackson.JsonMethods._
-import org.json4s.jackson.Serialization.{read, write}
+import org.json4s.jackson.Serialization.read
+import org.scalatest.Inspectors.forEvery
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
-import fi.oph.kouta.external.domain.indexed.{
-  KoulutusIndexed,
-  ToteutusIndexed,
-  OppilaitosIndexed
-}
-import fi.oph.kouta.domain.{Kieli, Sv}
+import java.io.StringWriter
+import scala.io.Source
+import scala.xml.{Elem, XML}
 
 object TestConversion extends EuropassConversion
 
@@ -37,6 +30,8 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     read[ToteutusIndexed](resource("toteutus-ihan-tavanomainen.json"))
   lazy val toteutusExactStartTime =
     read[ToteutusIndexed](resource("toteutus-tarkka-alkuaika.json"))
+  lazy val toteutusWithLinks =
+    read[ToteutusIndexed](resource("toteutus-with-links.json"))
 
   lazy val example_koulutus =
     read[KoulutusIndexed](resource("koulutus-example-1.json"))
@@ -77,11 +72,32 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusTotallyOrdinary)
     assert(toteutusXml \ "description" \@ "language" == "en")
     assert((toteutusXml \ "description" ).text.contains("<p>"))
-    assert((toteutusXml \ "description" ).text.endsWith(" Lisätietoja</p>"))
     assert((toteutusXml \ "duration").text == "P0Y0M")
     // from opetustapaKuvaus, since it doesn't have opetusaikaKuvaus
     assert(toteutusXml \ "scheduleInformation" \ "noteLiteral" \@ "language" == "en")
     assert((toteutusXml \ "scheduleInformation" \ "noteLiteral").text.startsWith("<p>Online course."))
+  }
+
+  "toteutus with links" should "have changed links to text" in {
+    val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusWithLinks)
+    assert(!(toteutusXml \ "description" ).text.contains("<a"))
+    assert((toteutusXml \ "description" ).text.contains("More information (https://opintopolku.fi/more-information)"))
+    assert(!(toteutusXml \ "scheduleInformation" \ "noteLiteral").text.contains("<a"))
+    assert(!(toteutusXml \ "scheduleInformation" \ "noteLiteral").text.eq("See here (https://opintopolku.fi/opetusaikakuvaus)"))
+  }
+
+  it should "not repeat the url if the link description is the same as the address" in {
+    val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusWithLinks)
+    val kuvausEn = (toteutusXml \ "description").filter(d => (d \@ "language") == "en").map(_.text).head
+    assert(kuvausEn.endsWith("Also see: https://opintopolku.fi/instructions.</p>"))
+  }
+
+  it should "remove <div>s, but leave the content of those divs" in {
+    val Some(toteutusXml: Elem) = TestConversion.toteutusAsElmXml(toteutusWithLinks)
+    val kuvausFi = (toteutusXml \ "description").filter(d => (d \@ "language") == "fi").map(_.text).head
+    assert(!kuvausFi.contains("<div>"))
+    assert(!kuvausFi.contains("</div>"))
+    assert(kuvausFi.contains("<p>Hyvä ruoka "))
   }
 
   "example_toteutus" should "have correct fields" in {
@@ -236,4 +252,84 @@ class ConversionSpec extends ScalatraFlatSpec with KoutaJsonFormats {
     assert((tulosXml(0) \ "title")(2) \@ "language" == "sv")
   }
 
+  "cleanHtml" should "allow value attributes in list items" in {
+    val string =
+      """<ul>
+        |<li value="1">selkeän ja uskottavan liiketoimintasuunnitelman&nbsp;</li>
+        |<li value="2">siihen liittyvät talouslaskelmat&nbsp;</li>
+        |<li value="3">yrityksen perustamisasiakirjat&nbsp;</li>
+        |<li value="4">toimialasi vaatimatlisäasiakirjat ja lakisääteiset ilmoitukset&nbsp;</li>
+        |</ul>""".stripMargin
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response.contains("""<li value="1">"""))
+    assert(response.contains("""<li value="2">"""))
+    assert(response.contains("""<li value="3">"""))
+    assert(response.contains("""<li value="4">"""))
+  }
+
+  it should "remove link elements with empty urls" in {
+    val string = """<a href="" rel="noopener noreferrer" target="_blank">See detailed instruction time and location in the Uniarts study guide.</a>"""
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "See detailed instruction time and location in the Uniarts study guide.")
+  }
+
+  it should "handle tel: links in a sane way" in {
+    val string =
+      """<a href="tel:+358 41 123 4567" rel="noopener noreferrer" target="_blank">+358 411 234567</a>
+        |<a href="tel:+358 44 765 4321" rel="noopener noreferrer" target="_blank">+358 44 765 4321&nbsp;</a>"""
+        .stripMargin
+    val response = EuropassConversion.cleanHtml(string, None).replace("\n", " ")
+    assert(response == "+358 41 123 4567 +358 44 765 4321")
+
+  }
+
+  it should "handle mailto: links in a sane way" in {
+    val string =  "<p>Etunimi Sukunimi,&nbsp;<a href=\"mailto:etunimi.sukunimi@test.fi\" target=\"_blank\" rel=\"noopener noreferrer\">etunimi.sukunimi@test.fi </a>, p. 050 123 4567&nbsp;</p>"
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "<p>Etunimi Sukunimi,&nbsp;etunimi.sukunimi@test.fi, p. 050 123 4567&nbsp;</p>")
+  }
+
+  it should "remove links within the same page" in {
+    val string = "<p><a href=\"#_msocom_1\" target=\"_blank\" rel=\"noopener noreferrer\">[V1]</a></p>"
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "<p>[V1]</p>")
+  }
+
+  it should "remove links to about:blank" in {
+    val string = """<li value="2"><a href="about:blank" target="_blank" rel="noopener noreferrer">Porin lukio</a></li>"""
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "<li value=\"2\">Porin lukio</li>")
+  }
+
+  it should "allow style for p elements" in {
+    val string = """<p style="text-align: left;">Optometristin opintojen&nbsp;ja potilastyön taustalla on tutkittuun näyttöön perustuvaa toiminta.</p>"""
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == string)
+  }
+
+  it should "allow style for li elements" in {
+    val string = """<li value="4" style="text-align: start;">ottamaan vastuuta ja kokeilemaan omia vahvuuksiasi käytännössä</li>"""
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response.startsWith("""<li value="4" style="text-align: start;">ottamaan vastuuta ja kokeilemaan omia vahvuuksiasi käytännössä</li>"""))
+  }
+
+  it should "allow style for h* elements" in {
+    forEvery(1 to 6) { i =>
+      val string = s"""<h$i style="text-align: start;">&nbsp;<strong>Oma tie – Koulutus sopii erityisesti sinulle, joka</strong></h$i>"""
+      val response = EuropassConversion.cleanHtml(string, None)
+      assert(response == s"""<h$i style="text-align: start;">&nbsp;<strong>Oma tie – Koulutus sopii erityisesti sinulle, joka</strong></h$i>""")
+    }
+  }
+
+  it should "allow start attribute for ol elements" in {
+    val string = "<ol start=\"2\"> <li value=\"2\"><em>CV/Ansioluettelo</em></li>\n</ol>"
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "<ol start=\"2\">\n <li value=\"2\"><em>CV/Ansioluettelo</em></li>\n</ol>")
+  }
+
+  it should "remove <s> elements, but leave their content" in {
+    val string = "Kaikki harjoittelut tehdään Hollolassa, Asikkalassa, Padasjoeella, Orimattilassa tai Heinolassa <s>alueella</s>"
+    val response = EuropassConversion.cleanHtml(string, None)
+    assert(response == "Kaikki harjoittelut tehdään Hollolassa, Asikkalassa, Padasjoeella, Orimattilassa tai Heinolassa alueella")
+  }
 }

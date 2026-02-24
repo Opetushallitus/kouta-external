@@ -34,7 +34,7 @@
            xmlns:cp="http://data.europa.eu/snb/education-credit/25831c2"
            xmlns:curr="http://publications.europa.eu/resource/authority/currency"
            targetNamespace="http://data.europa.eu/snb/model/application-profile/loq-constraints/"
-           elementFormDefault="qualified" version="3.1.0">
+           elementFormDefault="qualified" version="3.3.1">
 
    <xs:include schemaLocation="cv/loq_individuals.xsd"/>
 
@@ -375,7 +375,7 @@
    <xs:element name="learningAssessmentSpecification" type="LearningAssessmentSpecificationType"/>
    <xs:element name="learningEntitlementSpecification" type="LearningEntitlementSpecificationType"/>
    <xs:element name="learningOpportunity" type="LearningOpportunityType"/>
-   <xs:element name="emailAddress" type="EmailAddressType"/>
+   <xs:element name="emailAddress" type="MailboxType"/>
    <xs:element name="phone" type="PhoneType"/>
    <xs:element name="priceDetail" type="PriceDetailType"/>
    <xs:element name="qualification" type="QualificationType"/>
@@ -1045,7 +1045,7 @@
                      <xs:documentation>Specific entry requirements or prerequisites of individuals for which this specification is designed to start this learning opportunity.</xs:documentation>
                   </xs:annotation>
                </xs:element>
-               <xs:element maxOccurs="unbounded" minOccurs="1" name="learningOutcome" type="IdReferenceType">
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="learningOutcome" type="IdReferenceType">
                   <xs:annotation>
                      <xs:documentation>An individual (expected) learning outcome of the learning specification. It MUST refer to an existing 'LearningOutcome'-record in the 'learningOutcomeReferences'-section.</xs:documentation>
                   </xs:annotation>
@@ -1543,9 +1543,9 @@
       </xs:complexContent>
    </xs:complexType>
 
-   <xs:complexType name="EmailAddressType">
+   <xs:complexType name="MailboxType">
       <xs:annotation>
-         <xs:documentation>An e-mail address.</xs:documentation>
+         <xs:documentation>A mailbox.</xs:documentation>
       </xs:annotation>
       <xs:simpleContent>
          <xs:extension base="xs:anyURI"/>
@@ -1613,7 +1613,7 @@
                <xs:documentation>The format of the note.</xs:documentation>
             </xs:annotation>
          </xs:element>
-         <xs:element ref="noteLiteral">
+         <xs:element ref="noteLiteral" minOccurs="1" maxOccurs="unbounded">
             <xs:annotation>
                <xs:documentation>The textual content of the note.</xs:documentation>
             </xs:annotation>
@@ -2014,7 +2014,7 @@
             </xs:annotation>
          </xs:element>
       </xs:sequence>
-      <xs:attribute name="xsdVersion" use="optional" default="3.1.0">
+      <xs:attribute name="xsdVersion" use="optional" default="3.3.1">
          <xs:annotation>
             <xs:documentation>used xsd version</xs:documentation>
          </xs:annotation>
@@ -2022,6 +2022,7 @@
             <xs:restriction base="xs:token">
                <xs:enumeration value="3.0.0"/>
                <xs:enumeration value="3.1.0"/>
+               <xs:enumeration value="3.3.1"/>
             </xs:restriction>
          </xs:simpleType>
       </xs:attribute>

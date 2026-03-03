@@ -14,6 +14,7 @@ import org.jsoup.safety.Safelist
 class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
 
+  /** @see [[EuropassConversion.cleanHtml]] */
   private val safelist = Safelist.none()
     .addTags("h1", "h2", "h3", "h4", "h5", "h6", "p", "strong", "b", "em", "i", "code", "ul", "ol", "li", "br", "hr", "u", "address", "section", "small", "sub", "sup")
     .addAttributes("li", "value")
@@ -296,7 +297,7 @@ class EuropassConversion extends Logging {
   def cleanHtml(s: String, oid: Option[Oid]): String = {
     val html = Jsoup.parse(s)
 
-    removeLinks(html)
+    convertLinksToText(html)
 
     val htmlString = html.body().html().trim
     if (!Jsoup.isValid(htmlString, safelist)) {
@@ -306,7 +307,7 @@ class EuropassConversion extends Logging {
     Jsoup.clean(htmlString, safelist)
   }
 
-  private def removeLinks(html: Document): Unit = {
+  private def convertLinksToText(html: Document): Unit = {
     val links = html.select("a[href]")
     links.forEach { element =>
       val url = element.attr("href")

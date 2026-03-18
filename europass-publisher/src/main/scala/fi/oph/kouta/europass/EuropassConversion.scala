@@ -1,26 +1,25 @@
 package fi.oph.kouta.europass
 
-import scala.xml._
+import scala.xml.Elem
 import org.json4s._
-import fi.oph.kouta.domain.{Julkaisutila, Julkaistu}
-import fi.oph.kouta.external.domain.indexed.{
-  KoodiUri,
-  KoulutusIndexed,
-  ToteutusIndexed,
-  OpetusIndexed,
-  TutkintoNimike,
-  OppilaitosIndexed,
-  Organisaatio,
-  AmmatillinenKoulutusMetadataIndexed,
-  KorkeakoulutusKoulutusMetadataIndexed,
-  ErikoislaakariKoulutusMetadataIndexed,
-  KoulutuksenAlkamiskausiIndexed
-}
+import fi.oph.kouta.domain.Julkaistu
+import fi.oph.kouta.domain.oid.Oid
+import fi.oph.kouta.external.domain.indexed.{AmmatillinenKoulutusMetadataIndexed, ErikoislaakariKoulutusMetadataIndexed, KoodiUri, KorkeakoulutusKoulutusMetadataIndexed, KoulutuksenAlkamiskausiIndexed, KoulutusIndexed, OpetusIndexed, OppilaitosIndexed, Organisaatio, ToteutusIndexed, TutkintoNimike}
 import fi.oph.kouta.external.domain.Kielistetty
 import fi.oph.kouta.logging.Logging
+import org.jsoup.Jsoup
+import org.jsoup.nodes.{Document, TextNode}
+import org.jsoup.safety.Safelist
 
 class EuropassConversion extends Logging {
   implicit val formats = DefaultFormats
+
+  /** @see [[EuropassConversion.cleanHtml]] */
+  private val safelist = Safelist.none()
+    .addTags("h1", "h2", "h3", "h4", "h5", "h6", "p", "strong", "b", "em", "i", "code", "ul", "ol", "li", "br", "hr", "u", "address", "section", "small", "sub", "sup")
+    .addAttributes("li", "value")
+    .addAttributes("ol", "start", "type")
+    .addAttributes(":all", "style")
 
   lazy val toteutusExtras = EuropassConfiguration.config.getBoolean(
     "europass-publisher.publishing.toteutus-extra-fields"
@@ -95,8 +94,8 @@ class EuropassConversion extends Logging {
   def toteutuksenKuvausAsElmXml(toteutus: ToteutusIndexed): Seq[Elem] =
     toteutus.metadata.map(_.kuvaus) match {
       case Some(kuvaukset: Kielistetty) if toteutusExtras =>
-        kuvaukset.keys.map{lang =>
-          <description language={lang.name}>{kuvaukset(lang)}</description>
+        kuvaukset.keys.map { lang =>
+          <description language={lang.name}>{cleanHtml(kuvaukset(lang), toteutus.oid)}</description>
         }.toList
       case _ => List()
     }
@@ -138,11 +137,11 @@ class EuropassConversion extends Logging {
     (opetus.map(_.opetusaikaKuvaus).map(_.toList).getOrElse(List()) ++
       opetus.map(_.opetustapaKuvaus).map(_.toList).getOrElse(List()))
         .take(1)  // No way to express language alternatives so we just pick a random one
-        .map{case (lang, desc) =>
+        .map { case (lang, desc) =>
           <scheduleInformation>
-            <noteLiteral language={lang.name}>{desc}</noteLiteral>
+            <noteLiteral language={lang.name}>{cleanHtml(desc, toteutus.oid)}</noteLiteral>
           </scheduleInformation>
-        }.toList
+        }
   }
 
   def toteutusAsElmXml(toteutus: ToteutusIndexed): Option[Elem] = {
@@ -239,9 +238,9 @@ class EuropassConversion extends Logging {
   def toteutusToKoulutusDependents(toteutus: ToteutusIndexed): Iterable[String] =
     toteutus.koulutusOid.map(_.toString)
 
-  def kielistettyAsNoteLiterals(content: Kielistetty): Iterable[Elem] =
+  def kielistettyAsNoteLiterals(content: Kielistetty, oid: Option[Oid]): Iterable[Elem] =
     content.keys.take(1)  // No way to express language alternatives so we just pick a random one
-      .map{lang => <noteLiteral language={lang.name}>{content(lang)}</noteLiteral>}
+      .map{lang => <noteLiteral language={lang.name}>{cleanHtml(content(lang), oid)}</noteLiteral>}
 
   def tarjoajaAsElmXml(tarjoaja: OppilaitosIndexed): Elem = {
     val nimet = tarjoaja.nimi.getOrElse(Map())
@@ -252,11 +251,10 @@ class EuropassConversion extends Logging {
       {nimet.keys.map{lang =>
         <legalName language={lang.name}>{nimet(lang)}</legalName>}}
       {
-        if (esittely.isEmpty) {
+        if (esittely.isEmpty)
           List()
-        } else {
-          <additionalNote>{kielistettyAsNoteLiterals(esittely)}</additionalNote>
-        }
+        else
+          <additionalNote>{kielistettyAsNoteLiterals(esittely, Some(tarjoaja.oid))}</additionalNote>
       }
       <location idref={sijaintiUrl(oid)}/>
     </organisation>
@@ -275,7 +273,7 @@ class EuropassConversion extends Logging {
           if (osoite.isEmpty) {
             List()
           } else {
-            <fullAddress>{kielistettyAsNoteLiterals(osoite)}</fullAddress>
+            <fullAddress>{kielistettyAsNoteLiterals(osoite, Some(tarjoaja.oid))}</fullAddress>
           }
         }
         <countryCode uri="http://publications.europa.eu/resource/authority/country/FIN"/>
@@ -286,6 +284,49 @@ class EuropassConversion extends Logging {
   def toteutusToTarjoajaDependents(toteutus: ToteutusIndexed): Iterable[Organisaatio] =
     toteutus.tarjoajat
 
+  /**
+   * NoteLiteral ja description -kentät validoidaan Europassin päässä SHACL-muodolla HtmlWhitelistLiteralShape,
+   * joka rajaa käytettävät HTML-elementit seuraaviin: h1–h6, p, strong/b, em/i, code, ul, ol, li, br, hr, u, address, section, small, sub, sup.
+   *
+   * Tässä funktiossa poistetaan kaikki tagit, jotka rikkovat tätä ehtoa. Ehtoa rikkovat tapaukset logitetaan.
+   *
+   * Dokumentaatio tuosta muodosta löytyy EU:n julkaisutoimistolta:
+   * https://op.europa.eu/fi/web/eu-vocabularies/dataset/-/resource?uri=http://publications.europa.eu/resource/dataset/snb-model
+   * Tiedosto on LOQ-constraints.rdf
+   */
+  def cleanHtml(s: String, oid: Option[Oid]): String = {
+    val html = Jsoup.parse(s)
+
+    convertLinksToText(html)
+
+    val htmlString = html.body().html().trim
+    if (!Jsoup.isValid(htmlString, safelist)) {
+      logger.warn(s"Kohteella ${oid.getOrElse("?")} on tietoja, jotka rikkovat Europassin HTML-tagien validointisääntöjä: ${htmlString.replace("\n", " ")}")
+    }
+
+    Jsoup.clean(htmlString, safelist)
+  }
+
+  private def convertLinksToText(html: Document): Unit = {
+    val links = html.select("a[href]")
+    links.forEach { element =>
+      val url = element.attr("href")
+        .replace("mailto:", "") // mailto:-linkit pelkiksi osoitteiksi
+        .replace("tel:", "") // tel: linkit pelkiksi puhelinnumeroiksi
+        .replaceAll("^about:blank", "") // poistetaan about:blank linkit
+        .replaceAll("^#(\\w|_)+", "") // poistetaan sivun sisäiset linkit
+      val text = element.text()
+
+      val textNode = if (text.replaceAll("\\s", "") == url.replaceAll("\\s", "")) {
+        new TextNode(s"$url")
+      } else if (url == "") {
+        new TextNode(text)
+      } else {
+        new TextNode(s"$text ($url)")
+      }
+      element.replaceWith(textNode)
+    }
+  }
 }
 
 object EuropassConversion extends EuropassConversion

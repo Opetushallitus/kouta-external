@@ -38,7 +38,7 @@
 
         <!-- Elasticsearch properties -->
         <elastic4sVersion>8.5.0</elastic4sVersion>
-        <elasticsearch-java-version>8.10.0</elasticsearch-java-version>
+        <elasticsearch-java-version>8.12.1</elasticsearch-java-version>
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>

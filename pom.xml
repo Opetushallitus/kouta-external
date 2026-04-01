@@ -24,7 +24,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <scala.compat.version>2.12</scala.compat.version>
 
-        <kouta-common.version>2.23.6-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>2.23.7-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
         <json4s.version>3.6.11</json4s.version>

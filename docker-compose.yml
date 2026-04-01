@@ -33,7 +33,7 @@ services:
       --includeType=data,mapping,alias,settings,template
 
   europass-s3:
-    image: docker.io/localstack/localstack:s3-latest
+    image: docker.io/localstack/localstack:s3-community-archive
     container_name: kouta-europass-s3
     ports:
       - "127.0.0.1:4566:4566"
@@ -53,4 +53,3 @@ services:
     depends_on:
       europass-s3:
         condition: service_healthy
-

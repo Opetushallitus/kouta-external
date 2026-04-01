@@ -19,6 +19,8 @@ XML-skeeman dokumentaatio:
    https://europa.eu/europass/elm-browser/documentation/xsd/ap/loq/documentation/loq_xsd.html
  - Vaaditut kentät:
    https://europass.europa.eu/en/stakeholders/qdr/publishdata#8705
+ - Itse skeematiedosto löytyy (LOQ schemata):
+   https://europass.europa.eu/en/stakeholders/qdr/documentlibrary
 
 Testien ajaminen
 ----------------
@@ -90,4 +92,3 @@ Lopputulos näkyy (QA-ympäristössä) AWS-konsolissa paikassa osoitteessa
 https://eu-west-1.console.aws.amazon.com/s3/object/europass-publish-pallero?region=eu-west-1&prefix=europass-export-1.xml
 ja julkisesti osoitteessa
 https://europass-publish-pallero.s3.eu-west-1.amazonaws.com/europass-export-1.xml
-

@@ -1,0 +1,5 @@
+<<<<<<<< HEAD:kouta-external/src/test/resources/elastic_dump/haku-kouta-09-03-2026-at-08.47.15.604.alias.json
+"{\"haku-kouta-09-03-2026-at-08.47.15.604\":{\"aliases\":{\"haku-kouta\":{\"is_write_index\":false},\"haku-kouta-virkailija\":{\"is_write_index\":true}}}}"
+========
+"{\"haku-kouta-31-03-2026-at-14.40.19.839\":{\"aliases\":{\"haku-kouta\":{\"is_write_index\":false},\"haku-kouta-virkailija\":{\"is_write_index\":true}}}}"
+>>>>>>>> OPHJOD-2123-amm-osaamistavoitteet:kouta-external/src/test/resources/elastic_dump/haku-kouta-31-03-2026-at-14.40.19.839.alias.json

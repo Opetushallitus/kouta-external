@@ -19,21 +19,6 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
 
   def resource(filename: String) = Source.fromResource(filename).bufferedReader
 
-  "toteutusToFile" should "create correct toteutusXml from ElasticSearch" in {
-    val writer = new StringWriter()
-    val bwriter = new BufferedWriter(writer)
-    TestPublisher.toteutusToFile("1.2.246.562.17.00000000000000000001", bwriter)
-    bwriter.close()
-    assert(writer.toString.contains("<contentUrl>https://opintopolku.fi/konfo/sv/toteutus/1.2.246.562.17.00000000000000000001</contentUrl>"))
-    assert(writer.toString.contains("<providedBy idref=\"https://rdf.oph.fi/organisaatio/1.2.246.562.10.594252633210\"/>"))
-
-    // Want to have the test XML as a file?  Here you go:
-    // val w = new BufferedWriter(new FileWriter("test.txt"))
-    // w.write(writer.toString)
-    // w.close()
-
-  }
-
   "toteutuksetToFile" should "have toteutukset" in {
     val writer = new StringWriter()
     val bwriter = new BufferedWriter(writer)
@@ -92,7 +77,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
       "<geographicName language=\"sv\">Koulutuskeskus Salpaus -kuntayhtymä sv</geographicName>"
     ))
     assert(content.contains(
-      "<noteLiteral language=\"fi\">Polvivaara 865, 15110 Lahti</noteLiteral>"
+      "<noteLiteral language=\"fi\">Polvivaara 959, 00920 Helsinki</noteLiteral>"
     ))
   }
 
@@ -101,7 +86,7 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
     assert(fileName.contains("europass-export"))
     val content = Source.fromFile(fileName).mkString
     assert(content.contains("<title language=\"sv\">nimi sv</title>"))
-    assert(ElmValidation.validateXml(fileName))
+    ElmValidation.validateXml(fileName)
   }
 
   "koulutusDependentsOfToteutukset" should "have all koulutukset" in {
@@ -113,4 +98,3 @@ class PublisherSpec extends ScalatraFlatSpec with ElasticFixture with KoutaJsonF
   }
 
 }
-

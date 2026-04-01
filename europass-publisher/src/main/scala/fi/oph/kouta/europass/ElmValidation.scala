@@ -1,10 +1,9 @@
 package fi.oph.kouta.europass
 
-import scala.io.Source
 import javax.xml.XMLConstants
 import javax.xml.transform.stream.StreamSource
 import javax.xml.validation.{Schema, SchemaFactory, Validator}
-// import org.xml.sax.{ErrorHandler, SAXParseException}
+import scala.io.Source
 
 object ElmValidation {
 
@@ -13,9 +12,8 @@ object ElmValidation {
   val loqSchema: Schema = schemaFactory.newSchema(loqSchemaURI)
   val loqValidator: Validator = loqSchema.newValidator()
 
-  def validateXml(xmlFile: String): Boolean = {
+  def validateXml(xmlFile: String): Unit = {
     loqValidator.validate(new StreamSource(Source.fromFile(xmlFile).bufferedReader))
-    return true
   }
 
 }

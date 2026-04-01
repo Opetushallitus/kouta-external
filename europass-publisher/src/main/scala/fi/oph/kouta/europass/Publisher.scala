@@ -21,18 +21,6 @@ class Publisher(converter: EuropassConversion) extends Logging {
     "europass-publisher.retrieval.toteutus-limit"
   )
 
-  def toteutusToFile(oid: String, dest: BufferedWriter) = {
-    val Some(toteutusXml: Elem) = converter.toteutusAsElmXml(ElasticClient.getToteutus(oid))
-    dest.write(
-      <Courses xmlns="http://data.europa.eu/snb/model/ap/loq-constraints/">
-        <learningOpportunityReferences>
-          {toteutusXml}
-        </learningOpportunityReferences>
-      </Courses>.toString
-    )
-    dest.close()
-  }
-
   def foreachWithLogging(seq: Stream[Elem], kind: String, handle: Elem => Unit) = {
     var writtenCount = 0;
     seq.foreach {item =>
@@ -132,7 +120,7 @@ class Publisher(converter: EuropassConversion) extends Logging {
     val toteutusStream = toteutukset(limitToteutukset, toteutusLimit)
     lazy val koulutusStream = koulutusDependentsOfToteutukset(toteutusStream)
     lazy val tarjoajaStream = tarjoajaDependentsOfToteutukset(toteutusStream)
-    dest.write("<Courses xmlns=\"http://data.europa.eu/snb/model/ap/loq-constraints/\">\n")
+    dest.write("<Courses xmlns=\"http://data.europa.eu/snb/model/application-profile/loq-constraints/\">\n")
     toteutuksetToFile(dest, toteutusStream)
     koulutuksetToFile(dest, koulutusStream)
     tuloksetToFile(dest, koulutusStream)

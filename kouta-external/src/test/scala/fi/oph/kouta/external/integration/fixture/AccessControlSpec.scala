@@ -4,6 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.MockSecurityContext
 import fi.oph.kouta.external.database.SessionDAO
+import fi.oph.kouta.external.servlet.KoutaLightTallentajaRole
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 
@@ -11,7 +12,7 @@ import java.util.UUID
 import scala.collection.mutable
 
 case class TestUser(oid: String, username: String, sessionId: UUID) {
-  val ticket = MockSecurityContext.ticketFor(KoutaIntegrationSpec.serviceIdentifier, username)
+  val ticket: String = MockSecurityContext.ticketFor(KoutaIntegrationSpec.serviceIdentifier, username)
 }
 
 trait AccessControlSpec extends ScalatraFlatSpec {
@@ -29,6 +30,8 @@ trait AccessControlSpec extends ScalatraFlatSpec {
   val YoOid                   = OrganisaatioOid("1.2.246.562.10.46312206843")
   val hakukohderyhmaOid       = HakukohderyhmaOid("1.2.246.562.28.00000000000000000015")
   val searchHakukohderyhmaOid = HakukohderyhmaOid("1.2.246.562.28.00000000000000000025")
+  val KoutaLightOrgOid1       = OrganisaatioOid("1.2.246.562.10.73908278491")
+  val KoutaLightOrgOid2       = OrganisaatioOid("1.2.246.562.10.73908278492")
 
   val crudSessions: mutable.Map[OrganisaatioOid, (UUID, CasSession)]                 = mutable.Map.empty
   val hakukohderyhmaCrudSessions: mutable.Map[HakukohderyhmaOid, (UUID, CasSession)] = mutable.Map.empty
@@ -38,11 +41,14 @@ trait AccessControlSpec extends ScalatraFlatSpec {
   def hakukohderyhmaCrudSessionIds(oid: HakukohderyhmaOid): UUID = hakukohderyhmaCrudSessions(oid)._1
   def readSessionIds(oid: OrganisaatioOid): UUID                 = readSessions(oid)._1
 
-  var ophPaakayttajaSessionId: UUID = _
-  var indexerSessionId: UUID        = _
-  var fakeIndexerSessionId: UUID    = _
-  var otherRoleSessionId: UUID      = _
-  var hakukohderyhmaSessionId: UUID = _
+  var ophPaakayttajaSessionId: UUID   = _
+  var indexerSessionId: UUID          = _
+  var fakeIndexerSessionId: UUID      = _
+  var otherRoleSessionId: UUID        = _
+  var hakukohderyhmaSessionId: UUID   = _
+  var koutaLightSessionId1: UUID      = _
+  var koutaLightSessionId2: UUID      = _
+  var faultyKoutaLightSessionId: UUID = _
 
   def addTestSession(authorities: Seq[Authority]): (UUID, CasSession) = {
     val sessionId = UUID.randomUUID()
@@ -61,6 +67,11 @@ trait AccessControlSpec extends ScalatraFlatSpec {
 
   def addTestSession(roles: Seq[Role], organisaatioOid: OrganisaatioOid): (UUID, CasSession) = {
     val authorities = roles.map(Authority(_, organisaatioOid))
+    addTestSession(authorities)
+  }
+
+  def addTestSessionWithMultipleOrgs(roles: Seq[(Role, OrganisaatioOid)]): (UUID, CasSession) = {
+    val authorities = roles.map(role => Authority(role._1, role._2))
     addTestSession(authorities)
   }
 
@@ -87,5 +98,10 @@ trait AccessControlSpec extends ScalatraFlatSpec {
     fakeIndexerSessionId = addTestSession(Role.Indexer, ChildOid)._1
     otherRoleSessionId = addTestSession(Role.UnknownRole("APP_OTHER"), ChildOid)._1
     hakukohderyhmaSessionId = addTestSession(Role.UnknownRole("APP_KOUTA_HAKUKOHDE"), hakukohderyhmaOid)._1
+    koutaLightSessionId1 = addTestSession(KoutaLightTallentajaRole, KoutaLightOrgOid1)._1
+    koutaLightSessionId2 = addTestSession(KoutaLightTallentajaRole, KoutaLightOrgOid2)._1
+    faultyKoutaLightSessionId = addTestSessionWithMultipleOrgs(
+      List((KoutaLightTallentajaRole, KoutaLightOrgOid1), (KoutaLightTallentajaRole, KoutaLightOrgOid2))
+    )._1
   }
 }

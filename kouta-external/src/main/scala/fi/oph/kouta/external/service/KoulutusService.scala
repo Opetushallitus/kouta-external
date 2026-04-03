@@ -4,21 +4,28 @@ import fi.oph.kouta.domain.oid.KoulutusOid
 import fi.oph.kouta.external.domain.Koulutus
 import fi.oph.kouta.external.elasticsearch.KoulutusClient
 import fi.oph.kouta.external.kouta.{CasKoutaClient, KoutaKoulutusRequest, KoutaResponse, OidResponse, UpdateResponse, UuidResponse}
+import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.security.Role.Indexer
 import fi.oph.kouta.security.{Role, RoleEntity}
 import fi.oph.kouta.service.{AuthorizationRuleForReadJulkinen, AuthorizationRules, OrganisaatioService, RoleEntityAuthorizationService}
 import fi.oph.kouta.servlet.Authenticated
-import fi.oph.kouta.logging.Logging
 
 import java.time.Instant
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext.global
 import scala.concurrent.Future
 
 object KoulutusService extends KoulutusService(KoulutusClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class KoulutusService(koulutusClient: KoulutusClient, val koutaClient: CasKoutaClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Koulutus] with Logging {
+class KoulutusService(
+    koulutusClient: KoulutusClient,
+    val koutaClient: CasKoutaClient,
+    val organisaatioService: OrganisaatioService
+) extends RoleEntityAuthorizationService[Koulutus]
+    with MassService[KoulutusOid, Koulutus]
+    with Logging {
 
   override val roleEntity: RoleEntity = Role.Koulutus
+  override val entityName: String     = "koulutus"
 
   def get(oid: KoulutusOid)(implicit authenticated: Authenticated): Future[Koulutus] = {
     koulutusClient.getKoulutus(oid).map { koulutus =>
@@ -31,7 +38,7 @@ class KoulutusService(koulutusClient: KoulutusClient, val koutaClient: CasKoutaC
           additionalAuthorizedOrganisaatioOids = koulutus.tarjoajat
         )
       )
-    }
+    }(global)
   }
 
   def create(koulutus: Koulutus)(implicit authenticated: Authenticated): Future[KoutaResponse[KoulutusOid]] =
@@ -41,10 +48,11 @@ class KoulutusService(koulutusClient: KoulutusClient, val koutaClient: CasKoutaC
       case Right(response: UuidResponse) => Left((200, response.id.toString))
       case Left(x)                       =>
         Left(x)
-    }
+    }(global)
 
   def update(koulutus: Koulutus, ifUnmodifiedSince: Instant)(
     implicit authenticated: Authenticated
   ): Future[KoutaResponse[UpdateResponse]] =
     koutaClient.update("kouta-backend.koulutus", KoutaKoulutusRequest(authenticated, koulutus), ifUnmodifiedSince)
+
 }

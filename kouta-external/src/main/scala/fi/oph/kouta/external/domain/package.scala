@@ -5,6 +5,7 @@ import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.swagger.SwaggerModel
 
+import java.net.URL
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -131,8 +132,164 @@ package object domain {
       |          type: string
       |          example: "posti_04230#2"
       |          description: "Ruotsinkielisen osoitteen postinumerokoodiuri"
+      |    KielistettyAmmattinimike:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: insinööri
+      |          description: "Suomenkielinen ammattinimike"
+      |        sv:
+      |          type: string
+      |          example: ingenjör
+      |          description: "Ruotsinkielinen ammattinimike"
+      |        en:
+      |          type: string
+      |          example: engineer
+      |          description: "Englanninkielinen ammattinimike"
+      |    KielistettyAsiasana:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: insinööri
+      |          description: "Suomenkielinen asiasana"
+      |        sv:
+      |          type: string
+      |          example: ingenjör
+      |          description: "Ruotsinkielinen asiasana"
+      |        en:
+      |          type: string
+      |          example: engineer
+      |          description: "Englanninkielinen asiasana"
+      |    KielistettyLinkki:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          format: url
+      |          example: https://opintopolku.fi/konfo/fi/
+      |          description: "Linkki suomenkieliselle sivulle, jos kielivalinnassa on 'fi'"
+      |        sv:
+      |          type: string
+      |          format: url
+      |          example: https://opintopolku.fi/konfo/sv/
+      |          description: "Linkki ruotsinkieliselle sivulle, jos kielivalinnassa on 'sv'"
+      |        en:
+      |          type: string
+      |          format: url
+      |          example: https://opintopolku.fi/konfo/en/
+      |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
       |""")
   abstract class KielistettySwagger
+
+  @SwaggerModel(
+    """    KoutaLightKoulutus:
+      |      type: object
+      |      properties:
+      |        externalId:
+      |          type: string
+      |          description: Koulutuksen yksilöllinen tunniste lähdejärjestelmässä.
+      |          example: externalId1234
+      |        kielivalinta:
+      |          type: array
+      |          description: Kielet, joilla koulutuksen sisältötiedot on määritelty.
+      |          items:
+      |            $ref: '#/components/schemas/Kieli'
+      |          example:
+      |            - fi
+      |            - sv
+      |        tila:
+      |          type: string
+      |          example: "julkaistu"
+      |          description: Koulutuksen julkaisutila.
+      |        nimi:
+      |          type: object
+      |          description: Koulutuksen nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+      |          $ref: '#/components/schemas/Nimi'
+      |        tarjoajat:
+      |          type: array
+      |          description: Koulutusta tarjoavan organisaation nimi
+      |          items:
+      |            $ref: '#/components/schemas/Nimi'
+      |        kuvaus:
+      |          type: object
+      |          description: Koulutuksen yleinen kuvaus eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+      |          $ref: '#/components/schemas/Kuvaus'
+      |        ammattinimikkeet:
+      |          type: array
+      |          description: Kokoelma ammattinimikkeitä, voi olla yksi tai useampi
+      |          items:
+      |            $ref: '#/components/schemas/KielistettyAmmattinimike'
+      |        asiasanat:
+      |          type: array
+      |          description: Kokoelma asiasanoja, voi olla yksi tai useampi
+      |          items:
+      |            $ref: '#/components/schemas/KielistettyAsiasana'
+      |        hakuaikaAlkaa:
+      |          type: string
+      |          format: date-time
+      |          description: Haun alkamisajankohta
+      |          example: 2025-08-23T09:00
+      |        hakuaikaPaattyy:
+      |          type: string
+      |          format: date-time
+      |          description: Haun päättymisajankohta
+      |          example: 2025-08-30T15:00
+      |        aloituspaikatLukumaara:
+      |          type: integer
+      |          description: Koulutuksen aloituspaikkojen lukumäärä
+      |          example: 10
+      |        hakulomakeLinkki:
+      |          type: object
+      |          description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
+      |          $ref: '#/components/schemas/KielistettyLinkki'
+      |        isTyovoimakoulutus:
+      |          type: boolean
+      |          description: Onko kyseessä työvoimakoulutus
+      |          example: false
+      |        johtaaTutkintoon:
+      |          type: boolean
+      |          description: Onko kyseessä tutkintoon johtava koulutus
+      |          example: true
+      |        isMaksullinen:
+      |          type: boolean
+      |          description: Onko koulutus maksullista
+      |          example: true
+      |        maksullisuuskuvaus:
+      |          type: object
+      |          description: Tarkempi kuvaus maksullisuudesta
+      |          $ref: '#/components/schemas/Kuvaus'
+      |        osaaminenUrit:
+      |          type: array
+      |          description: Koulutuksen tuottaman osaamisen ESCO-urit
+      |          items:
+      |            type: string
+      |            format: uri
+      |          example: [http://data.europa.eu/esco/skill/c1f4e64a-9bc7-4c75-b2eb-d982d7148cef]
+      |        opetuskielet:
+      |          type: array
+      |          description: Kieli, jolla opetus toteutetaan. Kieli annetaan 2 tai 3 merkin mittaisena kielikoodina.
+      |          items:
+      |            type: string
+      |            minLength: 2
+      |            maxLength: 3
+      |          example: ["fi", "sv"]
+      |        opetustavat:
+      |          type: array
+      |          description: Miten opetus toteutetaan
+      |          items:
+      |            type: string
+      |          example: [Monimuoto]
+      |      required:
+      |        - externalId
+      |        - kielivalinta
+      |        - tila
+      |        - nimi
+      |        - kuvaus
+      |        - tarjoajat
+      |"""
+  ) abstract class KoutaLightKoulutusSwagger
 
   type Kielistetty = Map[Kieli, String]
 

@@ -16,7 +16,7 @@ class SwaggerServlet extends ScalatraServlet {
   protected lazy val renderOpenapi3Yaml: String = {
     val header =
       """
-        |openapi: 3.0.3
+        |openapi: 3.1.1
         |info:
         |  title: kouta-external
         |  version: 0.2-SNAPSHOT
@@ -48,7 +48,13 @@ class SwaggerServlet extends ScalatraServlet {
       case (path, op) =>
         s"""  $path:
            |    parameters:
-           |      - $$ref: '#/components/parameters/callerId'
+           |      - in: header
+           |        name: Caller-Id
+           |        schema:
+           |          type: string
+           |          default: kouta-external-swagger
+           |        required: true
+           |        description: Kutsujan <a href="https://wiki.eduuni.fi/pages/viewpage.action?pageId=176867280">Caller ID</a>
            |""".stripMargin +
           op.mkString
     }.mkString
@@ -65,14 +71,6 @@ class SwaggerServlet extends ScalatraServlet {
          |        default: ${KoutaServlet.SampleHttpDate}
          |      required: true
          |      description: Vastaavan GETin ${KoutaServlet.LastModifiedHeader}
-         |    callerId:
-         |      in: header
-         |      name: Caller-Id
-         |      schema:
-         |        type: string
-         |        default: kouta-external-swagger
-         |      required: true
-         |      description: Kutsujan <a href="https://wiki.eduuni.fi/pages/viewpage.action?pageId=176867280">Caller ID</a>
          |  schemas:
          |""".stripMargin
 

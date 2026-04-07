@@ -16,7 +16,7 @@ class SwaggerServlet extends ScalatraServlet {
   protected lazy val renderOpenapi3Yaml: String = {
     val header =
       """
-        |openapi: 3.0.3
+        |openapi: 3.1.1
         |info:
         |  title: kouta-external
         |  version: 0.2-SNAPSHOT

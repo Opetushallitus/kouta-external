@@ -7,6 +7,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 @SwaggerModel(
   """    ToteutusMetadata:
     |      type: object
+    |      required:
+    |        - tyyppi
+    |        - opetus
+    |        - isTaydennyskoulutus
+    |        - isTyovoimakoulutus
     |      properties:
     |        kuvaus:
     |          type: object
@@ -15,6 +20,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            - $ref: '#/components/schemas/Kuvaus'
     |        opetus:
     |          type: object
+    |          description: Pakollinen julkaistulla toteutuksella
     |          $ref: '#/components/schemas/Opetus'
     |        yhteyshenkilot:
     |          type: array
@@ -67,9 +73,7 @@ sealed trait ToteutusMetadata {
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: amm
-    |              enum:
-    |                - amm
+    |              const: amm
     |            ammatillinenPerustutkintoErityisopetuksena:
     |              type: boolean
     |              description: Onko koulutuksen tyyppi \"Ammatillinen perustutkinto erityisopetuksena\"?
@@ -99,11 +103,13 @@ case class AmmatillinenToteutusMetadata(
     |              description: Tieto siitä onko toteutuksella käytössä hakukohteet
     |            hakutermi:
     |              type: object
+    |              description: Pakollinen, jos isHakukohteetKaytossa on päällä.
     |              $ref: '#/components/schemas/Hakutermi'
     |            hakulomaketyyppi:
     |              type: string
     |              description: Hakulomakkeen tyyppi. Kertoo, käytetäänkö Atarun (hakemuspalvelun) hakulomaketta, muuta hakulomaketta
     |                (jolloin voidaan lisätä hakulomakkeeseen linkki) tai onko niin, ettei sähkököistä hakulomaketta ole lainkaan, jolloin sille olisi hyvä lisätä kuvaus.
+    |                Pakollinen, jos isHakukohteetKaytossa on päällä.
     |              example: "ataru"
     |              enum:
     |                - ataru
@@ -113,10 +119,12 @@ case class AmmatillinenToteutusMetadata(
     |            hakulomakeLinkki:
     |              type: object
     |              description: Hakulomakkeen linkki eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |                Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu'.
     |              $ref: '#/components/schemas/Linkki'
     |            lisatietoaHakeutumisesta:
     |              type: object
     |              description: Lisätietoa hakeutumisesta eri kielillä. Kielet on määritetty haun kielivalinnassa.
+    |                Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu' tai 'ei sähköistä'.
     |              $ref: '#/components/schemas/Teksti'
     |            lisatietoaValintaperusteista:
     |              type: object
@@ -124,7 +132,7 @@ case class AmmatillinenToteutusMetadata(
     |              $ref: '#/components/schemas/Teksti'
     |            hakuaika:
     |              type: array
-    |              description: Toteutuksen hakuaika
+    |              description: Toteutuksen hakuaika. Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu'.
     |              $ref: '#/components/schemas/Ajanjakso'
     |            aloituspaikat:
     |              type: integer
@@ -157,9 +165,7 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: amm-tutkinnon-osa
-    |              enum:
-    |                - amm-tutkinnon-osa
+    |              const: amm-tutkinnon-osa
     |""")
 case class AmmatillinenTutkinnonOsaToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
@@ -192,9 +198,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: amm-osaamisala
-    |              enum:
-    |                - amm-osaamisala
+    |              const: amm-osaamisala
     |"""
 )
 case class AmmatillinenOsaamisalaToteutusMetadata(
@@ -223,13 +227,13 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: amm-muu
-    |              enum:
-    |                - amm-muu
+    |              const: amm-muu
     |""")
 case class AmmatillinenMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmMuu,
@@ -261,9 +265,7 @@ case class AmmatillinenMuuToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: yo
-    |              enum:
-    |                - yo
+    |              const: yo
     |""")
 case class YliopistoToteutusMetadata(
     tyyppi: Koulutustyyppi = Yo,
@@ -285,9 +287,7 @@ case class YliopistoToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: amk
-    |              enum:
-    |                - amk
+    |              const: amk
     |""")
 case class AmmattikorkeakouluToteutusMetadata(
     tyyppi: Koulutustyyppi = Amk,
@@ -309,9 +309,7 @@ case class AmmattikorkeakouluToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: amm-ope-erityisope-ja-opo
-    |              enum:
-    |                - amm-ope-erityisope-ja-opo
+    |              const: amm-ope-erityisope-ja-opo
     |""")
 case class AmmOpeErityisopeJaOpoToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmOpeErityisopeJaOpo,
@@ -333,9 +331,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: ope-pedag-opinnot
-    |              enum:
-    |                - ope-pedag-opinnot
+    |              const: ope-pedag-opinnot
     |""")
 case class OpePedagOpinnotToteutusMetadata(
     tyyppi: Koulutustyyppi = OpePedagOpinnot,
@@ -352,6 +348,8 @@ case class OpePedagOpinnotToteutusMetadata(
 @SwaggerModel(
   """    LukiolinjaTieto:
     |      type: object
+    |      required:
+    |        - koodiUri
     |      description: Toteutuksen yksittäisen lukiolinjatiedon kentät
     |      properties:
     |        koodiUri:
@@ -390,13 +388,13 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - yleislinja
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: lk
-    |              enum:
-    |                - lk
+    |              const: lk
     |            kielivalikoima:
     |              type: object
     |              description: Koulutuksen kielivalikoima
@@ -445,13 +443,13 @@ case class LukioToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: tuva
-    |              enum:
-    |                - tuva
+    |              const: tuva
     |            jarjestetaanErityisopetuksena:
     |              type: boolean
     |              description: Tieto siitä järjestetäänkö toteutus erityisopetuksena
@@ -473,13 +471,13 @@ case class TuvaToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: telma
-    |              enum:
-    |                - telma
+    |              const: telma
     |""")
 case class TelmaToteutusMetadata(
     tyyppi: Koulutustyyppi = Telma,
@@ -497,13 +495,13 @@ case class TelmaToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: vapaa-sivistystyo-opistovuosi
-    |              enum:
-    |                - vapaa-sivistystyo-opistovuosi
+    |              const: vapaa-sivistystyo-opistovuosi
     |""")
 case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoOpistovuosi,
@@ -522,13 +520,13 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: vapaa-sivistystyo-muu
-    |              enum:
-    |                - vapaa-sivistystyo-muu
+    |              const: vapaa-sivistystyo-muu
     |""")
 case class VapaaSivistystyoMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoMuu,
@@ -557,13 +555,13 @@ case class VapaaSivistystyoMuuToteutusMetadata(
                 |      allOf:
                 |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
                 |        - type: object
+                |          required:
+                |            - kuvaus
                 |          properties:
                 |            tyyppi:
                 |              type: string
                 |              description: Koulutuksen metatiedon tyyppi
-                |              example: vapaa-sivistystyo-osaamismerkki
-                |              enum:
-                |                - vapaa-sivistystyo-osaamismerkki
+                |              const: vapaa-sivistystyo-osaamismerkki
                 |""")
 case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoOsaamismerkki,
@@ -596,9 +594,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: aikuisten-perusopetus
-    |              enum:
-    |                - aikuisten-perusopetus
+    |              const: aikuisten-perusopetus
     |""")
 case class AikuistenPerusopetusToteutusMetadata(
     tyyppi: Koulutustyyppi = AikuistenPerusopetus,
@@ -626,16 +622,16 @@ case class AikuistenPerusopetusToteutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
+    |          required:
+    |            - kuvaus
     |          properties:
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: kk-opintojakso
-    |              enum:
-    |                - kk-opintojakso
+    |              const: kk-opintojakso
     |            isAvoinKorkeakoulutus:
     |              type: boolean
-    |              description: Onko koulutus avointa korkeakoulutusta?
+    |              description: Onko koulutus avointa korkeakoulutusta? Pitää olla sama kuin koulutuksella, jos koulutuksella vastaava kenttä määriteltynä.
     |            tunniste:
     |              type: string
     |              description: Hakijalle näkyvä tunniste
@@ -689,9 +685,7 @@ case class KkOpintojaksoToteutusMetadata(
                 |            tyyppi:
                 |              type: string
                 |              description: Koulutuksen metatiedon tyyppi
-                |              example: erikoislaakari
-                |              enum:
-                |                - erikoislaakari
+                |              const: erikoislaakari
                 |""")
 case class ErikoislaakariToteutusMetadata(
     tyyppi: Koulutustyyppi = Erikoislaakari,
@@ -714,9 +708,7 @@ case class ErikoislaakariToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: kk-opintokokonaisuus
-    |              enum:
-    |                - kk-opintokokonaisuus
+    |              const: kk-opintokokonaisuus
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)
@@ -727,7 +719,7 @@ case class ErikoislaakariToteutusMetadata(
     |              example: 10
     |            isAvoinKorkeakoulutus:
     |              type: boolean
-    |              description: Onko koulutus avointa korkeakoulutusta?
+    |              description: Onko koulutus avointa korkeakoulutusta? Pitää olla sama kuin koulutuksella, jos koulutuksella vastaava kenttä määriteltynä.
     |            tunniste:
     |              type: string
     |              description: Hakijalle näkyvä tunniste
@@ -774,9 +766,7 @@ case class KkOpintokokonaisuusToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
-    |              example: erikoistumiskoulutus
-    |              enum:
-    |                - erikoistumiskoulutus
+    |              const: erikoistumiskoulutus
     |"""
 )
 case class ErikoistumiskoulutusToteutusMetadata(
@@ -810,9 +800,7 @@ case class ErikoistumiskoulutusToteutusMetadata(
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
-    |              example: taiteen-perusopetus
-    |              enum:
-    |                - taiteen-perusopetus
+    |              const: taiteen-perusopetus
     |            taiteenalaKoodiUrit:
     |              type: array
     |              description: Lista taiteenaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/taiteenperusopetustaiteenala/1)
@@ -870,9 +858,7 @@ case class TaiteenPerusopetusToteutusMetadata(
   |            tyyppi:
   |              type: string
   |              description: Toteutuksen metatiedon tyyppi
-  |              example: muu
-  |              enum:
-  |                - muu
+  |              const: muu
   |            opintojenLaajuusyksikkoKoodiUri:
   |              type: string
   |              description: "Opintojen laajuusyksikko. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"

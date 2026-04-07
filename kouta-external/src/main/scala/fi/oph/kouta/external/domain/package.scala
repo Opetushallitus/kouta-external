@@ -141,6 +141,9 @@ package object domain {
   @SwaggerModel(
     """    Lisatieto:
       |      type: object
+      |      required:
+      |        - otsikkoKoodiUri
+      |        - teksti
       |      properties:
       |        otsikkoKoodiUri:
       |          type: string
@@ -148,7 +151,7 @@ package object domain {
       |          example: koulutuksenlisatiedot_03#1
       |        teksti:
       |          type: object
-      |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa.
+      |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa. Vaaditaan julkaistuille objekteille.
       |          $ref: '#/components/schemas/Teksti'
       |""")
   case class Lisatieto(otsikkoKoodiUri: String, teksti: Kielistetty)
@@ -156,6 +159,8 @@ package object domain {
   @SwaggerModel(
     """    Yhteyshenkilo:
       |      type: object
+      |      required:
+      |        - nimi
       |      properties:
       |        nimi:
       |          type: object
@@ -589,6 +594,8 @@ package object domain {
   @SwaggerModel(
     """    Korkeakoulutustyyppi:
       |      type: object
+      |      required:
+      |        - koulutustyyppi
       |      properties:
       |        koulutustyyppi:
       |          type: string
@@ -608,4 +615,3 @@ package object domain {
   case class Korkeakoulutustyyppi(koulutustyyppi: Koulutustyyppi, tarjoajat: Seq[OrganisaatioOid])
 
 }
-

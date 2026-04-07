@@ -6,10 +6,16 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 @SwaggerModel(
   """    Opetus:
     |      type: object
+    |      required:
+    |        - opetuskieliKoodiUrit
+    |        - opetusaikaKoodiUrit
+    |        - opetustapaKoodiUrit
+    |        - maksullisuustyyppi
+    |        - onkoApuraha
     |      properties:
     |        opetuskieliKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetuskielistä. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/oppilaitoksenopetuskieli/1)
+    |          description: Lista koulutuksen toteutuksen opetuskielistä. Pakollinen julkaistulle toteutukselle. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/oppilaitoksenopetuskieli/1)
     |          items:
     |            type: string
     |            example:
@@ -21,7 +27,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Kuvaus'
     |        opetusaikaKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetusajoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetusaikakk/1)
+    |          description: Lista koulutuksen toteutuksen opetusajoista. Pakollinen julkaistulle toteutukselle. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetusaikakk/1)
     |          items:
     |            type: string
     |            example:
@@ -33,7 +39,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Kuvaus'
     |        opetustapaKoodiUrit:
     |          type: array
-    |          description: Lista koulutuksen toteutuksen opetustavoista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetuspaikkakk/1)
+    |          description: Lista koulutuksen toteutuksen opetustavoista. Pakollinen julkaistulle toteutukselle. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opetuspaikkakk/1)
     |          items:
     |            type: string
     |            example:
@@ -45,7 +51,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/Kuvaus'
     |        maksullisuustyyppi:
     |          type: string
-    |          description: Maksullisuuden tyyppi
+    |          description: Maksullisuuden tyyppi.  Pakollinen julkaistulle toteutukselle.
     |          enum:
     |            - 'maksullinen'
     |            - 'maksuton'
@@ -60,7 +66,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
     |        maksunMaara:
     |          type: double
-    |          description: "Koulutuksen toteutuksen maksun määrä euroissa?"
+    |          description: "Koulutuksen toteutuksen maksun määrä euroissa?". Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'.
     |          example: 220.50
     |        lisatiedot:
     |          type: array
@@ -73,7 +79,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Onko koulutukseen apurahaa?
     |        apuraha:
     |          type: object
-    |          description: Koulutuksen apurahatiedot
+    |          description: Koulutuksen apurahatiedot. Pakollinen julkaistulla toteutuksella, jos onkoApuraha on true.
     |          $ref: '#/components/schemas/Apuraha'
     |        suunniteltuKestoVuodet:
     |          type: integer
@@ -110,14 +116,17 @@ case class Opetus(
 @SwaggerModel(
 """    Apuraha:
   |      type: object
+  |      required:
+  |        - min
+  |        - max
   |      properties:
   |        min:
   |          type: int
-  |          description: Apurahan minimi euromäärä tai minimi prosenttiosuus lukuvuosimaksusta
+  |          description: Apurahan minimi euromäärä tai minimi prosenttiosuus lukuvuosimaksusta. Pakollinen julkaistaessa.
   |          example: 100
   |        max:
   |          type: int
-  |          description: Apurahan maksimi euromäärä tai maksimi prosenttiosuus lukuvuosimaksusta
+  |          description: Apurahan maksimi euromäärä tai maksimi prosenttiosuus lukuvuosimaksusta. Pakollinen julkaistaessa.
   |          example: 200
   |        yksikko:
   |          type: string

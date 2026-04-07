@@ -594,6 +594,8 @@ package object domain {
   @SwaggerModel(
     """    Korkeakoulutustyyppi:
       |      type: object
+      |      required:
+      |        - koulutustyyppi
       |      properties:
       |        koulutustyyppi:
       |          type: string

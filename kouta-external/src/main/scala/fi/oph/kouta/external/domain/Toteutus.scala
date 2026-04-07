@@ -9,10 +9,20 @@ import java.util.UUID
 @SwaggerModel(
   """    Toteutus:
     |      type: object
+    |      required:
+    |        - oid
+    |        - koulutusOid
+    |        - tila
+    |        - tarjoajat
+    |        - nimi
+    |        - metadata
+    |        - muokkaaja
+    |        - organisaatioOid
+    |        - kielivalinta
     |      properties:
     |        oid:
     |          type: string
-    |          description: Toteutuksen yksilöivä tunniste. Järjestelmän generoima.
+    |          description: Toteutuksen yksilöivä tunniste. Järjestelmän generoima. Ei sallita toteutusta luodessa.
     |          example: 1.2.246.562.17.00000000000000000009
     |        externalId:
     |          type: string
@@ -35,7 +45,7 @@ import java.util.UUID
     |          description: Onko toteutus nähtävissä esikatselussa
     |        tarjoajat:
     |          type: array
-    |          description: Toteutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit
+    |          description: Toteutusta tarjoavien organisaatioiden yksilöivät organisaatio-oidit. Pakollinen julkaistussa toteutuksessa.
     |          items:
     |            type: string
     |          example:
@@ -51,11 +61,12 @@ import java.util.UUID
     |            - sv
     |        nimi:
     |          type: object
-    |          description: Toteutuksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          description: Toteutuksen Opintopolussa näytettävä nimi eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa. Pakollinen tieto, ellei kyseessä ole lukiokoulutus (mutta ei EB- tai DIA-koulutus).
     |          allOf:
     |            - $ref: '#/components/schemas/Nimi'
     |        metadata:
     |          type: object
+    |          description: Pakollinen julkaistussa toteutuksessa.
     |          oneOf:
     |            - $ref: '#/components/schemas/YliopistoToteutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenToteutusMetadata'
@@ -168,7 +179,7 @@ import java.util.UUID
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        muokkaaja:
     |          type: string
-    |          description: Toteutusta viimeksi muokanneen virkailijan henkilö-oid
+    |          description: Toteutusta viimeksi muokanneen virkailijan henkilö-oid. Palvelun asettama. Päivittäessä voi olla mikä tahansa string.
     |          example: 1.2.246.562.10.00101010101
     |        organisaatioOid:
     |           type: string

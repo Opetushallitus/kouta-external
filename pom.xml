@@ -20,11 +20,11 @@
         <!-- Korjaa käännösvirheen:
              [ERROR] Source option 5 is no longer supported. Use 6 or later.
              [ERROR] Target option 1.5 is no longer supported. Use 1.6 or later. -->
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <scala.compat.version>2.12</scala.compat.version>
 
-        <kouta-common.version>2.23.6-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>2.23.7-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
         <json4s.version>3.6.11</json4s.version>

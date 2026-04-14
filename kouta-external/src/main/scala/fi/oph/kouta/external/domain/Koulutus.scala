@@ -10,10 +10,21 @@ import java.util.UUID
 @SwaggerModel(
   """    Koulutus:
     |      type: object
+    |      required:
+    |        - oid
+    |        - johtaaTutkintoon
+    |        - koulutustyyppi
+    |        - tila
+    |        - julkinen
+    |        - kielivalinta
+    |        - nimi
+    |        - metadata
+    |        - muokkaaja
+    |        - organisaatioOid
     |      properties:
     |        oid:
     |          type: string
-    |          description: Koulutuksen yksilöivä tunniste. Järjestelmän generoima.
+    |          description: Koulutuksen yksilöivä tunniste. Järjestelmän generoima. Ei sallita koulutusta luodessa.
     |          example: 1.2.246.562.13.00000000000000000009
     |        externalId:
     |          type: string
@@ -75,6 +86,7 @@ import java.util.UUID
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        metadata:
     |          type: object
+    |          description: Pakollinen julkaistulle koulutukselle
     |          oneOf:
     |            - $ref: '#/components/schemas/YliopistoKoulutusMetadata'
     |            - $ref: '#/components/schemas/AmmatillinenKoulutusMetadata'
@@ -110,7 +122,7 @@ import java.util.UUID
     |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
     |        muokkaaja:
     |          type: string
-    |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid
+    |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid. Palvelun asettama. Päivittäessä voi olla mikä tahansa string.
     |          example: 1.2.246.562.24.00101010101
     |        organisaatioOid:
     |           type: string

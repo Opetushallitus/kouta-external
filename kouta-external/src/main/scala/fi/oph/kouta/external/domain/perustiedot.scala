@@ -16,10 +16,11 @@ sealed trait Perustiedot[ID, T] extends AuthorizableEntity[T] {
   val kielivalinta: Seq[Kieli]
   val organisaatioOid: OrganisaatioOid
   val modified: Option[Modified]
+  val externalId: Option[String]
 }
 
 abstract class PerustiedotWithOid[ID <: Oid, T] extends Perustiedot[ID, T] {
-  val oid: Option[Oid]
+  val oid: Option[ID]
 }
 
 abstract class PerustiedotWithId[T] extends Perustiedot[UUID, T] {

@@ -27,7 +27,7 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
     contentType = formats("json")
   }
 
-  protected def externalModifyEnabled(): Boolean =
+  protected def externalModifyEnabled: Boolean =
     KoutaConfigurationFactory.configuration.securityConfiguration.externalApiModifyEnabled
 
   protected def createLastModifiedHeader[E <: Perustiedot[_, E]](entity: E): Map[String, String] = {

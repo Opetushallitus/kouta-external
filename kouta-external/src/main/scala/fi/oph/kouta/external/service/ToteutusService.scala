@@ -16,9 +16,16 @@ import scala.concurrent.Future
 
 object ToteutusService extends ToteutusService(ToteutusClient, CasKoutaClient, OrganisaatioServiceImpl)
 
-class ToteutusService(toteutusClient: ToteutusClient, val koutaClient: CasKoutaClient, val organisaatioService: OrganisaatioService) extends RoleEntityAuthorizationService[Toteutus] with Logging {
+class ToteutusService(
+    toteutusClient: ToteutusClient,
+    val koutaClient: CasKoutaClient,
+    val organisaatioService: OrganisaatioService
+) extends RoleEntityAuthorizationService[Toteutus]
+    with MassService[ToteutusOid, Toteutus]
+    with Logging {
 
   override val roleEntity: RoleEntity = Role.Toteutus
+  override val entityName: String     = "toteutus"
 
   def get(oid: ToteutusOid)(implicit authenticated: Authenticated): Future[Toteutus] =
     toteutusClient

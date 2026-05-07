@@ -10,7 +10,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        - opetuskieliKoodiUrit
     |        - opetusaikaKoodiUrit
     |        - opetustapaKoodiUrit
-    |        - maksullisuustyyppi
+    |        - maksut
     |        - onkoApuraha
     |      properties:
     |        opetuskieliKoodiUrit:
@@ -49,13 +49,6 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: object
     |          description: Koulutuksen toteutuksen opetustapoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
     |          $ref: '#/components/schemas/Kuvaus'
-    |        maksullisuustyyppi:
-    |          type: string
-    |          description: Maksullisuuden tyyppi.  Pakollinen julkaistulle toteutukselle.
-    |          enum:
-    |            - 'maksullinen'
-    |            - 'maksuton'
-    |            - 'lukuvuosimaksu'
     |        maksullisuusKuvaus:
     |          type: object
     |          description: Koulutuksen toteutuksen maksullisuutta tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
@@ -64,10 +57,12 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: object
     |          description: Koulutuksen alkamiskausi
     |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
-    |        maksunMaara:
-    |          type: double
-    |          description: "Koulutuksen toteutuksen maksun määrä euroissa?. Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'."
-    |          example: 220.50
+    |        maksut:
+    |          type: array
+    |          description: Opetuksen maksullisuustiedot. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa kaksi eri maksutyyppiä, 'lukuvuosimaksu' ja 'maksullinen', muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
+    |          items:
+    |            type: object
+    |            $ref: '#/components/schemas/Maksu'
     |        lisatiedot:
     |          type: array
     |          description: Koulutuksen toteutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
@@ -93,7 +88,8 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: object
     |          description: "Koulutuksen toteutuksen suunnitellun keston kuvaus eri kielillä. Kielet on määritetty toteutuksen kielivalinnassa."
     |          $ref: '#/components/schemas/Kuvaus'
-    |""")
+    |"""
+)
 case class Opetus(
     opetuskieliKoodiUrit: Seq[String],
     opetuskieletKuvaus: Kielistetty,
@@ -101,10 +97,9 @@ case class Opetus(
     opetusaikaKuvaus: Kielistetty = Map(),
     opetustapaKoodiUrit: Seq[String],
     opetustapaKuvaus: Kielistetty,
-    maksullisuustyyppi: Option[Maksullisuustyyppi],
     maksullisuusKuvaus: Kielistetty = Map(),
     koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausi],
-    maksunMaara: Option[Double],
+    maksut: Seq[Maksu],
     lisatiedot: Seq[Lisatieto],
     onkoApuraha: Boolean,
     apuraha: Option[Apuraha],
@@ -144,3 +139,27 @@ case class Apuraha(min: Option[Int],
                    max: Option[Int],
                    yksikko: Option[Apurahayksikko],
                    kuvaus: Kielistetty)
+
+@SwaggerModel(
+  """    Maksu:
+    |      type: object
+    |      required:
+    |        - maksullisuustyyppi
+    |      properties:
+    |        maksullisuustyyppi:
+    |          type: string
+    |          description: Maksullisuuden tyyppi. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa sekä 'lukuvuosimaksu' että 'maksullinen' maksuissa, muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
+    |          enum:
+    |            - 'maksullinen'
+    |            - 'maksuton'
+    |            - 'lukuvuosimaksu'
+    |        maksunMaara:
+    |          type: double
+    |          description: "Koulutuksen toteutuksen maksun määrä euroissa. Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'."
+    |          example: 220.50
+    |"""
+)
+case class Maksu(
+    maksullisuustyyppi: Maksullisuustyyppi,
+    maksunMaara: Option[Double] = None
+)

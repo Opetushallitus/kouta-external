@@ -86,7 +86,7 @@
       }
     ],
     "opetus": {
-      "maksullisuustyyppi": "maksullinen",
+      "maksut": [{"maksullisuustyyppi": "maksullinen", "maksunMaara": 200.5}],
       "apuraha": {
         "min": 100,
         "max": 200,
@@ -96,7 +96,6 @@
           "sv": "apurahakuvaus sv"
         }
       },
-      "maksunMaara": 200.5,
       "maksullisuusKuvaus": {
         "fi": "Maksullisuuskuvaus fi",
         "sv": "Maksullisuuskuvaus sv"

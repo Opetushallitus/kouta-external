@@ -144,7 +144,7 @@ jobs:
           git clone https://github.com/Opetushallitus/ci-tools.git
           source ci-tools/common/setup-tools.sh
           export BASE_IMAGE="baseimage-fatjar-openjdk21:master"
-          export OVARA_KOUTA_LIGHT_ARTIFACT_NAME="kouta-external-ovara-kouta-light"
+          export OVARA_KOUTA_LIGHT_ARTIFACT_NAME="ovara-kouta-external-kouta-light"
 
           mv ovara-kouta-light/target/ovara-kouta-light-*-jar-with-dependencies.jar \
             $DOCKER_BUILD_DIR/artifact/${OVARA_KOUTA_LIGHT_ARTIFACT_NAME}.jar

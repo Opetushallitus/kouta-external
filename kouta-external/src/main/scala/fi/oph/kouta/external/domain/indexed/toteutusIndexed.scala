@@ -941,7 +941,6 @@ case class MuuToteutusMetadataIndexed(
     opintojenLaajuusyksikko: Option[KoodiUri],
     opintojenLaajuusNumeroMin: Option[Double],
     opintojenLaajuusNumeroMax: Option[Double],
-    taiteenala: Seq[KoodiUri],
     opetus: Option[OpetusIndexed],
     asiasanat: List[Keyword],
     ammattinimikkeet: List[Keyword],

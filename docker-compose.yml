@@ -19,6 +19,10 @@ services:
     ports:
       - "127.0.0.1:9200:9200"
       - "127.0.0.1:9300:9300"
+    deploy:
+      resources:
+        limits:
+          memory: 10g
 
   elasticdump-loader:
     image: docker.io/elasticdump/elasticsearch-dump:v6.110.0

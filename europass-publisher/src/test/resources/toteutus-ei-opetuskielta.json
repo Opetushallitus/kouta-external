@@ -70,7 +70,7 @@
     "kuvaus": {},
     "osaamistavoitteet": {},
     "opetus": {
-      "maksullisuustyyppi": "maksuton",
+      "maksut": [{"maksullisuustyyppi": "maksuton"}],
       "maksullisuusKuvaus": {},
       "suunniteltuKestoKuvaus": {},
       "onkoApuraha": false,

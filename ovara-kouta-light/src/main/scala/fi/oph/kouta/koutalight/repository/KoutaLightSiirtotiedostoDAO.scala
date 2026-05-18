@@ -78,16 +78,16 @@ sealed trait KoutaLightSiirtotiedostoSQL extends KoutaLightExtractors with SQLHe
   }
 
   def selectLatestSiirtotiedostoOperation(): DBIO[Seq[SiirtotiedostoOperation]] = {
-    sql"""select id, window_start, window_end, run_start, run_end, stored_entities_count
-          from siirtotiedosto_operaatio
-          order by run_start DESC
+    sql"""SELECT id, window_start, window_end, run_start, run_end, stored_entities_count
+          FROM siirtotiedosto_operaatio
+          ORDER by run_start DESC
          """.as[SiirtotiedostoOperation]
   }
 
   def persistSiirtoOperationData(siirtotiedostoOperation: SiirtotiedostoOperation): DBIO[Int] = {
-    sqlu"""insert into siirtotiedosto_operaatio
+    sqlu"""INSERT INTO siirtotiedosto_operaatio
           (id, window_start, window_end, run_start, run_end, stored_entities_count)
-          values
+          VALUES
             (${siirtotiedostoOperation.id.toString}::uuid,
             ${siirtotiedostoOperation.windowStart}::timestamp,
             ${siirtotiedostoOperation.windowEnd}::timestamp,

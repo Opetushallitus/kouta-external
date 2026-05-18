@@ -29,12 +29,11 @@ class KoutaLightSiirtotiedostoService(
         maxNumberOfItemsInFile
       )
 
-    var operationSubId              = 0
+    var operationSubId              = 1
     val keyList: ListBuffer[String] = ListBuffer()
     var koulutusIds                 = koulutukset.flatMap(_.id)
 
     while (koulutukset.nonEmpty) {
-      operationSubId += 1
       keyList += siirtotiedostoPalveluClient.saveSiirtotiedosto(
         contentType = "koulutus",
         content = koulutukset,
@@ -51,6 +50,7 @@ class KoutaLightSiirtotiedostoService(
       )
 
       koulutusIds = koulutusIds ++ koulutukset.flatMap(_.id)
+      operationSubId += 1
     }
 
     val count = koulutusIds.length

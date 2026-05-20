@@ -89,6 +89,8 @@ case class AmmatillinenKoulutusMetadata(
       |      allOf:
       |        - $ref: '#/components/schemas/KoulutusMetadata'
       |        - type: object
+      |          required:
+      |            - tutkinnonOsat
       |          properties:
       |            tyyppi:
       |              type: string
@@ -96,7 +98,7 @@ case class AmmatillinenKoulutusMetadata(
       |              const: amm-tutkinnon-osa
       |            tutkinnonOsat:
       |              type: array
-      |              description: Tutkinnon osat
+      |              description: Tutkinnon osat. Pakollinen julkaistaessa.
       |              items:
       |                type: object
       |                $ref: '#/components/schemas/TutkinnonOsa'
@@ -114,6 +116,8 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
+    |          required:
+    |            - osaamistavoitteet
     |          properties:
     |            tyyppi:
     |              type: string
@@ -121,7 +125,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |              const: amm-osaamisala
     |            osaamisalaKoodiUri:
     |              type: string
-    |              description: Osaamisala. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamisala/1)
+    |              description: Osaamisala. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamisala/1)
     |              example: osaamisala_10#1
     |
     |"""
@@ -238,6 +242,9 @@ case class AmmattikorkeakouluKoulutusMetadata(
       |              type: array
       |              description: Lista koulutuksen tutkintonimikkeistä. Täytyy olla tyhjä.
       |              const: []
+      |              items:
+      |                minItems: 0
+      |                maxItems: 0
       |              example: []
       |            opintojenLaajuusyksikkoKoodiUri:
       |              type: string
@@ -318,7 +325,7 @@ case class OpePedagOpinnotKoulutusMetadata(
     |              const: lk
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen, jos opintojenLaajuusNumero on määritelty. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -329,8 +336,11 @@ case class OpePedagOpinnotKoulutusMetadata(
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
+    |                minItems: 1
+    |                maxItems: 1
+    |                const: kansallinenkoulutusluokitus2016koulutusalataso1_00#1
     |                example:
-    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
+    |                  - kansallinenkoulutusluokitus2016koulutusalataso1_00#1
     |"""
 )
 case class LukioKoulutusMetadata(
@@ -350,6 +360,8 @@ case class LukioKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
     |            tyyppi:
     |              type: string
@@ -360,11 +372,12 @@ case class LukioKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 8, eli viikkoa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_8#1
+    |              const: opintojenlaajuusyksikko_8#1
     |            opintojenLaajuusNumero:
     |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 150
     |"""
 )
@@ -385,6 +398,8 @@ case class TuvaKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
     |            tyyppi:
     |              type: string
@@ -395,11 +410,12 @@ case class TuvaKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 6, eli osaamispistettä. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
+    |              const: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 150
     |"""
 )
@@ -420,6 +436,8 @@ case class TelmaKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
     |            tyyppi:
     |              type: string
@@ -434,11 +452,11 @@ case class TelmaKoulutusMetadata(
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 10
     |"""
 )
@@ -459,6 +477,8 @@ case class AmmatillinenMuuKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
     |            tyyppi:
     |              type: string
@@ -472,14 +492,14 @@ case class AmmatillinenMuuKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            koulutusalaKoodiUrit:
     |              type: array
-    |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
+    |              description: Lista koulutusaloja. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
     |              items:
     |                type: string
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
@@ -503,14 +523,31 @@ case class VapaaSivistystyoKoulutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
+    |          required:
+    |            - osaamismerkkiKoodiUri
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
+    |            kuvaus:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
+    |            osaamistavoitteet:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              const: vapaa-sivistystyo-osaamismerkki
     |            linkkiEPerusteisiin:
     |              type: object
-    |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              description: Pitää olla tyhjä. Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -520,12 +557,14 @@ case class VapaaSivistystyoKoulutusMetadata(
     |                  - kansallinenkoulutusluokitus2016koulutusalataso1_001#1
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pitää viitata koodiin 4 (opintopisteet). Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_4#1
+    |              const: opintojenlaajuusyksikko_4#1
     |            opintojenLaajuusNumero:
     |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              description: Opintojen laajuus tai kesto numeroarvona. Pitää olla 1.
     |              example: 1
+    |              const: 1
     |            osaamismerkkiKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/osaamismerkit)"
@@ -551,7 +590,14 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - opintojenLaajuusNumero
+    |            - opintojenLaajuusyksikkoKoodiUri
     |          properties:
+    |            lisatiedot:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
@@ -561,11 +607,11 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
-    |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
+    |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
     |              type: double
-    |              description: Opintojen laajuus tai kesto numeroarvona
+    |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 10
     |"""
 )
@@ -649,6 +695,7 @@ case class KkOpintojaksoKoulutusMetadata(
     |        - type: object
     |          required:
     |            - kuvaus
+    |            - koulutusalaKoodiUrit
     |          properties:
     |            tyyppi:
     |              type: string
@@ -659,6 +706,8 @@ case class KkOpintojaksoKoulutusMetadata(
     |              description: Vain yksi versio koodista kansallinenkoulutusluokitus2016koulutusalataso2_091 (Terveys). Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso2/1).
     |              items:
     |                type: string
+    |                minProperties: 1
+    |                maxProperties: 1
     |                example:
     |                  - kansallinenkoulutusluokitus2016koulutusalataso2_091#1
     |            tutkintonimikeKoodiUrit:

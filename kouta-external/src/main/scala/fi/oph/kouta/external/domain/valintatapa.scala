@@ -7,10 +7,14 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 @SwaggerModel(
   """    Valintatapa:
     |      type: object
+    |      required:
+    |        - nimi
+    |        - valintatapaKoodiUri
+    |        - kaytaMuuntotaulukkoa
     |      properties:
     |        valintatapaKoodiUri:
     |          type: string
-    |          description: Valintatapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/valintatapajono/1)
+    |          description: Valintatapa. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/valintatapajono/1)
     |          example: valintatapajono_av#1
     |        nimi:
     |          type: object
@@ -73,6 +77,8 @@ sealed trait Sisalto
     |          description: Taukon rivit
     |          items:
     |            type: object
+    |            required:
+    |              - index
     |            properties:
     |              index:
     |                type: integer
@@ -85,6 +91,8 @@ sealed trait Sisalto
     |                description: Rivin sarakkeet
     |                items:
     |                  type: object
+    |                  required:
+    |                    - index
     |                  properties:
     |                    index:
     |                      type: integer
@@ -102,10 +110,12 @@ case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends
   """    SisaltoTeksti:
     |      type: object
     |      description: Tekstimuotoinen valintatavan sisällön kuvaus
+    |      required:
+    |        - teksti
     |      properties:
     |        teksti:
     |          type: object
-    |          description: Valintatavan Opintopolussa näytettävä kuvausteksti eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa.
+    |          description: Valintatavan Opintopolussa näytettävä kuvausteksti eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa. Pakollinen julkaistaessa.
     |          allOf:
     |            - $ref: '#/components/schemas/Teksti'
     |""")

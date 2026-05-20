@@ -5,6 +5,7 @@ import slick.jdbc.{PositionedParameters, SetParameter}
 
 import java.sql.JDBCType
 import java.time.{Instant, OffsetDateTime, ZoneId}
+import java.util.UUID
 
 trait SQLHelpers extends KoutaLightJsonFormats {
   implicit object SetInstant extends SetParameter[Instant] {
@@ -22,6 +23,12 @@ trait SQLHelpers extends KoutaLightJsonFormats {
         case Some(i) => SetInstant.apply(i, pp)
         case None    => pp.setNull(java.sql.Types.NULL)
       }
+    }
+  }
+
+  implicit object SetUUID extends SetParameter[UUID] {
+    def apply(v: UUID, pp: PositionedParameters): Unit = {
+      pp.setObject(v, JDBCType.BINARY.getVendorTypeNumber)
     }
   }
 }

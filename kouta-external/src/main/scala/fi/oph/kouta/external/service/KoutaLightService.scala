@@ -43,10 +43,7 @@ object Validations {
   }
 
   def validateOpetuskielet(koulutusExternalId: String, opetuskielet: Seq[String]): Seq[ValidationError] = {
-    val invalidKielikoodit = opetuskielet.flatMap {
-      case kieli: String if kieli.length < 2 || kieli.length > 3 => Some(kieli)
-      case _                                                     => None
-    }
+    val invalidKielikoodit = opetuskielet.filter(kieli => kieli.length < 2 || kieli.length > 3)
 
     if (invalidKielikoodit.nonEmpty)
       List(ValidationError(koulutusExternalId, invalidOpetuskielet(invalidKielikoodit)))

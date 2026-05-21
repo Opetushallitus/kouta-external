@@ -156,18 +156,18 @@ class KoutaLightSpec extends KoutaLightFixture {
   "findMissingLanguages" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
     Validations.findMissingLanguages(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"))
+      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")
     ) shouldEqual List()
   }
 
   it should "return a list with Sv and En as missing languages when they do not exist in Kielistetty field even though they are defined in kielivalinta" in {
-    Validations.findMissingLanguages(List(Fi, Sv, En), Left(Map(Fi -> "kuvaus fi"))) shouldEqual List(Sv, En)
+    Validations.findMissingLanguages(List(Fi, Sv, En), Map(Fi -> "kuvaus fi")) shouldEqual List(Sv, En)
   }
 
   "validateKielistetty" should "return empty list of validation errors when kielistetty kuvaus has value for all languages defined in kielivalinta" in {
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")),
+      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"),
       "externalId6357",
       "kuvaus"
     ) shouldEqual List()
@@ -177,7 +177,7 @@ class KoutaLightSpec extends KoutaLightFixture {
     val externalId = "externalId6357"
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi")),
+      Map(Fi -> "kuvaus fi"),
       externalId,
       "kuvaus"
     ) shouldEqual List(

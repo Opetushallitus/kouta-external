@@ -67,22 +67,25 @@ class KoutaLightService extends Logging {
     Validations.and(
       Validations.validateKielistetty(kielivalinta, koulutus.nimi, koulutusExternalId, "nimi"),
       Validations.validateKielistetty(kielivalinta, koulutus.kuvaus, koulutusExternalId, "kuvaus"),
-      koulutus.tarjoajat.zipWithIndex.flatMap(tarjoaja =>
+      koulutus.tarjoajat.zipWithIndex.flatMap(tarjoajaWithIndex => {
+        val (tarjoaja, index) = tarjoajaWithIndex
         Validations
-          .validateKielistetty(kielivalinta, tarjoaja._1, koulutusExternalId, s"tarjoajat[${tarjoaja._2}]")
-      ),
-      koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimike =>
+          .validateKielistetty(kielivalinta, tarjoaja, koulutusExternalId, s"tarjoajat[$index]")
+      }),
+      koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimikeWithIndex => {
+        val (ammattinimike, index) = ammattinimikeWithIndex
         Validations.validateKielistetty(
           kielivalinta,
-          ammattinimike._1,
+          ammattinimike,
           koulutusExternalId,
-          s"ammattinimikkeet[${ammattinimike._2}]"
-        )
+          s"ammattinimikkeet[$index]"
+        )}
       ),
-      koulutus.asiasanat.zipWithIndex.flatMap(asiasana =>
+      koulutus.asiasanat.zipWithIndex.flatMap(asiasanaWithIndex => {
+        val (asiasana, index) = asiasanaWithIndex
         Validations
-          .validateKielistetty(kielivalinta, asiasana._1, koulutusExternalId, s"asiasanat[${asiasana._2}]")
-      ),
+          .validateKielistetty(kielivalinta, asiasana, koulutusExternalId, s"asiasanat[$index]")
+      }),
       Validations.validateOptionalKielistetty(
         kielivalinta,
         koulutus.maksullisuuskuvaus,

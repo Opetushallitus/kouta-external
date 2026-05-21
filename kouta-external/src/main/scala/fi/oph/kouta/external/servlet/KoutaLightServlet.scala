@@ -3,11 +3,9 @@ package fi.oph.kouta.external.servlet
 import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
-import fi.oph.kouta.security.Role
+import fi.oph.kouta.security.Role.KoutaLightTallentajaRole
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
-
-object KoutaLightTallentajaRole extends Role.UnknownRole("APP_KOUTA_EXTERNAL-KOUTA-LIGHT-TALLENTAJA")
 
 object KoutaLightServlet extends KoutaLightServlet(KoutaLightService)
 

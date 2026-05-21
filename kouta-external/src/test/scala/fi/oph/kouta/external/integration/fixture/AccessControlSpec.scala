@@ -4,7 +4,7 @@ import fi.oph.kouta.TestOids._
 import fi.oph.kouta.domain.oid.{HakukohderyhmaOid, OrganisaatioOid}
 import fi.oph.kouta.external.MockSecurityContext
 import fi.oph.kouta.external.database.SessionDAO
-import fi.oph.kouta.external.servlet.KoutaLightTallentajaRole
+import fi.oph.kouta.security.Role.KoutaLightTallentajaRole
 import fi.oph.kouta.security._
 import org.scalatra.test.scalatest.ScalatraFlatSpec
 

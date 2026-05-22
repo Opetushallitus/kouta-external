@@ -11,7 +11,7 @@ import java.net.URI
 import java.util.UUID
 
 class KoutaLightSpec extends KoutaLightFixture {
-  val nonExistingSessionId: UUID             = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
+  val nonExistingSessionId: UUID                     = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
   val koutaLightKoulutus: ExternalKoutaLightKoulutus = KoutaLightKoulutusWithOptionalData
 
   s"PUT /koutan-tietomallista-poikkeavat-koulutukset/" should "return 401 without a session" in {
@@ -168,23 +168,17 @@ class KoutaLightSpec extends KoutaLightFixture {
     Validations.validateKielistetty(
       List(Fi, Sv, En),
       Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"),
-      "externalId6357",
       "kuvaus"
     ) shouldEqual List()
   }
 
   it should "return list of validation errors when kielistetty kuvaus has value for all languages defined in kielivalinta" in {
-    val externalId = "externalId6357"
     Validations.validateKielistetty(
       List(Fi, Sv, En),
       Map(Fi -> "kuvaus fi"),
-      externalId,
       "kuvaus"
     ) shouldEqual List(
-      ValidationError(
-        koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv, en]"""
-      )
+      """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv, en]"""
     )
   }
 

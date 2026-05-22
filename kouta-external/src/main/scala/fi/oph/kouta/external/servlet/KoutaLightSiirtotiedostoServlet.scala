@@ -8,8 +8,7 @@ import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, LocalDateTime}
+import java.time.Instant
 import java.util.UUID
 import scala.util.{Failure, Try}
 
@@ -51,8 +50,7 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       "success" -> "true"
     )
 
-  private val SiirtotiedostoDateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-  private val DateTimeExample                                 = SiirtotiedostoDateTimeFormat.format(LocalDateTime.now())
+  private val DateTimeExample = SiirtotiedostoInstantFormat.format(Instant.now())
 
   registerPath(
     "/siirtotiedosto/kouta-light-koulutukset",

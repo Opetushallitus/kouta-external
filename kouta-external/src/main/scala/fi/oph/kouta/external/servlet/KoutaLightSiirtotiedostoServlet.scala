@@ -24,12 +24,12 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
     val defaultEndTime = Instant.now()
     val startTimeVal   = parseInstant(startTime, "alkuaika")
     val endTimeVal     = parseInstant(endTime, "loppuaika").getOrElse(defaultEndTime)
-    (startTimeVal, endTimeVal) match {
-      case (Some(startTimeVal), _) if startTimeVal.isAfter(Instant.now()) =>
+    startTimeVal match {
+      case Some(startTimeVal) if startTimeVal.isAfter(Instant.now()) =>
         throw new IllegalArgumentException("Alkuaika ei voi olla tulevaisuudessa")
-      case (Some(startTimeVal), endTimeVal) if startTimeVal.isAfter(endTimeVal) =>
+      case Some(startTimeVal) if startTimeVal.isAfter(endTimeVal) =>
         throw new IllegalArgumentException("Alkuaika ei voi olla loppuajan jälkeen")
-      case (_, _) => (startTimeVal, endTimeVal)
+      case _ => (startTimeVal, endTimeVal)
     }
   }
 
@@ -38,8 +38,8 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       fieldName: String
   ): Option[Instant] = {
     dateTime.map { dateTimeStr =>
-      Try(Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))).recoverWith {
-        case _ => Failure(new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'"))
+      Try(Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))).recoverWith { case _ =>
+        Failure(new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'"))
       }.get
     }
   }

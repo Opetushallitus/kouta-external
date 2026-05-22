@@ -46,7 +46,11 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
   )
   put("/") {
     implicit val authenticated: Authenticated = authenticate
-    val hasKoutaLightRole                     = authenticated.session.roles.contains(KoutaLightTallentajaRole)
+    val userOid                               = authenticated.session.personOid
+    val userAuthoritiesStr                    = s"Käyttäjän käyttöoikeudet: ${authenticated.session.authorities}"
+    def logWarningMessage(errorMessage: String): Unit =
+      logger.warn(s"$errorMessage $userAuthoritiesStr")
+    val hasKoutaLightRole = authenticated.session.roles.contains(KoutaLightTallentajaRole)
 
     if (hasKoutaLightRole) {
       val orgsForTheRole = authenticated.session.getOrganizationsForRoles(Seq(KoutaLightTallentajaRole))
@@ -56,16 +60,18 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
         val ownerOrg = orgsForTheRole.head
         Ok(koutaLightService.put(parsedBody.extract[List[ExternalKoutaLightKoulutus]], ownerOrg))
       } else if (orgsForTheRole.size > 1) {
-        val errorMsg = errorMessage("Käyttäjän oikeuksissa määritelty liian monta organisaatiota")
-        logger.warn(errorMsg.toString())
-        Forbidden(errorMsg)
+        val errorStr = s"Käyttäjän $userOid oikeuksissa määritelty liian monta organisaatiota."
+        logWarningMessage(errorStr)
+        Forbidden(errorMessage(errorStr))
       } else {
-        Forbidden(errorMessage("Käyttäjän oikeuksissa puutteita"))
+        val errorStr = s"Käyttäjän $userOid oikeuksissa puutteita."
+        logWarningMessage(errorStr)
+        Forbidden(errorMessage(errorStr))
       }
     } else {
-      val errorMsg = errorMessage("Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta")
-      logger.warn(errorMsg.toString())
-      Forbidden(errorMsg)
+      val errorStr = s"Käyttäjällä $userOid ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta."
+      logWarningMessage(errorStr)
+      Forbidden(errorMessage(errorStr))
     }
   }
 }

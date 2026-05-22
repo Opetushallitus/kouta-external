@@ -41,19 +41,20 @@ trait AccessControlSpec extends ScalatraFlatSpec {
   def hakukohderyhmaCrudSessionIds(oid: HakukohderyhmaOid): UUID = hakukohderyhmaCrudSessions(oid)._1
   def readSessionIds(oid: OrganisaatioOid): UUID                 = readSessions(oid)._1
 
-  var ophPaakayttajaSessionId: UUID   = _
-  var indexerSessionId: UUID          = _
-  var fakeIndexerSessionId: UUID      = _
-  var otherRoleSessionId: UUID        = _
-  var hakukohderyhmaSessionId: UUID   = _
-  var koutaLightSessionId1: UUID      = _
-  var koutaLightSessionId2: UUID      = _
-  var faultyKoutaLightSessionId: UUID = _
+  var ophPaakayttajaSessionId: UUID                               = _
+  var indexerSessionId: UUID                                      = _
+  var fakeIndexerSessionId: UUID                                  = _
+  var otherRoleSessionId: UUID                                    = _
+  var hakukohderyhmaSessionId: UUID                               = _
+  var koutaLightSessionId1: UUID                                  = _
+  var koutaLightSessionId2: UUID                                  = _
+  var faultyKoutaLightSessionWithMultipleOrgs: (UUID, CasSession) = _
+  var faultyKoutaLightSessionWithoutOrg: (UUID, CasSession)       = _
 
   def addTestSession(authorities: Seq[Authority]): (UUID, CasSession) = {
     val sessionId = UUID.randomUUID()
     val oid       = s"1.2.246.562.24.${math.abs(sessionId.getLeastSignificantBits.toInt)}"
-    val user      = TestUser(oid, s"user-$oid", sessionId)
+    val user      = TestUser("test-user-oid", s"user-$oid", sessionId)
     val session   = CasSession(ServiceTicket(user.ticket), user.oid, authorities.toSet)
     SessionDAO.store(session, user.sessionId)
     (sessionId, session)
@@ -70,13 +71,18 @@ trait AccessControlSpec extends ScalatraFlatSpec {
     addTestSession(authorities)
   }
 
+  def addTestSession(roles: Seq[Role], hakukohderyhmaOid: HakukohderyhmaOid): (UUID, CasSession) = {
+    val authorities = roles.map(Authority(_, hakukohderyhmaOid))
+    addTestSession(authorities)
+  }
+
   def addTestSessionWithMultipleOrgs(roles: Seq[(Role, OrganisaatioOid)]): (UUID, CasSession) = {
     val authorities = roles.map(role => Authority(role._1, role._2))
     addTestSession(authorities)
   }
 
-  def addTestSession(roles: Seq[Role], hakukohderyhmaOid: HakukohderyhmaOid): (UUID, CasSession) = {
-    val authorities = roles.map(Authority(_, hakukohderyhmaOid))
+  def addTestSessionWithoutOrg(role: Role): (UUID, CasSession) = {
+    val authorities = Seq(Authority(role.toString()))
     addTestSession(authorities)
   }
 
@@ -100,8 +106,9 @@ trait AccessControlSpec extends ScalatraFlatSpec {
     hakukohderyhmaSessionId = addTestSession(Role.UnknownRole("APP_KOUTA_HAKUKOHDE"), hakukohderyhmaOid)._1
     koutaLightSessionId1 = addTestSession(KoutaLightTallentajaRole, KoutaLightOrgOid1)._1
     koutaLightSessionId2 = addTestSession(KoutaLightTallentajaRole, KoutaLightOrgOid2)._1
-    faultyKoutaLightSessionId = addTestSessionWithMultipleOrgs(
+    faultyKoutaLightSessionWithMultipleOrgs = addTestSessionWithMultipleOrgs(
       List((KoutaLightTallentajaRole, KoutaLightOrgOid1), (KoutaLightTallentajaRole, KoutaLightOrgOid2))
-    )._1
+    )
+    faultyKoutaLightSessionWithoutOrg = addTestSessionWithoutOrg(KoutaLightTallentajaRole)
   }
 }

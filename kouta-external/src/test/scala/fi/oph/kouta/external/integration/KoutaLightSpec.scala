@@ -23,16 +23,25 @@ class KoutaLightSpec extends KoutaLightFixture {
       List(MinKoutaLightKoulutus),
       defaultSessionId,
       403,
-      s"""{"error":"Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"}"""
+      s"""{"error":"Käyttäjällä ${testUser.oid} ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta."}"""
     )
   }
 
   it should "return 403 when user has two organizations defined for the KoutaLight user right" in {
     put(
       List(MinKoutaLightKoulutus),
-      faultyKoutaLightSessionId,
+      faultyKoutaLightSessionWithMultipleOrgs._1,
       403,
-      s"""{"error":"Käyttäjän oikeuksissa määritelty liian monta organisaatiota"}"""
+      s"""{"error":"Käyttäjän ${testUser.oid} oikeuksissa määritelty liian monta organisaatiota."}"""
+    )
+  }
+
+  it should "return 403 when no org attached to the user role" in {
+    put(
+      List(MinKoutaLightKoulutus),
+      faultyKoutaLightSessionWithoutOrg._1,
+      403,
+      s"""{"error":"Käyttäjän ${testUser.oid} oikeuksissa puutteita."}"""
     )
   }
 

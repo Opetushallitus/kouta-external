@@ -11,7 +11,7 @@ import org.scalatra.{Forbidden, Ok}
 import java.time.format.DateTimeFormatter
 import java.time.{Instant, LocalDateTime}
 import java.util.UUID
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService)
     extends KoutaServlet
@@ -37,15 +37,10 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       dateTime: Option[String],
       fieldName: String
   ): Option[Instant] = {
-    dateTime match {
-      case Some(dateTimeStr) =>
-        Try[Instant] {
-          Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))
-        } match {
-          case Success(instant) => Some(instant)
-          case Failure(_)       => throw new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'")
-        }
-      case None => None
+    dateTime.map { dateTimeStr =>
+      Try(Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))).recoverWith {
+        case _ => Failure(new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'"))
+      }.get
     }
   }
 

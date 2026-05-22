@@ -10,10 +10,23 @@ import java.util.UUID
 @SwaggerModel(
   """    Hakukohde:
     |      type: object
+    |      required:
+    |        - oid
+    |        - toteutusOid
+    |        - hakuOid
+    |        - tila
+    |        - tarjoaja
+    |        - kaytetaanHaunHakulomaketta
+    |        - pohjakoulutusvaatimusKoodiUrit
+    |        - kaytetaanHaunAikataulua
+    |        - metadata
+    |        - muokkaaja
+    |        - organisaatioOid
+    |        - kielivalinta
     |      properties:
     |        oid:
     |          type: string
-    |          description: Hakukohteen yksilöivä tunniste. Järjestelmän generoima.
+    |          description: Hakukohteen yksilöivä tunniste. Järjestelmän generoima. Ei sallita hakukohdetta luodessa.
     |          example: 1.2.246.562.20.00000000000000000009
     |        externalId:
     |          type: string
@@ -52,7 +65,7 @@ import java.util.UUID
     |          $ref: '#/components/schemas/Nimi'
     |        tarjoaja:
     |          type: string
-    |          description: Hakukohteen järjestyspaikan organisaatioOid
+    |          description: Hakukohteen järjestyspaikan organisaatioOid. Pakollinen julkaistaessa.
     |          example: 1.2.246.562.10.00101010101
     |        hakulomaketyyppi:
     |          type: string
@@ -76,10 +89,10 @@ import java.util.UUID
     |          $ref: '#/components/schemas/Linkki'
     |        kaytetaanHaunHakulomaketta:
     |          type: boolean
-    |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake? Käytössä vain muulla kuin Opintopolun hakulomakkeella.
+    |          description: Käytetäänkö haun hakulomaketta vai onko hakukohteelle määritelty oma hakulomake? Käytössä vain muulla kuin Opintopolun hakulomakkeella. Pakollinen julkaistaessa.
     |        pohjakoulutusvaatimusKoodiUrit:
     |          type: array
-    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/pohjakoulutusvaatimuskouta/1)
+    |          description: Lista hakukohteen pohjakoulutusvaatimuksista. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/pohjakoulutusvaatimuskouta/1)
     |          items:
     |            type: string
     |          example:
@@ -94,7 +107,7 @@ import java.util.UUID
     |          description: "Onko hakukohteen toisen asteen koulutuksessa mahdollista suorittaa kaksoistutkinto. Käytössä vain koulutustyypeillä: amm ja lukio"
     |        kaytetaanHaunAikataulua:
     |          type: boolean
-    |          description: Käytetäänkö haun hakuaikoja vai onko hakukohteelle määritelty omat hakuajat? Jos false, hakukohteelle voidaan määritellä oma, erillinen hakuaika kentässä hakuajat
+    |          description: Käytetäänkö haun hakuaikoja vai onko hakukohteelle määritelty omat hakuajat? Jos false, hakukohteelle voidaan määritellä oma, erillinen hakuaika kentässä hakuajat. Pakollinen julkaistaessa.
     |        valintaperusteId:
     |          type: string
     |          description: Hakukohteeseen liittyvän valintaperustekuvauksen yksilöivä tunniste
@@ -134,15 +147,16 @@ import java.util.UUID
     |            $ref: '#/components/schemas/Valintakoe'
     |        hakuajat:
     |          type: array
-    |          description: Hakukohteen hakuajat, jos ei käytetä haun hakuaikoja
+    |          description: Hakukohteen hakuajat, jos ei käytetä haun hakuaikoja. Pakollinen, kun kaytetaanHaunAikataulua on false.
     |          items:
     |            $ref: '#/components/schemas/Ajanjakso'
     |        metadata:
     |          type: object
+    |          description: Pakollinen julkaistaessa.
     |          $ref: '#/components/schemas/HakukohdeMetadata'
     |        muokkaaja:
     |          type: string
-    |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid
+    |          description: Hakukohdetta viimeksi muokanneen virkailijan henkilö-oid. Palvelun asettama. Päivittäessä voi olla mikä tahansa string.
     |          example: 1.2.246.562.10.00101010101
     |        organisaatioOid:
     |           type: string
@@ -256,6 +270,9 @@ case class HakukohteenLinja(linja: Option[Koodi] = None, // NOTE: None tarkoitta
 @SwaggerModel(
   """    HakukohdeMetadata:
       |      type: object
+      |      required:
+      |        - kaytetaanHaunAlkamiskautta
+      |        - aloituspaikat
       |      properties:
       |        valintakokeidenYleiskuvaus:
       |          type: object
@@ -279,7 +296,7 @@ case class HakukohteenLinja(linja: Option[Koodi] = None, // NOTE: None tarkoitta
       |          description: Käytetäänkö haun alkamiskautta ja -vuotta vai onko hakukohteelle määritelty oma alkamisajankohta?
       |        aloituspaikat:
       |          type: object
-      |          description: Hakukohteen aloituspaikkojen tiedot
+      |          description: Hakukohteen aloituspaikkojen tiedot. Pakollinen julkaistaessa.
       |          $ref: '#/components/schemas/Aloituspaikat'
       |        hakukohteenLinja:
       |          type: object

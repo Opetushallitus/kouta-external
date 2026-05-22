@@ -10,10 +10,20 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
 @SwaggerModel(
   """    Valintaperuste:
     |      type: object
+    |      required:
+    |        - id
+    |        - tila
+    |        - koulutustyyppi
+    |        - hakutapaKoodiUri
+    |        - kohdejoukkoKoodiUri
+    |        - nimi
+    |        - julkinen
+    |        - organisaatioOid
+    |        - muokkaaja
     |      properties:
     |        id:
     |          type: string
-    |          description: Valintaperustekuvauksen yksilöivä tunniste. Järjestelmän generoima.
+    |          description: Valintaperustekuvauksen yksilöivä tunniste. Järjestelmän generoima. Ei sallita valintaperustetta luodessa.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        externalId:
     |          type: string
@@ -36,11 +46,11 @@ import fi.oph.kouta.security.AuthorizableMaybeJulkinen
     |          example: amm
     |        hakutapaKoodiUri:
     |          type: string
-    |          description: Valintaperustekuvaukseen liittyvä hakutapa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/hakutapa/11)
+    |          description: Valintaperustekuvaukseen liittyvä hakutapa. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/hakutapa/11)
     |          example: hakutapa_03#1
     |        kohdejoukkoKoodiUri:
     |          type: string
-    |          description: Valintaperustekuvaukseen liittyvä kohdejoukko. Valintaperusteen ja siihen hakukohteen kautta liittyvän haun kohdejoukon tulee olla sama. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/haunkohdejoukko/1)
+    |          description: Valintaperustekuvaukseen liittyvä kohdejoukko. Pakollinen julkaistaessa. Valintaperusteen ja siihen hakukohteen kautta liittyvän haun kohdejoukon tulee olla sama. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/haunkohdejoukko/1)
     |          example: haunkohdejoukko_17#1
     |        julkinen:
     |          type: boolean

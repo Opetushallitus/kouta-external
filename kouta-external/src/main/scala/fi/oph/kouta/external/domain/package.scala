@@ -356,6 +356,8 @@ package object domain {
   @SwaggerModel(
     """    Ajanjakso:
       |      type: object
+      |      required:
+      |        - alkaa
       |      properties:
       |        alkaa:
       |           type: string
@@ -374,10 +376,12 @@ package object domain {
     """    Valintakoe:
       |      type: object
       |      description: Valintakokeen tiedot
+      |      required:
+      |        - id
       |      properties:
       |        id:
       |          type: string
-      |          description: Valintakokeen yksilöivä tunniste. Järjestelmän generoima.
+      |          description: Valintakokeen yksilöivä tunniste. Järjestelmän generoima. Ei sallita luodessa.
       |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
       |        tyyppiKoodiUri:
       |          type: string
@@ -421,14 +425,14 @@ package object domain {
       |          description: Liittyykö valintakokeeseen ennakkovalmistautumista
       |        ohjeetEnnakkovalmistautumiseen:
       |          type: object
-      |          description: Ohjeet valintakokeen ennakkojärjestelyihin
+      |          description: Ohjeet valintakokeen ennakkojärjestelyihin. Pakollinen julkaistaessa, jos liittyyEnnakkovalmistautumista on true.
       |          $ref: '#/components/schemas/Teksti'
       |        erityisjarjestelytMahdollisia:
       |          type: boolean
       |          description: Ovatko erityisjärjestelyt mahdollisia valintakokeessa
       |        ohjeetErityisjarjestelyihin:
       |          type: object
-      |          description: Ohjeet valintakokeen erityisjärjestelyihin
+      |          description: Ohjeet valintakokeen erityisjärjestelyihin. Pakollinen julkaistaessa, jos erityisjarjestelytMahdollisia on true.
       |          $ref: '#/components/schemas/Teksti'
       |""")
   case class ValintaKoeMetadata(tietoja: Kielistetty = Map(),
@@ -441,14 +445,17 @@ package object domain {
   @SwaggerModel(
     """    Valintakoetilaisuus:
       |      type: object
+      |      required:
+      |        - osoite
+      |        - aika
       |      properties:
       |        osoite:
       |          type: object
-      |          description: Valintakokeen järjestämispaikan osoite
+      |          description: Valintakokeen järjestämispaikan osoite. Pakollinen julkaistaessa.
       |          $ref: '#/components/schemas/Osoite'
       |        aika:
       |          type: array
-      |          description: Valintakokeen järjestämisaika
+      |          description: Valintakokeen järjestämisaika. Pakollinen julkaistaessa.
       |          items:
       |            $ref: '#/components/schemas/Ajanjakso'
       |        lisatietoja:
@@ -530,17 +537,19 @@ package object domain {
   @SwaggerModel(
     """    KoulutuksenAlkamiskausi:
       |      type: object
+      |      required:
+      |        - alkamiskausityyppi
       |      properties:
       |        alkamiskausityyppi:
       |          type: string
-      |          description: Alkamiskauden tyyppi
+      |          description: Alkamiskauden tyyppi. Pakollinen julkaistaessa.
       |          enum:
       |            - 'henkilokohtainen suunnitelma'
       |            - 'tarkka alkamisajankohta'
       |            - 'alkamiskausi ja -vuosi'
       |        koulutuksenAlkamispaivamaara:
       |          type: string
-      |          description: Koulutuksen tarkka alkamisen päivämäärä
+      |          description: Koulutuksen tarkka alkamisen päivämäärä. Pakollinen julkaistaessa, kun alkamiskausityyppi on tarkka alkamisajankohta.
       |          example: 2019-11-20T12:00
       |        koulutuksenPaattymispaivamaara:
       |          type: string
@@ -548,12 +557,12 @@ package object domain {
       |          example: 2019-11-20T12:00
       |        koulutuksenAlkamiskausiKoodiUri:
       |          type: string
-      |          description: Koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla.
+      |          description: Koulutusten alkamiskausi. Hakukohteella voi olla eri alkamiskausi kuin haulla. Pakollinen julkaistaessa, kun alkamiskausityyppi on alkamiskausi ja -vuosi.
       |            Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kausi/1)
       |          example: kausi_k#1
       |        koulutuksenAlkamisvuosi:
       |          type: string
-      |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla.
+      |          description: Haun koulutusten alkamisvuosi. Hakukohteella voi olla eri alkamisvuosi kuin haulla. Pakollinen julkaistaessa, kun alkamiskausityyppi on alkamiskausi ja -vuosi.
       |          example: 2020
       |        henkilokohtaisenSuunnitelmanLisatiedot:
       |          type: object
@@ -689,10 +698,12 @@ package object domain {
   @SwaggerModel(
     """    Aloituspaikat:
       |      type: object
+      |      required:
+      |        - lukumaara
       |      properties:
       |        lukumaara:
       |          type: integer
-      |          description: Hakukohteen aloituspaikkojen lukumäärä
+      |          description: Hakukohteen aloituspaikkojen lukumäärä. Pakollinen julkaistaessa.
       |          example: 100
       |        ensikertalaisille:
       |          type: integer

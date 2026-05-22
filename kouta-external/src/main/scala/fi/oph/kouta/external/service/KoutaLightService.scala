@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
-import fi.oph.kouta.external.domain.enums.Operation.Upsert
+import fi.oph.kouta.external.domain.enums.Operation.{Create, Update, Upsert}
 import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.logging.Logging
 
@@ -117,10 +117,10 @@ class KoutaLightService extends Logging {
         KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
           case Success(null) =>
             logger.info(s"Created koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.CreateSuccess(externalId = Some(externalId)))
+            List(KoutaLightMassResult.Success(Create, Some(externalId)))
           case Success(_) =>
             logger.info(s"Updated koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId)))
+            List(KoutaLightMassResult.Success(Update, Some(externalId)))
           case Failure(e) =>
             logger.error(
               s"Create or update failed on koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid",

@@ -60,23 +60,15 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 sealed abstract class KoutaLightMassResult(operation: Operation, success: Boolean)
 
 object KoutaLightMassResult {
-  case class UpdateSuccess(
+  case class Success(
       operation: Operation,
       success: Boolean,
       externalId: Option[String]
   ) extends KoutaLightMassResult(operation, success)
 
-  object UpdateSuccess {
-    def apply(externalId: Option[String]): UpdateSuccess =
-      UpdateSuccess(Operation.Update, success = true, externalId)
-  }
-
-  case class CreateSuccess(operation: Operation, success: Boolean, externalId: Option[String])
-      extends KoutaLightMassResult(operation, success)
-
-  object CreateSuccess {
-    def apply(externalId: Option[String]): CreateSuccess =
-      CreateSuccess(Operation.Create, success = true, externalId = externalId)
+  object Success {
+    def apply(operation: Operation, externalId: Option[String]): Success =
+      Success(operation, success = true, externalId)
   }
 
   case class Error(

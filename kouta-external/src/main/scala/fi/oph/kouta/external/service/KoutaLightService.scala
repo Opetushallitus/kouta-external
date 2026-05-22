@@ -117,10 +117,10 @@ class KoutaLightService extends Logging {
         KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
           case Success(null) =>
             logger.info(s"Created koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.Success(Create, Some(externalId)))
+            List(KoutaLightMassResult.Success(Create, externalId))
           case Success(_) =>
             logger.info(s"Updated koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.Success(Update, Some(externalId)))
+            List(KoutaLightMassResult.Success(Update, externalId))
           case Failure(e) =>
             logger.error(
               s"Create or update failed on koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid",

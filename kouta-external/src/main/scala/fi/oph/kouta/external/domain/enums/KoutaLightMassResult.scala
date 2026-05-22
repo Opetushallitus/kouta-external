@@ -63,11 +63,11 @@ object KoutaLightMassResult {
   case class Success(
       operation: Operation,
       success: Boolean,
-      externalId: Option[String]
+      externalId: String
   ) extends KoutaLightMassResult(operation, success)
 
   object Success {
-    def apply(operation: Operation, externalId: Option[String]): Success =
+    def apply(operation: Operation, externalId: String): Success =
       Success(operation, success = true, externalId)
   }
 

@@ -5,7 +5,7 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 package object siirtotiedosto {
-  val SiirtotiedostoInstantFormat: DateTimeFormatter =
+  val SiirtotiedostoDateTimeFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(ZoneId.of("Europe/Helsinki"))
 
   case class SiirtotiedostoOperation(

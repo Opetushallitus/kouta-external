@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.util
 
-import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoInstantFormat
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoDateTimeFormatter
 import fi.oph.kouta.util.GenericKoutaJsonFormats
 import org.json4s.JsonAST.{JObject, JString}
 import org.json4s.{CustomSerializer, Formats, JNull, MappingException}
@@ -24,7 +24,7 @@ trait KoutaLightJsonFormats extends GenericKoutaJsonFormats {
         case JNull => null
       },
       { case i: Instant =>
-        JString(SiirtotiedostoInstantFormat.format(i))
+        JString(SiirtotiedostoDateTimeFormatter.format(i))
       }
     )
   })

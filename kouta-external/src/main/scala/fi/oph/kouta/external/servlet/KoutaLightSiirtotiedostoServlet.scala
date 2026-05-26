@@ -1,7 +1,7 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
-import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoInstantFormat
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoDateTimeFormatter
 import fi.oph.kouta.external.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.security.Role
@@ -37,7 +37,7 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       fieldName: String
   ): Option[Instant] = {
     dateTime.map { dateTimeStr =>
-      Try(Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))).recoverWith { case _ =>
+      Try(Instant.from(SiirtotiedostoDateTimeFormatter.parse(dateTimeStr))).recoverWith { case _ =>
         Failure(new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'"))
       }.get
     }
@@ -50,7 +50,7 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       "success" -> "true"
     )
 
-  private val DateTimeExample = SiirtotiedostoInstantFormat.format(Instant.now())
+  private val DateTimeExample = SiirtotiedostoDateTimeFormatter.format(Instant.now())
 
   registerPath(
     "/siirtotiedosto/kouta-light-koulutukset",

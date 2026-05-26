@@ -31,9 +31,11 @@
         </dependency>
 
         <dependency>
-            <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
-            <artifactId>dokumenttipalvelu</artifactId>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-external</artifactId>
+            <version>0.10-SNAPSHOT</version>
         </dependency>
+
 
         <dependency>
             <groupId>com.typesafe.slick</groupId>

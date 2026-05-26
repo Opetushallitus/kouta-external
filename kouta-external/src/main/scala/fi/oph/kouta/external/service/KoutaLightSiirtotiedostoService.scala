@@ -1,8 +1,8 @@
-package fi.oph.kouta.koutalight.service
+package fi.oph.kouta.external.service
 
-import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
-import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
-import fi.oph.kouta.koutalight.repository.KoutaLightSiirtotiedostoDAO
+import fi.oph.kouta.external.client.SiirtotiedostoPalveluClient
+import fi.oph.kouta.external.database.KoutaLightSiirtotiedostoDAO
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoOperation
 
 import java.time.Instant
 import java.util.UUID

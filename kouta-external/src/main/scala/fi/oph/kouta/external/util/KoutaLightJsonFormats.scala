@@ -1,6 +1,6 @@
-package fi.oph.kouta.koutalight.util
+package fi.oph.kouta.external.util
 
-import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoInstantFormat
 import fi.oph.kouta.util.GenericKoutaJsonFormats
 import org.json4s.JsonAST.{JObject, JString}
 import org.json4s.{CustomSerializer, Formats, JNull, MappingException}

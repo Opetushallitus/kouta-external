@@ -3,9 +3,9 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
+import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
 import fi.oph.kouta.external.domain.enums.Operation.{Create, Update, Upsert}
-import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}

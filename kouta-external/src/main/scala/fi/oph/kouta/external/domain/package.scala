@@ -2,7 +2,6 @@ package fi.oph.kouta.external
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
-import fi.oph.kouta.external.domain.indexed.KoodiUri
 import fi.oph.kouta.external.swagger.SwaggerModel
 
 import java.net.URL
@@ -294,6 +293,8 @@ package object domain {
   type Kielistetty = Map[Kieli, String]
 
   type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
+
+  type KielistettyLinkki = Map[Kieli, URL]
 
   @SwaggerModel(
     """    Lisatieto:

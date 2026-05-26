@@ -1,9 +1,9 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoInstantFormat
+import fi.oph.kouta.external.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
-import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}

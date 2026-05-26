@@ -1,8 +1,7 @@
 package fi.oph.kouta.external
 
-import fi.oph.kouta.koutalight.S3Configuration
-import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
+import fi.oph.kouta.external.client.SiirtotiedostoPalveluClient
+import fi.oph.kouta.external.domain.KoutaLightKoulutus
 
 import java.util.UUID
 

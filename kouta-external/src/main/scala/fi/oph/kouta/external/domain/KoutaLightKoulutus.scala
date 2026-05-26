@@ -1,4 +1,4 @@
-package fi.oph.kouta.koutalight.domain
+package fi.oph.kouta.external.domain
 
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid

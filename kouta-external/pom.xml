@@ -37,12 +37,6 @@
         </dependency>
 
         <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>ovara-kouta-light</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.json4s</groupId>
             <artifactId>json4s-xml_2.12</artifactId>
         </dependency>
@@ -55,6 +49,11 @@
                     <artifactId>slf4j-simple</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
+            <artifactId>dokumenttipalvelu</artifactId>
         </dependency>
 
         <dependency>

@@ -1,15 +1,14 @@
-package fi.oph.kouta.koutalight.repository
+package fi.oph.kouta.external.database
 
-import fi.oph.kouta.koutalight.domain.{KoutaLightKoulutus, SiirtotiedostoOperation}
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoOperation
+import fi.oph.kouta.external.domain.KoutaLightKoulutus
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 
 import java.time.Instant
 import java.util.UUID
 
-class KoutaLightSiirtotiedostoDAO(
-    dbConnection: KoutaExternalDatabaseConnection
-) extends KoutaLightSiirtotiedostoSQL {
+class KoutaLightSiirtotiedostoDAO(dbConnection: KoutaExternalDatabaseConnection) extends KoutaLightSiirtotiedostoSQL {
   def getKoulutukset(
       operationWindowStartTime: Option[Instant],
       operationWindowEndTime: Instant,

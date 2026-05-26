@@ -1,17 +1,16 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoDateTimeFormatter
+import fi.oph.kouta.external.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
-import fi.oph.kouta.koutalight.SiirtotiedostoApp.SiirtotiedostoInstantFormat
-import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, LocalDateTime}
+import java.time.Instant
 import java.util.UUID
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Try}
 
 class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService)
     extends KoutaServlet
@@ -24,12 +23,12 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
     val defaultEndTime = Instant.now()
     val startTimeVal   = parseInstant(startTime, "alkuaika")
     val endTimeVal     = parseInstant(endTime, "loppuaika").getOrElse(defaultEndTime)
-    (startTimeVal, endTimeVal) match {
-      case (Some(startTimeVal), _) if startTimeVal.isAfter(Instant.now()) =>
+    startTimeVal match {
+      case Some(startTimeVal) if startTimeVal.isAfter(Instant.now()) =>
         throw new IllegalArgumentException("Alkuaika ei voi olla tulevaisuudessa")
-      case (Some(startTimeVal), endTimeVal) if startTimeVal.isAfter(endTimeVal) =>
+      case Some(startTimeVal) if startTimeVal.isAfter(endTimeVal) =>
         throw new IllegalArgumentException("Alkuaika ei voi olla loppuajan jälkeen")
-      case (_, _) => (startTimeVal, endTimeVal)
+      case _ => (startTimeVal, endTimeVal)
     }
   }
 
@@ -37,15 +36,10 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       dateTime: Option[String],
       fieldName: String
   ): Option[Instant] = {
-    dateTime match {
-      case Some(dateTimeStr) =>
-        Try[Instant] {
-          Instant.from(SiirtotiedostoInstantFormat.parse(dateTimeStr))
-        } match {
-          case Success(instant) => Some(instant)
-          case Failure(_)       => throw new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'")
-        }
-      case None => None
+    dateTime.map { dateTimeStr =>
+      Try(Instant.from(SiirtotiedostoDateTimeFormatter.parse(dateTimeStr))).recoverWith { case _ =>
+        Failure(new IllegalArgumentException(s"Virheellinen $fieldName '$dateTimeStr'"))
+      }.get
     }
   }
 
@@ -56,8 +50,7 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
       "success" -> "true"
     )
 
-  private val SiirtotiedostoDateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-  private val DateTimeExample                                 = SiirtotiedostoDateTimeFormat.format(LocalDateTime.now())
+  private val DateTimeExample = SiirtotiedostoDateTimeFormatter.format(Instant.now())
 
   registerPath(
     "/siirtotiedosto/kouta-light-koulutukset",

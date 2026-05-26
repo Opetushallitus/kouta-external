@@ -1,7 +1,7 @@
-package fi.oph.kouta.koutalight.repository
+package fi.oph.kouta.external.database
 
 import com.zaxxer.hikari.{HikariConfig, HikariDataSource}
-import fi.oph.kouta.koutalight.KoutaExternalDatabaseConnectionConfiguration
+import fi.oph.kouta.external.KoutaExternalDatabaseConnectionConfiguration
 import fi.oph.kouta.logging.Logging
 import org.apache.commons.lang3.builder.ToStringBuilder
 import slick.dbio.DBIO

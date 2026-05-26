@@ -1,11 +1,10 @@
 package fi.oph.kouta.external.integration.fixture
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.database.SessionDAO
+import fi.oph.kouta.external.database.{KoutaLightExtractors, SessionDAO}
+import fi.oph.kouta.external.domain.KoutaLightKoulutus
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.{KoutaConfigurationFactory, TestSetups}
-import fi.oph.kouta.koutalight.domain.KoutaLightKoulutus
-import fi.oph.kouta.koutalight.repository.KoutaLightExtractors
 import fi.oph.kouta.mocks.{OrganisaatioServiceMock, SpecWithMocks, UrlProperties}
 import fi.oph.kouta.security.{Authority, CasSession, RoleEntity, ServiceTicket}
 import fi.oph.kouta.util.TimeUtils

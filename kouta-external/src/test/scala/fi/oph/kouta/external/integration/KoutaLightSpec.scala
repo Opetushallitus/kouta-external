@@ -2,16 +2,16 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.{En, Fi, Sv}
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
+import fi.oph.kouta.external.domain.{ExternalKoutaLightKoulutus, KoutaLightKoulutus}
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
 import fi.oph.kouta.external.service.{KoutaLightService, ValidationError, Validations}
-import fi.oph.kouta.koutalight.domain.{ExternalKoutaLightKoulutus, KoutaLightKoulutus}
 import org.json4s.jackson.JsonMethods.parse
 
 import java.net.URI
 import java.util.UUID
 
 class KoutaLightSpec extends KoutaLightFixture {
-  val nonExistingSessionId: UUID             = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
+  val nonExistingSessionId: UUID                     = UUID.fromString("9267884f-fba1-4b85-8bb3-3eb77440c197")
   val koutaLightKoulutus: ExternalKoutaLightKoulutus = KoutaLightKoulutusWithOptionalData
 
   s"PUT /koutan-tietomallista-poikkeavat-koulutukset/" should "return 401 without a session" in {
@@ -23,16 +23,25 @@ class KoutaLightSpec extends KoutaLightFixture {
       List(MinKoutaLightKoulutus),
       defaultSessionId,
       403,
-      s"""{"error":"Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"}"""
+      s"""{"error":"Käyttäjällä ${testUser.oid} ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta."}"""
     )
   }
 
   it should "return 403 when user has two organizations defined for the KoutaLight user right" in {
     put(
       List(MinKoutaLightKoulutus),
-      faultyKoutaLightSessionId,
+      faultyKoutaLightSessionWithMultipleOrgs._1,
       403,
-      s"""{"error":"Käyttäjän oikeuksissa määritelty liian monta organisaatiota"}"""
+      s"""{"error":"Käyttäjän ${testUser.oid} oikeuksissa määritelty liian monta organisaatiota."}"""
+    )
+  }
+
+  it should "return 403 when no org attached to the user role" in {
+    put(
+      List(MinKoutaLightKoulutus),
+      faultyKoutaLightSessionWithoutOrg._1,
+      403,
+      s"""{"error":"Käyttäjän ${testUser.oid} oikeuksissa puutteita."}"""
     )
   }
 
@@ -156,35 +165,29 @@ class KoutaLightSpec extends KoutaLightFixture {
   "findMissingLanguages" should "return empty list as Kielistetty field has all languages from kielivalinta" in {
     Validations.findMissingLanguages(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"))
+      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")
     ) shouldEqual List()
   }
 
   it should "return a list with Sv and En as missing languages when they do not exist in Kielistetty field even though they are defined in kielivalinta" in {
-    Validations.findMissingLanguages(List(Fi, Sv, En), Left(Map(Fi -> "kuvaus fi"))) shouldEqual List(Sv, En)
+    Validations.findMissingLanguages(List(Fi, Sv, En), Map(Fi -> "kuvaus fi")) shouldEqual List(Sv, En)
   }
 
   "validateKielistetty" should "return empty list of validation errors when kielistetty kuvaus has value for all languages defined in kielivalinta" in {
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en")),
-      "externalId6357",
+      Map(Fi -> "kuvaus fi", Sv -> "kuvaus sv", En -> "kuvaus en"),
       "kuvaus"
     ) shouldEqual List()
   }
 
   it should "return list of validation errors when kielistetty kuvaus has value for all languages defined in kielivalinta" in {
-    val externalId = "externalId6357"
     Validations.validateKielistetty(
       List(Fi, Sv, En),
-      Left(Map(Fi -> "kuvaus fi")),
-      externalId,
+      Map(Fi -> "kuvaus fi"),
       "kuvaus"
     ) shouldEqual List(
-      ValidationError(
-        koulutusExternalId = externalId,
-        message = """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv, en]"""
-      )
+      """Kielistetystä kentästä 'kuvaus' puuttuu arvo kielillä [sv, en]"""
     )
   }
 

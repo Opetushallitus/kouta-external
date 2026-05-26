@@ -4,7 +4,6 @@ import java.sql.JDBCType
 import java.time.{Instant, LocalDateTime, OffsetDateTime, ZoneId}
 import java.util.UUID
 
-import fi.oph.kouta.external.domain.Ajanjakso
 import fi.oph.kouta.domain.oid._
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.logging.Logging
@@ -30,6 +29,15 @@ trait SQLHelpers extends KoutaJsonFormats with Logging {
   implicit object SetInstant extends SetParameter[Instant] {
     def apply(v: Instant, pp: PositionedParameters): Unit = {
       pp.setObject(OffsetDateTime.ofInstant(v, ZoneId.of("Europe/Helsinki")), JDBCType.TIMESTAMP_WITH_TIMEZONE.getVendorTypeNumber)
+    }
+  }
+
+  implicit object SetInstantOption extends SetParameter[Option[Instant]] {
+    def apply(v: Option[Instant], pp: PositionedParameters): Unit = {
+      v match {
+        case Some(i) => SetInstant.apply(i, pp)
+        case None    => pp.setNull(java.sql.Types.NULL)
+      }
     }
   }
 

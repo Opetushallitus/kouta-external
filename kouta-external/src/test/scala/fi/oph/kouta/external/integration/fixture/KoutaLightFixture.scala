@@ -1,11 +1,10 @@
 package fi.oph.kouta.external.integration.fixture
 
-import fi.oph.kouta.external.service.KoutaLightService
+import fi.oph.kouta.external.database.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
+import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
+import fi.oph.kouta.external.service.{KoutaLightService, KoutaLightSiirtotiedostoService}
 import fi.oph.kouta.external.servlet.{KoutaLightServlet, KoutaLightSiirtotiedostoServlet}
 import fi.oph.kouta.external.{KoutaConfigurationFactory, SiirtotiedostoPalveluClientMock}
-import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
-import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
-import fi.oph.kouta.koutalight.service.KoutaLightSiirtotiedostoService
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods.parse
 

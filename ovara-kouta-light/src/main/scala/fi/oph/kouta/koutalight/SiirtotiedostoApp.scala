@@ -1,28 +1,25 @@
 package fi.oph.kouta.koutalight
 
-import fi.oph.kouta.koutalight.client.SiirtotiedostoPalveluClient
-import fi.oph.kouta.koutalight.domain.SiirtotiedostoOperation
-import fi.oph.kouta.koutalight.repository.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
-import fi.oph.kouta.koutalight.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
-import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
+import fi.oph.kouta.external.OvaraKoutaLightConfiguration
+import fi.oph.kouta.external.client.SiirtotiedostoPalveluClient
+import fi.oph.kouta.external.database.{KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoOperation
+import fi.oph.kouta.external.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
+import fi.oph.kouta.external.util.KoutaLightJsonFormats
 import fi.oph.kouta.logging.Logging
 import org.json4s.jackson.Serialization.writePretty
 
-import java.time.format.DateTimeFormatter
-import java.time.{Instant, ZoneId}
+import java.time.Instant
 import java.util.UUID
 import scala.sys.exit
 import scala.util.{Failure, Success, Try}
 
 object SiirtotiedostoApp extends Logging with KoutaLightJsonFormats {
-  val SiirtotiedostoInstantFormat: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(ZoneId.of("Europe/Helsinki"))
-
   def main(args: Array[String]): Unit = {
     val opId         = UUID.randomUUID()
     val runStartTime = Instant.now()
 
-    val configuration = Configuration.createConfig()
+    val configuration = OvaraKoutaLightConfiguration.createConfig()
 
     val databaseConnectionConfiguration = configuration.databaseConnectionConfiguration
     val dbConnection                    = KoutaExternalDatabaseConnection(databaseConnectionConfiguration)

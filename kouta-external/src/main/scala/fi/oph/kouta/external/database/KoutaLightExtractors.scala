@@ -1,9 +1,10 @@
-package fi.oph.kouta.koutalight.repository
+package fi.oph.kouta.external.database
 
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.koutalight.domain.{Kielistetty, KoutaLightKoulutusMetadata, KoutaLightKoulutus, SiirtotiedostoOperation}
-import fi.oph.kouta.koutalight.util.KoutaLightJsonFormats
+import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoOperation
+import fi.oph.kouta.external.domain.{Kielistetty, KoutaLightKoulutus, KoutaLightKoulutusMetadata}
+import fi.oph.kouta.external.util.KoutaLightJsonFormats
 import org.json4s.jackson.Serialization.read
 import slick.jdbc.GetResult
 

@@ -1,8 +1,8 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.external.TestData.KoutaLightKoulutusWithOptionalData
+import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
-import fi.oph.kouta.koutalight.domain.ExternalKoutaLightKoulutus
 
 import java.time.temporal.ChronoUnit
 import java.time.{Duration, LocalDateTime}

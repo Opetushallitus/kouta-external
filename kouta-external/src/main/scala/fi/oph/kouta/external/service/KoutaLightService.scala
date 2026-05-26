@@ -3,10 +3,9 @@ package fi.oph.kouta.external.service
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.KoutaLightDAO
+import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
-import fi.oph.kouta.external.domain.enums.Operation.Upsert
-import fi.oph.kouta.external.domain.Kielistetty
-import fi.oph.kouta.koutalight.domain.{KielistettyLinkki, ExternalKoutaLightKoulutus}
+import fi.oph.kouta.external.domain.enums.Operation.{Create, Update, Upsert}
 import fi.oph.kouta.logging.Logging
 
 import scala.util.{Failure, Success}
@@ -14,46 +13,39 @@ import scala.util.{Failure, Success}
 case class ValidationError(koulutusExternalId: String, message: String)
 
 object Validations {
-  def and(validations: Seq[ValidationError]*): Seq[ValidationError] = validations.flatten.distinct
+  def toValidationErrors(koulutusExternalId: String, validations: Seq[String]*): Seq[ValidationError] =
+    validations.flatten.map(s => ValidationError(koulutusExternalId, s)).distinct
 
-  def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Either[Kielistetty, KielistettyLinkki]): Seq[Kieli] =
-    for {
-      kieli <- kielivalinta
-      if !kielistetty.merge.keys.toSeq.contains(kieli)
-    } yield kieli
+  def findMissingLanguages(kielivalinta: Seq[Kieli], kielistetty: Map[Kieli, _]): Seq[Kieli] =
+    kielivalinta.filter(kieli => !kielistetty.keys.toSeq.contains(kieli))
 
   def validateKielistetty(
       kielivalinta: Seq[Kieli],
-      kielistetty: Either[Kielistetty, KielistettyLinkki],
-      koulutusExternalId: String,
+      kielistetty: Map[Kieli, _],
       propertyName: String
-  ): Seq[ValidationError] = {
+  ): Seq[String] = {
     Validations.findMissingLanguages(kielivalinta, kielistetty) match {
       case missingLanguages if missingLanguages.nonEmpty =>
-        List(ValidationError(koulutusExternalId, Validations.invalidKielistetty(missingLanguages, propertyName)))
+        List(Validations.invalidKielistetty(missingLanguages, propertyName))
       case _ => List()
     }
   }
 
   def validateOptionalKielistetty(
       kielivalinta: Seq[Kieli],
-      koulutusExternalId: String,
-      property: Either[Kielistetty, KielistettyLinkki],
+      kielistetty: Map[Kieli, _],
       propertyName: String
-  ): Seq[ValidationError] = {
-    if (property.merge.nonEmpty)
-      Validations.validateKielistetty(kielivalinta, property, koulutusExternalId, propertyName)
+  ): Seq[String] = {
+    if (kielistetty.nonEmpty)
+      Validations.validateKielistetty(kielivalinta, kielistetty, propertyName)
     else List()
   }
 
-  def validateOpetuskielet(koulutusExternalId: String, opetuskielet: Seq[String]): Seq[ValidationError] = {
-    val invalidKielikoodit = opetuskielet.flatMap {
-      case kieli: String if kieli.length < 2 || kieli.length > 3 => Some(kieli)
-      case _                                                     => None
-    }
+  def validateOpetuskielet(opetuskielet: Seq[String]): Seq[String] = {
+    val invalidKielikoodit = opetuskielet.filter(kieli => kieli.length < 2 || kieli.length > 3)
 
     if (invalidKielikoodit.nonEmpty)
-      List(ValidationError(koulutusExternalId, invalidOpetuskielet(invalidKielikoodit)))
+      List(invalidOpetuskielet(invalidKielikoodit))
     else
       List()
   }
@@ -71,38 +63,39 @@ class KoutaLightService extends Logging {
   def validate(koulutus: ExternalKoutaLightKoulutus): Seq[ValidationError] = {
     val kielivalinta       = koulutus.kielivalinta
     val koulutusExternalId = koulutus.externalId
-    Validations.and(
-      Validations.validateKielistetty(kielivalinta, Left(koulutus.nimi), koulutusExternalId, "nimi"),
-      Validations.validateKielistetty(kielivalinta, Left(koulutus.kuvaus), koulutusExternalId, "kuvaus"),
-      koulutus.tarjoajat.zipWithIndex.flatMap(tarjoaja =>
+    Validations.toValidationErrors(
+      koulutusExternalId,
+      Validations.validateKielistetty(kielivalinta, koulutus.nimi, "nimi"),
+      Validations.validateKielistetty(kielivalinta, koulutus.kuvaus, "kuvaus"),
+      koulutus.tarjoajat.zipWithIndex.flatMap(tarjoajaWithIndex => {
+        val (tarjoaja, index) = tarjoajaWithIndex
         Validations
-          .validateKielistetty(kielivalinta, Left(tarjoaja._1), koulutusExternalId, s"tarjoajat[${tarjoaja._2}]")
-      ),
-      koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimike =>
+          .validateKielistetty(kielivalinta, tarjoaja, s"tarjoajat[$index]")
+      }),
+      koulutus.ammattinimikkeet.zipWithIndex.flatMap(ammattinimikeWithIndex => {
+        val (ammattinimike, index) = ammattinimikeWithIndex
         Validations.validateKielistetty(
           kielivalinta,
-          Left(ammattinimike._1),
-          koulutusExternalId,
-          s"ammattinimikkeet[${ammattinimike._2}]"
+          ammattinimike,
+          s"ammattinimikkeet[$index]"
         )
-      ),
-      koulutus.asiasanat.zipWithIndex.flatMap(asiasana =>
+      }),
+      koulutus.asiasanat.zipWithIndex.flatMap(asiasanaWithIndex => {
+        val (asiasana, index) = asiasanaWithIndex
         Validations
-          .validateKielistetty(kielivalinta, Left(asiasana._1), koulutusExternalId, s"asiasanat[${asiasana._2}]")
-      ),
+          .validateKielistetty(kielivalinta, asiasana, s"asiasanat[$index]")
+      }),
       Validations.validateOptionalKielistetty(
         kielivalinta,
-        koulutusExternalId,
-        Left(koulutus.maksullisuuskuvaus),
+        koulutus.maksullisuuskuvaus,
         "maksullisuuskuvaus"
       ),
       Validations.validateOptionalKielistetty(
         kielivalinta,
-        koulutusExternalId,
-        Right(koulutus.hakulomakeLinkki),
+        koulutus.hakulomakeLinkki,
         "hakulomakeLinkki"
       ),
-      Validations.validateOpetuskielet(koulutusExternalId, koulutus.opetuskielet)
+      Validations.validateOpetuskielet(koulutus.opetuskielet)
     )
   }
 
@@ -124,10 +117,10 @@ class KoutaLightService extends Logging {
         KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
           case Success(null) =>
             logger.info(s"Created koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.CreateSuccess(externalId = Some(externalId)))
+            List(KoutaLightMassResult.Success(Create, externalId))
           case Success(_) =>
             logger.info(s"Updated koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
-            List(KoutaLightMassResult.UpdateSuccess(externalId = Some(externalId)))
+            List(KoutaLightMassResult.Success(Update, externalId))
           case Failure(e) =>
             logger.error(
               s"Create or update failed on koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid",

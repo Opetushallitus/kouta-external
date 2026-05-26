@@ -11,6 +11,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |            required:
     |              - operation
     |              - success
+    |              - externalId
     |            properties:
     |              operation:
     |                const: CREATE
@@ -74,12 +75,12 @@ object KoutaLightMassResult {
   case class Error(
       operation: Operation,
       success: Boolean,
-      externalId: Option[String],
+      externalId: String,
       exception: String
   ) extends KoutaLightMassResult(operation, success)
 
   object Error {
-    def apply(operation: Operation, externalId: Option[String], exception: String): Error =
+    def apply(operation: Operation, externalId: String, exception: String): Error =
       Error(operation, success = false, externalId, exception)
   }
 }

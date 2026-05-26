@@ -6,7 +6,8 @@ Sovellus käyttää kouta-externalin tietokantaa, joten embeddedJettyLauncherin 
 SiirtotiedostoAppia kehitysympäristössä.
 
 Ajoa varten kopioi konfiguraatio `ovara-kouta-light/ovara-kouta-light.dev.properties.example`-tiedoston sisältö 
-`ovara-kouta-light/ovara-kouta-light.properties`-tiedostoon.
+`ovara-kouta-light/ovara-kouta-light.properties`-tiedostoon. IDEAsta ajettaessa työhakemistoksi tulee olla valittuna 
+`kouta-external/ovara-kouta-light` (SiirtotiedostoAppin Run configuration > working directory).
 
 `ovara-kouta-light`-moduulin `SiirtotiedostoApp`ia pystyy ajamaan omalta koneelta,
 kunhan lisää IDEA:n Run-konfiguraation "Environment Variables"-kenttään `AWS_PROFILE=oph-dev`,

@@ -103,7 +103,7 @@ class KoutaLightService extends Logging {
       validationErrors: Seq[ValidationError]
   ): Seq[KoutaLightMassResult] =
     validationErrors.map(error =>
-      KoutaLightMassResult.Error(Upsert, Option(error.koulutusExternalId), exception = error.message)
+      KoutaLightMassResult.Error(Upsert, error.koulutusExternalId, exception = error.message)
     )
 
   def put(
@@ -129,7 +129,7 @@ class KoutaLightService extends Logging {
             List(
               KoutaLightMassResult.Error(
                 operation = Upsert,
-                externalId = Some(externalId),
+                externalId = externalId,
                 exception = e.toString
               )
             )

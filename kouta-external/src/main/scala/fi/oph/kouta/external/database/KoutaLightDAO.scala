@@ -13,7 +13,7 @@ object KoutaLightDAO extends KoutaLightSQL {
    *
    * @param koulutus ExternalKoutaLightKoulutus to save to db
    * @param organisaatioOid Oid of the organization that is mapped with the API user i.e. owner org
-   * @return null if new koulutus is saved or updated_at timestamp if old koulutus is updated
+   * @return null if new koulutus is created or updated_at timestamp if old koulutus is updated
    */
   def createOrUpdate(koulutus: ExternalKoutaLightKoulutus, organisaatioOid: OrganisaatioOid): Try[String] = {
     val koulutusToCreate = KoutaLightKoulutus(organisaatioOid, koulutus)

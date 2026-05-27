@@ -24,10 +24,6 @@
                     <groupId>com.github.ben-manes.caffeine</groupId>
                     <artifactId>caffeine</artifactId>
                 </exclusion>
-		<exclusion>
-		    <groupId>jakarta.xml.bind</groupId>
-		    <artifactId>jakarta.xml.bind-api</artifactId>
-		</exclusion>
             </exclusions>
         </dependency>
 
@@ -65,15 +61,6 @@
             <groupId>org.asynchttpclient</groupId>
             <artifactId>async-http-client</artifactId>
             <exclusions>
-                <!-- Because dokumenttipalvelu library brings a newer version in -->
-                <exclusion>
-                    <groupId>io.netty</groupId>
-                    <artifactId>netty-transport-native-unix-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.reactivestreams</groupId>
-                    <artifactId>reactive-streams</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>

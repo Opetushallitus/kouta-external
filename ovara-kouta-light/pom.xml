@@ -22,12 +22,6 @@
         <dependency>
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>jakarta.xml.bind</groupId>
-                    <artifactId>jakarta.xml.bind-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -39,12 +33,6 @@
         <dependency>
             <groupId>com.typesafe.slick</groupId>
             <artifactId>slick_2.12</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.reactivestreams</groupId>
-                    <artifactId>reactive-streams</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.typesafe.slick</groupId>

@@ -33,7 +33,8 @@ case class ExternalKoutaLightKoulutus(
     isMaksullinen: Boolean = false,
     maksullisuuskuvaus: Kielistetty = Map(),
     osaaminenUrit: Seq[URL] = List(),
-    opetuskielet: Seq[String] = List()
+    opetuskielet: Seq[String] = List(),
+    opetustavat: Seq[String] = List()
 ) extends KoutaLightKoulutusBase
 
 case class KoutaLightKoulutusMetadata(
@@ -49,7 +50,8 @@ case class KoutaLightKoulutusMetadata(
     isMaksullinen: Boolean,
     maksullisuuskuvaus: Kielistetty,
     osaaminenUrit: Seq[URL],
-    opetuskielet: Seq[String]
+    opetuskielet: Seq[String],
+    opetustavat: Seq[String]
 )
 object KoutaLightKoulutusMetadata {
   private def kielistettyToKeyword(kielistetty: Kielistetty) = for ((kieli, value) <- kielistetty)
@@ -69,7 +71,8 @@ object KoutaLightKoulutusMetadata {
       koulutus.isMaksullinen,
       koulutus.maksullisuuskuvaus,
       koulutus.osaaminenUrit,
-      koulutus.opetuskielet
+      koulutus.opetuskielet,
+      koulutus.opetustavat
     )
   }
 }

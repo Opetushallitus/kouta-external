@@ -486,6 +486,7 @@ object TestData {
     johtaaTutkintoon = true,
     isMaksullinen = true,
     maksullisuuskuvaus = Map(Fi -> "maksullisuuskuvaus fi", Sv -> "maksullisuuskuvaus sv"),
-    opetuskielet = List("sv", "kr", "eng")
+    opetuskielet = List("sv", "kr", "eng"),
+    opetustavat = List("Paikan päällä", "Monimuoto")
   )
 }

@@ -5,7 +5,8 @@ import fi.oph.kouta.external.service.KoutaLightService
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.security.Role.KoutaLightTallentajaRole
 import fi.oph.kouta.servlet.Authenticated
-import org.scalatra.{Forbidden, Ok}
+import org.json4s.MappingException
+import org.scalatra.{BadRequest, Forbidden, Ok}
 
 object KoutaLightServlet extends KoutaLightServlet(KoutaLightService)
 
@@ -58,7 +59,14 @@ class KoutaLightServlet(koutaLightService: KoutaLightService) extends KoutaServl
       // koulutuksen omistajana tietokantaan tallennettaessa
       if (orgsForTheRole.size == 1) {
         val ownerOrg = orgsForTheRole.head
-        Ok(koutaLightService.put(parsedBody.extract[List[ExternalKoutaLightKoulutus]], ownerOrg))
+        try {
+          Ok(koutaLightService.put(parsedBody.extract[List[ExternalKoutaLightKoulutus]], ownerOrg))
+        } catch {
+          case e: MappingException =>
+            val errorStr = s"Virhe käyttäjän $userOid lähettämien tallennettavien koulutusten käsittelyssä: ${e.cause}"
+            logWarningMessage(errorStr)
+            BadRequest(errorStr)
+        }
       } else if (orgsForTheRole.size > 1) {
         val errorStr = s"Käyttäjän $userOid oikeuksissa määritelty liian monta organisaatiota."
         logWarningMessage(errorStr)

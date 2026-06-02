@@ -3,7 +3,7 @@ package fi.oph.kouta.external.domain
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 
-import java.net.URL
+import java.net.{URI, URL}
 import java.time.{Instant, LocalDateTime}
 import java.util.UUID
 
@@ -32,7 +32,7 @@ case class ExternalKoutaLightKoulutus(
     johtaaTutkintoon: Boolean = false,
     isMaksullinen: Boolean = false,
     maksullisuuskuvaus: Kielistetty = Map(),
-    osaaminenUrit: Seq[URL] = List(),
+    osaaminenUrit: Seq[URI] = List(),
     opetuskielet: Seq[String] = List(),
     opetustavat: Seq[String] = List()
 ) extends KoutaLightKoulutusBase
@@ -49,7 +49,7 @@ case class KoutaLightKoulutusMetadata(
     johtaaTutkintoon: Boolean,
     isMaksullinen: Boolean,
     maksullisuuskuvaus: Kielistetty,
-    osaaminenUrit: Seq[URL],
+    osaaminenUrit: Seq[URI],
     opetuskielet: Seq[String],
     opetustavat: Seq[String]
 )

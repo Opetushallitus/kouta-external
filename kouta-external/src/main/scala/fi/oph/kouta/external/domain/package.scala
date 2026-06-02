@@ -4,7 +4,7 @@ import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.domain.{Alkamiskausityyppi, Kieli, Koulutustyyppi}
 import fi.oph.kouta.external.swagger.SwaggerModel
 
-import java.net.URL
+import java.net.{URI, URL}
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -294,7 +294,7 @@ package object domain {
 
   type KielistettyPostinumero = Map[Kieli, Postinumerokoodi]
 
-  type KielistettyLinkki = Map[Kieli, URL]
+  type KielistettyLinkki = Map[Kieli, URI]
 
   @SwaggerModel(
     """    Lisatieto:

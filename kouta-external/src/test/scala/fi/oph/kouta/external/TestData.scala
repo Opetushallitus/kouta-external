@@ -481,7 +481,7 @@ object TestData {
     hakuaikaAlkaa = Some(LocalDateTime.parse("2025-08-23T09:00")),
     hakuaikaPaattyy = Some(LocalDateTime.parse("2025-08-23T09:00")),
     aloituspaikatLukumaara = Some(10),
-    hakulomakeLinkki = Map(Fi -> new URI("https://opintopolku.fi/konfo/fi/").toURL, Sv -> new URI("https://opintopolku.fi/konfo/sv/").toURL),
+    hakulomakeLinkki = Map(Fi -> new URI("https://opintopolku.fi/konfo/fi/"), Sv -> new URI("www.opintopolku.fi/konfo/sv/")),
     isTyovoimakoulutus = true,
     johtaaTutkintoon = true,
     isMaksullinen = true,

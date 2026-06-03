@@ -152,7 +152,8 @@ case class Apuraha(min: Option[Int],
     |            - 'maksuton'
     |            - 'lukuvuosimaksu'
     |        maksunMaara:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa. Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'."
     |          example: 220.50
     |"""

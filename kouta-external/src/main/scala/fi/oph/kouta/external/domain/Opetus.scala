@@ -61,13 +61,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: array
     |          description: Opetuksen maksullisuustiedot. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa kaksi eri maksutyyppiä, 'lukuvuosimaksu' ja 'maksullinen', muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
     |          items:
-    |            type: object
     |            $ref: '#/components/schemas/Maksu'
     |        lisatiedot:
     |          type: array
     |          description: Koulutuksen toteutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
     |          items:
-    |            type: object
     |            $ref: '#/components/schemas/Lisatieto'
     |        onkoApuraha:
     |          type: boolean

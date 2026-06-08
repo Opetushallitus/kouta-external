@@ -3,116 +3,50 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <groupId>fi.oph.kouta</groupId>
-    <artifactId>europass-publisher</artifactId>
-    <version>0.2-SNAPSHOT</version>
-    <name>${project.artifactId}</name>
-
     <parent>
-        <artifactId>kouta-external-parent</artifactId>
         <groupId>fi.oph.kouta</groupId>
+        <artifactId>kouta-external-parent</artifactId>
         <version>0.2-SNAPSHOT</version>
     </parent>
 
+    <artifactId>ovara-kouta-light</artifactId>
+    <name>${project.artifactId}</name>
+    <version>0.1-SNAPSHOT</version>
+
     <dependencies>
-        <dependency>
-            <groupId>fi.oph.kouta</groupId>
-            <artifactId>kouta-common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.github.ben-manes.caffeine</groupId>
-                    <artifactId>caffeine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-	<dependency>
-	    <groupId>fi.oph.kouta</groupId>
-	    <artifactId>kouta-external</artifactId>
-	    <version>0.10-SNAPSHOT</version>
-	    <exclusions>
-		<exclusion>
-		    <groupId>fi.vm.sade</groupId>
-		    <artifactId>scala-logging_2.12</artifactId>
-		</exclusion>
-		<exclusion>
-		    <groupId>org.scalatra.scalate</groupId>
-		    <artifactId>scalate-core_2.12</artifactId>
-		</exclusion>
-	    </exclusions>
-	</dependency>
-
-        <dependency>
-            <groupId>org.json4s</groupId>
-            <artifactId>json4s-xml_2.12</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_2.12</artifactId>
-        </dependency>
 
-        <!-- HTTP -->
         <dependency>
-            <groupId>org.asynchttpclient</groupId>
-            <artifactId>async-http-client</artifactId>
-            <exclusions>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatra</groupId>
-            <artifactId>scalatra_2.12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scalatra</groupId>
-            <artifactId>scalatra-json_2.12</artifactId>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-common</artifactId>
         </dependency>
 
         <dependency>
-            <!-- jsoup HTML parser library @ https://jsoup.org/ -->
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.22.1</version>
+            <groupId>fi.oph.kouta</groupId>
+            <artifactId>kouta-external</artifactId>
+            <version>0.10-SNAPSHOT</version>
         </dependency>
 
-        <!-- utilities -->
         <dependency>
-            <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
-            <artifactId>dokumenttipalvelu</artifactId>
+            <groupId>com.typesafe.slick</groupId>
+            <artifactId>slick_2.12</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
+            <groupId>com.typesafe.slick</groupId>
+            <artifactId>slick-hikaricp_2.12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-access</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.blemale</groupId>
-            <artifactId>scaffeine_2.12</artifactId>
-        </dependency>
 
-        <!-- Jetty -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Test -->
         <dependency>
             <groupId>org.scalatra</groupId>
             <artifactId>scalatra-scalatest_2.12</artifactId>
@@ -156,7 +90,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>${plugin.exec-maven-plugin.version}</version>
                 <configuration>
-                    <mainClass>fi.oph.kouta.europass.EuropassPublisherApp</mainClass>
+                    <mainClass>fi.oph.kouta.koutalight.SiirtotiedostoApp</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -192,7 +126,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>fi.oph.kouta.europass.EuropassPublisherApp</mainClass>
+                                    <mainClass>fi.oph.kouta.koutalight.SiirtotiedostoApp</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>

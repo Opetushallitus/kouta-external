@@ -86,3 +86,4 @@ object MassService {
 
 case class DuplicateOidException(duplicates: Iterable[Oid])
     extends IllegalArgumentException(s"Pyynnössä oli monta kohdetta, joilla oli sama OID: ${duplicates.mkString(", ")}")
+

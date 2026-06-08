@@ -19,6 +19,7 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
       responseStatus: Int = 200,
       session: Option[(UUID, CasSession)] = None,
       koulutus: Koulutus = koulutus
+
   ): Unit =
     addCreateMock(
       "koulutus",
@@ -63,7 +64,6 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
     mockCreate(responseStringWithOid(koulutusOid.s))
 
     val result = put(List(koulutus))
-
     result shouldEqual parse(
       s"""[{"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1"}]"""
     )
@@ -74,7 +74,6 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
     mockCreate(responseStringWithOid(koulutusOid.s), koulutus = koulutusWithoutExternalId)
 
     val result = put(List(koulutusWithoutExternalId))
-
     result shouldEqual parse(s"""[{"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}"}]""")
   }
 

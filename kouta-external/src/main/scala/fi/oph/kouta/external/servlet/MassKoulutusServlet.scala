@@ -22,7 +22,7 @@ object MassOperations {
 object MassKoulutusServlet extends MassKoulutusServlet(KoulutusService)
 
 class MassKoulutusServlet(koulutusService: KoulutusService)
-    extends KoutaServlet
+  extends KoutaServlet
     with CasAuthenticatedServlet
     with FutureSupport {
 

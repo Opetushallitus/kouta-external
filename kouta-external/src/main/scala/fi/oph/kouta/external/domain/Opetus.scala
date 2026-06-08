@@ -146,7 +146,7 @@ case class Apuraha(min: Option[Int],
     |      properties:
     |        maksullisuustyyppi:
     |          type: string
-    |          description: Maksullisuuden tyyppi. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa sekä 'lukuvuosimaksu' että 'maksullinen' maksuissa, muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
+    |          description: Maksullisuuden tyyppi. Ammatillisilla (amm, amm-tutkinnon-osa, amm-osaamisala, amm-muu, telma) ja lukiototeutuksilla voi olla yhtäaikaa sekä 'lukuvuosimaksu' että 'maksullinen' maksuissa, muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
     |          enum:
     |            - 'maksullinen'
     |            - 'maksuton'

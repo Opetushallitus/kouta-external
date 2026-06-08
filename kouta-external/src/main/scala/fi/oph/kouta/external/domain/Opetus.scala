@@ -61,13 +61,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          type: array
     |          description: Opetuksen maksullisuustiedot. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa kaksi eri maksutyyppiä, 'lukuvuosimaksu' ja 'maksullinen', muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
     |          items:
-    |            type: object
     |            $ref: '#/components/schemas/Maksu'
     |        lisatiedot:
     |          type: array
     |          description: Koulutuksen toteutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
     |          items:
-    |            type: object
     |            $ref: '#/components/schemas/Lisatieto'
     |        onkoApuraha:
     |          type: boolean
@@ -148,13 +146,14 @@ case class Apuraha(min: Option[Int],
     |      properties:
     |        maksullisuustyyppi:
     |          type: string
-    |          description: Maksullisuuden tyyppi. Ammatillisilla ja lukiototeutuksilla voi olla yhtäaikaa sekä 'lukuvuosimaksu' että 'maksullinen' maksuissa, muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
+    |          description: Maksullisuuden tyyppi. Ammatillisilla (amm, amm-tutkinnon-osa, amm-osaamisala, amm-muu, telma) ja lukiototeutuksilla voi olla yhtäaikaa sekä 'lukuvuosimaksu' että 'maksullinen' maksuissa, muilla toteutuksilla vain yksi arvo, joka on julkaistulle toteutukselle pakollinen.
     |          enum:
     |            - 'maksullinen'
     |            - 'maksuton'
     |            - 'lukuvuosimaksu'
     |        maksunMaara:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa. Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'."
     |          example: 220.50
     |"""

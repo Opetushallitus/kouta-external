@@ -7,6 +7,7 @@ import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
 import fi.oph.kouta.security.Role
 import fi.oph.kouta.servlet.Authenticated
 import org.scalatra.{Forbidden, Ok}
+import org.json4s.jackson.Serialization.writePretty
 
 import java.time.Instant
 import java.util.UUID
@@ -90,6 +91,7 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
   get("/kouta-light-koulutukset") {
     implicit val authenticated: Authenticated = authenticate
     val isOphPaakayttaja                      = authenticated.session.roles.contains(Role.Paakayttaja)
+    val userOid                               = authenticated.session.personOid
 
     val siirtotiedostoCreationEnabled =
       KoutaConfigurationFactory.configuration.securityConfiguration.transferFileCreationEnabled
@@ -97,12 +99,19 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
     if (siirtotiedostoCreationEnabled) {
       if (isOphPaakayttaja) {
         val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
-        Ok(resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)))
+        val result = resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime))
+
+        logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(result)}")
+        Ok(result)
       } else {
-        Forbidden(Map("error" -> "Käyttäjällä ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta"))
+        val errorMsg = Map("error" -> s"Käyttäjällä $userOid ei ole oikeutta koulutusten tallentamiseen rajapinnan kautta")
+        logger.warn(errorMsg.toString())
+        Forbidden(errorMsg)
       }
     } else {
-      Forbidden(Map("error" -> "Rajapinta ei ole käytössä tässä ympäristössä."))
+      val errorMsg = Map("error" -> "Rajapinta ei ole käytössä tässä ympäristössä.")
+      logger.warn(errorMsg.toString())
+      Forbidden(errorMsg)
     }
   }
 }

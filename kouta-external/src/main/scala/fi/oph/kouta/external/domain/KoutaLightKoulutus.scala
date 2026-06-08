@@ -3,7 +3,7 @@ package fi.oph.kouta.external.domain
 import fi.oph.kouta.domain.Kieli
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 
-import java.net.{URI, URL}
+import java.net.URI
 import java.time.{Instant, LocalDateTime}
 import java.util.UUID
 

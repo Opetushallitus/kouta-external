@@ -121,8 +121,7 @@
     "isTaydennyskoulutus": false,
     "tunniste": "AY694943A",
     "opetus": {
-      "maksullisuustyyppi": "maksullinen",
-      "maksunMaara": 160,
+      "maksut": [{"maksullisuustyyppi": "maksullinen", "maksunMaara": 160}],
       "maksullisuusKuvaus": {},
       "suunniteltuKestoKuvaus": {},
       "koulutuksenAlkamiskausi": {

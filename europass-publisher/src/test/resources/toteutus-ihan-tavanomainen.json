@@ -128,7 +128,7 @@
     "isTaydennyskoulutus": false,
     "tunniste": "ay044116S",
     "opetus": {
-      "maksullisuustyyppi": "maksuton",
+      "maksut": [{"maksullisuustyyppi": "maksuton"}],
       "maksullisuusKuvaus": {},
       "suunniteltuKestoKuvaus": {
         "en": "<p>There is a continuous registration for the course until 31.5.2023.</p>"

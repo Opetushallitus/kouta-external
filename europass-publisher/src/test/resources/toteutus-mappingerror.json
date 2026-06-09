@@ -131,7 +131,7 @@
       "hasJotpaRahoitus": true,
       "isTaydennyskoulutus": true,
       "opetus": {
-        "maksullisuustyyppi": "maksuton",
+        "maksut": [{"maksullisuustyyppi": "maksuton"}],
         "maksullisuusKuvaus": {
           "fi": "<p>Koulutus on Jatkuvan oppimisen ja työllisyyden palvelukeskuksen rahoittama. Palvelukeskus edistää työikäisten osaamisen kehittämistä ja osaavan työvoiman saatavuutta. </p>"
         },

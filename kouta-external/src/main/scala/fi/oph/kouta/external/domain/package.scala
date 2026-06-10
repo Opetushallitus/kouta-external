@@ -95,6 +95,21 @@ package object domain {
       |          $ref: '#/components/schemas/HtmlString'
       |        en:
       |          $ref: '#/components/schemas/HtmlString'
+      |    Osaamistavoitteet:
+      |      type: object
+      |      properties:
+      |        fi:
+      |          type: string
+      |          example: Suomenkielinen osaamistavoite
+      |          description: "Suomenkielinen osaamistavoite, jos kielivalinnassa on 'fi'"
+      |        sv:
+      |          type: string
+      |          example: Ruotsinkielinen osaamistavoite
+      |          description: "Ruotsinkielinen osaamistavoite, jos kielivalinnassa on 'sv'"
+      |        en:
+      |          type: string
+      |          example: Englanninkielinen osaamistavoite
+      |          description: "Englanninkielinen osaamistavoite, jos kielivalinnassa on 'en'"
       |    Linkki:
       |      type: object
       |      properties:

@@ -16,8 +16,11 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        kuvaus:
     |          type: object
     |          description: Toteutuksen kuvausteksti eri kielillä. Kielet on määritetty toteutuksen kielivalinnassa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Kuvaus'
+    |          $ref: '#/components/schemas/Kuvaus'
+    |        osaamistavoitteet:
+    |          type: object
+    |          description: Toteutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Osaamistavoitteet'
     |        opetus:
     |          type: object
     |          description: Pakollinen julkaistulla toteutuksella
@@ -664,6 +667,9 @@ case class AikuistenPerusopetusToteutusMetadata(
     |              description: Opintojen laajuus tai kesto numeroarvona.
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |              example: 10
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |"""
 )
 case class KkOpintojaksoToteutusMetadata(
@@ -745,6 +751,16 @@ case class ErikoislaakariToteutusMetadata(
     |              type: string
     |              description: Opinnon tyyppi. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/html/koodisto/opinnontyyppi/1)
     |              example: opinnontyyppi_1#1
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
+    |            liitetytOpintojaksot:
+    |              type: array
+    |              description: Opintokokonaisuuteen liitettyjen opintojaksojen toteutus-oidit.
+    |                Jos opintokokonaisuuden tila on 'Julkaistu', tulee kaikkien siihen liitettyjen opintojakso-toteutusten olla julkaistuja.
+    |                Opintokokonaisuudella ei tarvitse olla yhtään liitettyä opintojaksototeutusta.
+    |              items:
+    |                type: string
     |"""
 )
 case class KkOpintokokonaisuusToteutusMetadata(

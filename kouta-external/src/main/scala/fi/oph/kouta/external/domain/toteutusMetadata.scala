@@ -107,7 +107,7 @@ case class AmmatillinenToteutusMetadata(
     |              type: boolean
     |              description: Tieto siitä onko toteutuksella käytössä hakukohteet
     |            hakutermi:
-    |              type: object
+    |              type: string
     |              description: Pakollinen, jos isHakukohteetKaytossa on päällä.
     |              $ref: '#/components/schemas/Hakutermi'
     |            hakulomaketyyppi:
@@ -138,7 +138,8 @@ case class AmmatillinenToteutusMetadata(
     |            hakuaika:
     |              type: array
     |              description: Toteutuksen hakuaika. Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu'.
-    |              $ref: '#/components/schemas/Ajanjakso'
+    |              items:
+    |                $ref: '#/components/schemas/Ajanjakso'
     |            aloituspaikat:
     |              type: integer
     |              description: Toteutuksen aloituspaikkojen lukumäärä
@@ -171,6 +172,9 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              const: amm-tutkinnon-osa
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |""")
 case class AmmatillinenTutkinnonOsaToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmTutkinnonOsa,
@@ -205,6 +209,9 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              const: amm-osaamisala
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |"""
 )
 case class AmmatillinenOsaamisalaToteutusMetadata(
@@ -241,6 +248,9 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
     |              const: amm-muu
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |""")
 case class AmmatillinenMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = AmmMuu,
@@ -517,6 +527,11 @@ case class TelmaToteutusMetadata(
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              const: vapaa-sivistystyo-opistovuosi
+    |            liitetytOsaamismerkit:
+    |              type: array
+    |              description: Toteutukseen liitettyjen osaamismerkkien koulutus-oidit
+    |              items:
+    |                type: string
     |""")
 case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoOpistovuosi,
@@ -543,6 +558,14 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              const: vapaa-sivistystyo-muu
+    |            liitetytOsaamismerkit:
+    |              type: array
+    |              description: Toteutukseen liitettyjen osaamismerkkien koulutus-oidit
+    |              items:
+    |                type: string
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |""")
 case class VapaaSivistystyoMuuToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoMuu,
@@ -579,6 +602,13 @@ case class VapaaSivistystyoMuuToteutusMetadata(
                 |              type: string
                 |              description: Koulutuksen metatiedon tyyppi
                 |              const: vapaa-sivistystyo-osaamismerkki
+                |            isPieniOsaamiskokonaisuus:
+                |              type: boolean
+                |              description: Onko toteutus pieni osaamiskokonaisuus?
+                |            suoritetaanNayttona:
+                |              type: boolean
+                |              description: Tieto siitä suoritetaanko koulutuksen toteutus nayttönä. Jos kentän arvona ei ole true, tarkoittaa se, että toteutus suoritetaan kurssimuotoisena.
+                |              example: false
                 |""")
 case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
     tyyppi: Koulutustyyppi = VapaaSivistystyoOsaamismerkki,
@@ -804,6 +834,9 @@ case class KkOpintokokonaisuusToteutusMetadata(
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
     |              const: erikoistumiskoulutus
+    |            isPieniOsaamiskokonaisuus:
+    |              type: boolean
+    |              description: Onko toteutus pieni osaamiskokonaisuus?
     |"""
 )
 case class ErikoistumiskoulutusToteutusMetadata(
@@ -915,6 +948,9 @@ case class TaiteenPerusopetusToteutusMetadata(
   |              format: double
   |              description: Opintojen laajuuden enimmäismäärä numeroarvona
   |              example: 20
+  |            isPieniOsaamiskokonaisuus:
+  |              type: boolean
+  |              description: Onko toteutus pieni osaamiskokonaisuus?
   |"""
 )
 case class MuuToteutusMetadata(

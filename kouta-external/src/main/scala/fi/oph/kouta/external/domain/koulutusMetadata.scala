@@ -14,6 +14,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Koulutuksen kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa. Voi olla tyhjä ennen julkaisua.
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
+    |        osaamistavoitteet:
+    |          type: object
+    |          description: Koulutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Osaamistavoitteet'
     |        lisatiedot:
     |          type: array
     |          description: Koulutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
@@ -851,6 +855,11 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     |              format: double
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
+    |            korkeakoulutustyypit:
+    |              type: array
+    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              items:
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class ErikoistumiskoulutusMetadata(

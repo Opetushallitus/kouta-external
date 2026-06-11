@@ -433,7 +433,8 @@ package object domain {
       |          description: Tietoa valintakokeesta
       |          $ref: '#/components/schemas/Teksti'
       |        vahimmaispisteet:
-      |          type: double
+      |          type: number
+      |          format: double
       |          description: Valintakokeen vähimmäispisteet
       |          example: 10.0
       |        liittyyEnnakkovalmistautumista:

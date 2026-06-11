@@ -566,10 +566,12 @@ package object domain {
       |            - 'alkamiskausi ja -vuosi'
       |        koulutuksenAlkamispaivamaara:
       |          type: string
+      |          format: date-time
       |          description: Koulutuksen tarkka alkamisen päivämäärä. Pakollinen julkaistaessa, kun alkamiskausityyppi on tarkka alkamisajankohta.
       |          example: 2019-11-20T12:00
       |        koulutuksenPaattymispaivamaara:
       |          type: string
+      |          format: date-time
       |          description: Koulutuksen päättymisen päivämäärä
       |          example: 2019-11-20T12:00
       |        koulutuksenAlkamiskausiKoodiUri:

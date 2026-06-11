@@ -256,6 +256,7 @@ case class Hakukohde(
     |          $ref: '#/components/schemas/Koodi'
     |        alinHyvaksyttyKeskiarvo:
     |          type: number
+    |          format: double
     |          description: Linjan alin hyväksytty keskiarvo
     |          example: 8,2
     |        lisatietoa:

@@ -114,11 +114,11 @@ case class Opetus(
   |        - max
   |      properties:
   |        min:
-  |          type: int
+  |          type: integer
   |          description: Apurahan minimi euromäärä tai minimi prosenttiosuus lukuvuosimaksusta. Pakollinen julkaistaessa.
   |          example: 100
   |        max:
-  |          type: int
+  |          type: integer
   |          description: Apurahan maksimi euromäärä tai maksimi prosenttiosuus lukuvuosimaksusta. Pakollinen julkaistaessa.
   |          example: 200
   |        yksikko:

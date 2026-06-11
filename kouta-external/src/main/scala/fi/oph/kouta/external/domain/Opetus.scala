@@ -65,7 +65,8 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Koulutuksen alkamiskausi
     |          $ref: '#/components/schemas/KoulutuksenAlkamiskausi'
     |        maksunMaara:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: "Koulutuksen toteutuksen maksun määrä euroissa?. Pakollinen, jos maksullisuustyyppi ei ole 'maksuton'."
     |          example: 220.50
     |        lisatiedot:

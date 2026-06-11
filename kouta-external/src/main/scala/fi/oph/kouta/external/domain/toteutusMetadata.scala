@@ -663,7 +663,8 @@ case class AikuistenPerusopetusToteutusMetadata(
     |              description: "Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona.
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |              example: 10
@@ -738,7 +739,8 @@ case class ErikoislaakariToteutusMetadata(
     |              description: Opintojen laajuusyksikko. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 10
     |            isAvoinKorkeakoulutus:
@@ -851,11 +853,13 @@ case class ErikoistumiskoulutusToteutusMetadata(
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden vähimmäismäärä numeroarvona
     |              example: 10
     |            opintojenLaajuusNumeroMax:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden enimmäismäärä numeroarvona
     |              example: 20
     |"""
@@ -902,11 +906,13 @@ case class TaiteenPerusopetusToteutusMetadata(
   |              example:
   |                - opintojenlaajuusyksikko_2#1
   |            opintojenLaajuusNumeroMin:
-  |              type: integer
+  |              type: number
+  |              format: double
   |              description: Opintojen laajuuden vähimmäismäärä numeroarvona
   |              example: 10
   |            opintojenLaajuusNumeroMax:
-  |              type: integer
+  |              type: number
+  |              format: double
   |              description: Opintojen laajuuden enimmäismäärä numeroarvona
   |              example: 20
   |"""

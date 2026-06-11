@@ -422,7 +422,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
     |              description: Koulutuksen kielivalikoima
     |              $ref: '#/components/schemas/Kielivalikoima'
     |            yleislinja:
-    |              type: boolean,
+    |              type: boolean
     |              description: Onko lukio-toteutuksella yleislinja?
     |            painotukset:
     |              type: array

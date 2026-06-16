@@ -57,6 +57,8 @@ case class Liite(
 @SwaggerModel(
   """    LiitteenToimitusosoite:
     |      type: object
+    |      required:
+    |        - osoite
     |      properties:
     |        osoite:
     |          type: object

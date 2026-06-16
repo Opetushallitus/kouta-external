@@ -98,7 +98,7 @@
     "isTyovoimakoulutus": false,
     "isTaydennyskoulutus": false,
     "opetus": {
-      "maksullisuustyyppi": "maksuton",
+      "maksut": [{"maksullisuustyyppi": "maksuton"}],
       "maksullisuusKuvaus": {},
       "suunniteltuKestoKuvaus": {
         "fi": "<p>Sinulle laaditaan opintojen alussa henkilökohtainen osaamisen kehittämissuunnitelma (HOKS), jossa tunnistetaan ja tunnustetaan aiempi osaamisesi ja todetaan millaista osaamista tutkinnon muodostumiseen tarvitset. Tämä määrittää opiskeluaikasi.</p>"

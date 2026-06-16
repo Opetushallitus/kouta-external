@@ -79,7 +79,7 @@
       "hasJotpaRahoitus": false,
       "isTaydennyskoulutus": false,
       "opetus": {
-        "maksullisuustyyppi": "maksuton",
+        "maksut": [{"maksullisuustyyppi": "maksuton"}],
         "maksullisuusKuvaus": {},
         "suunniteltuKestoKuvaus": {},
         "suunniteltuKestoVuodet": 3,

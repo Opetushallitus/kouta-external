@@ -10,10 +10,21 @@ import java.util.UUID
 @SwaggerModel(
   """    Haku:
     |      type: object
+    |      required:
+    |        - oid
+    |        - nimi
+    |        - hakutapaKoodiUri
+    |        - kohdejoukkoKoodiUri
+    |        - tila
+    |        - hakulomaketyyppi
+    |        - metadata
+    |        - kielivalinta
+    |        - organisaatioOid
+    |        - muokkaaja
     |      properties:
     |        oid:
     |          type: string
-    |          description: Haun yksilöivä tunniste. Järjestelmän generoima.
+    |          description: Haun yksilöivä tunniste. Järjestelmän generoima. Ei sallita hakua luodessa.
     |          example: 1.2.246.562.29.00000000000000000009
     |        externalId:
     |          type: string
@@ -119,6 +130,7 @@ import java.util.UUID
     |            $ref: '#/components/schemas/Valintakoe'
     |        metadata:
     |          type: object
+    |          description: Pakollinen julkaistaessa.
     |          $ref: '#/components/schemas/HakuMetadata'
     |        kielivalinta:
     |          type: array

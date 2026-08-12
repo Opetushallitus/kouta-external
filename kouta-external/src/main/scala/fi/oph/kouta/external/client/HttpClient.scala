@@ -64,9 +64,9 @@ trait HttpClient extends CallerId {
     DefaultHttpClient
       .httpGet(url, defaultOptions(followRedirects): _*)(callerId)
       .header(HeaderClientSubSystemCode._1, HeaderClientSubSystemCode._2)
-      .responseWithHeaders match {
-      case (200, _, response) => parse(response)
-      case (xxx, _, response) => errorHandler(url, xxx, response)
+      .responseWithStatus match {
+      case (200, response) => parse(response)
+      case (xxx, response) => errorHandler(url, xxx, response)
     }
   private def defaultErrorHandler(url: String, statusCode: Int, response: String) =
     throw new RuntimeException(s"Url $url returned status code $statusCode $response")

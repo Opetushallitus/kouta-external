@@ -33,6 +33,8 @@
         <!-- jackson-annotations versioidaan eri tahtiin kuin muu jackson (vrt. kouta-backend-parent) -->
         <jackson.annotations.version>2.22</jackson.annotations.version>
         <logback-access.version>2.0.12</logback-access.version>
+        <!-- Jetty 12 ja java-cas 2.3.0 edellyttävät slf4j 2.x:ää -->
+        <slf4j.version>2.0.18</slf4j.version>
 
         <!-- Http related properties -->
         <scalatra.version>3.1.2</scalatra.version>
@@ -317,10 +319,11 @@
             </dependency>
 
 
+            <!-- java-cas 2.3.0 on käännetty 3.0.12:ta vasten (mm. Builder.setHttp2Enabled) -->
             <dependency>
                 <groupId>org.asynchttpclient</groupId>
                 <artifactId>async-http-client</artifactId>
-                <version>2.15.0</version>
+                <version>3.0.12</version>
 		<exclusions>
                     <exclusion>
                         <groupId>io.netty</groupId>
@@ -516,10 +519,11 @@
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
             </dependency>
+            <!-- java-cas 2.3.0 käyttää BasicThreadFactory.builder():iä, joka löytyy vasta 3.18.0:sta alkaen -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.9</version>
+                <version>3.20.0</version>
             </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>
@@ -529,12 +533,15 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.30</version>
+                <version>${slf4j.version}</version>
             </dependency>
+            <!-- Sovelluslogien slf4j-binding. Tuli aiemmin compile-scopessa java-cas 2.0.0:n
+                 mukana; java-cas 2.3.0 siirsi sen test-scopeen, joten se on deklaroitava itse
+                 tai kaikki logitus menee NOP-loggerille. -->
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.36</version>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>

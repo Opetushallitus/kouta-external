@@ -7,6 +7,7 @@ import io.netty.handler.codec.http.cookie.DefaultCookie
 import scalaj.http.HttpOptions._
 import org.asynchttpclient.Dsl._
 
+import java.time.Duration
 import java.util
 import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
@@ -25,8 +26,8 @@ trait HttpClient extends CallerId {
   private val HeaderClientSubSystemCode = ("clientSubSystemCode", callerId)
   private val asyncClient = asyncHttpClient(
     config()
-      .setReadTimeout(DefaultReadTimeout)
-      .setConnectTimeout(DefaultConnTimeout)
+      .setReadTimeout(Duration.ofMillis(DefaultReadTimeout))
+      .setConnectTimeout(Duration.ofMillis(DefaultConnTimeout))
   )
 
   def asyncGet[T](

@@ -46,6 +46,10 @@
             <groupId>ch.qos.logback.access</groupId>
             <artifactId>logback-access-jetty12</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.scalatra</groupId>

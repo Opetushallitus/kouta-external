@@ -4,15 +4,14 @@ import co.elastic.clients.elasticsearch
 import com.sksamuel.elastic4s.ElasticClient
 
 import java.util.UUID
-import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Sorakuvaus
 import fi.oph.kouta.external.domain.indexed.SorakuvausIndexed
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.KoutaHitReader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SorakuvausClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
+class SorakuvausClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaHitReader {
   val index: String = "sorakuvaus-kouta"
   def getSorakuvaus(id: UUID): Future[Sorakuvaus] =
     getItem(id.toString)

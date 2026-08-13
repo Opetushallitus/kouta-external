@@ -10,12 +10,11 @@ import co.elastic.clients.elasticsearch._types.query_dsl.{
   TermsQueryField
 }
 import com.sksamuel.elastic4s.ElasticClient
-import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.domain.oid.{HakukohdeOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Hakukohde
 import fi.oph.kouta.external.domain.indexed.{HakukohdeIndexed, HakukohdeJavaClient}
 import fi.oph.kouta.external.service.HakukohdeSearchParams
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.KoutaHitReader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -24,7 +23,7 @@ import scala.collection.JavaConverters._
 
 class HakukohdeClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient)
     extends ElasticsearchClient
-    with KoutaJsonFormats {
+    with KoutaHitReader {
   val index: String = "hakukohde-kouta"
 
   def getHakukohde(oid: HakukohdeOid): Future[(Hakukohde, Seq[OrganisaatioOid])] =

@@ -7,6 +7,7 @@ import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
 import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.external.client.AsyncHttpClientFactory
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.domain.indexed.{
   KoulutusIndexed,
@@ -52,7 +53,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     .setUsePreemptiveAuth(true)
     .setScheme(Realm.AuthScheme.BASIC)
     .build()
-  val httpClient = asyncHttpClient()
+  val httpClient = AsyncHttpClientFactory.client()
 
   def getJson(urlSuffix: String): JValue = {
     val req = get(s"${elasticUrl}/${urlSuffix}").setRealm(realm).build()

@@ -5,7 +5,7 @@ import fi.oph.kouta.http.DefaultHttpClient
 import java.util.{Map => JavaMap}
 import io.netty.handler.codec.http.cookie.DefaultCookie
 import scalaj.http.HttpOptions._
-import org.asynchttpclient.Dsl._
+import fi.oph.kouta.external.client.AsyncHttpClientFactory.{client, config}
 
 import java.time.Duration
 import java.util
@@ -24,7 +24,7 @@ trait HttpClient extends CallerId {
   )
 
   private val HeaderClientSubSystemCode = ("clientSubSystemCode", callerId)
-  private val asyncClient = asyncHttpClient(
+  private val asyncClient = client(
     config()
       .setReadTimeout(Duration.ofMillis(DefaultReadTimeout))
       .setConnectTimeout(Duration.ofMillis(DefaultConnTimeout))

@@ -5,8 +5,8 @@ import fi.oph.kouta.external.security.{AuthenticationFailedException, Kayttooike
 import fi.oph.kouta.security.Authority
 import fi.vm.sade.javautils.nio.cas.{CasClient, CasClientBuilder, CasConfig, UserDetails}
 import fi.vm.sade.javautils.nio.cas.impl.{CasClientImpl, CasSessionFetcher}
+import fi.oph.kouta.external.client.AsyncHttpClientFactory
 import org.asynchttpclient.AsyncHttpClient
-import org.asynchttpclient.Dsl.asyncHttpClient
 
 import java.util.concurrent.{CompletableFuture, TimeUnit}
 import scala.concurrent.duration.{Duration, SECONDS}
@@ -19,7 +19,7 @@ class MockSecurityContext(
 ) extends SecurityContext with CallerId {
 
   val casConfig: CasConfig = new CasConfig.CasConfigBuilder("", "", "", "", callerId, callerId, "").build()
-  val httpClient: AsyncHttpClient = asyncHttpClient()
+  val httpClient: AsyncHttpClient = AsyncHttpClientFactory.client()
 
   val casClient: CasClient = new CasClientImpl(
     casConfig, httpClient,

@@ -16,7 +16,7 @@
     </modules>
 
     <properties>
-        <scala.version>2.12.19</scala.version>
+        <scala.version>2.12.20</scala.version>
 
         <!-- Korjaa käännösvirheen:
              [ERROR] Source option 5 is no longer supported. Use 6 or later.
@@ -25,34 +25,38 @@
         <maven.compiler.target>21</maven.compiler.target>
         <scala.compat.version>2.12</scala.compat.version>
 
-        <kouta-common.version>2.24.0-SNAPSHOT</kouta-common.version>
+        <kouta-common.version>3.0.0-SNAPSHOT</kouta-common.version>
 
         <!-- Utility properties -->
-        <json4s.version>3.6.11</json4s.version>
-        <jackson.version>2.15.0</jackson.version>
-        <logback-access.version>1.2.13</logback-access.version>
+        <json4s.version>4.0.7</json4s.version>
+        <jackson.version>2.22.0</jackson.version>
+        <!-- jackson-annotations versioidaan eri tahtiin kuin muu jackson (vrt. kouta-backend-parent) -->
+        <jackson.annotations.version>2.22</jackson.annotations.version>
+        <logback-access.version>2.0.12</logback-access.version>
+        <!-- Jetty 12 ja java-cas 2.3.0 edellyttävät slf4j 2.x:ää -->
+        <slf4j.version>2.0.18</slf4j.version>
 
         <!-- Http related properties -->
-        <scalatra.version>2.7.0</scalatra.version>
-        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
-	<netty.version>4.1.124.Final</netty.version>
+        <scalatra.version>3.1.2</scalatra.version>
+        <jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
+	<netty.version>4.2.17.Final</netty.version>
 
         <!-- Elasticsearch properties -->
-        <elastic4sVersion>8.5.0</elastic4sVersion>
+        <elastic4sVersion>8.11.5</elastic4sVersion>
         <elasticsearch-java-version>8.10.0</elasticsearch-java-version>
 
         <!-- Database related properties -->
         <flyway.version>8.5.12</flyway.version>
         <slick.version>3.6.1</slick.version>
-        <jdbc.version>42.7.7</jdbc.version>
+        <jdbc.version>42.7.11</jdbc.version>
 
         <!-- Test properties -->
-        <scala-test.version>3.1.1</scala-test.version>
-        <scalatra-scalatest.version>2.7.0</scalatra-scalatest.version>
+        <scala-test.version>3.2.19</scala-test.version>
+        <scalatra-scalatest.version>3.1.2</scalatra-scalatest.version>
         <spec2.version>4.2.0</spec2.version>
-        <jetty.version>9.4.57.v20241219</jetty.version>
+        <jetty.version>12.1.10</jetty.version>
         <commons.io.version>2.14.0</commons.io.version>
-        <scalactic.version>3.1.1</scalactic.version>
+        <scalactic.version>3.2.19</scalactic.version>
 
         <!-- Plugin properties -->
         <enforce.java.version>[21,)</enforce.java.version>
@@ -117,22 +121,22 @@
             </dependency>
             <dependency>
                 <groupId>org.scalatra</groupId>
-                <artifactId>scalatra_2.12</artifactId>
+                <artifactId>scalatra-jakarta_2.12</artifactId>
                 <version>${scalatra.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.scalatra</groupId>
-                <artifactId>scalatra-json_2.12</artifactId>
+                <artifactId>scalatra-json-jakarta_2.12</artifactId>
                 <version>${scalatra.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
+                <groupId>jakarta.servlet</groupId>
+                <artifactId>jakarta.servlet-api</artifactId>
+                <version>${jakarta.servlet-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-access</artifactId>
+                <groupId>ch.qos.logback.access</groupId>
+                <artifactId>logback-access-jetty12</artifactId>
                 <version>${logback-access.version}</version>
             </dependency>
 
@@ -140,6 +144,36 @@
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-session</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-http</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-io</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-webapp</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty.ee10</groupId>
+                <artifactId>jetty-ee10-servlet</artifactId>
                 <version>${jetty.version}</version>
             </dependency>
 
@@ -157,14 +191,14 @@
             <dependency>
                 <groupId>fi.vm.sade.java-utils</groupId>
                 <artifactId>java-http</artifactId>
-                <version>0.5.0-SNAPSHOT</version>
+                <version>1.0.1-SNAPSHOT</version>
             </dependency>
 
             <!-- Cas related dependencies -->
 	    <dependency>
 		    <groupId>opiskelijavalinnat-utils</groupId>
 		    <artifactId>java-cas</artifactId>
-		    <version>2.0.0-SNAPSHOT</version>
+		    <version>2.3.0-SNAPSHOT</version>
 	    </dependency>
 
             <!-- Elasticsearch dependencies -->
@@ -259,15 +293,9 @@
             </dependency>
             <dependency>
                 <groupId>org.scalatra</groupId>
-                <artifactId>scalatra-scalatest_2.12</artifactId>
+                <artifactId>scalatra-scalatest-jakarta_2.12</artifactId>
                 <version>${scalatra-scalatest.version}</version>
                 <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-webapp</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -291,10 +319,11 @@
             </dependency>
 
 
+            <!-- java-cas 2.3.0 on käännetty 3.0.12:ta vasten (mm. Builder.setHttp2Enabled) -->
             <dependency>
                 <groupId>org.asynchttpclient</groupId>
                 <artifactId>async-http-client</artifactId>
-                <version>2.14.5</version>
+                <version>3.0.12</version>
 		<exclusions>
                     <exclusion>
                         <groupId>io.netty</groupId>
@@ -372,6 +401,16 @@
 		<version>${netty.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-dns</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-resolver-dns</artifactId>
+		<version>${netty.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>1.15</version>
@@ -394,7 +433,7 @@
             <dependency>
                 <groupId>fi.vm.sade.dokumenttipalvelu</groupId>
                 <artifactId>dokumenttipalvelu</artifactId>
-                <version>6.12-SNAPSHOT</version>
+                <version>6.16-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -427,6 +466,25 @@
                 <version>${json4s.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.json4s</groupId>
+                <artifactId>json4s-ext_2.12</artifactId>
+                <version>${json4s.version}</version>
+            </dependency>
+            <dependency>
+                <!-- org.json4s:json4s-core_2.12:4.0.7 (2.8)
+                  vs com.fasterxml.jackson.module:jackson-module-scala_2.12:2.22.0 (2.8.3) -->
+                <groupId>com.thoughtworks.paranamer</groupId>
+                <artifactId>paranamer</artifactId>
+                <version>2.8.3</version>
+            </dependency>
+            <dependency>
+                <!-- Scalatra 3.1.2 vetää transitiivisesti 2.1.4:n, josta puuttuu
+                     scala.collection.compat.immutable.LazyList -->
+                <groupId>org.scala-lang.modules</groupId>
+                <artifactId>scala-collection-compat_2.12</artifactId>
+                <version>2.14.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.scala-lang</groupId>
                 <artifactId>scala-reflect</artifactId>
                 <version>${scala.version}</version>
@@ -442,14 +500,9 @@
                 <version>1.1.2</version>
             </dependency>
             <dependency>
-                <groupId>org.scala-lang.modules</groupId>
-                <artifactId>scala-collection-compat_2.12</artifactId>
-                <version>2.1.4</version>
-            </dependency>
-            <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson.annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -466,10 +519,11 @@
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
             </dependency>
+            <!-- java-cas 2.3.0 käyttää BasicThreadFactory.builder():iä, joka löytyy vasta 3.18.0:sta alkaen -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.9</version>
+                <version>3.20.0</version>
             </dependency>
             <dependency>
                 <groupId>com.typesafe</groupId>
@@ -479,12 +533,15 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.30</version>
+                <version>${slf4j.version}</version>
             </dependency>
+            <!-- Sovelluslogien slf4j-binding. Tuli aiemmin compile-scopessa java-cas 2.0.0:n
+                 mukana; java-cas 2.3.0 siirsi sen test-scopeen, joten se on deklaroitava itse
+                 tai kaikki logitus menee NOP-loggerille. -->
             <dependency>
                 <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.36</version>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -569,33 +626,6 @@
 	<repository>
             <id>github</id>
             <url>https://maven.pkg.github.com/Opetushallitus/packages</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>oph-sade-artifactory-snapshots</id>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>oph-sade-artifactory-releases</id>
-            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <repository>
-            <id>ext-snapshot-local-artifactory-snapshots</id>
-            <url>https://artifactory.opintopolku.fi/artifactory/ext-snapshot-local</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>

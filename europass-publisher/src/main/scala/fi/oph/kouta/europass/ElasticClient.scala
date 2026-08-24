@@ -7,6 +7,7 @@ import org.asynchttpclient.Dsl._
 import org.asynchttpclient._
 
 import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.external.client.AsyncHttpClientFactory
 import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.external.domain.indexed.{
   KoulutusIndexed,
@@ -52,13 +53,16 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     .setUsePreemptiveAuth(true)
     .setScheme(Realm.AuthScheme.BASIC)
     .build()
-  val httpClient = asyncHttpClient()
+  val httpClient = AsyncHttpClientFactory.client()
 
+  /** Elasticsearchin dokumentit sisältävät eksplisiittisiä nulleja (esim. "yhteystiedot": null),
+   * jotka tarkoittavat samaa kuin puuttuva kenttä. json4s 4.x hylkää JNullin luokalle, jolla on
+   * Option-kenttiä, joten normalisoidaan nullit pois heti luvun yhteydessä. */
   def getJson(urlSuffix: String): JValue = {
     val req = get(s"${elasticUrl}/${urlSuffix}").setRealm(realm).build()
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
-      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream()).noNulls
       case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content at $urlSuffix")
       case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix failed: ${r.getResponseBody()}")
     }
@@ -72,7 +76,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
       .build()
     val resp: Response = httpClient.executeRequest(req).toCompletableFuture().join()
     resp match {
-      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream())
+      case r if r.getStatusCode == 200 => parse(r.getResponseBodyAsStream()).noNulls
       case r if r.getStatusCode == 404 => throw new NoSuchDocumentException(s"No content for $body at $urlSuffix")
       case r => throw new ElasticQueryException(s"Elasticsearch query $urlSuffix with "
         ++ s"body $body failed: ${r.getResponseBody()}")
@@ -111,7 +115,7 @@ trait ElasticClient extends Logging with KoutaJsonFormats {
     } catch {
       case e: MappingException => {
         val toteutusOid = (source \ "oid").extract[String]
-        logger.warn(s"Mapping error while processing toteutus $toteutusOid, ignoring")
+        logger.warn(s"Mapping error while processing toteutus $toteutusOid, ignoring: ${e.getMessage}")
         None
       }
     }

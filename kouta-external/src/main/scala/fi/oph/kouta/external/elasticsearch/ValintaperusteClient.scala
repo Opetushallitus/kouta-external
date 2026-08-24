@@ -4,15 +4,14 @@ import co.elastic.clients.elasticsearch
 import com.sksamuel.elastic4s.ElasticClient
 
 import java.util.UUID
-import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.external.domain.Valintaperuste
 import fi.oph.kouta.external.domain.indexed.ValintaperusteIndexed
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.KoutaHitReader
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ValintaperusteClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
+class ValintaperusteClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaHitReader {
   val index: String = "valintaperuste-kouta"
 
   def getValintaperuste(id: UUID): Future[Valintaperuste] =

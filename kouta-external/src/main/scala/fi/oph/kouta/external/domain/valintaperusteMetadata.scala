@@ -6,6 +6,8 @@ import fi.oph.kouta.external.swagger.SwaggerModel
 @SwaggerModel(
   """    ValintaperusteMetadata:
     |      type: object
+    |      required:
+    |        - tyyppi
     |      properties:
     |        tyyppi:
     |          type: string

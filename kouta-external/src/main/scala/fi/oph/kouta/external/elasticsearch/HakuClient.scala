@@ -6,19 +6,18 @@ import co.elastic.clients.elasticsearch._types.query_dsl.{Query, QueryBuilders, 
 import com.sksamuel.elastic4s.ElasticClient
 
 import java.time.Instant
-import com.sksamuel.elastic4s.json4s.ElasticJson4s.Implicits._
 import fi.oph.kouta.domain.Tallennettu
 import fi.oph.kouta.domain.oid.{HakuOid, OrganisaatioOid}
 import fi.oph.kouta.external.domain.Haku
 import fi.oph.kouta.external.domain.indexed.{HakuIndexed, HakuJavaClient}
-import fi.oph.kouta.external.util.KoutaJsonFormats
+import fi.oph.kouta.external.util.KoutaHitReader
 import fi.oph.kouta.util.TimeUtils
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.collection.JavaConverters._
 
-class HakuClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaJsonFormats {
+class HakuClient(val client: ElasticClient, val clientJava: elasticsearch.ElasticsearchClient) extends ElasticsearchClient with KoutaHitReader {
   val index: String = "haku-kouta"
 
   def getHaku(oid: HakuOid): Future[Haku] =

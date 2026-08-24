@@ -133,7 +133,7 @@ class MassKoulutusSpec extends KoutaBackendMock with MassKoulutusFixture with Ko
     result shouldEqual parse(
       s"""[
          |  {"operation": "CREATE", "success": true, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1"},
-         |  {"operation": "UPDATE", "success": false, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "exception": "org.json4s.package.MappingException"}
+         |  {"operation": "UPDATE", "success": false, "oid": "${koulutusOid.s}", "externalId": "extKoulutus1", "exception": "org.json4s.MappingException"}
          |]""".stripMargin)
   }
 }

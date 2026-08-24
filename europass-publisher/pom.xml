@@ -65,11 +65,11 @@
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra_2.12</artifactId>
+            <artifactId>scalatra-jakarta_2.12</artifactId>
         </dependency>
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra-json_2.12</artifactId>
+            <artifactId>scalatra-json-jakarta_2.12</artifactId>
         </dependency>
 
         <dependency>
@@ -89,8 +89,12 @@
             <artifactId>config</artifactId>
         </dependency>
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-access</artifactId>
+            <groupId>ch.qos.logback.access</groupId>
+            <artifactId>logback-access-jetty12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>com.github.blemale</groupId>
@@ -103,8 +107,8 @@
             <artifactId>jetty-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
+            <groupId>org.eclipse.jetty.ee10</groupId>
+            <artifactId>jetty-ee10-webapp</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -115,14 +119,8 @@
         <!-- Test -->
         <dependency>
             <groupId>org.scalatra</groupId>
-            <artifactId>scalatra-scalatest_2.12</artifactId>
+            <artifactId>scalatra-scalatest-jakarta_2.12</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jetty</groupId>
-                    <artifactId>jetty-webapp</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
     </dependencies>

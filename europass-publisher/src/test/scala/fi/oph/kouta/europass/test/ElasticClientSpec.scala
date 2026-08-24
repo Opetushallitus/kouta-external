@@ -52,6 +52,17 @@ class ElasticClientSpec extends ScalatraFlatSpec with ElasticFixture {
       == Some(Map(Fi -> "Kalmankaltionkuja 32, 00079 Metropolia")))
   }
 
+  it should "be loadable even when the document has explicit nulls" in {
+    // kouta-indeksoija tuottaa kenttiä muodossa "yhteystiedot": null, mikä tarkoittaa samaa kuin
+    // puuttuva kenttä. json4s 4.x hylkää JNullin luokalle jolla on Option-kenttiä, joten tämä
+    // menee läpi vain ElasticClient.getJson:in noNulls-normalisoinnin ansiosta.
+    val opp = ElasticClient.getOppilaitos("1.2.246.562.10.00000000000000000099")
+    assert(opp.oid.toString == "1.2.246.562.10.00000000000000000099")
+    assert(opp.nimi == None)
+    assert(opp.oppilaitos.flatMap(_.metadata).flatMap(_.esittely) == None)
+    assert(opp.oppilaitos.flatMap(_.metadata).flatMap(_.yhteystiedot) == None)
+  }
+
   "intoToteutusIndexedIfPossible" should "cope with MappingErrors" in {
     val unmappable = parse(resource("toteutus-mappingerror.json"))
     assert(ElasticClient.intoToteutusIndexedIfPossible(unmappable) == None)

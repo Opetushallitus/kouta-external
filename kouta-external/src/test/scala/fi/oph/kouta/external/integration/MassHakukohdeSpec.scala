@@ -117,7 +117,7 @@ class MassHakukohdeSpec extends KoutaBackendMock with MassHakukohdeFixture with 
 
     result shouldEqual parse(s"""[
                                 |  {"operation": "CREATE", "success": true, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde"},
-                                |  {"operation": "UPDATE", "success": false, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "exception": "org.json4s.package.MappingException"}
+                                |  {"operation": "UPDATE", "success": false, "oid": "${hakukohdeOid.s}", "externalId": "extHakukohde", "exception": "org.json4s.MappingException"}
                                 |]""".stripMargin)
   }
 }

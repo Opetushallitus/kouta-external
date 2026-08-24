@@ -5,8 +5,9 @@ import fi.oph.kouta.http.DefaultHttpClient
 import java.util.{Map => JavaMap}
 import io.netty.handler.codec.http.cookie.DefaultCookie
 import scalaj.http.HttpOptions._
-import org.asynchttpclient.Dsl._
+import fi.oph.kouta.external.client.AsyncHttpClientFactory.{client, config}
 
+import java.time.Duration
 import java.util
 import java.util.concurrent.CompletableFuture
 import scala.compat.java8.FutureConverters._
@@ -23,10 +24,10 @@ trait HttpClient extends CallerId {
   )
 
   private val HeaderClientSubSystemCode = ("clientSubSystemCode", callerId)
-  private val asyncClient = asyncHttpClient(
+  private val asyncClient = client(
     config()
-      .setReadTimeout(DefaultReadTimeout)
-      .setConnectTimeout(DefaultConnTimeout)
+      .setReadTimeout(Duration.ofMillis(DefaultReadTimeout))
+      .setConnectTimeout(Duration.ofMillis(DefaultConnTimeout))
   )
 
   def asyncGet[T](
@@ -64,9 +65,9 @@ trait HttpClient extends CallerId {
     DefaultHttpClient
       .httpGet(url, defaultOptions(followRedirects): _*)(callerId)
       .header(HeaderClientSubSystemCode._1, HeaderClientSubSystemCode._2)
-      .responseWithHeaders match {
-      case (200, _, response) => parse(response)
-      case (xxx, _, response) => errorHandler(url, xxx, response)
+      .responseWithStatus match {
+      case (200, response) => parse(response)
+      case (xxx, response) => errorHandler(url, xxx, response)
     }
   private def defaultErrorHandler(url: String, statusCode: Int, response: String) =
     throw new RuntimeException(s"Url $url returned status code $statusCode $response")

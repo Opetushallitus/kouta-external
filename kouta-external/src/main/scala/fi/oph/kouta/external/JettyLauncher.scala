@@ -3,9 +3,9 @@ package fi.oph.kouta.external
 import ch.qos.logback.access.jetty.RequestLogImpl
 import fi.vm.sade.properties.OphProperties
 import fi.oph.kouta.logging.Logging
+import org.eclipse.jetty.ee10.webapp.WebAppContext
 import org.eclipse.jetty.server.{RequestLog, Server}
-import org.eclipse.jetty.util.resource.Resource
-import org.eclipse.jetty.webapp.WebAppContext
+import org.eclipse.jetty.util.resource.ResourceFactory
 
 object JettyLauncher extends Logging {
   val DEFAULT_PORT = "8080"
@@ -18,10 +18,13 @@ object JettyLauncher extends Logging {
 }
 
 class JettyLauncher(val port: Int) {
-  val server  = new Server(port)
-  val context = new WebAppContext()
-  context.setBaseResource(Resource.newClassPathResource("webapp"))
-  context.setDescriptor("WEB-INF/web.xml")
+  val server       = new Server(port)
+  val context      = new WebAppContext()
+  val baseResource = ResourceFactory.of(context).newClassLoaderResource("webapp")
+  context.setBaseResource(baseResource)
+  // Jetty 12 resolvoi suhteellisen descriptor-polun työhakemistoa vasten, ei
+  // base resourcea vasten kuten Jetty 9, joten annetaan se absoluuttisena URI:na.
+  context.setDescriptor(baseResource.resolve("WEB-INF/web.xml").getURI.toString)
   context.setContextPath("/kouta-external")
   server.setHandler(context)
 

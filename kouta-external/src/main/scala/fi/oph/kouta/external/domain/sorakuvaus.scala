@@ -10,10 +10,17 @@ import java.util.UUID
 @SwaggerModel(
   """    Sorakuvaus:
     |      type: object
+    |      required:
+    |        - id
+    |        - tila
+    |        - koulutustyyppi
+    |        - metadata
+    |        - muokkaaja
+    |        - organisaatioOid
     |      properties:
     |        id:
     |          type: string
-    |          description: SORA-kuvauksen yksilöivä tunniste. Järjestelmän generoima.
+    |          description: SORA-kuvauksen yksilöivä tunniste. Järjestelmän generoima. Ei sallita SORA-kuvausta luodessa.
     |          example: "ea596a9c-5940-497e-b5b7-aded3a2352a7"
     |        externalId:
     |          type: string
@@ -50,11 +57,13 @@ import java.util.UUID
     |          $ref: '#/components/schemas/Nimi'
     |        metadata:
     |          type: object
-    |          description: SORA-kuvauksen kuvailutiedot eri kielillä
+    |          description: SORA-kuvauksen kuvailutiedot eri kielillä. Pakollinen julkaistaessa.
+    |          required:
+    |            - kuvaus
     |          properties:
     |            kuvaus:
     |              type: object
-    |              description: SORA-kuvauksen kuvausteksti eri kielillä. Kielet on määritetty kuvauksen kielivalinnassa.
+    |              description: SORA-kuvauksen kuvausteksti eri kielillä. Kielet on määritetty kuvauksen kielivalinnassa. Pakollinen julkaistaessa.
     |              $ref: '#/components/schemas/Kuvaus'
     |            koulutusKoodiUrit:
     |              type: array

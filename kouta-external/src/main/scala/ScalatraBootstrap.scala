@@ -6,7 +6,7 @@ import fi.oph.kouta.external.servlet._
 import fi.oph.kouta.external.swagger.SwaggerServlet
 import org.scalatra._
 
-import javax.servlet.ServletContext
+import jakarta.servlet.ServletContext
 
 class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {

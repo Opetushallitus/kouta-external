@@ -12,7 +12,8 @@ import fi.oph.kouta.external.util.KoutaJsonFormats
 import fi.oph.kouta.service.{KoulutustyyppiAuthorizationFailedException, OrganizationAuthorizationFailedException, RoleAuthorizationFailedException}
 import fi.oph.kouta.util.TimeUtils.renderHttpDate
 import fi.oph.kouta.logging.Logging
-import org.json4s.MappingException
+import jakarta.servlet.http.HttpServletRequest
+import org.json4s.{JValue, MappingException}
 import org.json4s.jackson.Serialization.write
 import org.scalatra._
 import org.scalatra.json.JacksonJsonSupport
@@ -92,6 +93,13 @@ trait KoutaServlet extends ScalatraServlet with KoutaJsonFormats with JacksonJso
       logger.error("Unhandled error", t)
       InternalServerError("error" -> "Unhandled error")
   }
+
+  /**
+   * json4s 4.x hylkää eksplisiittisen JSON-nullin luokalle, jolla on Option-kenttiä, kun taas
+   * 3.6:ssa se purkautui None:ksi. Normalisoidaan nullit pois, jotta rajapinta hyväksyy samat
+   * pyyntörungot kuin ennen — ja samat kuin kouta-backend, jossa on vastaava sanitointi.
+   */
+  override def parsedBody(implicit request: HttpServletRequest): JValue = super.parsedBody(request).noNulls
 }
 
 object KoutaServlet {

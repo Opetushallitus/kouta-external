@@ -121,7 +121,7 @@ class MassToteutusSpec extends KoutaBackendMock with MassToteutusFixture with Ko
     result shouldEqual parse(
       s"""[
          |  {"operation": "CREATE", "success": true, "oid": "${toteutusOid.s}", "externalId": "extToteutus1"},
-         |  {"operation": "UPDATE", "success": false, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "exception": "org.json4s.package.MappingException"}
+         |  {"operation": "UPDATE", "success": false, "oid": "${toteutusOid.s}", "externalId": "extToteutus1", "exception": "org.json4s.MappingException"}
          |]""".stripMargin)
   }
 }

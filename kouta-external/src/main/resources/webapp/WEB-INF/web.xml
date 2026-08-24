@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
     <listener>
         <listener-class>org.scalatra.servlet.ScalatraListener</listener-class>
     </listener>
@@ -14,6 +14,16 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <!-- Scalatran ScalatraServlet.serveStaticResource tarjoilee staattiset tiedostot
+         forwardaamalla nimetylle "default"-servletille. Jetty 12.1:n ResourceServlet
+         asettaa pathInfoOnly-oletukseksi true, jolloin prefiksimäpätyn servletin
+         (/swagger/*) alta forwardattu polku typistyy pathInfoksi ja resolvoituu
+         webapp-juureen. Jetty 9:ssä oletus oli false. -->
+    <context-param>
+        <param-name>org.eclipse.jetty.servlet.Default.pathInfoOnly</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
     <context-param>
         <param-name>org.scalatra.cors.allowCredentials</param-name>

@@ -4,15 +4,15 @@ import fi.oph.kouta.external.integration.fixture.KoutaIntegrationSpec
 import fi.oph.kouta.external.kouta.CasKoutaClient
 import fi.vm.sade.properties.OphProperties
 import fi.vm.sade.javautils.nio.cas.{CasClient, UserDetails}
-import org.asynchttpclient.{AsyncHttpClient, DefaultAsyncHttpClientConfig, Request, Response}
-import org.asynchttpclient.Dsl.asyncHttpClient
+import fi.oph.kouta.external.client.AsyncHttpClientFactory
+import org.asynchttpclient.{AsyncHttpClient, Request, Response}
 
 import java.util.concurrent.CompletableFuture
 import java.util.{HashMap, Set}
 import scala.collection.JavaConverters._
 
 object MockCasClient extends CasClient {
-  private val client: AsyncHttpClient = asyncHttpClient(new DefaultAsyncHttpClientConfig.Builder().build())
+  private val client: AsyncHttpClient = AsyncHttpClientFactory.client()
 
   override def execute(request: Request): CompletableFuture[Response] =
     client.executeRequest(request).toCompletableFuture

@@ -127,11 +127,11 @@ case class AmmatillinenToteutusMetadata(
     |              type: object
     |              description: Lisätietoa hakeutumisesta eri kielillä. Kielet on määritetty haun kielivalinnassa.
     |                Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu' tai 'ei sähköistä'.
-    |              $ref: '#/components/schemas/Teksti'
+    |              $ref: '#/components/schemas/Kuvaus'
     |            lisatietoaValintaperusteista:
     |              type: object
     |              description: Lisätietoa valintaperusteista eri kielillä. Kielet on määritetty haun kielivalinnassa.
-    |              $ref: '#/components/schemas/Teksti'
+    |              $ref: '#/components/schemas/Kuvaus'
     |            hakuaika:
     |              type: array
     |              description: Toteutuksen hakuaika. Pakollinen julkaistulla toteutuksella, kun hakulomakkeen tyyppi on 'muu'.
@@ -143,7 +143,7 @@ case class AmmatillinenToteutusMetadata(
     |            aloituspaikkakuvaus:
     |              type: object
     |              description: Koulutuksen toteutuksen aloituspaikkoja tarkentava kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |              $ref: '#/components/schemas/Teksti'
+    |              $ref: '#/components/schemas/Kuvaus'
     |
     |"""
 )

@@ -116,8 +116,7 @@ case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends
     |        teksti:
     |          type: object
     |          description: Valintatavan Opintopolussa näytettävä kuvausteksti eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa. Pakollinen julkaistaessa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Teksti'
+    |          $ref: '#/components/schemas/Kuvaus'
     |""")
 case class SisaltoTeksti(teksti: Kielistetty) extends Sisalto
 

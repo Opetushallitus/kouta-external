@@ -90,17 +90,11 @@ package object domain {
       |      type: object
       |      properties:
       |        fi:
-      |          type: string
-      |          example: Suomenkielinen kuvaus
-      |          description: "Suomenkielinen kuvaus, jos kielivalinnassa on 'fi'"
+      |          $ref: '#/components/schemas/HtmlString'
       |        sv:
-      |          type: string
-      |          example: Ruotsinkielinen kuvaus
-      |          description: "Ruotsinkielinen kuvaus, jos kielivalinnassa on 'sv'"
+      |          $ref: '#/components/schemas/HtmlString'
       |        en:
-      |          type: string
-      |          example: Englanninkielinen kuvaus
-      |          description: "Englanninkielinen kuvaus, jos kielivalinnassa on 'en'"
+      |          $ref: '#/components/schemas/HtmlString'
       |    Linkki:
       |      type: object
       |      properties:
@@ -179,6 +173,10 @@ package object domain {
       |          format: url
       |          example: https://opintopolku.fi/konfo/en/
       |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
+      |    HtmlString:
+      |      type: string
+      |      description: "Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |      example: "<p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><ul><li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </li><li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </li></ul>"
       |""")
   abstract class KielistettySwagger
 
@@ -310,7 +308,7 @@ package object domain {
       |        teksti:
       |          type: object
       |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa. Vaaditaan julkaistuille objekteille.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class Lisatieto(otsikkoKoodiUri: String, teksti: Kielistetty)
 
@@ -416,7 +414,7 @@ package object domain {
       |        tietoja:
       |          type: object
       |          description: Tietoa valintakokeesta
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        vahimmaispisteet:
       |          type: double
       |          description: Valintakokeen vähimmäispisteet
@@ -427,14 +425,14 @@ package object domain {
       |        ohjeetEnnakkovalmistautumiseen:
       |          type: object
       |          description: Ohjeet valintakokeen ennakkojärjestelyihin. Pakollinen julkaistaessa, jos liittyyEnnakkovalmistautumista on true.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        erityisjarjestelytMahdollisia:
       |          type: boolean
       |          description: Ovatko erityisjärjestelyt mahdollisia valintakokeessa
       |        ohjeetErityisjarjestelyihin:
       |          type: object
       |          description: Ohjeet valintakokeen erityisjärjestelyihin. Pakollinen julkaistaessa, jos erityisjarjestelytMahdollisia on true.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class ValintaKoeMetadata(tietoja: Kielistetty = Map(),
                                 vahimmaispisteet: Option[Double] = None,
@@ -462,7 +460,7 @@ package object domain {
       |        lisatietoja:
       |          type: object
       |          description: Lisätietoja valintakokeesta eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        jarjestamispaikka:
       |          type: object
       |          description: Valintakokeen järjestämispaikka eri kielillä. Kielet on määritetty kielivalinnassa.
@@ -568,7 +566,7 @@ package object domain {
       |        henkilokohtaisenSuunnitelmanLisatiedot:
       |          type: object
       |          description: Lisätietoa koulutuksen alkamisesta henkilökohtaisen suunnitelman mukaan eri kielillä. Kielet on määritetty haun kielivalinnassa.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class KoulutuksenAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
                                      henkilokohtaisenSuunnitelmanLisatiedot: Kielistetty = Map(),

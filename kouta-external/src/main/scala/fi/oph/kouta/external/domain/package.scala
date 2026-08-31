@@ -416,9 +416,10 @@ package object domain {
       |          description: Tietoa valintakokeesta
       |          $ref: '#/components/schemas/Kuvaus'
       |        vahimmaispisteet:
-      |          type: double
+      |          type: number
+      |          format: double
       |          description: Valintakokeen vähimmäispisteet
-      |          example: 10.0
+      |          example: 10.5
       |        liittyyEnnakkovalmistautumista:
       |          type: boolean
       |          description: Liittyykö valintakokeeseen ennakkovalmistautumista

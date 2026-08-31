@@ -374,6 +374,7 @@ case class LukioKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 8, eli viikkoa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
@@ -413,6 +414,7 @@ case class TuvaKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 6, eli osaamispistettä. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
@@ -497,6 +499,7 @@ case class AmmatillinenMuuKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -614,6 +617,7 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
@@ -868,9 +872,9 @@ case class ErikoistumiskoulutusMetadata(
       |              description: Koulutuksen metatiedon tyyppi
       |              const: taiteen-perusopetus
       |            linkkiEPerusteisiin:
-      |              type: string
-      |              description: Linkki koulutuksen eperusteisiin
-      |              example: https://eperusteet.opintopolku.fi/#/fi/kooste/taiteenperusopetus
+      |              type: object
+      |              description: Linkki koulutuksen eperusteisiin eri kielillä. Kielet on määritetty haun kielivalinnassa.
+      |              $ref: '#/components/schemas/Linkki'
       |"""
 )
 case class TaiteenPerusopetusKoulutusMetadata(

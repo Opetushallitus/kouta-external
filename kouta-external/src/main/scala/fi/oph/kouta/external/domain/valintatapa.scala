@@ -38,11 +38,13 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
     |        enimmaispisteet:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: Valintatavan enimmäispisteet
     |          example: 20.0
     |        vahimmaispisteet:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: Valintatavan vähimmäispisteet
     |          example: 10.0
     |""")

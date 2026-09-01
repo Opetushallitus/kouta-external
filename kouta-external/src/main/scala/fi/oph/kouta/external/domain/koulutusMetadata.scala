@@ -703,7 +703,7 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              example: opinnontyyppi_1#1
     |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
     |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
@@ -809,7 +809,7 @@ case class ErikoislaakariKoulutusMetadata(
     |              example: opinnontyyppi_1#1
     |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
     |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
@@ -871,7 +871,7 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     |              example: 20
     |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
     |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""

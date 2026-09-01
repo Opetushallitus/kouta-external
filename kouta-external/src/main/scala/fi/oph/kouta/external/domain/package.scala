@@ -86,21 +86,24 @@ package object domain {
       |          type: string
       |          example: Englanninkielinen nimi
       |          description: "Englanninkielinen nimi, jos kielivalinnassa on 'en'"
+      |    HtmlExample:
+      |      type: string
+      |      example:
+      |        "<p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      |        <ul><li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </li>
+      |        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </li></ul>"
       |    Kuvaus:
       |      type: object
       |      properties:
       |        fi:
-      |          type: string
-      |          example: Suomenkielinen kuvaus
-      |          description: "Suomenkielinen kuvaus, jos kielivalinnassa on 'fi'"
+      |          description: "Suomenkielinen kuvausteksti, jos kielivalinnassa on 'fi'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |        sv:
-      |          type: string
-      |          example: Ruotsinkielinen kuvaus
-      |          description: "Ruotsinkielinen kuvaus, jos kielivalinnassa on 'sv'"
+      |          description: "Ruotsinkielinen kuvausteksti, jos kielivalinnassa on 'sv'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |        en:
-      |          type: string
-      |          example: Englanninkielinen kuvaus
-      |          description: "Englanninkielinen kuvaus, jos kielivalinnassa on 'en'"
+      |          description: "Englanninkielinen kuvausteksti, jos kielivalinnassa on 'en'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |    Linkki:
       |      type: object
       |      properties:
@@ -310,7 +313,7 @@ package object domain {
       |        teksti:
       |          type: object
       |          description: Lisätiedon teksti eri kielillä. Kielet on määritetty kielivalinnassa. Vaaditaan julkaistuille objekteille.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class Lisatieto(otsikkoKoodiUri: String, teksti: Kielistetty)
 
@@ -416,25 +419,26 @@ package object domain {
       |        tietoja:
       |          type: object
       |          description: Tietoa valintakokeesta
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        vahimmaispisteet:
-      |          type: double
+      |          type: number
+      |          format: double
       |          description: Valintakokeen vähimmäispisteet
-      |          example: 10.0
+      |          example: 10.5
       |        liittyyEnnakkovalmistautumista:
       |          type: boolean
       |          description: Liittyykö valintakokeeseen ennakkovalmistautumista
       |        ohjeetEnnakkovalmistautumiseen:
       |          type: object
       |          description: Ohjeet valintakokeen ennakkojärjestelyihin. Pakollinen julkaistaessa, jos liittyyEnnakkovalmistautumista on true.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        erityisjarjestelytMahdollisia:
       |          type: boolean
       |          description: Ovatko erityisjärjestelyt mahdollisia valintakokeessa
       |        ohjeetErityisjarjestelyihin:
       |          type: object
       |          description: Ohjeet valintakokeen erityisjärjestelyihin. Pakollinen julkaistaessa, jos erityisjarjestelytMahdollisia on true.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class ValintaKoeMetadata(tietoja: Kielistetty = Map(),
                                 vahimmaispisteet: Option[Double] = None,
@@ -462,7 +466,7 @@ package object domain {
       |        lisatietoja:
       |          type: object
       |          description: Lisätietoja valintakokeesta eri kielillä. Kielet on määritetty kielivalinnassa.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |        jarjestamispaikka:
       |          type: object
       |          description: Valintakokeen järjestämispaikka eri kielillä. Kielet on määritetty kielivalinnassa.
@@ -550,10 +554,12 @@ package object domain {
       |            - 'alkamiskausi ja -vuosi'
       |        koulutuksenAlkamispaivamaara:
       |          type: string
+      |          format: date-time
       |          description: Koulutuksen tarkka alkamisen päivämäärä. Pakollinen julkaistaessa, kun alkamiskausityyppi on tarkka alkamisajankohta.
       |          example: 2019-11-20T12:00
       |        koulutuksenPaattymispaivamaara:
       |          type: string
+      |          format: date-time
       |          description: Koulutuksen päättymisen päivämäärä
       |          example: 2019-11-20T12:00
       |        koulutuksenAlkamiskausiKoodiUri:
@@ -568,7 +574,7 @@ package object domain {
       |        henkilokohtaisenSuunnitelmanLisatiedot:
       |          type: object
       |          description: Lisätietoa koulutuksen alkamisesta henkilökohtaisen suunnitelman mukaan eri kielillä. Kielet on määritetty haun kielivalinnassa.
-      |          $ref: '#/components/schemas/Teksti'
+      |          $ref: '#/components/schemas/Kuvaus'
       |""")
   case class KoulutuksenAlkamiskausi(alkamiskausityyppi: Option[Alkamiskausityyppi] = None,
                                      henkilokohtaisenSuunnitelmanLisatiedot: Kielistetty = Map(),

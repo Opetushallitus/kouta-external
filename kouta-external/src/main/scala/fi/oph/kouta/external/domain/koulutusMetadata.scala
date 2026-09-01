@@ -17,7 +17,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        osaamistavoitteet:
     |          type: object
     |          description: Koulutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          $ref: '#/components/schemas/Osaamistavoitteet'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        lisatiedot:
     |          type: array
     |          description: Koulutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
@@ -39,6 +39,12 @@ sealed trait KoulutusMetadata {
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
+    |            kuvaus:
+    |              description: Koulutuksen kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa. Voi olla tyhjä ennen julkaisua.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |            osaamistavoitteet:
+    |              description: Koulutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
@@ -121,9 +127,17 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
-    |          required:
-    |            - osaamistavoitteet
     |          properties:
+    |            kuvaus:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
+    |            osaamistavoitteet:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi

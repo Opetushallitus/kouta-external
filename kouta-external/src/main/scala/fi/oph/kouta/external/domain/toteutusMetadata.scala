@@ -20,7 +20,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |        osaamistavoitteet:
     |          type: object
     |          description: Toteutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
-    |          $ref: '#/components/schemas/Osaamistavoitteet'
+    |          $ref: '#/components/schemas/Kuvaus'
     |        opetus:
     |          type: object
     |          description: Pakollinen julkaistulla toteutuksella
@@ -205,6 +205,11 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
     |          properties:
+    |            osaamistavoitteet:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            tyyppi:
     |              type: string
     |              description: Toteutuksen metatiedon tyyppi
@@ -598,6 +603,11 @@ case class VapaaSivistystyoMuuToteutusMetadata(
                 |          required:
                 |            - kuvaus
                 |          properties:
+                |            osaamistavoitteet:
+                |              description: Pitää olla tyhjä.
+                |              additionalProperties: false
+                |              minProperties: 0
+                |              maxProperties: 0
                 |            tyyppi:
                 |              type: string
                 |              description: Koulutuksen metatiedon tyyppi

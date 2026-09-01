@@ -86,30 +86,24 @@ package object domain {
       |          type: string
       |          example: Englanninkielinen nimi
       |          description: "Englanninkielinen nimi, jos kielivalinnassa on 'en'"
+      |    HtmlExample:
+      |      type: string
+      |      example:
+      |        "<p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      |        <ul><li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </li>
+      |        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </li></ul>"
       |    Kuvaus:
       |      type: object
       |      properties:
       |        fi:
-      |          $ref: '#/components/schemas/HtmlString'
+      |          description: "Suomenkielinen kuvausteksti, jos kielivalinnassa on 'fi'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |        sv:
-      |          $ref: '#/components/schemas/HtmlString'
+      |          description: "Ruotsinkielinen kuvausteksti, jos kielivalinnassa on 'sv'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |        en:
-      |          $ref: '#/components/schemas/HtmlString'
-      |    Osaamistavoitteet:
-      |      type: object
-      |      properties:
-      |        fi:
-      |          type: string
-      |          example: Suomenkielinen osaamistavoite
-      |          description: "Suomenkielinen osaamistavoite, jos kielivalinnassa on 'fi'"
-      |        sv:
-      |          type: string
-      |          example: Ruotsinkielinen osaamistavoite
-      |          description: "Ruotsinkielinen osaamistavoite, jos kielivalinnassa on 'sv'"
-      |        en:
-      |          type: string
-      |          example: Englanninkielinen osaamistavoite
-      |          description: "Englanninkielinen osaamistavoite, jos kielivalinnassa on 'en'"
+      |          description: "Englanninkielinen kuvausteksti, jos kielivalinnassa on 'en'. Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
+      |          $ref: '#/components/schemas/HtmlExample'
       |    Linkki:
       |      type: object
       |      properties:
@@ -188,10 +182,6 @@ package object domain {
       |          format: url
       |          example: https://opintopolku.fi/konfo/en/
       |          description: "Linkki englanninkieliselle sivulle, jos kielivalinnassa on 'en'"
-      |    HtmlString:
-      |      type: string
-      |      description: "Merkkijono joka sisältää HTML-tageja. Sallitut tagit: p, h3, h4, ul, ol, li, a, br, strong."
-      |      example: "<p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><ul><li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </li><li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </li></ul>"
       |""")
   abstract class KielistettySwagger
 

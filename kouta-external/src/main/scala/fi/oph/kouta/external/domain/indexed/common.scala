@@ -115,6 +115,13 @@ case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
   )
 }
 
+case class PaikallinenTutkinnonOsaIndexed(opetussuunnitelmaId: String, tutkinnonosaId: String) {
+  def toPaikallinenTutkinnonOsa: PaikallinenTutkinnonOsa = PaikallinenTutkinnonOsa(
+    opetussuunnitelmaId = opetussuunnitelmaId,
+    tutkinnonosaId = tutkinnonosaId
+  )
+}
+
 
 case class KoulutuksenAlkamiskausiHakukohdeES @JsonCreator()(
   @JsonProperty("alkamiskausityyppi") alkamiskausityyppi: Option[String],

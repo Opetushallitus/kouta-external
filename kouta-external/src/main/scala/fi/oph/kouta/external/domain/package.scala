@@ -627,6 +627,19 @@ package object domain {
                           koulutusKoodiUri: Option[String] = None,
                           tutkinnonosaId: Option[Long] = None,
                           tutkinnonosaViite: Option[Long] = None)
+
+  @SwaggerModel(
+    """    PaikallinenTutkinnonOsa:
+      |      type: object
+      |      properties:
+      |        opetussuunnitelmaId:
+      |          type: string
+      |          description: Paikallisen tutkinnon osan opetussuunnitelman tunniste
+      |        tutkinnonosaId:
+      |          type: string
+      |          description: Paikallisen tutkinnon osan tunniste
+      |""")
+  case class PaikallinenTutkinnonOsa(opetussuunnitelmaId: String, tutkinnonosaId: String)
   @SwaggerModel(
     """    Kielivalikoima:
       |      type: object

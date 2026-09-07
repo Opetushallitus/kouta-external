@@ -102,13 +102,20 @@ case class AmmatillinenKoulutusMetadata(
       |              items:
       |                type: object
       |                $ref: '#/components/schemas/TutkinnonOsa'
+      |            paikallisetTutkinnonOsat:
+      |              type: array
+      |              description: Paikalliset tutkinnon osat
+      |              items:
+      |                type: object
+      |                $ref: '#/components/schemas/PaikallinenTutkinnonOsa'
       |""")
 case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     tyyppi: Koulutustyyppi,
     kuvaus: Kielistetty,
     osaamistavoitteet: Kielistetty,
     lisatiedot: Seq[Lisatieto],
-    tutkinnonOsat: Seq[TutkinnonOsa]
+    tutkinnonOsat: Seq[TutkinnonOsa],
+    paikallisetTutkinnonOsat: Seq[PaikallinenTutkinnonOsa] = Seq()
 ) extends KoulutusMetadata
 
 @SwaggerModel(

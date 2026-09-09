@@ -16,13 +16,14 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6
         with:
-          java-version: '21'
+          java-version-file: '.java-version'
           distribution: 'corretto'
           cache: 'maven'
 
-      - uses: szenius/set-timezone@1f9716b0f7120e344f0c62bb7b1ee98819aefd42 # v2.0
-        with:
-          timezoneLinux: "Europe/Helsinki"
+      - name: Set timezone
+        run: |
+          sudo timedatectl set-timezone Europe/Helsinki
+          sudo ln -sf /usr/share/zoneinfo/Europe/Helsinki /etc/localtime
 
       - name: Set up build prerequisites
         env:

@@ -28,7 +28,7 @@ trait ElasticFixture extends BeforeAndAfterAll { this: Suite =>
     Try((ElasticClient.getJson("_cluster/health?wait_for_status=yellow&timeout=30s") \ "status")
       .extract[String]).toOption.exists(status => status == "yellow" || status == "green")
 
-  // docker-compose up -d does not wait for the container to accept
+  // docker compose up -d does not wait for the container to accept
   // connections at all, so retry until elasticsearch is reachable.
   private def waitForElastic(retriesLeft: Int = 30): Boolean =
     if (clusterHealthy()) {
@@ -62,13 +62,13 @@ trait ElasticFixture extends BeforeAndAfterAll { this: Suite =>
 
   override def beforeAll() {
     if (useFixture()) {
-      Process("docker-compose up -d kouta-elastic europass-s3").!
+      Process("docker compose up -d kouta-elastic europass-s3").!
       println("Waiting for elasticsearch to be ready...")
       val dumpUpToDate = waitForElastic() && elasticDocCount() > 0 && storedDumpHash().contains(currentDumpHash())
       if (dumpUpToDate) {
         println("Elasticsearch already has up-to-date dump data, skipping import.")
       } else {
-        Process("docker-compose up elasticdump-loader s3-configurator").!
+        Process("docker compose up elasticdump-loader s3-configurator").!
         Try(storeDumpHash(currentDumpHash()))
       }
     }
@@ -76,7 +76,7 @@ trait ElasticFixture extends BeforeAndAfterAll { this: Suite =>
 
   override def afterAll() {
     if (useFixture()) {
-      Process("docker-compose down").!
+      Process("docker compose down").!
     }
   }
 

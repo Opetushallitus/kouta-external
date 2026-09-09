@@ -47,8 +47,8 @@ pitämällä testidatalla täytetyn ElasticSearchin koko ajan käynnissä.
 Tämä onnistuu seuraavilla komennoilla:
 
 ``` shell
-$ docker-compose up -d kouta-elastic
-$ docker-compose up elasticdump-loader
+$ docker compose up -d kouta-elastic
+$ docker compose up elasticdump-loader
 $ export TEST_USE_PRERUN_ELASTIC=true
 ```
 

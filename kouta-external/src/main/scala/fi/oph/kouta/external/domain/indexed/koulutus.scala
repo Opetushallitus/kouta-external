@@ -98,6 +98,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
     osaamistavoitteet: Kielistetty = Map.empty,
     lisatiedot: Seq[LisatietoIndexed] = Seq.empty,
     tutkinnonOsat: Seq[TutkinnonOsaIndexed] = Seq.empty,
+    paikallisetTutkinnonOsat: Seq[PaikallinenTutkinnonOsaIndexed] = Seq.empty,
     koulutusala: Seq[KoodiUri] = Seq.empty
 ) extends KoulutusMetadataIndexed {
   override def toKoulutusMetadata: AmmatillinenTutkinnonOsaKoulutusMetadata =
@@ -106,7 +107,8 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadataIndexed(
       kuvaus = kuvaus,
       osaamistavoitteet = osaamistavoitteet,
       lisatiedot = lisatiedot.map(_.toLisatieto),
-      tutkinnonOsat = tutkinnonOsat.map(_.toTutkinnonOsa)
+      tutkinnonOsat = tutkinnonOsat.map(_.toTutkinnonOsa),
+      paikallisetTutkinnonOsat = paikallisetTutkinnonOsat.map(_.toPaikallinenTutkinnonOsa)
     )
 }
 

@@ -38,11 +38,13 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
     |        enimmaispisteet:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: Valintatavan enimmäispisteet
     |          example: 20.0
     |        vahimmaispisteet:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: Valintatavan vähimmäispisteet
     |          example: 10.0
     |""")
@@ -116,8 +118,7 @@ case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends
     |        teksti:
     |          type: object
     |          description: Valintatavan Opintopolussa näytettävä kuvausteksti eri kielillä. Kielet on määritetty valintaperusteen kielivalinnassa. Pakollinen julkaistaessa.
-    |          allOf:
-    |            - $ref: '#/components/schemas/Teksti'
+    |          $ref: '#/components/schemas/Kuvaus'
     |""")
 case class SisaltoTeksti(teksti: Kielistetty) extends Sisalto
 

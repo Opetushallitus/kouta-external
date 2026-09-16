@@ -31,6 +31,15 @@ class TutkinnonOsaKoulutusSpec extends KoulutusFixture with GenericGetTests[Koul
     }
   }
 
+  it should "return koulutusKoodiUri for tutkinnonOsat of amm-tutkinnon-osa koulutus" in {
+    val result = get(ammTutkinnonOsaOid, crudSessionIds(ChildOid))
+    result.metadata match {
+      case Some(metadata: AmmatillinenTutkinnonOsaKoulutusMetadata) =>
+        metadata.tutkinnonOsat.flatMap(_.koulutusKoodiUri) should contain("koulutus_123123#1")
+      case other => fail(s"Expected AmmatillinenTutkinnonOsaKoulutusMetadata, got $other")
+    }
+  }
+
   "AmmatillinenTutkinnonOsaKoulutusMetadataIndexed" should "default to an empty list for documents indexed before the field existed" in {
     val indexedJsonWithoutField =
       """{

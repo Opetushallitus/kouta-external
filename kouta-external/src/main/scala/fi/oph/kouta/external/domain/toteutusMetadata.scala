@@ -65,6 +65,7 @@ sealed trait ToteutusMetadata {
 }
 
 @SwaggerModel("""    AmmatillinenToteutusMetadata:
+    |      title: AmmatillinenToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -164,6 +165,7 @@ sealed trait TutkintoonJohtamatonToteutusMetadata extends ToteutusMetadata {
 }
 
 @SwaggerModel("""    AmmatillinenTutkinnonOsaToteutusMetadata:
+    |      title: AmmatillinenTutkinnonOsaToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -201,6 +203,7 @@ case class AmmatillinenTutkinnonOsaToteutusMetadata(
 
 @SwaggerModel(
   """    AmmatillinenOsaamisalaToteutusMetadata:
+    |      title: AmmatillinenOsaamisalaToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -243,6 +246,7 @@ case class AmmatillinenOsaamisalaToteutusMetadata(
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AmmatillinenMuuToteutusMetadata:
+    |      title: AmmatillinenMuuToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -281,6 +285,7 @@ case class AmmatillinenMuuToteutusMetadata(
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    YliopistoToteutusMetadata:
+    |      title: YliopistoToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -304,6 +309,7 @@ case class YliopistoToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaToteutusMetadata:
+    |      title: AmmattikorkeaToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -327,6 +333,7 @@ case class AmmattikorkeakouluToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoToteutusMetadata:
+    |      title: AmmOpeErityisopeJaOpoToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -350,6 +357,7 @@ case class AmmOpeErityisopeJaOpoToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    OpePedagOpinnotToteutusMetadata:
+    |      title: OpePedagOpinnotToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -412,6 +420,7 @@ case class LukiodiplomiTieto(koodiUri: String, linkki: Kielistetty, linkinAltTek
 
 @SwaggerModel(
   """    LukioToteutusMetadata:
+    |      title: LukioToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -468,6 +477,7 @@ case class LukioToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TuvaToteutusMetadata:
+    |      title: TuvaToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -497,6 +507,7 @@ case class TuvaToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    TelmaToteutusMetadata:
+    |      title: TelmaToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -522,6 +533,7 @@ case class TelmaToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoOpistovuosiToteutusMetadata:
+    |      title: VapaaSivistystyoOpistovuosiToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/ToteutusMetadata'
     |        - type: object
@@ -553,6 +565,7 @@ case class VapaaSivistystyoOpistovuosiToteutusMetadata(
 ) extends ToteutusMetadata
 
 @SwaggerModel("""    VapaaSivistystyoMuuToteutusMetadata:
+    |      title: VapaaSivistystyoMuuToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -645,6 +658,7 @@ case class VapaaSivistystyoOsaamismerkkiToteutusMetadata(
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    AikuistenPerusopetusToteutusMetadata:
+    |      title: AikuistenPerusopetusToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -678,6 +692,7 @@ case class AikuistenPerusopetusToteutusMetadata(
 
 @SwaggerModel(
   """    KkOpintojaksoToteutusMetadata:
+    |      title: KkOpintojaksoToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -742,6 +757,7 @@ case class KkOpintojaksoToteutusMetadata(
 ) extends TutkintoonJohtamatonToteutusMetadata
 
 @SwaggerModel("""    ErikoislaakariToteutusMetadata:
+                |      title: ErikoislaakariToteutusMetadata
                 |      allOf:
                 |        - $ref: '#/components/schemas/ToteutusMetadata'
                 |        - type: object
@@ -766,6 +782,7 @@ case class ErikoislaakariToteutusMetadata(
 
 @SwaggerModel(
   """    KkOpintokokonaisuusToteutusMetadata:
+    |      title: KkOpintokokonaisuusToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -836,6 +853,7 @@ case class KkOpintokokonaisuusToteutusMetadata(
 
 @SwaggerModel(
   """    ErikoistumiskoulutusToteutusMetadata:
+    |      title: ErikoistumiskoulutusToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -874,6 +892,7 @@ case class ErikoistumiskoulutusToteutusMetadata(
 
 @SwaggerModel(
   """    TaiteenPerusopetusToteutusMetadata:
+    |      title: TaiteenPerusopetusToteutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/TutkintoonJohtamatonToteutusMetadata'
     |        - type: object
@@ -935,6 +954,7 @@ case class TaiteenPerusopetusToteutusMetadata(
 
 @SwaggerModel(
   """    MuuToteutusMetadata:
+  |      title: MuuToteutusMetadata
   |      allOf:
   |        - $ref: '#/components/schemas/ToteutusMetadata'
   |        - type: object

@@ -63,6 +63,7 @@ sealed trait Sisalto
 @SwaggerModel(
   """    SisaltoTaulukko:
     |      type: object
+    |      title: SisaltoTaulukko
     |      description: Taulukkomuotoinen valintatavan sisällön kuvaus
     |      properties:
     |        id:
@@ -111,6 +112,7 @@ case class Taulukko(id: Option[UUID], nimi: Kielistetty, rows: Seq[Row]) extends
 @SwaggerModel(
   """    SisaltoTeksti:
     |      type: object
+    |      title: SisaltoTeksti
     |      description: Tekstimuotoinen valintatavan sisällön kuvaus
     |      required:
     |        - teksti

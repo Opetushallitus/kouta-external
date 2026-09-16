@@ -33,11 +33,13 @@ class AuthServlet(casSessionService: CasSessionService) extends KoutaServlet {
       |          name: ticket
       |          schema:
       |            type: string
-      |          required: true
+      |          required: false
       |          description: CAS-tiketti
       |      responses:
       |        '200':
       |          description: Ok
+      |        '302':
+      |          description: Uudelleenohjaus CAS-kirjautumiseen, jos ticket-parametria ei annettu
       |        '401':
       |          description: Unauthorized
       |""".stripMargin)

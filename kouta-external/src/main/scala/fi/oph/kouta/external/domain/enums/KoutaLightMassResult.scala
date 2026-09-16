@@ -7,6 +7,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |      items:
     |        oneOf:
     |          - type: object
+    |            title: CreateSuccess
     |            description: Onnistunut luonti
     |            required:
     |              - operation
@@ -23,6 +24,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |                type: string
     |                description: Pyynnössä annettu externalId
     |          - type: object
+    |            title: UpdateSuccess
     |            description: Onnistunut päivitys
     |            required:
     |              - operation
@@ -38,6 +40,7 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |                type: string
     |                description: Pyynnössä annettu externalId
     |          - type: object
+    |            title: Error
     |            description: Odottamaton virhe.
     |            required:
     |              - operation

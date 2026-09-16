@@ -31,6 +31,7 @@ sealed trait KoulutusMetadata {
 
 @SwaggerModel(
   """    AmmatillinenKoulutusMetadata:
+    |      title: AmmatillinenKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -86,6 +87,7 @@ case class AmmatillinenKoulutusMetadata(
 ) extends KoulutusMetadata
 
 @SwaggerModel("""    AmmatillinenTutkinnonOsaKoulutusMetadata:
+      |      title: AmmatillinenTutkinnonOsaKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KoulutusMetadata'
       |        - type: object
@@ -120,6 +122,7 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
 
 @SwaggerModel(
   """    AmmatillinenOsaamisalaKoulutusMetadata:
+    |      title: AmmatillinenOsaamisalaKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -184,6 +187,7 @@ trait KorkeakoulutusKoulutusMetadata extends KoulutusMetadata {
 }
 
 @SwaggerModel("""    YliopistoKoulutusMetadata:
+      |      title: YliopistoKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KorkeakouluMetadata'
       |        - type: object
@@ -205,6 +209,7 @@ case class YliopistoKoulutusMetadata(
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmattikorkeaKoulutusMetadata:
+      |      title: AmmattikorkeaKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KorkeakouluMetadata'
       |        - type: object
@@ -226,6 +231,7 @@ case class AmmattikorkeakouluKoulutusMetadata(
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    AmmOpeErityisopeJaOpoKoulutusMetadata:
+      |      title: AmmOpeErityisopeJaOpoKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KorkeakouluMetadata'
       |        - type: object
@@ -275,6 +281,7 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
 ) extends KorkeakoulutusKoulutusMetadata
 
 @SwaggerModel("""    OpePedagOpinnotKoulutusMetadata:
+      |      title: OpePedagOpinnotKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KorkeakouluMetadata'
       |        - type: object
@@ -322,6 +329,7 @@ case class OpePedagOpinnotKoulutusMetadata(
 
 @SwaggerModel(
   """    LukioKoulutusMetadata:
+    |      title: LukioKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -362,6 +370,7 @@ case class LukioKoulutusMetadata(
 
 @SwaggerModel(
   """    TuvaKoulutusMetadata:
+    |      title: TuvaKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -400,6 +409,7 @@ case class TuvaKoulutusMetadata(
 
 @SwaggerModel(
   """    TelmaKoulutusMetadata:
+    |      title: TelmaKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -438,6 +448,7 @@ case class TelmaKoulutusMetadata(
 
 @SwaggerModel(
   """    AmmatillinenMuuKoulutusMetadata:
+    |      title: AmmatillinenMuuKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -479,6 +490,7 @@ case class AmmatillinenMuuKoulutusMetadata(
 
 @SwaggerModel(
   """    VapaaSivistystyoKoulutusMetadata:
+    |      title: VapaaSivistystyoKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -527,6 +539,7 @@ case class VapaaSivistystyoKoulutusMetadata(
 
 @SwaggerModel(
   """    VapaaSivistystyoOsaamismerkkiKoulutusMetadata:
+    |      title: VapaaSivistystyoOsaamismerkkiKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -592,6 +605,7 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
 
 @SwaggerModel(
   """    AikuistenPerusopetusKoulutusMetadata:
+    |      title: AikuistenPerusopetusKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -634,6 +648,7 @@ case class AikuistenPerusopetusKoulutusMetadata(
 
 @SwaggerModel(
   """    KkOpintojaksoKoulutusMetadata:
+    |      title: KkOpintojaksoKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -697,6 +712,7 @@ case class KkOpintojaksoKoulutusMetadata(
 
 @SwaggerModel(
   """    ErikoislaakariKoulutusMetadata:
+    |      title: ErikoislaakariKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -738,6 +754,7 @@ case class ErikoislaakariKoulutusMetadata(
 
 @SwaggerModel(
   """    KkOpintokokonaisuusKoulutusMetadata:
+    |      title: KkOpintokokonaisuusKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -801,6 +818,7 @@ case class KkOpintokokonaisuusKoulutusMetadata(
 
 @SwaggerModel(
   """    ErikoistumiskoulutusMetadata:
+    |      title: ErikoistumiskoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
@@ -854,6 +872,7 @@ case class ErikoistumiskoulutusMetadata(
 
 @SwaggerModel(
   """    TaiteenPerusopetusKoulutusMetadata:
+      |      title: TaiteenPerusopetusKoulutusMetadata
       |      allOf:
       |        - $ref: '#/components/schemas/KoulutusMetadata'
       |        - type: object
@@ -880,6 +899,7 @@ case class TaiteenPerusopetusKoulutusMetadata(
 
 @SwaggerModel(
   """    MuuKoulutusMetadata:
+    |      title: MuuKoulutusMetadata
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object

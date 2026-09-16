@@ -104,14 +104,21 @@ case class KoulutuksenAlkamiskausiIndexed(alkamiskausityyppi: Option[Alkamiskaus
 }
 
 case class TutkinnonOsaIndexed(ePerusteId: Option[Long] = None,
-                               koulutusKoodiUri: Option[KoodiUri] = None,
+                               koulutus: Option[KoodiUri] = None,
                                tutkinnonosaId: Option[Long] = None,
                                tutkinnonosaViite: Option[Long] = None) {
   def toTutkinnonOsa: TutkinnonOsa = TutkinnonOsa(
     ePerusteId = ePerusteId,
-    koulutusKoodiUri = koulutusKoodiUri.map(_.koodiUri),
+    koulutusKoodiUri = koulutus.map(_.koodiUri),
     tutkinnonosaId = tutkinnonosaId,
     tutkinnonosaViite = tutkinnonosaViite
+  )
+}
+
+case class PaikallinenTutkinnonOsaIndexed(opetussuunnitelmaId: String, tutkinnonosaId: String) {
+  def toPaikallinenTutkinnonOsa: PaikallinenTutkinnonOsa = PaikallinenTutkinnonOsa(
+    opetussuunnitelmaId = opetussuunnitelmaId,
+    tutkinnonosaId = tutkinnonosaId
   )
 }
 

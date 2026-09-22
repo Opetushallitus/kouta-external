@@ -47,8 +47,8 @@ pitämällä testidatalla täytetyn ElasticSearchin koko ajan käynnissä.
 Tämä onnistuu seuraavilla komennoilla:
 
 ``` shell
-$ docker-compose up -d kouta-elastic
-$ docker-compose up elasticdump-loader
+$ docker compose up -d kouta-elastic
+$ docker compose up elasticdump-loader
 $ export TEST_USE_PRERUN_ELASTIC=true
 ```
 
@@ -140,10 +140,24 @@ Suositeltava kehitysympäristö on [IntelliJ IDEA](https://www.jetbrains.com/ide
 
 ### 3.8. Testidata
 
-Katso kouta-indeksoijan readme:stä kuinka saat lokaaliin elasticsearchiin indeksoitua dataa.
-Tämän jälkeen käynnistä kouta-external tätä lokaalia elasticsearchia vasten.
+Testien käyttämä Elasticsearch-testidata (`kouta-external/src/test/resources/elastic_dump/*.json`)
+on generoitu [kouta-indeksoijalla](https://github.com/Opetushallitus/kouta-indeksoija/blob/master/test/mocks/kouta_external_mocks.clj). **Dumppitiedostoja ei saa muokata käsin** – käsin tehdyt
+muutokset katoavat seuraavassa generoinnissa, ja tiedostojen muodon (yksi JSON-dokumentti per rivi)
+rikkoutuminen voi hajottaa elasticdump-importin. Jos tarvitset erilaista elasticsearch-testidataa, muokkaa testidatan generointia kouta-indeksoijassa.
 
-Kouta-indeksoijan avulla saat päivitettyä tarvittaessa myös testien käyttämän mock-data-dumpin.
+Elasticdump-tiedostot voi päivittää tarvittaessa ajamalla:
+
+``` shell
+./tools/updateElasticDump.sh
+```
+
+Skripti vaatii:
+- Dockerin ja [Leiningenin](https://leiningen.org/)
+- sisarhakemistona olevan kouta-indeksoija-checkoutin (tai `KOUTA_INDEKSOIJA_DIR`-ympäristömuuttujan,
+  joka osoittaa kyseiseen checkoutiin)
+
+Skripti ajaa komennon `lein elasticdump:kouta-external` kouta-indeksoijassa ja kopioi syntyneet
+elasticdump-tiedostot tämän repon `elastic_dump`-hakemistoon korvaten vanhat.
 
 ## 4. Ympäristöt
 

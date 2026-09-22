@@ -28,8 +28,8 @@ Testien ajaminen
 Päähakemistossa, siis git-repon juuressa:
 
 ``` shell
-kouta-external$ docker-compose up -d kouta-elastic
-kouta-external$ docker-compose up elasticdump-loader  # tarvitsee tehdä vain kerran
+kouta-external$ docker compose up -d kouta-elastic
+kouta-external$ docker compose up elasticdump-loader  # tarvitsee tehdä vain kerran
 kouta-external$ (cd europass-publisher && TEST_USE_PRERUN_ELASTIC=true mvn test)
 ```
 
@@ -39,8 +39,8 @@ Lokaalisti ajaminen
 Päähakemistossa:
 
 ``` shell
-kouta-external$ docker-compose up -d kouta-elastic europass-s3
-kouta-external$ docker-compose up elasticdump-loader s3-configurator  # tarvitsee tehdä vain kerran
+kouta-external$ docker compose up -d kouta-elastic europass-s3
+kouta-external$ docker compose up elasticdump-loader s3-configurator  # tarvitsee tehdä vain kerran
 kouta-external$ (cd europass-publisher && mvn compile exec:java)
 ```
 

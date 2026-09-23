@@ -14,6 +14,10 @@ import fi.oph.kouta.external.swagger.SwaggerModel
     |          description: Koulutuksen kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa. Voi olla tyhjä ennen julkaisua.
     |          allOf:
     |            - $ref: '#/components/schemas/Kuvaus'
+    |        osaamistavoitteet:
+    |          type: object
+    |          description: Koulutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |          $ref: '#/components/schemas/Kuvaus'
     |        lisatiedot:
     |          type: array
     |          description: Koulutukseen liittyviä lisätietoja, jotka näkyvät oppijalle Opintopolussa
@@ -36,6 +40,12 @@ sealed trait KoulutusMetadata {
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
     |          properties:
+    |            kuvaus:
+    |              description: Koulutuksen kuvausteksti eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa. Voi olla tyhjä ennen julkaisua.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
+    |            osaamistavoitteet:
+    |              description: Koulutuksen osaamistavoitteet eri kielillä. Kielet on määritetty koulutuksen kielivalinnassa.
+    |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
@@ -67,7 +77,8 @@ sealed trait KoulutusMetadata {
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumero:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: |
     |                Opintojen laajuus tai kesto numeroarvona.
     |                HUOM! Syötettävissä vain kun koulutuksetKoodiUri-kenttään on valittu jokin seuraavista&#58; "koulutus_381501", "koulutus_381502", "koulutus_381503", "koulutus_381521". Muuten käytetään valitulta ePerusteelta (ePerusteId) tulevaa arvoa.
@@ -126,9 +137,17 @@ case class AmmatillinenTutkinnonOsaKoulutusMetadata(
     |      allOf:
     |        - $ref: '#/components/schemas/KoulutusMetadata'
     |        - type: object
-    |          required:
-    |            - osaamistavoitteet
     |          properties:
+    |            kuvaus:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
+    |            osaamistavoitteet:
+    |              description: Pitää olla tyhjä.
+    |              additionalProperties: false
+    |              minProperties: 0
+    |              maxProperties: 0
     |            tyyppi:
     |              type: string
     |              description: Koulutuksen metatiedon tyyppi
@@ -174,7 +193,8 @@ case class AmmatillinenOsaamisalaKoulutusMetadata(
     |          description: "Yksi versio koodista opintojenlaajuusyksikko_2 (opintopisteet). Pakollinen, jos opintojenLaajuusNumero on annettu. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |          example: opintojenlaajuusyksikko_2#1
     |        opintojenLaajuusNumero:
-    |          type: double
+    |          type: number
+    |          format: double
     |          description: Opintojen laajuus tai kesto numeroarvona
     |          example: 10
     |"""
@@ -264,7 +284,8 @@ case class AmmattikorkeakouluKoulutusMetadata(
       |              description: "Yksi versio koodista opintojenlaajuusyksikko_2 (opintopisteet). Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
       |              example: opintojenlaajuusyksikko_2#1
       |            opintojenLaajuusNumero:
-      |              type: double
+      |              type: number
+      |              format: double
       |              description: Opintojen laajuus tai kesto numeroarvona
       |              const: 60
       |              example: 60
@@ -311,7 +332,8 @@ case class AmmOpeErityisopeJaOpoKoulutusMetadata(
       |              description: "Yksi versio koodista opintojenlaajuusyksikko_2 (opintopisteet). Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
       |              example: opintojenlaajuusyksikko_2#1
       |            opintojenLaajuusNumero:
-      |              type: double
+      |              type: number
+      |              format: double
       |              description: Opintojen laajuus tai kesto numeroarvona
       |              const: 60
       |              example: 60
@@ -343,7 +365,8 @@ case class OpePedagOpinnotKoulutusMetadata(
     |              description: "Opintojen laajuusyksikko. Pakollinen, jos opintojenLaajuusNumero on määritelty. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 150
     |            koulutusalaKoodiUrit:
@@ -386,13 +409,15 @@ case class LukioKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 8, eli viikkoa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_8#1
     |              const: opintojenlaajuusyksikko_8#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 150
     |"""
@@ -425,13 +450,15 @@ case class TuvaKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Oltava koodi 6, eli osaamispistettä. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |              const: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 150
     |"""
@@ -473,7 +500,8 @@ case class TelmaKoulutusMetadata(
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 10
     |"""
@@ -509,6 +537,7 @@ case class AmmatillinenMuuKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            koulutusalaKoodiUrit:
     |              type: array
     |              description: Lista koulutusaloja. Pakollinen julkaistaessa. Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/kansallinenkoulutusluokitus2016koulutusalataso1/1)
@@ -521,7 +550,8 @@ case class AmmatillinenMuuKoulutusMetadata(
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona
     |              example: 10
     |"""
@@ -581,7 +611,8 @@ case class VapaaSivistystyoKoulutusMetadata(
     |              example: opintojenlaajuusyksikko_4#1
     |              const: opintojenlaajuusyksikko_4#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona. Pitää olla 1.
     |              example: 1
     |              const: 1
@@ -626,12 +657,14 @@ case class VapaaSivistystyoOsaamismerkkiKoulutusMetadata(
     |            linkkiEPerusteisiin:
     |              type: object
     |              description: Linkit koulutuksen käyttämiin ePerusteisiin, eri kielisiin versioihin. Kielet on määritetty koulutuksen kielivalinnassa.
+    |              $ref: '#/components/schemas/Linkki'
     |            opintojenLaajuusyksikkoKoodiUri:
     |              type: string
     |              description: "Opintojen laajuusyksikko. Pakollinen julkaistaessa. Viittaa koodistoon [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_6#1
     |            opintojenLaajuusNumero:
-    |              type: double
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuus tai kesto numeroarvona. Pakollinen julkaistaessa.
     |              example: 10
     |"""
@@ -671,11 +704,13 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              description: "Yksi versio koodista opintojenlaajuusyksikko_2 (opintopisteet). Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
     |              example: 10
     |            opintojenLaajuusNumeroMax:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
     |            isAvoinKorkeakoulutus:
@@ -690,7 +725,7 @@ case class AikuistenPerusopetusKoulutusMetadata(
     |              example: opinnontyyppi_1#1
     |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
     |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
@@ -777,11 +812,13 @@ case class ErikoislaakariKoulutusMetadata(
     |              description: "Yksi versio koodista opintojenlaajuusyksikko_2 (opintopisteet). Viittaa [koodistoon](https://virkailija.testiopintopolku.fi/koodisto-app/koodisto/view/opintojenlaajuusyksikko/1)"
     |              example: opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
     |              example: 10
     |            opintojenLaajuusNumeroMax:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
     |            isAvoinKorkeakoulutus:
@@ -796,7 +833,7 @@ case class ErikoislaakariKoulutusMetadata(
     |              example: opinnontyyppi_1#1
     |            korkeakoulutustyypit:
     |              type: array
-    |              description: Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
     |              items:
     |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
@@ -848,13 +885,20 @@ case class KkOpintokokonaisuusKoulutusMetadata(
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
     |              example: 10
     |            opintojenLaajuusNumeroMax:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
+    |            korkeakoulutustyypit:
+    |              type: array
+    |              description: Päätellään koulutuksen tarjoajista. Lista korkeakoulutustyypeistä (amk, yo) minkä tyyppisenä ko. koulutus käytännössä järjestetään. Jos tyyppejä on useita, listataan jokaiselle tyypille tarjoajat erikseen.
+    |              items:
+    |                $ref: '#/components/schemas/Korkeakoulutustyyppi'
     |"""
 )
 case class ErikoistumiskoulutusMetadata(
@@ -884,9 +928,9 @@ case class ErikoistumiskoulutusMetadata(
       |              description: Koulutuksen metatiedon tyyppi
       |              const: taiteen-perusopetus
       |            linkkiEPerusteisiin:
-      |              type: string
-      |              description: Linkki koulutuksen eperusteisiin
-      |              example: https://eperusteet.opintopolku.fi/#/fi/kooste/taiteenperusopetus
+      |              type: object
+      |              description: Linkki koulutuksen eperusteisiin eri kielillä. Kielet on määritetty haun kielivalinnassa.
+      |              $ref: '#/components/schemas/Linkki'
       |"""
 )
 case class TaiteenPerusopetusKoulutusMetadata(
@@ -921,11 +965,13 @@ case class TaiteenPerusopetusKoulutusMetadata(
     |              example:
     |                - opintojenlaajuusyksikko_2#1
     |            opintojenLaajuusNumeroMin:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston vähimmäismäärä numeroarvona
     |              example: 10
     |            opintojenLaajuusNumeroMax:
-    |              type: integer
+    |              type: number
+    |              format: double
     |              description: Opintojen laajuuden tai keston enimmäismäärä numeroarvona
     |              example: 20
     |"""

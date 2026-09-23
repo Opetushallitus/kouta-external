@@ -108,19 +108,6 @@ import java.util.UUID
     |            - $ref: '#/components/schemas/ErikoistumiskoulutusMetadata'
     |            - $ref: '#/components/schemas/TaiteenPerusopetusKoulutusMetadata'
     |            - $ref: '#/components/schemas/MuuKoulutusMetadata'
-    |          example:
-    |            koulutustyyppi: amm
-    |            koulutusalaKoodiUrit:
-    |              - kansallinenkoulutusluokitus2016koulutusalataso2_054#1
-    |              - kansallinenkoulutusluokitus2016koulutusalataso2_055#1
-    |            kuvaus:
-    |              fi: Suomenkielinen kuvaus
-    |              sv: Ruotsinkielinen kuvaus
-    |            lisatiedot:
-    |              - otsikkoKoodiUri: koulutuksenlisatiedot_03#1
-    |                teksti:
-    |                  fi: Opintojen suomenkielinen lisätietokuvaus
-    |                  sv: Opintojen ruotsinkielinen lisätietokuvaus
     |        muokkaaja:
     |          type: string
     |          description: Koulutusta viimeksi muokanneen virkailijan henkilö-oid. Palvelun asettama. Päivittäessä voi olla mikä tahansa string.

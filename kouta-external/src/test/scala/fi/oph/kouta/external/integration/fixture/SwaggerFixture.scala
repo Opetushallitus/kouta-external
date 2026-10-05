@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.integration.fixture
 
+import fi.oph.kouta.TestOids.TestUserOid
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.elasticsearch._
 import fi.oph.kouta.external.security.{CasSessionService, SecurityContext}
@@ -29,7 +30,7 @@ trait SwaggerFixture extends ScalatraFlatSpec {
 
   val defaultSessionId = UUID.randomUUID()
 
-  val testUser = TestUser("test-user-oid", "testuser", defaultSessionId)
+  val testUser = TestUser(TestUserOid.s, "testuser", defaultSessionId)
 
   var urlProperties: Option[OphProperties] = None
 
@@ -72,7 +73,7 @@ trait SwaggerFixture extends ScalatraFlatSpec {
     addServlet(new ValintaperusteServlet(valintaperusteService), ValintaperustePath)
 
     val securityContext: SecurityContext = MockSecurityContext(casUrl, serviceIdentifier, defaultAuthorities)
-    object MockCasSessionService extends CasSessionService(securityContext)
+    object MockCasSessionService extends CasSessionService(securityContext, MockAuditLog)
 
     addServlet(new AuthServlet(MockCasSessionService), AuthPath)
     addServlet(HealthcheckServlet, "/healthcheck")

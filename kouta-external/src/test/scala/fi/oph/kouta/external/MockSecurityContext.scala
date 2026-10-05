@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.TestOids.TestUserOid
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.external.security.{AuthenticationFailedException, KayttooikeusUserDetails, SecurityContext}
 import fi.oph.kouta.security.Authority
@@ -35,7 +36,7 @@ class MockSecurityContext(
       if (serviceTicket.startsWith(MockSecurityContext.ticketPrefix(service))) {
         val username: String = serviceTicket.stripPrefix(MockSecurityContext.ticketPrefix(service))
         if (username == "testuser") {
-          val henkiloOid  = "test-user-oid"
+          val henkiloOid  = TestUserOid.s
           val roles       = defaultAuthorities.map(a => s"ROLE_${a.role}").asJava
           val userDetails = new UserDetails(username, henkiloOid, null, null, roles)
           CompletableFuture.completedFuture(userDetails)

@@ -28,6 +28,17 @@
             <groupId>fi.oph.kouta</groupId>
             <artifactId>kouta-external</artifactId>
             <version>0.10-SNAPSHOT</version>
+            <exclusions>
+                <!-- kouta-external käyttää log4j2:ta, tämä moduuli slf4j-simpleä -->
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j2-impl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

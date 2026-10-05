@@ -1,6 +1,6 @@
 package fi.oph.kouta.external.integration.fixture
 
-import fi.oph.kouta.external.MockSecurityContext
+import fi.oph.kouta.external.{MockAuditLog, MockSecurityContext}
 import fi.oph.kouta.external.security._
 import fi.oph.kouta.external.servlet.AuthServlet
 
@@ -14,7 +14,7 @@ trait AuthFixture {
   val casUrl = "testCasUrl"
 
   val securityContext: SecurityContext = MockSecurityContext(casUrl, serviceIdentifier, defaultAuthorities)
-  object MockCasSessionService extends CasSessionService(securityContext)
+  object MockCasSessionService extends CasSessionService(securityContext, MockAuditLog)
 
   addServlet(new AuthServlet(MockCasSessionService), authPath)
 

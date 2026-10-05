@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.TestOids.EvilChildOid
+import fi.oph.kouta.external.MockAuditLogger
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegrationSpec}
 import fi.oph.kouta.security.CasSession
 
@@ -31,9 +32,11 @@ trait GenericUpdateTests[E] {
 
   def genericUpdateTests(): Unit = {
     s"Update $entityName" should s"execute update successfully" in {
+      MockAuditLogger.clean()
       val now = Instant.now()
       mockUpdate(theId(1), Some(now), s"""{"updated": true}""")
       update(theId(1), now)
+      MockAuditLogger.find(s"${entityName}_update", theId(1), testUser.oid) shouldBe defined
     }
 
     it should "require x-If-Unmodified-Since header" in {

@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.integration.fixture
 
+import fi.oph.kouta.TestOids.TestUserOid
 import fi.oph.kouta.domain.oid.OrganisaatioOid
 import fi.oph.kouta.external.database.{KoutaLightExtractors, SessionDAO}
 import fi.oph.kouta.external.domain.KoutaLightKoulutus
@@ -37,7 +38,7 @@ trait KoutaIntegrationSpec
   val rootOrganisaatio   = KoutaIntegrationSpec.rootOrganisaatio
   val defaultAuthorities = KoutaIntegrationSpec.defaultAuthorities
 
-  val testUser = TestUser("test-user-oid", "testuser", defaultSessionId)
+  val testUser = TestUser(TestUserOid.s, "testuser", defaultSessionId)
 
   def addDefaultSession(): Unit = {
     SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)
@@ -232,7 +233,7 @@ trait KoutaLightIntegrationSpec
 
   val defaultAuthorities: Set[Authority] = KoutaLightIntegrationSpec.defaultAuthorities
 
-  val testUser = TestUser("test-user-oid", "testuser", defaultSessionId)
+  val testUser = TestUser(TestUserOid.s, "testuser", defaultSessionId)
 
   def addDefaultSession(): Unit = {
     SessionDAO.store(CasSession(ServiceTicket(testUser.ticket), testUser.oid, defaultAuthorities), testUser.sessionId)

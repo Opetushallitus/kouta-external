@@ -54,7 +54,7 @@ trait AccessControlSpec extends ScalatraFlatSpec {
   def addTestSession(authorities: Seq[Authority]): (UUID, CasSession) = {
     val sessionId = UUID.randomUUID()
     val oid       = s"1.2.246.562.24.${math.abs(sessionId.getLeastSignificantBits.toInt)}"
-    val user      = TestUser("test-user-oid", s"user-$oid", sessionId)
+    val user      = TestUser(TestUserOid.s, s"user-$oid", sessionId)
     val session   = CasSession(ServiceTicket(user.ticket), user.oid, authorities.toSet)
     SessionDAO.store(session, user.sessionId)
     (sessionId, session)

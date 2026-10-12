@@ -3,7 +3,7 @@ package fi.oph.kouta.external.kouta
 import fi.oph.kouta.external.domain.{Haku, Hakukohde, Koulutus, Sorakuvaus, Toteutus, Valintaperuste}
 import fi.oph.kouta.servlet.Authenticated
 
-trait ExternalRequest {
+sealed trait ExternalRequest {
   val authenticated: Authenticated
 }
 

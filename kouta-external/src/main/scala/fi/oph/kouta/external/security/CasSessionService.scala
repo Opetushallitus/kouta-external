@@ -1,11 +1,13 @@
 package fi.oph.kouta.external.security
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.auditlog.AuditLog
 import fi.oph.kouta.external.database.SessionDAO
 import fi.oph.kouta.external.kouta.CallerId
 import fi.oph.kouta.logging.Logging
 import fi.oph.kouta.security.{Authority, CasSession, ServiceTicket, Session}
 import fi.vm.sade.javautils.nio.cas.UserDetails
+import jakarta.servlet.http.HttpServletRequest
 
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -16,9 +18,12 @@ import scala.concurrent.duration.Duration
 import scala.util.control.NonFatal
 
 object CasSessionService
-    extends CasSessionService(ProductionSecurityContext(KoutaConfigurationFactory.configuration.securityConfiguration))
+    extends CasSessionService(
+      ProductionSecurityContext(KoutaConfigurationFactory.configuration.securityConfiguration),
+      AuditLog
+    )
 
-abstract class CasSessionService(val securityContext: SecurityContext)
+abstract class CasSessionService(val securityContext: SecurityContext, auditLog: AuditLog)
     extends Logging with CallerId {
   logger.info(s"Using security context ${securityContext.getClass.getSimpleName}")
 
@@ -56,10 +61,16 @@ abstract class CasSessionService(val securityContext: SecurityContext)
     (id, session)
   }
 
-  private def createSession(ticket: ServiceTicket): Either[Throwable, (UUID, CasSession)] = {
+  private def createSession(
+      ticket: ServiceTicket
+  )(implicit request: HttpServletRequest): Either[Throwable, (UUID, CasSession)] = {
     validateServiceTicket(ticket)
       .map(extractUserDetails)
       .map(storeSession(ticket, _))
+      .map { case (id, session) =>
+        auditLog.logAfterCommit(s"kirjautuminen ${session.personOid}")(auditLog.logLogin(id, session, ticket))
+        (id, session)
+      }
   }
 
   private def getSession(id: UUID): Either[Throwable, (UUID, Session)] =
@@ -68,7 +79,9 @@ abstract class CasSessionService(val securityContext: SecurityContext)
       .map(session => (id, session))
       .toRight(new AuthenticationFailedException(s"Session $id doesn't exist"))
 
-  def getSession(ticket: Option[ServiceTicket], id: Option[UUID]): Either[Throwable, (UUID, Session)] = {
+  def getSession(ticket: Option[ServiceTicket], id: Option[UUID])(implicit
+      request: HttpServletRequest
+  ): Either[Throwable, (UUID, Session)] = {
     logger.trace(s"Getting session with ticket $ticket and session id $id")
     (ticket, id) match {
       case (None, None) =>

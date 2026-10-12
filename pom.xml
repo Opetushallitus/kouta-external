@@ -35,6 +35,8 @@
         <logback-access.version>2.0.12</logback-access.version>
         <!-- Jetty 12 ja java-cas 2.3.0 edellyttävät slf4j 2.x:ää -->
         <slf4j.version>2.0.18</slf4j.version>
+        <log4j.version>2.26.0</log4j.version>
+        <auditlogger.version>9.2.7-SNAPSHOT</auditlogger.version>
 
         <!-- Http related properties -->
         <scalatra.version>3.1.2</scalatra.version>
@@ -535,9 +537,35 @@
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-            <!-- Sovelluslogien slf4j-binding. Tuli aiemmin compile-scopessa java-cas 2.0.0:n
-                 mukana; java-cas 2.3.0 siirsi sen test-scopeen, joten se on deklaroitava itse
-                 tai kaikki logitus menee NOP-loggerille. -->
+            <dependency>
+                <groupId>fi.vm.sade</groupId>
+                <artifactId>auditlogger</artifactId>
+                <version>${auditlogger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.14.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+            <!-- europass-publisherin ja ovara-kouta-lightin slf4j-binding (kouta-external käyttää
+                 log4j2:ta). Tuli aiemmin compile-scopessa java-cas 2.0.0:n mukana; java-cas 2.3.0
+                 siirsi sen test-scopeen, joten se on deklaroitava itse tai kaikki logitus menee
+                 NOP-loggerille. -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>

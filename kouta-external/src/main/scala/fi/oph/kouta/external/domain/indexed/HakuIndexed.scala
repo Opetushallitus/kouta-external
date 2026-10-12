@@ -30,8 +30,8 @@ case class EmbeddedToteutusIndexedES @JsonCreator() (
 case class HakuMetadataES @JsonCreator() (
     @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES] = Seq(),
     @JsonProperty("tulevaisuudenAikataulu") tulevaisuudenAikataulu: List[AikaJakso] = List(),
-    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES]
-)
+    @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES],
+    @JsonProperty("alkaa") varasijatayttoPaattyy: Option[String])
 
 case class YhteyshenkiloES @JsonCreator() (
     @JsonProperty("nimi") nimi: Map[String, String] = Map(),
@@ -174,7 +174,8 @@ case class HakuJavaClient @JsonCreator() (
             koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.koulutuksenAlkamiskausi.map(ka => KoodiUri(ka.koodiUri)),
             koulutuksenAlkamisvuosi = koulutuksenAlkamiskausi.koulutuksenAlkamisvuosi
           )
-        )
+        ),
+        varasijatayttoPaattyy = metadataES.varasijatayttoPaattyy.map(parseLocalDateTime)
       )
     )
   }
@@ -293,11 +294,13 @@ case class HakuIndexed(
 case class HakuMetadataIndexed(
     yhteyshenkilot: Seq[Yhteyshenkilo],
     tulevaisuudenAikataulu: Seq[Ajanjakso],
-    koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed]
+    koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiIndexed],
+    varasijatayttoPaattyy: Option[LocalDateTime]
 ) {
   def toHakuMetadata: HakuMetadata = HakuMetadata(
     yhteyshenkilot = yhteyshenkilot,
     tulevaisuudenAikataulu = tulevaisuudenAikataulu,
-    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi)
+    koulutuksenAlkamiskausi = koulutuksenAlkamiskausi.map(_.toKoulutuksenAlkamiskausi),
+    varasijatayttoPaattyy = varasijatayttoPaattyy
   )
 }

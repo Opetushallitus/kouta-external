@@ -253,7 +253,8 @@ object TestData {
             koulutuksenAlkamiskausiKoodiUri = Some("kausi_k#1"),
             koulutuksenAlkamisvuosi = Some(LocalDate.now().getYear.toString)
           )
-        )
+        ),
+        varasijatayttoPaattyy = Some(inFuture().plusDays(1))
       )
     ),
     hakuajat = List(Ajanjakso(alkaa = now(), paattyy = Some(inFuture()))),

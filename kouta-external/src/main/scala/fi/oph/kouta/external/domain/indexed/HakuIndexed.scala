@@ -31,7 +31,7 @@ case class HakuMetadataES @JsonCreator() (
     @JsonProperty("yhteyshenkilot") yhteyshenkilot: Seq[YhteyshenkiloES] = Seq(),
     @JsonProperty("tulevaisuudenAikataulu") tulevaisuudenAikataulu: List[AikaJakso] = List(),
     @JsonProperty("koulutuksenAlkamiskausi") koulutuksenAlkamiskausi: Option[KoulutuksenAlkamiskausiHakukohdeES],
-    @JsonProperty("alkaa") varasijatayttoPaattyy: Option[String])
+    @JsonProperty("varasijatayttoPaattyy") varasijatayttoPaattyy: Option[String])
 
 case class YhteyshenkiloES @JsonCreator() (
     @JsonProperty("nimi") nimi: Map[String, String] = Map(),
@@ -146,6 +146,8 @@ case class HakuJavaClient @JsonCreator() (
 
   }
   def getHakuMetadataIndexed(metadataESOption: Option[HakuMetadataES]): Option[HakuMetadataIndexed] = {
+    println("metadataESOption")
+    println(metadataESOption)
     metadataESOption.map(metadataES =>
       HakuMetadataIndexed(
         yhteyshenkilot = metadataES.yhteyshenkilot.map(m =>

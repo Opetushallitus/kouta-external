@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.domain.{Fi, Sv}
+import fi.oph.kouta.external.MockAuditLogger
 import fi.oph.kouta.external.TestData.{KoutaLightKoulutusWithOptionalData, MinKoutaLightKoulutus}
 import fi.oph.kouta.external.domain.{ExternalKoutaLightKoulutus, KoutaLightKoulutus}
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
@@ -45,9 +46,11 @@ class KoutaLightSpec extends KoutaLightFixture {
   }
 
   it should "create a new koulutus" in {
+    MockAuditLogger.clean()
     put(List(koutaLightKoulutus), koutaLightSessionId1) shouldEqual parse(
       s"""[{"operation": "CREATE", "success": true, "externalId": "8929jwl2"}]"""
     )
+    MockAuditLogger.find("kouta_light_koulutus_create", "8929jwl2", KoutaLightOrgOid1.s, testUser.oid) shouldBe defined
   }
 
   it should "update existing koulutus" in {
@@ -59,11 +62,15 @@ class KoutaLightSpec extends KoutaLightFixture {
       s"""[{"operation": "CREATE", "success": true, "externalId": "externalId1234"}]"""
     )
 
+    MockAuditLogger.clean()
     val koulutusWithUpdatedName =
       koulutus.copy(externalId = externalId, nimi = Map(Fi -> "Päivitetty nimi fi", Sv -> "Päivitetty nimi sv"))
     put(List(koulutusWithUpdatedName), koutaLightSessionId1) shouldEqual parse(
       s"""[{"operation": "UPDATE", "success": true, "externalId": "externalId1234"}]"""
     )
+    val nimiChange =
+      s"""{"fieldName":"nimi.fi","oldValue":"${koulutus.nimi(Fi)}","newValue":"Päivitetty nimi fi"}"""
+    MockAuditLogger.find("kouta_light_koulutus_update", "externalId1234", nimiChange) shouldBe defined
 
     val storedKoulutukset = getFromDb(externalId, orgOid)
     val storedKoulutus    = storedKoulutukset.head

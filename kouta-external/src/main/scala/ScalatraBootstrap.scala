@@ -1,4 +1,5 @@
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.auditlog.AuditLog
 import fi.oph.kouta.external.client.SiirtotiedostoPalveluClient
 import fi.oph.kouta.external.database.{KoutaDatabase, KoutaExternalDatabaseConnection, KoutaLightSiirtotiedostoDAO}
 import fi.oph.kouta.external.service.KoutaLightSiirtotiedostoService
@@ -14,6 +15,7 @@ class ScalatraBootstrap extends LifeCycle {
 
     KoutaConfigurationFactory.init()
     KoutaDatabase.init()
+    AuditLog.init()
 
     val dbConnectionConfiguration =
       KoutaConfigurationFactory.configuration.ovaraKoutaLightConfiguration.databaseConnectionConfiguration
@@ -46,7 +48,7 @@ class ScalatraBootstrap extends LifeCycle {
     )
 
     context.mount(
-      new KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService),
+      new KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService, AuditLog),
       "/siirtotiedosto",
       "siirtotiedosto"
     )

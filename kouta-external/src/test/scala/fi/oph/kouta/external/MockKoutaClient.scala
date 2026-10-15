@@ -1,5 +1,6 @@
 package fi.oph.kouta.external
 
+import fi.oph.kouta.TestOids.TestUserOid
 import fi.oph.kouta.external.integration.fixture.KoutaIntegrationSpec
 import fi.oph.kouta.external.kouta.CasKoutaClient
 import fi.vm.sade.properties.OphProperties
@@ -22,7 +23,7 @@ object MockCasClient extends CasClient {
 
   override def validateServiceTicketWithVirkailijaUserDetails(service: String, ticket: String): CompletableFuture[UserDetails] = {
     val roles = KoutaIntegrationSpec.defaultAuthorities.map(_.role.toString())
-    val userDetails = new UserDetails("testuser", "test-user-oids", null, null, roles.asJava)
+    val userDetails = new UserDetails("testuser", TestUserOid.s, null, null, roles.asJava)
     CompletableFuture.completedFuture(userDetails)
   }
 
@@ -31,7 +32,7 @@ object MockCasClient extends CasClient {
 
 }
 
-class MockKoutaClient(mockProperties: OphProperties) extends CasKoutaClient {
+class MockKoutaClient(mockProperties: OphProperties) extends CasKoutaClient(MockAuditLog) {
   override def urlProperties: OphProperties = mockProperties
 
   override protected lazy val client: CasClient = MockCasClient

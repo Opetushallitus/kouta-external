@@ -2,6 +2,7 @@ package fi.oph.kouta.external.integration
 
 import fi.oph.kouta.TestOids.{ChildOid, EvilChildOid, ParentOid}
 import fi.oph.kouta.domain.oid.OrganisaatioOid
+import fi.oph.kouta.external.MockAuditLogger
 import fi.oph.kouta.external.integration.fixture.{AccessControlSpec, KoutaIntegrationSpec}
 import fi.oph.kouta.security.CasSession
 
@@ -32,6 +33,14 @@ trait GenericCreateTests[E] {
         if (createdOid.isEmpty) responseStringWithId(createdId) else responseStringWithOid(createdOid)
       )
       create(if (createdOid.isEmpty) createdId else createdOid, ParentOid)
+    }
+
+    it should s"audit log the created $entityName" in {
+      MockAuditLogger.clean()
+      val id = if (createdOid.isEmpty) createdId else createdOid
+      mockCreate(ParentOid, if (createdOid.isEmpty) responseStringWithId(id) else responseStringWithOid(id))
+      create(id, ParentOid)
+      MockAuditLogger.find(s"${entityName}_create", id, testUser.oid) shouldBe defined
     }
 
     it should s"return the error code and message when creating $entityName" in {

@@ -3,6 +3,7 @@ package fi.oph.kouta.external.kouta
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.auditlog.AuditLog
 import fi.oph.kouta.external.servlet.KoutaServlet
 import fi.oph.kouta.external.util.{KoutaBackendJsonAdapter, KoutaJsonFormats}
 import fi.oph.kouta.util.TimeUtils
@@ -22,9 +23,9 @@ import scala.concurrent.duration._
 import scala.compat.java8.FutureConverters.toScala
 import scala.concurrent.{Future, Promise}
 
-object CasKoutaClient extends CasKoutaClient
+object CasKoutaClient extends CasKoutaClient(AuditLog)
 
-class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging with CallerId {
+class CasKoutaClient(auditLog: AuditLog) extends KoutaJsonFormats with KoutaBackendJsonAdapter with Logging with CallerId {
 
   def config = KoutaConfigurationFactory.configuration
   def clientConfig = config.clientConfiguration
@@ -59,7 +60,7 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
     Await.result(result, 5.seconds)
   }
 
-  def create[T <: AnyRef](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] =
+  def create[T <: ExternalRequest](urlKey: String, body: T): Future[Either[(Int, String), IdResponse]] =
     toScala(client.execute(
       new RequestBuilder()
         .setMethod("PUT")
@@ -74,9 +75,12 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
           case obj: JObject if (obj \ "id") != JNothing => obj.extract[UuidResponse]
         })
       case r => Left(r.getStatusCode(), r.getResponseBody())
+    }.map { result =>
+      result.foreach(response => auditLog.logAfterCommit(s"create $urlKey $response")(auditLog.logCreate(body, response)))
+      result
     }
 
-  def update[T <: AnyRef](
+  def update[T <: ExternalRequest](
       urlKey: String,
       body: T,
       ifUnmodifiedSince: Instant
@@ -93,6 +97,9 @@ class CasKoutaClient extends KoutaJsonFormats with KoutaBackendJsonAdapter with 
       case r if r.getStatusCode() == 200 =>
         Right(parse(r.getResponseBodyAsStream()).extract[UpdateResponse])
       case r => Left(r.getStatusCode(), r.getResponseBody())
+    }.map { result =>
+      result.foreach(response => auditLog.logAfterCommit(s"update $urlKey")(auditLog.logUpdate(body, response)))
+      result
     }
 
 }

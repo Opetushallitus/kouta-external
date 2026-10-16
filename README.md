@@ -25,12 +25,15 @@ Asenna haluamallasi tavalla koneellesi
 Lisäksi tarvitset Java SDK:n ja Scala SDK:n (Unix pohjaisissa käyttöjärjestelmissä auttaa esim. [SDKMAN!](https://sdkman.io/)).
 Kirjoitushetkellä käytössä openJDK11 ja scala 2.12.10.   
 
-PostgreSQL kontti-image buildataan (täytyy tehdä vain kerran) komennnolla:
+PostgreSQL kontti-image buildataan komennnolla:
 ``` shell
 # projektin juuressa
 cd postgresql/docker
 docker build --tag koutaexternal-postgres .
 ```
+
+Riittää ajaa kerran, mutta image täytyy buildata uudelleen jos `postgresql/docker`-hakemiston
+tiedostot muuttuvat (esim. pg_cron-konfiguraatio).
 
 Kopioi lokaalia kehitystä varten konfiguraatiotiedosto '/src/test/resources/dev-vars.template.yml' -> '/src/test/resources/dev-vars.yml'. Dev-vars.yml on ignoroitu Gitissä ettei salasanat valu repoon.
 

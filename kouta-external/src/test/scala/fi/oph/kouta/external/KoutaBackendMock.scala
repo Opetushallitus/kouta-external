@@ -10,8 +10,8 @@ import java.time.Instant
 import java.util.UUID
 
 /* If you need to debug mocks,
-   change log4j.logger.org.mockserver=INFO
-   in test/resources/log4j.properties */
+   change <Logger name="org.mockserver" level="INFO"/>
+   in test/resources/log4j2-test.xml */
 
 trait KoutaBackendMock extends SpecWithMocks with ServiceMockBase with KoutaJsonFormats {
   def authenticated(sessionId: UUID, session: CasSession) = Map("id" -> sessionId.toString, "session" -> session)

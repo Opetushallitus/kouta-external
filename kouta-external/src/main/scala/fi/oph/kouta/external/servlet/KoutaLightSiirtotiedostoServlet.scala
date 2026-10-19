@@ -1,6 +1,7 @@
 package fi.oph.kouta.external.servlet
 
 import fi.oph.kouta.external.KoutaConfigurationFactory
+import fi.oph.kouta.external.auditlog.AuditLog
 import fi.oph.kouta.external.domain.siirtotiedosto.SiirtotiedostoDateTimeFormatter
 import fi.oph.kouta.external.service.{KoutaLightSiirtotiedostoService, SiirtotiedostoOperationResults}
 import fi.oph.kouta.external.swagger.SwaggerPaths.registerPath
@@ -13,8 +14,10 @@ import java.time.Instant
 import java.util.UUID
 import scala.util.{Failure, Try}
 
-class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService)
-    extends KoutaServlet
+class KoutaLightSiirtotiedostoServlet(
+    koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService,
+    auditLog: AuditLog
+) extends KoutaServlet
     with CasAuthenticatedServlet {
 
   private def parseTimeRange(
@@ -99,7 +102,12 @@ class KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService: KoutaLigh
     if (siirtotiedostoCreationEnabled) {
       if (isOphPaakayttaja) {
         val (startTime, endTime) = parseTimeRange(params.get("startTime"), params.get("endTime"))
-        val result = resultMap(koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime))
+        val operationResults =
+          koutaLightSiirtotiedostoService.storeKoulutukset(UUID.randomUUID(), startTime, endTime)
+        auditLog.logAfterCommit(s"siirtotiedosto ${operationResults.s3ObjectKeys}") {
+          auditLog.logKoutaLightSiirtotiedosto(startTime, endTime, operationResults.s3ObjectKeys, operationResults.count)
+        }
+        val result = resultMap(operationResults)
 
         logger.info(s"Siirtotiedosto-operaatio ajettiin onnistuneesti: ${writePretty(result)}")
         Ok(result)

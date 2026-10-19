@@ -2,6 +2,7 @@ package fi.oph.kouta.external.integration
 
 import java.util.UUID
 
+import fi.oph.kouta.external.MockAuditLogger
 import fi.oph.kouta.external.integration.fixture.AuthFixture
 import fi.oph.kouta.external.integration.fixture.KoutaIntegrationSpec
 
@@ -32,10 +33,12 @@ class AuthSpec extends KoutaIntegrationSpec with AuthFixture {
   }
 
   it should "reuse an existing session" in {
+    MockAuditLogger.clean()
     get(loginPath, headers = defaultHeaders) {
       body should include(testUser.oid)
       status should equal(200)
     }
+    MockAuditLogger.logs shouldBe empty
   }
 
   it should "reject an invalid session id" in {
@@ -55,6 +58,7 @@ class AuthSpec extends KoutaIntegrationSpec with AuthFixture {
   }
 
   it should "create a new session from a verifiable CAS ticket" in {
+    MockAuditLogger.clean()
     val cookieHeader = get(loginPath, params = Seq("ticket" -> testUser.ticket), headers = Seq(jsonHeader)) {
       body should include(testUser.oid)
       status should equal(200)
@@ -65,6 +69,7 @@ class AuthSpec extends KoutaIntegrationSpec with AuthFixture {
 
     val sessionId = getSessionFromCookies(cookieHeader)
     sessionId should not be empty
+    MockAuditLogger.find("kirjautuminen", testUser.ticket, testUser.oid, sessionId.get) shouldBe defined
 
     get(sessionPath, headers = Seq(sessionHeader(sessionId.get))) {
       status should equal(200)

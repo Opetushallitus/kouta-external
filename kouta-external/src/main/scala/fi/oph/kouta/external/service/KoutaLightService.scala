@@ -1,11 +1,13 @@
 package fi.oph.kouta.external.service
 
 import fi.oph.kouta.domain.oid.OrganisaatioOid
-import fi.oph.kouta.external.database.KoutaLightDAO
+import fi.oph.kouta.external.auditlog.AuditLog
+import fi.oph.kouta.external.database.{KoutaLightDAO, KoutaLightUpsertResult}
 import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.domain.enums.KoutaLightMassResult
 import fi.oph.kouta.external.domain.enums.Operation.{Create, Update, Upsert}
 import fi.oph.kouta.logging.Logging
+import fi.oph.kouta.servlet.Authenticated
 
 import scala.util.{Failure, Success}
 
@@ -28,9 +30,9 @@ object Validations {
     s"Virheellinen arvo [${values.mkString(", ")}] kentässä 'opetuskielet'"
 }
 
-object KoutaLightService extends KoutaLightService
+object KoutaLightService extends KoutaLightService(AuditLog)
 
-class KoutaLightService extends Logging {
+class KoutaLightService(auditLog: AuditLog) extends Logging {
   def validate(koulutus: ExternalKoutaLightKoulutus): Seq[ValidationError] = {
     val koulutusExternalId = koulutus.externalId
     Validations.toValidationErrors(
@@ -46,16 +48,24 @@ class KoutaLightService extends Logging {
       KoutaLightMassResult.Error(Upsert, error.koulutusExternalId, exception = error.message)
     )
 
+  private def logChange(externalId: String, organisaatioOid: OrganisaatioOid)(result: KoutaLightUpsertResult)(implicit
+      authenticated: Authenticated
+  ): Unit =
+    result.before match {
+      case None         => auditLog.logKoutaLightCreate(externalId, organisaatioOid, result.after)
+      case Some(before) => auditLog.logKoutaLightUpdate(externalId, organisaatioOid, before, result.after)
+    }
+
   def put(
       koulutukset: List[ExternalKoutaLightKoulutus],
       organisaatioOid: OrganisaatioOid
-  ): Seq[KoutaLightMassResult] = {
+  )(implicit authenticated: Authenticated): Seq[KoutaLightMassResult] = {
     koulutukset.flatMap(koulutus => {
       val externalId       = koulutus.externalId
       val validationErrors = validate(koulutus)
       if (validationErrors.isEmpty) {
-        KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid) match {
-          case Success(null) =>
+        KoutaLightDAO.createOrUpdate(koulutus, organisaatioOid)(logChange(externalId, organisaatioOid)) match {
+          case Success(result) if result.created =>
             logger.info(s"Created koulutus with externalId: ${koulutus.externalId}, ownerOrg: $organisaatioOid")
             List(KoutaLightMassResult.Success(Create, externalId))
           case Success(_) =>

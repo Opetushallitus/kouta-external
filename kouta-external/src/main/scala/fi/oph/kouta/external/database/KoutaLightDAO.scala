@@ -6,22 +6,49 @@ import fi.oph.kouta.external.domain.{ExternalKoutaLightKoulutus, KoutaLightKoulu
 import slick.dbio.DBIO
 import slick.jdbc.PostgresProfile.api._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.Try
+
+/**
+ * @param before koulutuksen tallennettu tila JSON-muodossa ennen tallennusta, None jos koulutus luotiin
+ * @param after koulutuksen tallennettu tila JSON-muodossa tallennuksen jälkeen
+ */
+case class KoutaLightUpsertResult(before: Option[String], after: String) {
+  def created: Boolean = before.isEmpty
+}
 
 object KoutaLightDAO extends KoutaLightSQL {
   /**
    *
    * @param koulutus ExternalKoutaLightKoulutus to save to db
    * @param organisaatioOid Oid of the organization that is mapped with the API user i.e. owner org
-   * @return null if new koulutus is created or updated_at timestamp if old koulutus is updated
+   * @param auditLog audit-logitus, joka ajetaan samassa transaktiossa tallennuksen kanssa
+   * @return koulutuksen tila ennen ja jälkeen tallennuksen
    */
-  def createOrUpdate(koulutus: ExternalKoutaLightKoulutus, organisaatioOid: OrganisaatioOid): Try[String] = {
+  def createOrUpdate(koulutus: ExternalKoutaLightKoulutus, organisaatioOid: OrganisaatioOid)(
+      auditLog: KoutaLightUpsertResult => Unit
+  ): Try[KoutaLightUpsertResult] = {
     val koulutusToCreate = KoutaLightKoulutus(organisaatioOid, koulutus)
-    runBlockingTransactionally(upsert(koulutusToCreate))
+    runBlockingTransactionally(
+      for {
+        before <- selectAuditJson(koulutusToCreate)
+        after  <- upsert(koulutusToCreate)
+        result = KoutaLightUpsertResult(before, after)
+        _ <- Try(auditLog(result)).fold(DBIO.failed, DBIO.successful)
+      } yield result
+    )
   }
 }
 
 sealed trait KoutaLightSQL extends SQLHelpers {
+  private val auditJson =
+    "jsonb_build_object('kielivalinta', kielivalinta, 'tila', tila, 'nimi', nimi, 'tarjoajat', tarjoajat, 'metadata', metadata)::text"
+
+  def selectAuditJson(koulutus: KoutaLightKoulutus): DBIO[Option[String]] =
+    sql"""select #$auditJson
+          from kouta_light_koulutus
+          where owner_org = ${koulutus.ownerOrg} and external_id = ${koulutus.externalId}""".as[String].headOption
+
   def upsert(koulutus: KoutaLightKoulutus): DBIO[String] = {
     sql"""insert into kouta_light_koulutus (
       external_id,
@@ -48,6 +75,6 @@ sealed trait KoutaLightSQL extends SQLHelpers {
       tarjoajat = EXCLUDED.tarjoajat,
       metadata = EXCLUDED.metadata,
       updated_at = now()
-    returning updated_at""".as[String].head
+    returning #$auditJson""".as[String].head
   }
 }

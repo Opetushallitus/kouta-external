@@ -4,7 +4,7 @@ import fi.oph.kouta.external.database.{KoutaExternalDatabaseConnection, KoutaLig
 import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.service.{KoutaLightService, KoutaLightSiirtotiedostoService}
 import fi.oph.kouta.external.servlet.{KoutaLightServlet, KoutaLightSiirtotiedostoServlet}
-import fi.oph.kouta.external.{KoutaConfigurationFactory, SiirtotiedostoPalveluClientMock}
+import fi.oph.kouta.external.{KoutaConfigurationFactory, MockAuditLog, SiirtotiedostoPalveluClientMock}
 import org.json4s.JValue
 import org.json4s.jackson.JsonMethods.parse
 
@@ -20,7 +20,7 @@ trait KoutaLightFixture extends KoutaLightIntegrationSpec with AccessControlSpec
 
   override def beforeAll(): Unit = {
     super.beforeAll()
-    val koutaLightService = new KoutaLightService
+    val koutaLightService = new KoutaLightService(MockAuditLog)
     addServlet(new KoutaLightServlet(koutaLightService), KoutaLightPath)
 
     val dbConnectionConfiguration =
@@ -32,7 +32,10 @@ trait KoutaLightFixture extends KoutaLightIntegrationSpec with AccessControlSpec
     val koutaLightSiirtotiedostoService: KoutaLightSiirtotiedostoService =
       new KoutaLightSiirtotiedostoService(koutaLightSiirtotiedostoDAO, koutaLightSiirtotiedostoPalveluClient)
 
-    addServlet(new KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService), KoutaLightSiirtotiedostoPath)
+    addServlet(
+      new KoutaLightSiirtotiedostoServlet(koutaLightSiirtotiedostoService, MockAuditLog),
+      KoutaLightSiirtotiedostoPath
+    )
   }
 
   def parseResult(result: String): JValue =

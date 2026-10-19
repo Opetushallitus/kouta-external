@@ -1,5 +1,6 @@
 package fi.oph.kouta.external.integration
 
+import fi.oph.kouta.external.MockAuditLogger
 import fi.oph.kouta.external.TestData.KoutaLightKoulutusWithOptionalData
 import fi.oph.kouta.external.domain.ExternalKoutaLightKoulutus
 import fi.oph.kouta.external.integration.fixture.KoutaLightFixture
@@ -29,6 +30,7 @@ class KoutaLightSiirtotiedostoSpec extends KoutaLightFixture {
     put(List(koutaLightKoulutus1), koutaLightSessionId1)
     put(List(koutaLightKoulutus2), koutaLightSessionId1)
     put(List(koutaLightKoulutus3), koutaLightSessionId1)
+    MockAuditLogger.clean()
     get(
       Path,
       dayBefore,
@@ -36,6 +38,11 @@ class KoutaLightSiirtotiedostoSpec extends KoutaLightFixture {
       ophPaakayttajaSessionId,
       200
     ) shouldEqual s"""{"keys":"koutalight_koulutus__1.json, koutalight_koulutus__2.json","count":"3","success":"true"}"""
+    MockAuditLogger.find(
+      "kouta_light_siirtotiedosto_create",
+      "koutalight_koulutus__1.json, koutalight_koulutus__2.json",
+      "startTime"
+    ) shouldBe defined
   }
 
   it should "Save koulutukset ok without timerange" in {
